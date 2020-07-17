@@ -4,6 +4,7 @@ import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/views/dress_room_view.dart';
 import 'package:frontend/ui/views/look_book_view.dart';
 import 'package:frontend/ui/views/swipe_view.dart';
+import 'package:frontend/ui/widgets/radius_container_widget.dart';
 
 import 'mypage_view.dart';
 
@@ -33,10 +34,10 @@ class RootView extends StatelessWidget {
           ),
         ),
         body: TabBarView(children: [
-          MyPageView(),
-          SwipeView(),
-          DressRoomView(),
-          LookBookView()
+          RadiusContainer(MyPageView()),
+          RadiusContainer(SwipeView()),
+          RadiusContainer(DressRoomView()),
+          RadiusContainer(LookBookView())
         ]),
       ),
     );
