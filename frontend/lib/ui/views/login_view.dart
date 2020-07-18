@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:frontend/core/constants/app_constants.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+// import 'package:flutter_kakao_login/flutter_kakao_login.dart';
 
 class LoginView extends StatelessWidget {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FacebookLogin facebookLogin = FacebookLogin();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  Future<FirebaseUser> _handleSignIn() async {
+  // FlutterKakaoLogin kakaoSignIn = FlutterKakaoLogin();
+  Future<FirebaseUser> _handlgeGoogleSignIn() async {
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -21,6 +24,8 @@ class LoginView extends StatelessWidget {
     print("signed in " + user.email);
     return user;
   }
+
+  Future<FirebaseUser> _handleFacebookSingIn() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -38,14 +43,20 @@ class LoginView extends StatelessWidget {
             Text('Login View'),
             GoogleSignInButton(
               onPressed: () {
-                _handleSignIn().then((user) {
+                _handlgeGoogleSignIn().then((user) {
                   print(user);
                 });
               },
               textStyle: TextStyle(fontSize: 15),
             ),
             FacebookSignInButton(
-              onPressed: () {},
+              onPressed: () async {
+                FacebookLoginResult result =
+                    await facebookLogin.logIn(['email', 'public_profile']);
+                // AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: result.accessToken.token);
+                // AuthResult authResult = await _auth.signInWithCredential(credential);
+                // FirebaseUser user = authResult.user;
+              },
               text: "Sign in with Facebook",
               textStyle: TextStyle(fontSize: 15, color: Colors.white),
             ),
@@ -58,7 +69,22 @@ class LoginView extends StatelessWidget {
               ),
             ),
             FlatButton(
-                onPressed: () {
+                onPressed: () async {
+                  // final KakaoLoginResult result = await kakaoSignIn.logIn();
+                  // switch (result.status) {
+                  //   case KakaoLoginStatus.loggedIn:
+                  //     print('LoggedIn by the user.\n'
+                  //         '- UserID is ${result.account.userID}\n'
+                  //         '- UserEmail is ${result.account.userEmail} ');
+                  //     break;
+                  //   case KakaoLoginStatus.loggedOut:
+                  //     print('LoggedOut by the user.');
+                  //     break;
+                  //   case KakaoLoginStatus.error:
+                  //     print(
+                  //         'This is Kakao error message : ${result.errorMessage}');
+                  //     break;
+                  // }
                   Navigator.pushReplacementNamed(context, RoutePaths.Home);
                 },
                 color: Colors.blue,
