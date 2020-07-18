@@ -5,7 +5,33 @@ import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:http/http.dart';
+import 'package:kakao_flutter_sdk/auth.dart';
 // import 'package:flutter_kakao_login/flutter_kakao_login.dart';
+import 'package:kakao_flutter_sdk/common.dart';
+
+// KakaoContext.clientId = "${put your native app key here}";
+
+void loginButtonClicked() async {
+  try {
+    String authCode = await AuthCodeClient.instance.request();
+    print('here');
+  } on KakaoAuthException catch (e) {
+    // some error happened during the course of user login... deal with it.
+    print('here2');
+    print(e);
+  } on KakaoClientException catch (e) {
+    //
+    print('here3');
+
+    print(e);
+  } catch (e) {
+    //
+    print('here4');
+
+    print(e);
+  }
+}
 
 class LoginView extends StatelessWidget {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -69,23 +95,10 @@ class LoginView extends StatelessWidget {
               ),
             ),
             FlatButton(
-                onPressed: () async {
-                  // final KakaoLoginResult result = await kakaoSignIn.logIn();
-                  // switch (result.status) {
-                  //   case KakaoLoginStatus.loggedIn:
-                  //     print('LoggedIn by the user.\n'
-                  //         '- UserID is ${result.account.userID}\n'
-                  //         '- UserEmail is ${result.account.userEmail} ');
-                  //     break;
-                  //   case KakaoLoginStatus.loggedOut:
-                  //     print('LoggedOut by the user.');
-                  //     break;
-                  //   case KakaoLoginStatus.error:
-                  //     print(
-                  //         'This is Kakao error message : ${result.errorMessage}');
-                  //     break;
-                  // }
-                  Navigator.pushReplacementNamed(context, RoutePaths.Home);
+                onPressed: () {
+                  print('DAFDSA');
+                  loginButtonClicked();
+                  //Navigator.pushReplacementNamed(context, RoutePaths.Home);
                 },
                 color: Colors.blue,
                 child: Text('Go to Home'))
