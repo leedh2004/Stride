@@ -5,10 +5,14 @@ import 'package:frontend/ui/views/dress_room_view.dart';
 import 'package:frontend/ui/views/look_book_view.dart';
 import 'package:frontend/ui/views/swipe_view.dart';
 import 'package:frontend/ui/widgets/radius_container_widget.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'mypage_view.dart';
 
 class RootView extends StatelessWidget {
+  final FirebaseUser user;
+
+  const RootView({Key key, this.user}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
