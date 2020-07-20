@@ -13,15 +13,21 @@ class AuthenticationService {
   Future loginCheck() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String email = prefs.getString('email');
-    if (email == null) {
-      print('email 존재 X');
-      await prefs.setString('email', 'leedh2008@naver.com');
-    } else {
-      print(email);
-      User user = User(email: email);
-      _userController.add(user);
-      //prefs.remove('email');
-      //print('email 존재해서 삭제');
+    if (email != null) {
+      login(email);
     }
+  }
+
+  void login(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', email);
+    User user = User(email: email);
+    _userController.add(user);
+  }
+
+  void logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('email');
+    _userController.add(null);
   }
 }

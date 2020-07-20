@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        initialRoute: RoutePaths.Login,
+        initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
       ),
     );

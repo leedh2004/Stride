@@ -15,7 +15,7 @@ List<SingleChildWidget> providers = [
 ];
 
 List<SingleChildWidget> independentServices = [
-  Provider.value(value: LoginViewModel()),
+  //Provider.value(value: LoginViewModel()),
   Provider.value(value: AuthenticationService())
 ];
 
