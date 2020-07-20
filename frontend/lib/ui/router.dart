@@ -6,10 +6,10 @@ import 'package:frontend/ui/views/root_view.dart';
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case RoutePaths.Home:
+      case RoutePaths.Root:
         return MaterialPageRoute(builder: (_) => RootView());
-      case RoutePaths.Login:
-        return MaterialPageRoute(builder: (_) => LoginView());
+      // case RoutePaths.Login:
+      //   return MaterialPageRoute(builder: (_) => LoginView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(
