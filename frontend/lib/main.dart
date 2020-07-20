@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakao_flutter_sdk/all.dart';
+// import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 import 'package:frontend/provider_setup.dart';
 import 'package:frontend/ui/router.dart';
@@ -7,8 +7,9 @@ import 'package:frontend/ui/router.dart';
 import 'core/constants/app_constants.dart';
 
 void main() {
-  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
-  KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
+  // KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
+  // KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
+
   runApp(MyApp());
 }
 
