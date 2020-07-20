@@ -1,8 +1,11 @@
 from flask import Flask
 from api_v1.dressroom import dressroom
 from api_v1.coordination import coordination
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={r'*': {'origins': '*'}})
+
 app.register_blueprint(dressroom, url_prefix='/dressroom')
 app.register_blueprint(coordination, url_prefix='/coordination')
 
