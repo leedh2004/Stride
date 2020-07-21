@@ -5,6 +5,7 @@ import 'package:frontend/core/viewmodels/widgets/dress_room_model.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/views/base_widget.dart';
+import 'package:frontend/ui/views/product_web_view.dart';
 import 'package:provider/provider.dart';
 
 class DressRoom extends StatelessWidget {
@@ -46,8 +47,6 @@ class DressRoom extends StatelessWidget {
                   itemCount: model.items.length,
                 ),
               );
-        // childAspectRatio: 8.0 / 9.0,
-        // children: _buildItems(model.items));
       },
     );
   }
@@ -102,6 +101,12 @@ class DressRoomItemWidget extends StatelessWidget {
                       ),
                       onPressed: () {
                         print("버튼 클릭");
+                        print(item.product_url);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    ProductWebView(item.product_url)));
                       },
                     ),
                   ]),

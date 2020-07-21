@@ -23,6 +23,7 @@ class Product {
     product_name = json['product_name'];
     product_url = json['product_url'];
     type = json['type'];
+    print(product_url);
     // size = json['size'];
   }
 
