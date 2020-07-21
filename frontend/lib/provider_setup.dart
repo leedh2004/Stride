@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
 import 'core/models/user.dart';
+import 'core/services/api.dart';
 // import 'package:provider_arc/core/services/api.dart';
 // import 'package:provider_arc/core/services/authentication_service.dart';
 // import 'core/models/user.dart';
@@ -16,6 +17,7 @@ List<SingleChildWidget> providers = [
 
 List<SingleChildWidget> independentServices = [
   //Provider.value(value: LoginViewModel()),
+  Provider.value(value: Api()),
   Provider.value(value: AuthenticationService())
 ];
 
@@ -30,5 +32,5 @@ List<SingleChildWidget> uiConsumableProviders = [
   StreamProvider<User>(
     create: (context) =>
         Provider.of<AuthenticationService>(context, listen: false).user,
-  )
+  ),
 ];
