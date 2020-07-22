@@ -1,3 +1,4 @@
+import 'package:frontend/core/models/coordinate.dart';
 import 'package:frontend/core/models/product.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -14,6 +15,18 @@ class Api {
       items.add(Product.fromJson(item));
     }
     //print(items[0]);
+    return items;
+  }
+
+  Future<List<Coordinate>> getCoordinate() async {
+    var items = List<Coordinate>();
+    var response = await client.get('$endpoint/coordination/test');
+    var parsed = json.decode(response.body) as List<dynamic>;
+    for (var item in parsed) {
+      print(item);
+      items.add(Coordinate.fromJson(item));
+    }
+    print('end');
     return items;
   }
 }
