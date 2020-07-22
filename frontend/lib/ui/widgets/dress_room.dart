@@ -9,15 +9,8 @@ import 'package:frontend/ui/views/product_web_view.dart';
 import 'package:provider/provider.dart';
 
 class DressRoom extends StatelessWidget {
-  List<DressRoomItemWidget> _buildItems(List<Product> items) {
-    return items.map((item) {
-      return DressRoomItemWidget(item);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return BaseWidget<DressRoomModel>(
       model: DressRoomModel(api: Provider.of(context)),
       onModelReady: (model) {
