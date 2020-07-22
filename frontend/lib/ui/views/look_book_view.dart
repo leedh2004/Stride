@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:frontend/ui/widgets/look_book.dart';
 
 class LookBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SafeArea(
-        child: WebView(
-          initialUrl: 'https://www.naver.com',
-          javascriptMode: JavascriptMode.unrestricted,
-        ),
-      ),
-    );
+    return Column(children: <Widget>[
+      LookBook(),
+    ]);
   }
 }

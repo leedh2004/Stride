@@ -17,7 +17,6 @@ class _BaseWidgetState<T extends ChangeNotifier> extends State<BaseWidget<T>> {
   T model;
   @override
   initState() {
-    // TODO: implement initState
     model = widget.model;
     if (widget.onModelReady != null) {
       widget.onModelReady(model);
