@@ -7,7 +7,7 @@ class DressRoomModel extends BaseModel {
   Api _api;
   DressRoomModel({@required Api api}) : _api = api;
   List<Product> items;
-  bool flag = false;
+  bool isAnyOneSelected = false;
 
   Future fetchItems() async {
     setBusy(true);
@@ -16,7 +16,19 @@ class DressRoomModel extends BaseModel {
   }
 
   void selectItem(int index) {
-    items[index].selected = true;
+    items[index].selected = 1 - items[index].selected; // toggle
+    isAnyOneSelected = false;
+    for (var item in items) {
+      if (item.selected == 1) {
+        isAnyOneSelected = true;
+        break;
+      }
+    }
+    notifyListeners();
+  }
+
+  void removeItem() {
+    items.removeWhere((element) => element.selected == 1);
     notifyListeners();
   }
 
