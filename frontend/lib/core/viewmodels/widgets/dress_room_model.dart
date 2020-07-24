@@ -27,6 +27,29 @@ class DressRoomModel extends BaseModel {
     notifyListeners();
   }
 
+  List<Product> findSelectedTop() {
+    List<Product> top = List<Product>();
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].selected == 1 && items[i].type == 'top') {
+        print(items[i].product_name);
+        top.add(items[i]);
+      }
+    }
+    return top;
+  }
+
+  List<Product> findSelectedBotoom() {
+    List<Product> bottom = List<Product>();
+    for (int i = 0; i < items.length; i++) {
+      if (items[i].selected == 1 &&
+          (items[i].type == 'skirt' || items[i].type == 'pants')) {
+        print(items[i].product_name);
+        bottom.add(items[i]);
+      }
+    }
+    return bottom;
+  }
+
   void removeItem() {
     items.removeWhere((element) => element.selected == 1);
     notifyListeners();

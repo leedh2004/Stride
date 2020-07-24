@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontend/core/models/product.dart';
 import 'package:frontend/core/viewmodels/widgets/dress_room_model.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
+import 'package:frontend/ui/widgets/dress_room_select_dialog.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 import 'delete_alert_dialog.dart';
 
 class DressRoomButtonBar extends StatelessWidget {
-  final isAnyOneSelected;
-  DressRoomButtonBar(this.isAnyOneSelected);
+  final DressRoomModel model;
+  DressRoomButtonBar(this.model);
 
   @override
   Widget build(BuildContext context) {
-    return isAnyOneSelected
+    return model.isAnyOneSelected
         ? Stack(
             children: <Widget>[
               Align(
@@ -21,7 +24,15 @@ class DressRoomButtonBar extends StatelessWidget {
                 child: RaisedButton(
                   padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
                   color: backgroundColor,
-                  onPressed: () {},
+                  onPressed: () async {
+                    List<Product> top = model.findSelectedTop();
+                    List<Product> bottom = model.findSelectedBotoom();
+                    showMaterialModalBottomSheet(
+                        expand: false,
+                        context: context,
+                        builder: (context, scrollController) =>
+                            DressRoomSelectDialog(top, bottom));
+                  },
                   child: Text('Make', style: whiteStyle),
                 ),
               ),
