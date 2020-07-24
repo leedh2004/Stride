@@ -7,6 +7,7 @@ import 'package:frontend/core/viewmodels/widgets/look_book_model.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/shared/ui_helper.dart';
 import 'package:frontend/ui/views/base_widget.dart';
+import 'package:frontend/ui/widgets/delete_alert_dialog.dart';
 import 'package:frontend/ui/widgets/look_book_dialog.dart';
 import 'package:provider/provider.dart';
 
@@ -70,24 +71,18 @@ class LookBookItem extends StatelessWidget {
                   Expanded(
                     child: Container(
                       height: 200,
-                      child: Hero(
-                        tag: item.top_thumbnail_url,
-                        child: Image.network(
-                          item.top_thumbnail_url,
-                          fit: BoxFit.fill,
-                        ),
+                      child: Image.network(
+                        item.top_thumbnail_url,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
                   Expanded(
                     child: Container(
                       height: 200,
-                      child: Hero(
-                        tag: item.bottom_thumbnail_url,
-                        child: Image.network(
-                          item.bottom_thumbnail_url,
-                          fit: BoxFit.fill,
-                        ),
+                      child: Image.network(
+                        item.bottom_thumbnail_url,
+                        fit: BoxFit.fill,
                       ),
                     ),
                   ),
@@ -157,23 +152,7 @@ class LookBookItem extends StatelessWidget {
                         final result = await showDialog(
                             context: context,
                             builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                title: Text("정말로 삭제하시겠습니까?"),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, "remove");
-                                      },
-                                      child: Text('확인')),
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('취소'))
-                                ],
-                              );
+                              return DeleteAlertDialog();
                             });
                         if (result == "remove") {
                           Provider.of<LookBookModel>(context, listen: false)

@@ -5,6 +5,7 @@ class Product {
   String product_name;
   String product_url;
   String type;
+  int selected = 0;
   // String size;
 
   Product(
