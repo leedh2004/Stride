@@ -46,7 +46,7 @@ class DressRoom extends StatelessWidget {
                     ),
                   ),
                 ),
-                DressRoomButtonBar(model.isAnyOneSelected)
+                DressRoomButtonBar(model)
               ]);
       },
     );
