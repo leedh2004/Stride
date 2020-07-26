@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/models/product.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 
 class SwipeCardAlignment extends StatelessWidget {
-  final int cardNum;
-  SwipeCardAlignment(this.cardNum);
+  //final int cardNum;
+
+  final Product item;
+  SwipeCardAlignment(this.item);
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +23,9 @@ class SwipeCardAlignment extends StatelessWidget {
             SizedBox.expand(
               child: AspectRatio(
                 aspectRatio: 11 / 16,
-                child: Image.network(
-                    "http://www.66girls.co.kr/web/product/big/201910/3091a301c1bcb448b04f8ab76761865c.jpg",
-                    fit: BoxFit.fitHeight),
+                child: Image.network(item.thumbnail_url,
+                    //"http://www.66girls.co.kr/web/product/big/201910/3091a301c1bcb448b04f8ab76761865c.jpg",
+                    fit: BoxFit.cover),
               ),
             ),
             Container(
@@ -44,13 +47,14 @@ class SwipeCardAlignment extends StatelessWidget {
                 padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        '로드리 스커트',
+                        item.product_name, //'로드리 스커트',
                         style: whiteShadowStyle,
                       ),
                       Text(
-                        'Price 17,000',
+                        'Price ${item.price}',
                         style: whiteSmallShadowStyle,
                       )
                     ]),

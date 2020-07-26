@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/models/product.dart';
 import 'package:frontend/core/viewmodels/widgets/swipe_model.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/views/base_widget.dart';
@@ -15,6 +16,7 @@ List<Alignment> cardsAlign = [
 List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
+  int _curIdx = 0;
   SwipeCardSection(BuildContext context) {
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
         MediaQuery.of(context).size.height * 0.65);
@@ -30,8 +32,7 @@ class SwipeCardSection extends StatefulWidget {
 
 class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
-  int cardsCounter = 0;
-
+  List<Product> items;
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
 
@@ -46,15 +47,14 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   void initState() {
     super.initState();
     // Init cards
-    for (cardsCounter = 0; cardsCounter < 3; cardsCounter++) {
-      cards.add(SwipeCardAlignment(cardsCounter));
-    }
+    // for (cardsCounter = 0; cardsCounter < 3; cardsCounter++) {
+    //   cards.add(SwipeCardAlignment(cardsCounter));
+    // }
 
     frontCardAlign = cardsAlign[2];
-
     // Init the animation controller
     _controller =
-        AnimationController(duration: Duration(milliseconds: 700), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((AnimationStatus status) {
       if (status == AnimationStatus.completed) changeCardsOrder();
@@ -74,9 +74,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
             : Expanded(
                 child: Stack(
                 children: <Widget>[
-                  backCard(),
-                  middleCard(),
-                  frontCard(),
+                  backCard(context),
+                  middleCard(context),
+                  frontCard(context),
                   nopeTextWidget(),
                   passTextWidget(),
                   likeTextWidget(),
@@ -147,32 +147,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 ],
               ));
       },
-    );
-  }
-
-  Widget backCard() {
-    return Align(
-      alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.backCardAlignmentAnim(_controller).value
-          : cardsAlign[0],
-      child: SizedBox.fromSize(
-          size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.backCardSizeAnim(_controller).value
-              : cardsSize[2],
-          child: cards[2]),
-    );
-  }
-
-  Widget middleCard() {
-    return Align(
-      alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.middleCardAlignmentAnim(_controller).value
-          : cardsAlign[1],
-      child: SizedBox.fromSize(
-          size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.middleCardSizeAnim(_controller).value
-              : cardsSize[1],
-          child: cards[1]),
     );
   }
 
@@ -274,7 +248,39 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         ));
   }
 
-  Widget frontCard() {
+  Widget backCard(BuildContext context) {
+    Product item =
+        Provider.of<SwipeModel>(context).items[(widget._curIdx + 2) % 9];
+    return Align(
+      alignment: _controller.status == AnimationStatus.forward
+          ? CardsAnimation.backCardAlignmentAnim(_controller).value
+          : cardsAlign[0],
+      child: SizedBox.fromSize(
+          size: _controller.status == AnimationStatus.forward
+              ? CardsAnimation.backCardSizeAnim(_controller).value
+              : cardsSize[2],
+          child: SwipeCardAlignment(item)),
+    );
+  }
+
+  Widget middleCard(BuildContext context) {
+    Product item =
+        Provider.of<SwipeModel>(context).items[(widget._curIdx + 1) % 9];
+    return Align(
+      alignment: _controller.status == AnimationStatus.forward
+          ? CardsAnimation.middleCardAlignmentAnim(_controller).value
+          : cardsAlign[1],
+      child: SizedBox.fromSize(
+          size: _controller.status == AnimationStatus.forward
+              ? CardsAnimation.middleCardSizeAnim(_controller).value
+              : cardsSize[1],
+          child: SwipeCardAlignment(item)),
+    );
+  }
+
+  Widget frontCard(BuildContext context) {
+    //int idx = Provider.of<SwipeModel>(context).curIdx;
+    Product item = Provider.of<SwipeModel>(context).items[widget._curIdx % 9];
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -283,21 +289,21 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
             : frontCardAlign,
         child: Transform.rotate(
           angle: (pi / 180.0) * frontCardRot,
-          child: SizedBox.fromSize(size: cardsSize[0], child: cards[0]),
+          child: SizedBox.fromSize(
+              size: cardsSize[0], child: SwipeCardAlignment(item)),
         ));
   }
 
   void changeCardsOrder() {
+    //model.nextItem();
     setState(() {
       // Swap cards (back card becomes the middle card; middle card becomes the front card, front card becomes a  bottom card)
-      var temp = cards[0];
-      cards[0] = cards[1];
-      cards[1] = cards[2];
-      cards[2] = temp;
-
-      cards[2] = SwipeCardAlignment(cardsCounter);
-      cardsCounter++;
-
+      // var temp = cards[0];
+      // cards[0] = cards[1];
+      // cards[1] = cards[2];
+      // cards[2] = temp;
+      // cards[2] = SwipeCardAlignment(cardsCounter);
+      widget._curIdx++;
       frontCardAlign = defaultFrontCardAlign;
       frontCardRot = 0.0;
     });

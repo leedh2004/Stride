@@ -2,10 +2,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:frontend/core/viewmodels/widgets/swipe_model.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/shared/ui_helper.dart';
 import 'package:frontend/ui/widgets/swipe_card.dart';
+import 'package:provider/provider.dart';
+
+import 'base_widget.dart';
 
 class SwipeView extends StatefulWidget {
   @override
@@ -27,7 +31,14 @@ class _SwipeViewState extends State<SwipeView> {
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      SwipeCardSection(context),
+      BaseWidget<SwipeModel>(
+          model: SwipeModel(api: Provider.of(context)),
+          onModelReady: (model) {
+            model.fetchItems();
+          },
+          builder: (context, model, child) {
+            return SwipeCardSection(context);
+          }),
       Transform.scale(
         scale: 1.5,
         child: Switch(
