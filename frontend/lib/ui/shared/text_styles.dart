@@ -21,3 +21,11 @@ const whiteSmallShadowStyle = TextStyle(
     Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
   ],
 );
+const redHeaderStyle = TextStyle(
+    fontSize: 35,
+    fontWeight: FontWeight.w900,
+    color: Color.fromRGBO(238, 123, 118, 1));
+const blueHeaderStyle = TextStyle(
+    fontSize: 35,
+    fontWeight: FontWeight.w900,
+    color: Color.fromRGBO(78, 161, 158, 1));

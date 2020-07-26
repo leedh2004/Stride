@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:frontend/core/viewmodels/widgets/swipe_model.dart';
+import 'package:frontend/ui/shared/text_styles.dart';
+import 'package:frontend/ui/views/base_widget.dart';
 import 'package:frontend/ui/widgets/swipe_card_alignment.dart';
 import 'dart:math';
 
+import 'package:provider/provider.dart';
+
 List<Alignment> cardsAlign = [
-  Alignment(0.0, 1.0),
-  Alignment(0.0, 0.8),
+  Alignment(0.0, 0.0),
+  Alignment(0.0, 0.0),
   Alignment(0.0, 0.0)
 ];
 List<Size> cardsSize = List(3);
@@ -12,11 +17,11 @@ List<Size> cardsSize = List(3);
 class SwipeCardSection extends StatefulWidget {
   SwipeCardSection(BuildContext context) {
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.7);
+        MediaQuery.of(context).size.height * 0.65);
     cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.7);
+        MediaQuery.of(context).size.height * 0.6);
     cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.7);
+        MediaQuery.of(context).size.height * 0.6);
   }
 
   @override
@@ -33,6 +38,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
   Alignment frontCardAlign;
   double frontCardRot = 0.0;
+  double opacityPass = 0.0;
+  double opacityLike = 0.0;
+  double opacityNope = 0.0;
+
   @override
   void initState() {
     super.initState();
@@ -54,51 +63,91 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Stack(
-      children: <Widget>[
-        backCard(),
-        middleCard(),
-        frontCard(),
-        _controller.status != AnimationStatus.forward
-            ? SizedBox.expand(
-                child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                // While dragging the first card
-                onPanUpdate: (DragUpdateDetails details) {
-                  // Add what the user swiped in the last frame to the alignment of the card
-                  setState(() {
-                    // 20 is the "speed" at which moves the card
-                    frontCardAlign = Alignment(
-                        frontCardAlign.x +
-                            20 *
-                                details.delta.dx /
-                                MediaQuery.of(context).size.width,
-                        frontCardAlign.y +
-                            40 *
-                                details.delta.dy /
-                                MediaQuery.of(context).size.height);
+    return BaseWidget<SwipeModel>(
+      model: SwipeModel(api: Provider.of(context)),
+      onModelReady: (model) {
+        model.fetchItems();
+      },
+      builder: (context, model, child) {
+        return model.busy
+            ? CircularProgressIndicator()
+            : Expanded(
+                child: Stack(
+                children: <Widget>[
+                  backCard(),
+                  middleCard(),
+                  frontCard(),
+                  nopeTextWidget(),
+                  passTextWidget(),
+                  likeTextWidget(),
+                  _controller.status != AnimationStatus.forward
+                      ? SizedBox.expand(
+                          child: GestureDetector(
+                          // While dragging the first card
+                          onPanUpdate: (DragUpdateDetails details) {
+                            // Add what the user swiped in the last frame to the alignment of the card
+                            double pass = 0.0;
+                            double like = 0.0;
+                            double nope = 0.0;
+                            if (frontCardAlign.x > 2.5) {
+                              //LIKE
+                              like = frontCardAlign.x / 8;
+                              if (like >= 1) like = 1.0;
+                            } else if (frontCardAlign.x < -2.5) {
+                              nope = -frontCardAlign.x / 8;
+                              if (nope >= 1) nope = 1.0;
+                            } else if (frontCardAlign.y < -2) {
+                              // PASS
+                              pass = -(frontCardAlign.y / 12);
+                              if (pass >= 1) pass = 1.0;
+                            }
 
-                    frontCardRot = frontCardAlign.x; // * rotation speed;
-                  });
-                },
-                // When releasing the first card
-                onPanEnd: (_) {
-                  // If the front card was swiped far enough to count as swiped
-                  if (frontCardAlign.x > 3.0 || frontCardAlign.x < -3.0) {
-                    animateCards();
-                  } else {
-                    // Return to the initial rotation and alignment
-                    setState(() {
-                      frontCardAlign = defaultFrontCardAlign;
-                      frontCardRot = 0.0;
-                    });
-                  }
-                },
-              ))
-            : Container(),
-      ],
-    ));
+                            setState(() {
+                              opacityLike = like;
+                              opacityNope = nope;
+                              opacityPass = pass;
+                              print(frontCardAlign.y);
+                              print(frontCardAlign.x);
+                              frontCardAlign = Alignment(
+                                  frontCardAlign.x +
+                                      20 *
+                                          details.delta.dx /
+                                          MediaQuery.of(context).size.width,
+                                  frontCardAlign.y +
+                                      60 *
+                                          details.delta.dy /
+                                          MediaQuery.of(context).size.height);
+                              frontCardRot =
+                                  frontCardAlign.x; // * rotation speed;
+                            });
+                          },
+                          // When releasing the first card
+                          onPanEnd: (_) {
+                            // If the front card was swiped far enough to count as swiped
+                            setState(() {
+                              opacityPass = 0.0;
+                              opacityLike = 0.0;
+                              opacityNope = 0.0;
+                            });
+                            if (frontCardAlign.x > 3.0 ||
+                                frontCardAlign.x < -3.0) {
+                              animateCards();
+                            } else if (frontCardAlign.y < -3.0) {
+                              animateCards();
+                            } else {
+                              // Return to the initial rotation and alignment
+                              setState(() {
+                                frontCardAlign = defaultFrontCardAlign;
+                                frontCardRot = 0.0;
+                              });
+                            }
+                          },
+                        ))
+                      : Container(),
+                ],
+              ));
+      },
+    );
   }
 
   Widget backCard() {
@@ -125,6 +174,104 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               : cardsSize[1],
           child: cards[1]),
     );
+  }
+
+  Widget likeTextWidget() {
+    return Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.frontCardDisappearAlignmentAnim(
+                    _controller, frontCardAlign)
+                .value
+            : frontCardAlign,
+        child: Transform.rotate(
+          angle: (pi / 180.0) * frontCardRot,
+          child: SizedBox.fromSize(
+            size: cardsSize[0],
+            child: Opacity(
+              opacity: opacityLike,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
+                alignment: Alignment.topLeft,
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                          color: Color.fromRGBO(238, 123, 118, 1), width: 5)),
+                  child: Text(
+                    'LIKE',
+                    style: redHeaderStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget nopeTextWidget() {
+    return Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.frontCardDisappearAlignmentAnim(
+                    _controller, frontCardAlign)
+                .value
+            : frontCardAlign,
+        child: Transform.rotate(
+          angle: (pi / 180.0) * frontCardRot,
+          child: SizedBox.fromSize(
+            size: cardsSize[0],
+            child: Opacity(
+              opacity: opacityNope,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 50, 20, 0),
+                alignment: Alignment.topRight,
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(
+                          color: Color.fromRGBO(78, 161, 158, 1), width: 5)),
+                  child: Text(
+                    'NOPE',
+                    style: blueHeaderStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ));
+  }
+
+  Widget passTextWidget() {
+    return Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.frontCardDisappearAlignmentAnim(
+                    _controller, frontCardAlign)
+                .value
+            : frontCardAlign,
+        child: Transform.rotate(
+          angle: (pi / 180.0) * frontCardRot,
+          child: SizedBox.fromSize(
+            size: cardsSize[0],
+            child: Opacity(
+              opacity: opacityPass,
+              child: Container(
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 30),
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  padding: EdgeInsets.all(3),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      border: Border.all(color: Colors.white, width: 5)),
+                  child: Text(
+                    'PASS',
+                    style: whiteHeaderStyle,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget frontCard() {
@@ -192,6 +339,16 @@ class CardsAnimation {
 
   static Animation<Alignment> frontCardDisappearAlignmentAnim(
       AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x < 3 && beginAlign.x > -3) {
+      return AlignmentTween(
+              begin: beginAlign,
+              end: Alignment(
+                  0.0, beginAlign.y - 30) // Has swiped to the left or right?
+              )
+          .animate(CurvedAnimation(
+              parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+    }
+
     return AlignmentTween(
             begin: beginAlign,
             end: Alignment(
