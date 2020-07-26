@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
@@ -25,6 +26,7 @@ class TabBarControllerView extends StatelessWidget {
             elevation: 0.0,
             backgroundColor: backgroundColor,
             bottom: TabBar(
+                isScrollable: true,
                 indicator: UnderlineTabIndicator(
                     borderSide: BorderSide(color: Colors.white, width: 3.0),
                     insets: EdgeInsets.fromLTRB(20, 0, 20, 5)),
@@ -37,7 +39,7 @@ class TabBarControllerView extends StatelessWidget {
                 ]),
           ),
         ),
-        body: TabBarView(children: [
+        body: TabBarView(physics: NeverScrollableScrollPhysics(), children: [
           RadiusContainer(MyPageView()),
           RadiusContainer(SwipeView()),
           RadiusContainer(DressRoomView()),

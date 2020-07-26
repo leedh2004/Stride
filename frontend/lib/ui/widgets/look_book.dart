@@ -73,7 +73,7 @@ class LookBookItem extends StatelessWidget {
                       height: 200,
                       child: Image.network(
                         item.top_thumbnail_url,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
@@ -82,7 +82,7 @@ class LookBookItem extends StatelessWidget {
                       height: 200,
                       child: Image.network(
                         item.bottom_thumbnail_url,
-                        fit: BoxFit.fill,
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
