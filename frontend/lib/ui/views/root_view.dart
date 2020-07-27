@@ -8,11 +8,16 @@ class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<User>(builder: (context, user, child) {
+      Widget showWidget;
       if (user == null) {
-        return LoginView();
+        showWidget = LoginView();
       } else {
-        return TabBarControllerView();
+        showWidget = TabBarControllerView();
       }
+      return AnimatedSwitcher(
+        duration: Duration(milliseconds: 500),
+        child: showWidget,
+      );
     });
   }
 }

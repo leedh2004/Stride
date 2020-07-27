@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/core/models/product.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
@@ -22,11 +23,17 @@ class SwipeCardAlignment extends StatelessWidget {
           children: <Widget>[
             SizedBox.expand(
               child: AspectRatio(
-                aspectRatio: 11 / 16,
-                child: Image.network(item.thumbnail_url,
-                    //"http://www.66girls.co.kr/web/product/big/201910/3091a301c1bcb448b04f8ab76761865c.jpg",
-                    fit: BoxFit.cover),
-              ),
+                  aspectRatio: 11 / 16,
+                  child: FancyShimmerImage(
+                    imageUrl: item.thumbnail_url,
+                    boxFit: BoxFit.cover,
+                    errorWidget: Icon(Icons.error),
+                    shimmerHighlightColor: backgroundColor,
+                    shimmerBackColor: backgroundColor,
+                    shimmerBaseColor: backgroundTransparentColor,
+
+                    // placeholder: (context, url) => LoadingWidget(),
+                  )),
             ),
             Container(
               alignment: Alignment.bottomLeft,

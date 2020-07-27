@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/core/models/product.dart';
@@ -6,6 +8,7 @@ import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/shared/ui_helper.dart';
 import 'package:frontend/ui/views/base_widget.dart';
+import 'package:frontend/ui/views/login_view.dart';
 import 'package:frontend/ui/views/product_web_view.dart';
 import 'package:frontend/ui/widgets/dress_room_button_bar.dart';
 import 'package:provider/provider.dart';
@@ -20,34 +23,41 @@ class DressRoom extends StatelessWidget {
       },
       builder: (context, model, child) {
         // return CircularProgressIndicator();
-        return model.busy
-            ? CircularProgressIndicator()
-            : Column(children: <Widget>[
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      //crossAxisCount: 2,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.8,
-                        mainAxisSpacing: 20.0,
-                        crossAxisSpacing: 20.0,
-                      ),
-                      padding: EdgeInsets.all(16),
-                      itemBuilder: (context, index) {
-                        print(index);
-                        print(model.items[index].product_id);
-                        return DressRoomItemWidget(model.items[index],
-                            model.items[index].selected.toDouble(), index);
-                      },
-                      itemCount: model.items.length,
-                    ),
+        Widget showWidget;
+        if (model.busy) {
+          showWidget = LoadingWidget();
+        } else {
+          showWidget = Column(children: <Widget>[
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  //crossAxisCount: 2,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    mainAxisSpacing: 20.0,
+                    crossAxisSpacing: 20.0,
                   ),
+                  padding: EdgeInsets.all(16),
+                  itemBuilder: (context, index) {
+                    print(index);
+                    print(model.items[index].product_id);
+                    return DressRoomItemWidget(model.items[index],
+                        model.items[index].selected.toDouble(), index);
+                  },
+                  itemCount: model.items.length,
                 ),
-                DressRoomButtonBar(model)
-              ]);
+              ),
+            ),
+            DressRoomButtonBar(model)
+          ]);
+        }
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: showWidget,
+        );
       },
     );
   }
@@ -73,9 +83,14 @@ class DressRoomItemWidget extends StatelessWidget {
           children: <Widget>[
             AspectRatio(
                 aspectRatio: 18 / 17,
-                child: Image.network(
-                  item.thumbnail_url,
-                  fit: BoxFit.cover,
+                child: FancyShimmerImage(
+                  imageUrl: item.thumbnail_url,
+                  boxFit: BoxFit.cover,
+                  errorWidget: Icon(Icons.error),
+                  shimmerBaseColor: backgroundTransparentColor,
+                  shimmerHighlightColor: backgroundColor,
+                  shimmerBackColor: backgroundColor,
+                  // placeholder: (context, url) => LoadingWidget(),
                 )),
             Expanded(
               child: Padding(

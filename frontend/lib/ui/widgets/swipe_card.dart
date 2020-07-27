@@ -3,6 +3,7 @@ import 'package:frontend/core/models/product.dart';
 import 'package:frontend/core/viewmodels/widgets/swipe_model.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/views/base_widget.dart';
+import 'package:frontend/ui/views/login_view.dart';
 import 'package:frontend/ui/widgets/swipe_card_alignment.dart';
 import 'dart:math';
 
@@ -70,7 +71,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
       },
       builder: (context, model, child) {
         return model.busy
-            ? CircularProgressIndicator()
+            ? LoadingWidget()
             : Expanded(
                 child: Stack(
                 children: <Widget>[
@@ -84,37 +85,38 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                       ? SizedBox.expand(
                           child: GestureDetector(
                           // While dragging the first card
+                          // onHorizontalDragStart: (details) => {},
                           onPanUpdate: (DragUpdateDetails details) {
                             // Add what the user swiped in the last frame to the alignment of the card
                             double pass = 0.0;
                             double like = 0.0;
                             double nope = 0.0;
+                            details.globalPosition.dy;
                             if (frontCardAlign.x > 2.5) {
                               //LIKE
-                              like = frontCardAlign.x / 8;
+                              like = frontCardAlign.x / 6;
                               if (like >= 1) like = 1.0;
                             } else if (frontCardAlign.x < -2.5) {
-                              nope = -frontCardAlign.x / 8;
+                              nope = -frontCardAlign.x / 6;
                               if (nope >= 1) nope = 1.0;
                             } else if (frontCardAlign.y < -2) {
                               // PASS
                               pass = -(frontCardAlign.y / 12);
                               if (pass >= 1) pass = 1.0;
                             }
-
                             setState(() {
                               opacityLike = like;
                               opacityNope = nope;
                               opacityPass = pass;
-                              print(frontCardAlign.y);
-                              print(frontCardAlign.x);
+                              print(details.delta.dx);
+                              print(details.delta.dy);
                               frontCardAlign = Alignment(
                                   frontCardAlign.x +
-                                      20 *
+                                      15 *
                                           details.delta.dx /
                                           MediaQuery.of(context).size.width,
                                   frontCardAlign.y +
-                                      60 *
+                                      40 *
                                           details.delta.dy /
                                           MediaQuery.of(context).size.height);
                               frontCardRot =

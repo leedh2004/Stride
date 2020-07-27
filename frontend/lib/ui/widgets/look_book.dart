@@ -1,15 +1,18 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/core/models/coordinate.dart';
-import 'package:frontend/core/services/api.dart';
-import 'package:frontend/core/viewmodels/views/login_viewmodel.dart';
 import 'package:frontend/core/viewmodels/widgets/look_book_model.dart';
+import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/shared/ui_helper.dart';
 import 'package:frontend/ui/views/base_widget.dart';
-import 'package:frontend/ui/widgets/delete_alert_dialog.dart';
+import 'package:frontend/ui/views/login_view.dart';
 import 'package:frontend/ui/widgets/look_book_dialog.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class LookBook extends StatelessWidget {
   @override
@@ -20,26 +23,36 @@ class LookBook extends StatelessWidget {
         model.fetchItems();
       },
       builder: (context, model, child) {
-        return model.busy
-            ? CircularProgressIndicator()
-            : Padding(
-                padding: EdgeInsets.all(16),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                    mainAxisSpacing: 10.0,
-                    crossAxisSpacing: 10.0,
-                  ),
-                  padding: EdgeInsets.all(5),
-                  itemBuilder: (context, index) {
-                    print("$index 전달");
-                    return LookBookItem(item: model.items[index], index: index);
-                  },
-                  itemCount: model.items.length,
+        Widget showWidget;
+        if (model.busy) {
+          showWidget = LoadingWidget();
+        } else {
+          showWidget = Container(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  mainAxisSpacing: 10.0,
+                  crossAxisSpacing: 10.0,
                 ),
-              );
+                padding: EdgeInsets.all(5),
+                itemBuilder: (context, index) {
+                  print("$index 전달");
+                  return LookBookItem(item: model.items[index], index: index);
+                },
+                itemCount: model.items.length,
+              ),
+            ),
+          );
+        }
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: showWidget,
+        );
       },
     );
   }
@@ -70,21 +83,29 @@ class LookBookItem extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Container(
-                      height: 200,
-                      child: Image.network(
-                        item.top_thumbnail_url,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        height: 200,
+                        child: FancyShimmerImage(
+                          imageUrl: item.top_thumbnail_url,
+                          boxFit: BoxFit.cover,
+                          errorWidget: Icon(Icons.error),
+                          shimmerBaseColor: backgroundTransparentColor,
+                          shimmerHighlightColor: backgroundColor,
+                          shimmerBackColor: backgroundColor,
+                          // placeholder: (context, url) => LoadingWidget(),
+                        )),
                   ),
                   Expanded(
                     child: Container(
-                      height: 200,
-                      child: Image.network(
-                        item.bottom_thumbnail_url,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
+                        height: 200,
+                        child: FancyShimmerImage(
+                          imageUrl: item.bottom_thumbnail_url,
+                          boxFit: BoxFit.cover,
+                          errorWidget: Icon(Icons.error),
+                          shimmerBaseColor: backgroundTransparentColor,
+                          shimmerHighlightColor: backgroundColor,
+                          shimmerBackColor: backgroundColor,
+                          // placeholder: (context, url) => LoadingWidget(),
+                        )),
                   ),
                 ],
               ),
@@ -108,38 +129,42 @@ class LookBookItem extends StatelessWidget {
                       iconSize: 16,
                       color: Colors.black54,
                       icon: FaIcon(FontAwesomeIcons.edit),
-                      onPressed: () async {
-                        final result = await showDialog(
+                      onPressed: () {
+                        final _textController = TextEditingController();
+                        AwesomeDialog(
                             context: context,
-                            builder: (context) {
-                              final _textController = TextEditingController();
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                                content: TextField(
+                            keyboardAware: true,
+                            dialogType: DialogType.ERROR,
+                            customHeader: FaIcon(
+                              FontAwesomeIcons.edit,
+                              color: backgroundColor,
+                              size: 56,
+                            ),
+                            animType: AnimType.BOTTOMSLIDE,
+                            body: Column(children: <Widget>[
+                              Text(
+                                '수정',
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(left: 16),
+                                child: TextField(
                                   controller: _textController,
                                   decoration: InputDecoration.collapsed(
                                       hintText: "새로운 이름을 입력해주세요"),
                                 ),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(
-                                            context, _textController.text);
-                                      },
-                                      child: Text('수정')),
-                                  FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                      child: Text('취소'))
-                                ],
-                              );
-                            });
-                        if (result != null) {
-                          Provider.of<LookBookModel>(context, listen: false)
-                              .rename(index, result);
-                        }
+                              ),
+                            ]),
+                            //),
+                            desc: '선택된 아이템의 새로운 이름을 입력해주세요.',
+                            btnOkColor: greenColor,
+                            btnCancelColor: pinkColor,
+                            btnCancelOnPress: () {},
+                            btnOkOnPress: () {
+                              Provider.of<LookBookModel>(context, listen: false)
+                                  .rename(index, _textController.text);
+                            })
+                          ..show();
                       },
                     ),
                   ),
@@ -148,16 +173,26 @@ class LookBookItem extends StatelessWidget {
                       iconSize: 16,
                       color: Colors.black54,
                       icon: FaIcon(FontAwesomeIcons.trash),
-                      onPressed: () async {
-                        final result = await showDialog(
+                      onPressed: () {
+                        AwesomeDialog(
                             context: context,
-                            builder: (context) {
-                              return DeleteAlertDialog();
-                            });
-                        if (result == "remove") {
-                          Provider.of<LookBookModel>(context, listen: false)
-                              .removeItem(index);
-                        }
+                            dialogType: DialogType.ERROR,
+                            customHeader: FaIcon(
+                              FontAwesomeIcons.ban,
+                              color: backgroundColor,
+                              size: 56,
+                            ),
+                            animType: AnimType.BOTTOMSLIDE,
+                            title: '삭제',
+                            desc: '선택된 아이템을 룩북에서 삭제하겠습니까?',
+                            btnOkColor: greenColor,
+                            btnCancelColor: pinkColor,
+                            btnCancelOnPress: () {},
+                            btnOkOnPress: () {
+                              Provider.of<LookBookModel>(context, listen: false)
+                                  .removeItem(index);
+                            })
+                          ..show();
                       },
                     ),
                   ),

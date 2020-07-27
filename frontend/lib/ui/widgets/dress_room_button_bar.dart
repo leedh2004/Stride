@@ -1,3 +1,4 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:frontend/core/models/product.dart';
@@ -39,39 +40,58 @@ class DressRoomButtonBar extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
-                  color: backgroundColor,
-                  padding: EdgeInsets.only(right: 30),
-                  alignment: Alignment.centerRight,
-                  icon: FaIcon(FontAwesomeIcons.trash),
-                  onPressed: () async {
-                    final result = await showDialog(
-                        context: context,
-                        builder: (context) {
-                          return DeleteAlertDialog();
-                        });
-                    if (result == "remove") {
-                      Provider.of<DressRoomModel>(context, listen: false)
-                          .removeItem();
-                      final snackBar = SnackBar(
-                        duration: Duration(seconds: 1),
-                        content: Text(
-                          '아이템이 정상적으로 삭제 되었습니다.',
-                        ),
-                        // action: SnackBarAction(
-                        //   textColor: Colors.yellow,
-                        //   label: '확인',
-                        //   onPressed: () {
-                        //     // Some code to undo the change.
-                        //   },
-                        // ),
-                      );
-
-                      // Find the Scaffold in the widget tree and use
-                      // it to show a SnackBar.
-                      Scaffold.of(context).showSnackBar(snackBar);
+                    color: backgroundColor,
+                    padding: EdgeInsets.only(right: 30),
+                    alignment: Alignment.centerRight,
+                    icon: FaIcon(FontAwesomeIcons.trash),
+                    onPressed: () {
+                      AwesomeDialog(
+                          context: context,
+                          dialogType: DialogType.ERROR,
+                          customHeader: FaIcon(
+                            FontAwesomeIcons.ban,
+                            color: backgroundColor,
+                            size: 56,
+                          ),
+                          animType: AnimType.BOTTOMSLIDE,
+                          title: '삭제',
+                          desc: '선택된 아이템을 드레스룸에서 삭제하겠습니까?',
+                          btnOkColor: greenColor,
+                          btnCancelColor: pinkColor,
+                          btnCancelOnPress: () {},
+                          btnOkOnPress: () {
+                            Provider.of<DressRoomModel>(context, listen: false)
+                                .removeItem();
+                          })
+                        ..show();
                     }
-                  },
-                ),
+                    // final result = await showDialog(
+                    //     context: context,
+                    //     builder: (context) {
+                    //return DeleteAlertDialog();
+                    // if (result == "remove") {
+                    //   Provider.of<DressRoomModel>(context, listen: false)
+                    //       .removeItem();
+                    //   final snackBar = SnackBar(
+                    //     duration: Duration(seconds: 1),
+                    //     content: Text(
+                    //       '아이템이 정상적으로 삭제 되었습니다.',
+                    //     ),
+                    // action: SnackBarAction(
+                    //   textColor: Colors.yellow,
+                    //   label: '확인',
+                    //   onPressed: () {
+                    //     // Some code to undo the change.
+                    //   },
+                    // ),
+                    // );
+
+                    // Find the Scaffold in the widget tree and use
+                    // it to show a SnackBar.
+                    // Scaffold.of(context).showSnackBar(snackBar);
+                    // }
+                    // },
+                    ),
               ),
             ],
           )

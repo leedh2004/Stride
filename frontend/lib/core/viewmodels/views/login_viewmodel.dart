@@ -43,6 +43,13 @@ class LoginViewModel extends BaseModel {
     setBusy(false);
   }
 
+  void handleWithoutSignIn() async {
+    setBusy(true);
+    await Future.delayed(Duration(seconds: 1));
+    _authenticationService.login("master@master.com");
+    setBusy(false);
+  }
+
   void handleKaKaoSignIn() async {
     try {} catch (e) {}
   }
