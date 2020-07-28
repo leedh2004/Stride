@@ -1,6 +1,6 @@
 from flask import Flask
-from api_v1.dressroom import dressroom
-from api_v1.coordination import coordination
+from backend.api_v1.dressroom import dressroom
+from backend.api_v1.coordination import coordination
 from flask_cors import CORS
 
 app = Flask(__name__)
