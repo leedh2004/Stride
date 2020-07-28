@@ -62,3 +62,13 @@ def get_dressroom(user_id):
         }
     ]
     return json.dumps(mock_response, default=json_util.default, ensure_ascii=False)
+
+
+@dressroom.route('/', methods=['POST'])
+def create_dress():
+    return
+
+
+@dressroom.route('/', methods=['DELETE'])
+def delete_dress():
+    return
