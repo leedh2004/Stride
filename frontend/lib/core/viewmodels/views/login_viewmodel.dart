@@ -7,6 +7,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+// 뷰모델이 비즈니스 로직을 하지말고,
+// 로직이 뷰가 없어도 되야할 때, 다른 뷰에서 사용이 되어야할 때로 하자
+// 서비스들의 데이터를 가져오는 역할 (변수로 가져온다)
+
 class LoginViewModel extends BaseModel {
   AuthenticationService _authenticationService;
 

@@ -1,5 +1,4 @@
 # Stride
-
 Flutter App, Note what I have to do.
 
 ## TO-DO
@@ -43,3 +42,18 @@ Flutter App, Note what I have to do.
 
 #### 그 외
 - [ ] Loading시 gif가 필요함, 우선은 라이브러리 사용 (pub.dev)
+
+#### 할 것
+- [ ] 파이어 베이스 crash, analytics 붙이기
+- [ ] 전반적으로 ViewModel, Service 수정
+- [ ] 서버에다가 redirect 하기, flutter secure storage
+- [ ] 추천모델 웹 만들기, id 파라미터, 진행상황 관리, 카운터 올려주고
+- [ ] request 전송하고, 받기
+- [ ] 디자인 반영
+
+#### Note
+Authentication(토큰 값 저장), API
+Sprint(cycle) 1 ~ 4 주
+Sprint 시작 back log(무엇을 할 지)
+배포를 하고 다음 스프린트 때에는 반영
+회고 잘한점, 못한점, 개선할점
