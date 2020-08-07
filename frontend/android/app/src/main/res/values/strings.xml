@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">frontend</string>
+    <string name="facebook_app_id">945269725921746</string> 
+    <string name="fb_login_protocol_scheme">fb945269725921746</string>
+    <string name="kakao_app_key">caa6c865e94aa692c781ac217de8f393</string>
+</resources>
+
