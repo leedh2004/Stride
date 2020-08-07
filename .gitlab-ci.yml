@@ -14,7 +14,7 @@ production:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
   script:
-    - ./gitlab-deploy-prod.sh
+    - bash .gitlab-deploy-prod.sh
 
   environment:
     name: production
