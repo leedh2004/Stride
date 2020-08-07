@@ -18,13 +18,13 @@ def get_coordination(user_id):
             'top_product_url': "https://www.66girls.co.kr/product/detail.html?product_no=101239&cate_no=70&display_group=1",
             'top_type': "top",
             'top_size': {'free': {'shoulder': 51, 'hem': 50, 'arm_length': 15, 'bust': 56, 'length': 71}},
-            'bottom_shop_name': 'sixsixgirls',
+            'bottom_shop_name': 'noncode',
             'bottom_product_id': "101112",
-            'bottom_thumbnail_url': "https://www.66girls.co.kr/product/detail.html?product_no=101112&cate_no=86&display_group=1",
+            'bottom_thumbnail_url': "http://noncode.co.kr/web/product/medium/202007/ffae56a5932a52840d2a8de984be9e5b.jpg",
             'bottom_price': 19900,
-            'bottom_product_name': "자가드꽃A스커트",
-            'bottom_product_url': "https://www.66girls.co.kr/product/detail.html?product_no=105361&cate_no=70&display_group=1",
-            'bottom_type': "skirt",
+            'bottom_product_name': "마블 밴드 와이드 팬츠",
+            'bottom_product_url': "https://noncode.co.kr/product/detail.html?product_no=2031&cate_no=57&display_group=1",
+            'bottom_type': "pants",
             'bottom_size': {'s': {'hem': 59, 'length': 44}, 'm': {'hem': 61, 'length': 46}}
         },
         {
@@ -43,7 +43,8 @@ def get_coordination(user_id):
             'bottom_product_name': "위키롱데님팬츠",
             'bottom_product_url': "https://www.66girls.co.kr/product/detail.html?product_no=102309&cate_no=71&display_group=1",
             'bottom_type': "pants",
-            'bottom_size': {'s': {'hem': 19, 'length': 108}, 'm': {'hem': 21, 'length': 110}, 'l': {'hem': 23, 'length': 112}}
+            'bottom_size': {'s': {'hem': 19, 'length': 108}, 'm': {'hem': 21, 'length': 110},
+                            'l': {'hem': 23, 'length': 112}}
         },
         {
             'top_shop_name': 'sixsixgirls',
