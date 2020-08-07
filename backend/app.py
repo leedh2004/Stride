@@ -1,4 +1,7 @@
 from flask import Flask
+import sys
+sys.path.append('../')
+sys.path.append('../../')
 from backend.api_v1.dressroom import dressroom
 from backend.api_v1.coordination import coordination
 from backend.api_v1.auth import auth
