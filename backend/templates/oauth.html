@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://d3js.org/d3.v5.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <h1>OAUTH</h1>
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    let token = {{token|tojson}};
+    jwt_token.postMessage(token);
+});
+</script>
+</body>
+</html>
