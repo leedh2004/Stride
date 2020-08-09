@@ -7,7 +7,7 @@ from backend.api_v1.dressroom import dressroom
 from backend.api_v1.coordination import coordination
 from backend.api_v1.login import login
 from backend.api_v1.kakao import kakao
-
+from backend.api_v1.naver import naver
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -17,6 +17,7 @@ app.register_blueprint(dressroom, url_prefix='/dressroom')
 app.register_blueprint(coordination, url_prefix='/coordination')
 app.register_blueprint(login, url_prefix='/login')
 app.register_blueprint(kakao, url_prefix='/kakao')
+app.register_blueprint(naver, url_prefix='/naver')
 
 
 @app.route('/')

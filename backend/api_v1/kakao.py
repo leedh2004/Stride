@@ -13,6 +13,7 @@ from backend.db.user import *
 from backend.api_v1.auth import *
 kakao = Blueprint('kakao', __name__)
 
+
 @kakao.route('/oauth', methods=['GET'])
 def login():
     code = str(request.args.get('code'))
