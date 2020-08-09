@@ -9,6 +9,7 @@ sys.path.append('../../../')
 import requests, json
 from bson import json_util
 from config.oauthconfig import *
+from backend.db.user import *
 auth = Blueprint('auth', __name__)
 
 
@@ -17,7 +18,7 @@ def login():
     code = str(request.args.get('code'))
     print(request.args)
     url = "https://kauth.kakao.com/oauth/token"
-    redirect_uri = str(SERVER) + "/auth/oauth"
+    redirect_uri = "http://15.165.33.138:5000/auth/oauth"
     payload = "grant_type=authorization_code&client_id=" + str(KAKAO_KEY) + "&redirect_uri=" + str(redirect_uri) + "&code=" + str(code)
     headers = {
         'Content-Type': "application/x-www-form-urlencoded",
@@ -34,6 +35,7 @@ def login():
     response_json = response.json()
     id = response_json.get('id')
     id = str(id) + "@kakao"
+    insert_user(id)
     token = encode_jwt_token(id)
     return render_template('oauth.html', token=token)
 

@@ -4,7 +4,6 @@ import sys
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
-sys.path.append('../../../../')
 from config.oauthconfig import *
 
 service_conn = psycopg2.connect(
