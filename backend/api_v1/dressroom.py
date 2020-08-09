@@ -122,10 +122,16 @@ def get_dressroom():
 
 
 @dressroom.route('/', method=['GET'])
+@login_required
 def get_dress():
     result = get_dressroom()
-    return result
+    return result, 200
+
 
 @dressroom.route('/', methods=['DELETE'])
+@login_required
 def delete_dress():
-    return
+    body = request.get_json()
+    product_id = body['product_id']
+    delete_dressroom(product_id)
+    return jsonify("Success"), 200

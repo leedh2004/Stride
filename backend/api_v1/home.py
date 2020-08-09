@@ -17,7 +17,7 @@ home = Blueprint('home', __name__)
 @login_required
 def get_clothes():
     result = get_home_clothes()
-    return result
+    return result, 200
 
 
 @home.route('/result/like', methods=['POST'])
@@ -26,7 +26,7 @@ def like():
     body = request.get_json()
     product_id = body['product_id']
     insert_like(product_id)
-    return
+    return 200
 
 
 @home.route('/result/dislike', methods=['POST'])
@@ -35,7 +35,7 @@ def like():
     body = request.get_json()
     product_id = body['product_id']
     insert_dislikes(product_id)
-    return
+    return 200
 
 
 @home.route('/result/pass', methods=['POST'])
@@ -44,5 +44,5 @@ def like():
     body = request.get_json()
     product_id = body['product_id']
     insert_pass(product_id)
-    return
+    return 200
 
