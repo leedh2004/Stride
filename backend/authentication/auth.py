@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, g
+from flask import request, g
 from functools import wraps
 import jwt
 import sys
@@ -6,10 +6,7 @@ from datetime import datetime, timedelta
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
-import requests, json
-from bson import json_util
-from config.oauthconfig import *
-from backend.db.user import *
+from backend.db.queries.user import *
 
 
 def encode_jwt_token(id):
