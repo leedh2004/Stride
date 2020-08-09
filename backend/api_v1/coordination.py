@@ -2,7 +2,10 @@
 from flask import Blueprint, jsonify
 import json
 from bson import ObjectId, json_util
-from backend.api_v1.auth import *
+import sys
+sys.path.append('../')
+sys.path.append('../../')
+from backend.authentication.auth import *
 
 coordination = Blueprint('coordination', __name__)
 

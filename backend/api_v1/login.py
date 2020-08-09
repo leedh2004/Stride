@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import sys
-from flask import Blueprint, request, render_template, jsonify
-from datetime import datetime, timedelta
+from flask import Blueprint, jsonify
+import json
+from bson import ObjectId, json_util
+
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
-import requests, json
-from bson import json_util
-from config.oauthconfig import *
-from backend.api_v1.auth import *
+from backend.authentication.auth import *
 
 
 login = Blueprint('login', __name__)

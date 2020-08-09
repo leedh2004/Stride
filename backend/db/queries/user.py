@@ -1,5 +1,5 @@
 from backend.db.init import *
-
+from flask import g
 
 def insert_user(user_id):
     cursor = service_conn.cursor()
@@ -10,6 +10,8 @@ def insert_user(user_id):
     except:
         service_conn.rollback()
         pass
-    finally:
-        cursor.close()
+    cursor.close()
+
+
+
 

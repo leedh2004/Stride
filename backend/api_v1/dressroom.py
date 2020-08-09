@@ -2,14 +2,19 @@
 from flask import Blueprint, jsonify
 import json
 from bson import ObjectId, json_util
-from backend.api_v1.auth import *
+import sys
+sys.path.append('../')
+sys.path.append('../../')
+from backend.authentication.auth import *
+from backend.db.queries.dressroom import *
 
 dressroom = Blueprint('dressroom', __name__)
 
 
-@dressroom.route('/<user_id>', methods=['GET'])
+@dressroom.route('/mock/<user_id>', methods=['GET'])
 @login_required
-def get_dressroom(user_id):
+def get_dressroom():
+
     # return dress product
     mock_response = [
         {
@@ -116,11 +121,17 @@ def get_dressroom(user_id):
     return json.dumps(mock_response, default=json_util.default, ensure_ascii=False)
 
 
-@dressroom.route('/', methods=['POST'])
-def create_dress():
-    return
+@dressroom.route('/', method=['GET'])
+@login_required
+def get_dress():
+    result = get_dressroom()
+    return result, 200
 
 
 @dressroom.route('/', methods=['DELETE'])
+@login_required
 def delete_dress():
-    return
+    body = request.get_json()
+    product_id = body['product_id']
+    delete_dressroom(product_id)
+    return jsonify("Success"), 200
