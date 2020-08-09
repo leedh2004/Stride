@@ -2,11 +2,13 @@
 from flask import Blueprint, jsonify
 import json
 from bson import ObjectId, json_util
+from backend.api_v1.auth import *
 
 dressroom = Blueprint('dressroom', __name__)
 
 
 @dressroom.route('/<user_id>', methods=['GET'])
+@login_required
 def get_dressroom(user_id):
     # return dress product
     mock_response = [
