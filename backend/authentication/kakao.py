@@ -1,16 +1,9 @@
-from flask import Blueprint, request, render_template, g
-from functools import wraps
-import jwt
 import sys
-from datetime import datetime, timedelta
+
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
-import requests, json
-from bson import json_util
-from config.oauthconfig import *
-from backend.db.user import *
-from backend.api_v1.auth import *
+from backend.authentication.auth import *
 kakao = Blueprint('kakao', __name__)
 
 
