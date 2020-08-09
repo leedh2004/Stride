@@ -6,8 +6,8 @@ sys.path.append('../../../')
 from backend.api_v1.dressroom import dressroom
 from backend.api_v1.coordination import coordination
 from backend.api_v1.login import login
-from backend.api_v1.auth import auth
-
+from backend.api_v1.kakao import kakao
+from backend.api_v1.naver import naver
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -15,8 +15,9 @@ CORS(app, resources={r'*': {'origins': '*'}})
 
 app.register_blueprint(dressroom, url_prefix='/dressroom')
 app.register_blueprint(coordination, url_prefix='/coordination')
-app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(login, url_prefix='/login')
+app.register_blueprint(kakao, url_prefix='/kakao')
+app.register_blueprint(naver, url_prefix='/naver')
 
 
 @app.route('/')
