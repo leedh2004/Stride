@@ -69,7 +69,7 @@ def get_coodination():
 
 def delete_coordination(coor_id):
     cursor = service_conn.cursor()
-    query = """DELETE FROM coordination WHERE coor_id = %s"""
+    query = """DELETE FROM coordination WHERE coor_id = %s::int"""
     try:
         for del_id in coor_id:
             cursor.execute(query, (del_id,))
