@@ -93,7 +93,7 @@ def create_coord():
         body = request.get_json()
         top_product_id = body['top_product_id']
         bottom_product_id = body['bottom_product_id']
-        default_look_name = '나만의 룩'
+        default_look_name = body['name']
         insert_coordination(default_look_name, top_product_id, bottom_product_id)
     except:
         return jsonify("Fail"), 500
@@ -111,6 +111,18 @@ def delete_coord():
         return jsonify("Fail"), 500
     return 'Success', 200
 
+
+@coordination.route('/', methods=['PUT'])
+@login_required
+def modify_coor_name():
+    try:
+        body = request.get_json()
+        coor_id = body['coor_id']
+        update_name = body['update_name']
+        update_coor_name(update_name, coor_id)
+    except:
+        return jsonify("Fail"), 500
+    return 'Success', 200
 
 
 

@@ -6,7 +6,7 @@ from backend.db.init import *
 
 def insert_coordination(coor_name, top_product_id, bottom_product_id):
     cursor = service_conn.cursor()
-    query = """INSERT INTO coordination(user_id, coor_name, top_product_id, bottom_product_id) VALUES (%s, %s, %s, %s)"""
+    query = """INSERT INTO coordination(user_id, coor_name, product_top_id, product_bottom_id) VALUES (%s, %s, %s, %s)"""
     try:
         cursor.execute(query, (g.user_id, coor_name, top_product_id, bottom_product_id))
         service_conn.commit()
@@ -17,11 +17,11 @@ def insert_coordination(coor_name, top_product_id, bottom_product_id):
     cursor.close()
 
 
-def update_coor_name(coor_id):
+def update_coor_name(update_name, coor_id):
     cursor = service_conn.cursor()
     query = """UPDATE coordination SET coor_name = %s WHERE coor_id = %s"""
     try:
-        cursor.execute(query, (coor_id,))
+        cursor.execute(query, (update_name, coor_id))
         service_conn.commit()
     except:
         service_conn.rollback()
@@ -32,7 +32,7 @@ def update_coor_name(coor_id):
 
 def get_coodination():
     cursor = service_conn.cursor()
-    query = """SELECT * FROM coordination WHERE user_id = %s:"""
+    query = """SELECT * FROM coordination WHERE user_id = %s"""
     product_query = """SELECT * FROM products WHERE product_id = %s"""
     try:
         cursor.execute(query, (g.user_id, ))
@@ -41,6 +41,7 @@ def get_coodination():
         for item in coordination:
             load = {}
             load['coor_id'] = item[0]
+            load['coor_name'] = item[2]
             product_top_id = item[3]
             product_bottom_id = item[4]
             cursor.execute(product_query, (product_top_id, ))
@@ -71,9 +72,8 @@ def delete_coordination(coor_id):
     cursor = service_conn.cursor()
     query = """DELETE FROM coordination WHERE coor_id = %s::int"""
     try:
-        for del_id in coor_id:
-            cursor.execute(query, (del_id,))
-            service_conn.commit()
+        cursor.execute(query, (coor_id,))
+        service_conn.commit()
     except:
         service_conn.rollback()
         raise
