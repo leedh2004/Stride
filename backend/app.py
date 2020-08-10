@@ -12,6 +12,8 @@ from backend.authentication.naver import naver
 from flask_cors import CORS
 
 app = Flask(__name__)
+app.url_map.strict_slashes = False
+
 CORS(app, resources={r'*': {'origins': '*'}})
 
 app.register_blueprint(dressroom, url_prefix='/dressroom')
