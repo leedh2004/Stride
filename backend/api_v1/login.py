@@ -3,10 +3,10 @@ import sys
 from flask import Blueprint, jsonify
 import json
 from bson import ObjectId, json_util
-
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
+from backend.db.queries.user import *
 from backend.authentication.auth import *
 
 
@@ -34,4 +34,5 @@ def user_login():
         return jsonify("Fail"), 403
     else:
         new_token = encode_jwt_token(user_id)
+        update_login_timestamp()
         return jsonify({"new_token": new_token}), 200

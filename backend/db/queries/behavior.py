@@ -7,7 +7,9 @@ def insert_like(product_id):
     query = """INSERT INTO likes(user_id, product_id) VALUES (%s, %s)"""
     sequence_query = """INSERT INTO dressroom(user_id, product_id) VALUES (%s, %s)"""
     try:
+        print(type(g.user_id), g.user_id, product_id)
         cursor.execute(query, (g.user_id, product_id))
+        service_conn.commit()
         cursor.execute(sequence_query, (g.user_id, product_id))
         service_conn.commit()
     except:

@@ -8,8 +8,9 @@ def delete_dressroom(product_id):
     cursor = service_conn.cursor()
     query = """DELETE FROM dressroom where user_id = %s::varchar and product_id = %s::int"""
     try:
-        cursor.execute(query, (g.user_id, product_id))
-        service_conn.commit()
+        for del_id in product_id:
+            cursor.execute(query, (g.user_id, del_id))
+            service_conn.commit()
     except:
         service_conn.rollback()
         pass
@@ -31,7 +32,8 @@ def get_dressroom():
             load['product_url'] = item[3]
             load['product_name'] = item[4]
             load['price'] = item[5]
-            load['thumbnail'] = item[6]
+            load['thumbnail_url'] = item[6]
+            load['type'] = item[8]
             product.append(load)
         cursor.close()
         print(product)

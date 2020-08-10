@@ -15,7 +15,7 @@ def login():
     code = str(request.args.get('code'))
     print(request.args)
     url = "https://kauth.kakao.com/oauth/token"
-    redirect_uri = "http://15.165.33.138:5000/kakao/oauth"
+    redirect_uri = "http://api-stride.com:5000/kakao/oauth"
     payload = "grant_type=authorization_code&client_id=" + str(KAKAO_KEY) + "&redirect_uri=" + str(redirect_uri) + "&code=" + str(code)
     headers = {
         'Content-Type': "application/x-www-form-urlencoded",
