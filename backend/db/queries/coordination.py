@@ -12,6 +12,7 @@ def insert_coordination(coor_name, top_product_id, bottom_product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -24,6 +25,7 @@ def update_coor_name(coor_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -74,5 +76,6 @@ def delete_coordination(coor_id):
             service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()

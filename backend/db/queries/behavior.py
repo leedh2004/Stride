@@ -14,6 +14,7 @@ def insert_like(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -26,6 +27,7 @@ def insert_dislikes(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -38,6 +40,7 @@ def insert_pass(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -50,6 +53,7 @@ def insert_purchases(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 

@@ -13,6 +13,7 @@ def delete_dressroom(product_id):
             service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
