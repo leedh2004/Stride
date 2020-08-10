@@ -100,7 +100,7 @@ def create_coord():
     return 'Success', 200
 
 
-@coordination.route('/', methods=['DELETE'])
+@coordination.route('/delete', methods=['POST'])
 @login_required
 def delete_coord():
     try:
@@ -110,5 +110,7 @@ def delete_coord():
     except:
         return jsonify("Fail"), 500
     return 'Success', 200
+
+
 
 

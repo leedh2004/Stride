@@ -130,7 +130,7 @@ def get_dress():
     return result, 200
 
 
-@dressroom.route('/', methods=['DELETE'])
+@dressroom.route('/delete', methods=['POST'])
 @login_required
 def delete_dress():
     try:
