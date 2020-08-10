@@ -27,8 +27,8 @@ def get_home_clothes():
         return json.dumps(product, default=json_util.default, ensure_ascii=False)
     except:
         pass
-    return
+    return 'none'
 
 
-def recommended_list():
-    return
+#def recommended_list():
+#    return

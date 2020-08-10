@@ -13,8 +13,7 @@ dressroom = Blueprint('dressroom', __name__)
 
 @dressroom.route('/mock/<user_id>', methods=['GET'])
 @login_required
-def get_dressroom():
-
+def get_mock_dressroom(user_id):
     # return dress product
     mock_response = [
         {
@@ -121,17 +120,23 @@ def get_dressroom():
     return json.dumps(mock_response, default=json_util.default, ensure_ascii=False)
 
 
-@dressroom.route('/', method=['GET'])
+@dressroom.route('/', methods=['GET'])
 @login_required
 def get_dress():
-    result = get_dressroom()
+    try:
+        result = get_dressroom()
+    except:
+        return jsonify("Fail"), 500
     return result, 200
 
 
-@dressroom.route('/', methods=['DELETE'])
+@dressroom.route('/delete', methods=['POST'])
 @login_required
 def delete_dress():
-    body = request.get_json()
-    product_id = body['product_id']
-    delete_dressroom(product_id)
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        delete_dressroom(product_id)
+    except:
+        return jsonify("Fail"), 500
     return jsonify("Success"), 200

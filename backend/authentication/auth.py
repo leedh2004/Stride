@@ -23,25 +23,28 @@ def decode_jwt_token(token):
 def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        headers = request.headers.get("Authorization")
-        access_token = headers.split(' ')[1]
+        try:
+            headers = request.headers.get("Authorization")
+            access_token = headers.split(' ')[1]
+        except:
+            return 'Unauthorized', 401
         if access_token is not None:
             try:
                 payload = decode_jwt_token(access_token)
             except jwt.InvalidTokenError:
                 payload = None
             if payload is None:
-                return '', 401
+                return 'Unauthorized', 401
             user_id = payload["user_id"]
             exp = payload["exp"]
             time = datetime.utcnow()
             exp = datetime.fromtimestamp(exp)
             compare = exp - time
             if int(compare.days) < 0:
-                return '', 401
+                return 'Unauthorized', 401
             g.user_id = user_id
             # g.user = get_user_info(user_id) if user_id else None
         else:
-            return '', 401
+            return 'Unauthorized', 401
         return f(*args, **kwargs)
     return decorated_function

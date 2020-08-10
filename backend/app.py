@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask, g, request
 import sys
 sys.path.append('../')
 sys.path.append('../../')
@@ -24,6 +24,7 @@ app.register_blueprint(naver, url_prefix='/naver')
 
 @app.route('/')
 def hello_world():
+    print(request.headers)
     return 'Hello World!'
 
 

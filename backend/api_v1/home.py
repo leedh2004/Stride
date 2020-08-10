@@ -16,33 +16,45 @@ home = Blueprint('home', __name__)
 @home.route('/', methods=['GET'])
 @login_required
 def get_clothes():
-    result = get_home_clothes()
+    try:
+        result = get_home_clothes()
+    except:
+        return jsonify("Fail"), 500
     return result, 200
 
 
-@home.route('/result/like', methods=['POST'])
+@home.route('/like', methods=['POST'])
 @login_required
 def like():
-    body = request.get_json()
-    product_id = body['product_id']
-    insert_like(product_id)
-    return 200
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_like(product_id)
+    except:
+        return jsonify("Fail"), 500
+    return 'Success', 200
 
 
-@home.route('/result/dislike', methods=['POST'])
+@home.route('/dislike', methods=['POST'])
 @login_required
-def like():
-    body = request.get_json()
-    product_id = body['product_id']
-    insert_dislikes(product_id)
-    return 200
+def dislike():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_dislikes(product_id)
+    except:
+        return jsonify("Fail"), 500
+    return 'Success', 200
 
 
-@home.route('/result/pass', methods=['POST'])
+@home.route('/pass', methods=['POST'])
 @login_required
-def like():
-    body = request.get_json()
-    product_id = body['product_id']
-    insert_pass(product_id)
-    return 200
+def passes():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_pass(product_id)
+    except:
+        return jsonify("Fail"), 500
+    return 'Success', 200
 

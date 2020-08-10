@@ -7,11 +7,14 @@ def insert_like(product_id):
     query = """INSERT INTO likes(user_id, product_id) VALUES (%s, %s)"""
     sequence_query = """INSERT INTO dressroom(user_id, product_id) VALUES (%s, %s)"""
     try:
+        print(type(g.user_id), g.user_id, product_id)
         cursor.execute(query, (g.user_id, product_id))
+        service_conn.commit()
         cursor.execute(sequence_query, (g.user_id, product_id))
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -24,6 +27,7 @@ def insert_dislikes(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -36,6 +40,7 @@ def insert_pass(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
@@ -48,6 +53,7 @@ def insert_purchases(product_id):
         service_conn.commit()
     except:
         service_conn.rollback()
+        raise
         pass
     cursor.close()
 
