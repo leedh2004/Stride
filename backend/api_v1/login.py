@@ -23,6 +23,7 @@ def user_login():
     except jwt.DecodeError:
         return jsonify("Decode Fail"), 404
     user_id = decoded_token['user_id']
+    print(user_id)
     result = select_user(user_id)
     if result is None:
         insert_user(user_id)
