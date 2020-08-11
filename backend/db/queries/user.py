@@ -83,6 +83,3 @@ def update_user_concept(user_id, concept):
     finally:
         cursor.close()
 
-
-def update_user_timestamp(user_id):
-    cu
