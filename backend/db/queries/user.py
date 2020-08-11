@@ -59,3 +59,18 @@ def select_user(user_id):
     except:
         pass
     cursor.close()
+
+
+def update_user_size(size):
+    cursor = service_conn.cursor()
+    query = """UPDATE users SET length = %s , waist = %s , hip = %s, thigh = %s, rise = %s, hem = %s, shoulder = %s, bust = %s, arm_length = %s where id = %s"""
+    try:
+        load = (size['length'], size['waist'], size['hip'], size['thigh'], size['rise'], size['hem'], size['shoulder'], size['bust'], size['arm_length'], g.user_id)
+        cursor.execute(query, load)
+        service_conn.commit()
+    except:
+        service_conn.rollback()
+        raise
+        pass
+    finally:
+        cursor.close()
