@@ -9,16 +9,14 @@ production:
      - apk upgrade
      - apk add bash
      - apk add openssh
+     - apk add openssh-client
      - mkdir -p ~/.ssh
-     - echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
-     - chmod 700 ~/.ssh
-     - chmod 600 ~/.ssh/id_rsa
      - eval "$(ssh-agent -s)"
-     - ssh-add ~/.ssh/id_rsa
-     - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
+     - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add -
+     - chmod 700 ~/.ssh
      - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
    script:
-     - ssh ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall && cd dodamshindam/backend && git checkout develop && git pull && pip3 install -r requirements.txt &&nohup python3 app.py &"
+     - ssh -o ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall && cd dodamshindam/backend && git checkout develop && git pull && pip3 install -r requirements.txt &&nohup python3 app.py &"
 
    environment:
      name: production
