@@ -16,10 +16,9 @@ production:
      - eval "$(ssh-agent -s)"
      - ssh-add ~/.ssh/id_rsa
      - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
-
      - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
    script:
-      - bash .gitlab-deploy-prod.sh
+     - ssh -i ~/.ssh/id_rsa ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall && cd dodamshindam/backend && git checkout develop && git pull && pip3 install -r requirements.txt &&nohup python3 app.py &"
 
    environment:
      name: production
