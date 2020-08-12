@@ -11,9 +11,11 @@ production:
      - apk add openssh
      - apk add openssh-client
      - eval "$(ssh-agent -s)"
-     - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add -> /dev/null
+     - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
      - mkdir -p ~/.ssh
      - chmod 700 ~/.ssh
+     - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+     - chmod 644 ~/.ssh/known_hosts
    script:
      - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall && cd dodamshindam/backend && git checkout develop && git pull && pip3 install -r requirements.txt &&nohup python3 app.py &"
 
