@@ -70,7 +70,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   @override
   Widget build(BuildContext context) {
     return BaseWidget<SwipeModel>(
-      model: SwipeModel(api: Provider.of(context)),
+      model:
+          SwipeModel(Provider.of(context), Provider.of(context, listen: false)),
       onModelReady: (model) {
         model.fetchItems();
       },
@@ -138,9 +139,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             if (frontCardAlign.x > 3.0) {
                               model.likeRequest();
-                              print(Provider.of<DressRoomService>(context,
-                                      listen: false).items[0];
-                                );
+                              //print(Provider.of<DressRoomService>(context,
+                              //                                   listen: false).items[0];
+                              //);
 
                               //Provider.of<List<Product>>(context, listen: false)
                               //    .add(model.items[model.curIdx]);

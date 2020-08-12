@@ -9,19 +9,8 @@ import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 
 class Api {
-  static const endpoint = 'http://api-stride.com:5000';
+  static const endpoint = 'https://www.api-stride.com';
   var client = new http.Client();
-  //
-  //    String token = await _storage.read(key: 'jwt_token');
-  // print("Bearer ${token}");
-  // final response = await _api.client.get(
-  //   '${Api.endpoint}/login/token',
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     "Accept": "application/json",
-  //     'Authorization': "Bearer ${token}",
-  //   },
-  // );
 
   Future<List<Product>> getCards() async {
     FlutterSecureStorage storage = FlutterSecureStorage();

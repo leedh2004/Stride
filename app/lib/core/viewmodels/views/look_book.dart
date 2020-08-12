@@ -18,9 +18,7 @@ class LookBookModel extends BaseModel {
     setBusy(false);
   }
 
-  void removeItem(int index) async {
-    print("$index remove");
-    items.removeAt(index);
+  void removeItem(int id) async {
     FlutterSecureStorage _storage = new FlutterSecureStorage();
     String token = await _storage.read(key: 'jwt_token');
     final response = await http.post('${Api.endpoint}/coordination/delete',
@@ -29,9 +27,11 @@ class LookBookModel extends BaseModel {
           "Accept": "application/json",
           'Authorization': "Bearer ${token}",
         },
-        body: jsonEncode({'coor_id': items[index].id}));
+        body: jsonEncode({'coor_id': id}));
+    if (response.statusCode == 200) {
+      items.removeWhere((element) => element.id == id);
+    }
     print(response.statusCode);
-
     notifyListeners();
   }
 

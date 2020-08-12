@@ -19,6 +19,7 @@ class AuthenticationService {
   Future logout() async {
     await _storage.delete(key: 'jwt_token');
     _userController.add(null); // 이게 맞나..?
+    //_userController.
   }
 
   Future login(String token) async {
@@ -44,7 +45,6 @@ class AuthenticationService {
       //여기서 고유 아이디 정보를 받아와야함.
       //뉴토큰으로 토큰 교체해줘야함.
       final responseJson = json.decode(response.body);
-      print("!!!!!!!!!!!!");
       print(responseJson['new_token']);
       await _storage.delete(key: 'jwt_token');
       await _storage.write(key: 'jwt_token', value: responseJson['new_token']);

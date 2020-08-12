@@ -5,7 +5,6 @@ import 'package:app/ui/widgets/swipe/card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-
 import '../base_widget.dart';
 
 class SwipeView extends StatefulWidget {
@@ -21,7 +20,8 @@ class _SwipeViewState extends State<SwipeView> {
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
       BaseWidget<SwipeModel>(
-          model: SwipeModel(api: Provider.of(context)),
+          model: SwipeModel(
+              Provider.of(context), Provider.of(context, listen: false)),
           onModelReady: (model) {
             model.fetchItems();
           },

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class LookBookDialog extends StatelessWidget {
@@ -21,10 +22,10 @@ class LookBookDialog extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   flex: 2,
-                  child: Image.network(
-                    item.top_thumbnail_url,
+                  child: CachedNetworkImage(
+                    imageUrl: item.top_thumbnail_url,
                     fit: BoxFit.fitWidth,
-                    headers: {
+                    httpHeaders: {
                       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                     },
                   ),
@@ -49,10 +50,10 @@ class LookBookDialog extends StatelessWidget {
               children: <Widget>[
                 Expanded(
                   flex: 2,
-                  child: Image.network(
-                    item.bottom_thumbnail_url,
+                  child: CachedNetworkImage(
+                    imageUrl: item.bottom_thumbnail_url,
                     fit: BoxFit.fitWidth,
-                    headers: {
+                    httpHeaders: {
                       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                     },
                   ),

@@ -3,6 +3,8 @@ import 'package:app/ui/views/swipe/view.dart';
 import 'package:app/ui/widgets/radius_container.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import '../../provider_setup.dart';
 import 'dressroom/view.dart';
 import 'lookbook/view.dart';
 import 'mypage/view.dart';

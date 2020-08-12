@@ -7,6 +7,7 @@ import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,8 @@ class DressRoomSelectDialog extends StatelessWidget {
             itemCount: top.length,
             options: CarouselOptions(height: 280.0),
             itemBuilder: (context, int itemIndex) {
-              top_idx = itemIndex;
-              print(top_idx);
-
+              top_idx = itemIndex - 1;
+              if (top_idx == -1) top_idx = top.length - 1;
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -53,10 +53,10 @@ class DressRoomSelectDialog extends StatelessWidget {
                         children: <Widget>[
                           AspectRatio(
                               aspectRatio: 12 / 8,
-                              child: Image.network(
-                                top[itemIndex].thumbnail_url,
+                              child: CachedNetworkImage(
+                                imageUrl: top[itemIndex].thumbnail_url,
                                 fit: BoxFit.cover,
-                                headers: {
+                                httpHeaders: {
                                   HttpHeaders.refererHeader:
                                       "http://api-stride.com:5000/"
                                 },
@@ -97,8 +97,9 @@ class DressRoomSelectDialog extends StatelessWidget {
             options: CarouselOptions(height: 280.0),
             itemCount: bottom.length,
             itemBuilder: (context, int itemIndex) {
-              bottom_idx = itemIndex;
-              print(bottom_idx);
+              bottom_idx = itemIndex - 1;
+              if (bottom_idx == -1) bottom_idx = bottom.length - 1;
+
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -115,10 +116,10 @@ class DressRoomSelectDialog extends StatelessWidget {
                         children: <Widget>[
                           AspectRatio(
                               aspectRatio: 12 / 8,
-                              child: Image.network(
-                                bottom[itemIndex].thumbnail_url,
+                              child: CachedNetworkImage(
+                                imageUrl: bottom[itemIndex].thumbnail_url,
                                 fit: BoxFit.cover,
-                                headers: {
+                                httpHeaders: {
                                   HttpHeaders.refererHeader:
                                       "http://api-stride.com:5000/"
                                 },
@@ -182,8 +183,10 @@ class DressRoomSelectDialog extends StatelessWidget {
                     'name': '나만의 룩'
                   }));
               print(response.statusCode);
-              print(top[top_idx].product_id);
-              print(bottom[bottom_idx].product_id);
+              print(top_idx);
+              print(bottom_idx);
+              print(top[top_idx].product_name);
+              print(bottom[bottom_idx].product_name);
             },
             child: Text('Save', style: whiteStyle),
           )

@@ -1,28 +1,29 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/models/product.dart';
-import 'package:app/core/services/authentication_service.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:rxdart/subjects.dart';
 import 'api.dart';
 import 'package:http/http.dart' as http;
 
 class DressRoomService {
-  StreamController<List<Product>> _itemsController =
-      StreamController<List<Product>>();
-  Stream<List<Product>> get items => _itemsController.stream;
-  //List<Product> items;
+  // StreamController<List<Product>> _itemsController =
+  //     StreamController<List<Product>>.broadcast();
+  // List<Product> items;
   // AuthenticationService _authenticationService;
+  BehaviorSubject<List<Product>> _itemsController = BehaviorSubject();
+  Stream<List<Product>> get items => _itemsController.stream;
   Api _api;
   var client = new http.Client();
-
   DressRoomService(Api api) {
-    print("드레스룸생성!!!!!!");
+    print("드레스룸서비스생성!!!!!!");
     _api = api;
     getDressRoom();
   }
-
-  void addItem(List<Product> item) {
-    _itemsController.add(item);
+  void addItem(Product item) async {
+    //List<Product> temp = items.
+    List<Product> last = _itemsController.value;
+    _itemsController.add([...last, item]);
   }
 
   Future<List<Product>> getDressRoom() async {

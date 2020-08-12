@@ -2,13 +2,18 @@ import 'dart:convert';
 
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/api.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SwipeModel extends BaseModel {
   Api _api;
-  SwipeModel({@required Api api}) : _api = api;
+  DressRoomService _dressRoomService;
+  SwipeModel(Api api, DressRoomService dressRoomService) {
+    _api = api;
+    _dressRoomService = dressRoomService;
+  }
   List<Product> items;
   int curIdx = 0;
 
@@ -24,7 +29,7 @@ class SwipeModel extends BaseModel {
     setBusy(false);
   }
 
-  void likeRequest() async {
+  Future likeRequest() async {
     FlutterSecureStorage _storage = new FlutterSecureStorage();
     String token = await _storage.read(key: 'jwt_token');
     final response = await _api.client.post('${Api.endpoint}/home/like',
@@ -35,6 +40,11 @@ class SwipeModel extends BaseModel {
         },
         body: jsonEncode({'product_id': items[curIdx].product_id}));
     print(response.statusCode);
+    // _dressRoomService.items.add(items[curIdx]);
+    print(items[curIdx].product_name);
+    print("!!!");
+    await _dressRoomService.addItem(items[curIdx]);
+    print("???");
     nextItem();
   }
 

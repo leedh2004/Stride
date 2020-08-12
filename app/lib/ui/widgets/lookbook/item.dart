@@ -7,6 +7,7 @@ import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/lookbook/dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -40,10 +41,10 @@ class LookBookItem extends StatelessWidget {
                   Expanded(
                       child: Container(
                     height: 200,
-                    child: Image.network(
-                      item.top_thumbnail_url,
+                    child: CachedNetworkImage(
+                      imageUrl: item.top_thumbnail_url,
                       fit: BoxFit.cover,
-                      headers: {
+                      httpHeaders: {
                         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                       },
                     ),
@@ -60,10 +61,10 @@ class LookBookItem extends StatelessWidget {
                   Expanded(
                       child: Container(
                     height: 200,
-                    child: Image.network(
-                      item.bottom_thumbnail_url,
+                    child: CachedNetworkImage(
+                      imageUrl: item.bottom_thumbnail_url,
                       fit: BoxFit.cover,
-                      headers: {
+                      httpHeaders: {
                         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                       },
                     ),
@@ -131,6 +132,7 @@ class LookBookItem extends StatelessWidget {
                             btnCancelColor: pinkColor,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () async {
+                              print(index);
                               Provider.of<LookBookModel>(context, listen: false)
                                   .rename(index, _textController.text);
                             })
@@ -159,8 +161,10 @@ class LookBookItem extends StatelessWidget {
                             btnCancelColor: pinkColor,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
+                              print('wtf');
+                              print(index);
                               Provider.of<LookBookModel>(context, listen: false)
-                                  .removeItem(index);
+                                  .removeItem(item.id);
                             })
                           ..show();
                       },

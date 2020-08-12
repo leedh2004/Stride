@@ -6,6 +6,7 @@ import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -33,13 +34,12 @@ class DressRoomItemWidget extends StatelessWidget {
           children: <Widget>[
             AspectRatio(
               aspectRatio: 18 / 17,
-              child: Image.network(
-                item.thumbnail_url,
-                fit: BoxFit.cover,
-                headers: {
-                  HttpHeaders.refererHeader: "http://api-stride.com:5000/"
-                },
-              ),
+              child: CachedNetworkImage(
+                  imageUrl: item.thumbnail_url,
+                  fit: BoxFit.cover,
+                  httpHeaders: {
+                    HttpHeaders.refererHeader: "http://api-stride.com:5000/"
+                  }),
             ),
             // child: FancyShimmerImage(
             //   imageUrl: item.thumbnail_url,

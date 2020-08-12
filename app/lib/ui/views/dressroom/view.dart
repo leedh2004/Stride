@@ -40,7 +40,7 @@ class DressRoomView extends StatelessWidget {
                       padding: EdgeInsets.all(16),
                       itemBuilder: (context, index) {
                         print(index);
-                        print(items[index].product_id);
+                        //print(items[index].product_id);
                         return DressRoomItemWidget(items[index],
                             model.items[index].selected.toDouble(), index);
                       },
