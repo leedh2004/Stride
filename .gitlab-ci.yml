@@ -10,10 +10,12 @@ production:
      - apk add bash
      - apk add openssh
      - mkdir -p ~/.ssh
-     - chmod 700 ~/.ssh
      - echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
+     - chmod 700 ~/.ssh
+     - eval "$(ssh-agent -s)"
+     - ssh-add ~/.ssh/id_rsa
+     - ssh-keyscan -H 'gitlab.com' >> ~/.ssh/known_hosts
      - chmod 600 ~/.ssh/id_rsa
-     - cat ~/.ssh/id_rsa
      - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
    script:
       - bash .gitlab-deploy-prod.sh
