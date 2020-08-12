@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:frontend/core/models/product.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
@@ -14,24 +15,20 @@ class DressRoomSelectDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 600,
-      height: 600,
+      height: 650,
       child: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           CarouselSlider(
-            options: CarouselOptions(height: 250.0),
+            options: CarouselOptions(height: 280.0),
             items: top.map((item) {
               return Builder(
                 builder: (BuildContext context) {
                   return Container(
                       width: MediaQuery.of(context).size.width,
                       margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      //decoration: BoxDecoration(color: Colors.amber),
-                      child:
-                          //Image.network(item.thumbnail_url)
-                          Card(
+                      child: Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                             side:
@@ -48,32 +45,30 @@ class DressRoomSelectDialog extends StatelessWidget {
                                     item.thumbnail_url,
                                     fit: BoxFit.cover,
                                   )),
-                              Expanded(
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 5),
-                                  child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Text(
-                                                item.product_name,
-                                                style: subHeaderStyle,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                              Text('Price ${item.price}')
-                                            ],
-                                          ),
+                              Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              item.product_name,
+                                              style: subHeaderStyle,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                            Text('Price ${item.price}')
+                                          ],
                                         ),
-                                        UIHelper.horizontalSpaceMediumLarge
-                                      ]),
-                                ),
+                                      ),
+                                      UIHelper.horizontalSpaceMediumLarge
+                                    ]),
                               )
                             ],
                           ),
@@ -85,7 +80,7 @@ class DressRoomSelectDialog extends StatelessWidget {
           ),
           UIHelper.verticalSpaceMedium,
           CarouselSlider(
-            options: CarouselOptions(height: 250.0),
+            options: CarouselOptions(height: 280.0),
             items: bottom.map((item) {
               return Builder(
                 builder: (BuildContext context) {
@@ -105,11 +100,21 @@ class DressRoomSelectDialog extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               AspectRatio(
-                                  aspectRatio: 12 / 8,
-                                  child: Image.network(
-                                    item.thumbnail_url,
-                                    fit: BoxFit.cover,
-                                  )),
+                                aspectRatio: 12 / 8,
+                                child: FancyShimmerImage(
+                                  imageUrl: item.thumbnail_url,
+                                  boxFit: BoxFit.cover,
+                                  errorWidget: Icon(Icons.error),
+                                  shimmerBaseColor: backgroundTransparentColor,
+                                  shimmerHighlightColor: backgroundColor,
+                                  shimmerBackColor: backgroundColor,
+                                  // placeholder: (context, url) => LoadingWidget(),
+                                ),
+                                // Image.network(
+                                //   item.thumbnail_url,
+                                //   fit: BoxFit.cover,
+                                // )
+                              ),
                               Expanded(
                                 child: Padding(
                                   padding: EdgeInsets.only(left: 5),

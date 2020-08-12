@@ -9,7 +9,6 @@ import 'core/constants/app_constants.dart';
 void main() {
   // KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
   // KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
-
   runApp(MyApp());
 }
 

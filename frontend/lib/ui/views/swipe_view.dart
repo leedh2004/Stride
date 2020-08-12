@@ -6,6 +6,7 @@ import 'package:frontend/core/viewmodels/widgets/swipe_model.dart';
 import 'package:frontend/ui/shared/app_colors.dart';
 import 'package:frontend/ui/shared/text_styles.dart';
 import 'package:frontend/ui/shared/ui_helper.dart';
+import 'package:frontend/ui/views/login_view.dart';
 import 'package:frontend/ui/widgets/swipe_card.dart';
 import 'package:provider/provider.dart';
 
