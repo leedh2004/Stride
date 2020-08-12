@@ -16,7 +16,7 @@ def insert_user(user_id):
 
 def insert_user_birth(year):
     cursor = service_conn.cursor()
-    query = """UPDATE users SET birth_year = (%s) WHERE user_id = %s"""
+    query = """UPDATE users SET birth_year = %s WHERE user_id = %s"""
     try:
         year = str(year) + '0101'
         cursor.execute(query, (year, g.user_id))
