@@ -9,12 +9,13 @@ production:
 
   before_script:
     - mkdir -p ~/.ssh
-    - echo -e "$PRIVATE_KEY" > ~/.ssh/id_rsa
+    - echo -e “$PRIVATE_KEY” > ~/.ssh/id_rsa
+    # Sets the permission to 600 to prevent a problem with AWS
+    # that it’s too unprotected.
     - chmod 600 ~/.ssh/id_rsa
-    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-
+    - ‘[[ -f /.dockerenv ]] && echo -e “Host *\n\tStrictHostKeyChecking no\n\n” > ~/.ssh/config’
   script:
-    - bash .gitlab-deploy-prod.sh
+    - bash ./.gitlab-deploy-prod.sh
 
   environment:
     name: production
