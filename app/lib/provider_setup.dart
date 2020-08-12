@@ -1,5 +1,7 @@
+import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'core/models/product.dart';
@@ -48,7 +50,10 @@ List<SingleChildWidget> dependentServices = [
   ),
   ProxyProvider<Api, DressRoomService>(
     update: (context, api, dressRoomService) => DressRoomService(api),
-  )
+  ),
+  ProxyProvider<Api, LookBookService>(
+    update: (context, api, dressRoomService) => LookBookService(api),
+  ),
 ];
 
 List<SingleChildWidget> independentServices = [
@@ -63,5 +68,9 @@ List<SingleChildWidget> uiConsumableProviders = [
   StreamProvider<List<Product>>(
     create: (context) =>
         Provider.of<DressRoomService>(context, listen: false).items,
+  ),
+  StreamProvider<List<Coordinate>>(
+    create: (context) =>
+        Provider.of<LookBookService>(context, listen: false).items,
   )
 ];

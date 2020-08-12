@@ -23,7 +23,7 @@ class LookBookDialog extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: CachedNetworkImage(
-                    imageUrl: item.top_thumbnail_url,
+                    imageUrl: item.top.thumbnail_url,
                     fit: BoxFit.fitWidth,
                     httpHeaders: {
                       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
@@ -35,11 +35,11 @@ class LookBookDialog extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        item.top_product_name,
+                        item.top.product_name,
                         style: subHeaderStyle,
                         textAlign: TextAlign.center,
                       ),
-                      Text(item.top_price.toString()),
+                      Text(item.top.price.toString()),
                     ],
                   ),
                 )
@@ -51,7 +51,7 @@ class LookBookDialog extends StatelessWidget {
                 Expanded(
                   flex: 2,
                   child: CachedNetworkImage(
-                    imageUrl: item.bottom_thumbnail_url,
+                    imageUrl: item.bottom.thumbnail_url,
                     fit: BoxFit.fitWidth,
                     httpHeaders: {
                       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
@@ -63,11 +63,11 @@ class LookBookDialog extends StatelessWidget {
                   child: Column(
                     children: <Widget>[
                       Text(
-                        item.bottom_product_name,
+                        item.bottom.product_name,
                         style: subHeaderStyle,
                         textAlign: TextAlign.center,
                       ),
-                      Text(item.bottom_price.toString()),
+                      Text(item.bottom.price.toString()),
                     ],
                   ),
                 )

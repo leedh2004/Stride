@@ -2,26 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/core/models/product.dart';
-import 'package:app/core/services/api.dart';
-import 'package:app/core/viewmodels/views/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class DressRoomSelectDialog extends StatelessWidget {
   final List<Product> top;
   final List<Product> bottom;
   int top_idx = 0;
   int bottom_idx = 0;
-  // CarouselController topController = CarouselController();
-  // CarouselController bottomController = CarouselController();
   DressRoomSelectDialog(this.top, this.bottom);
 
   @override
@@ -36,6 +30,7 @@ class DressRoomSelectDialog extends StatelessWidget {
             itemCount: top.length,
             options: CarouselOptions(height: 280.0),
             itemBuilder: (context, int itemIndex) {
+              if (top.length == 0) return Container();
               top_idx = itemIndex - 1;
               if (top_idx == -1) top_idx = top.length - 1;
               return Container(
@@ -98,6 +93,7 @@ class DressRoomSelectDialog extends StatelessWidget {
             itemCount: bottom.length,
             itemBuilder: (context, int itemIndex) {
               bottom_idx = itemIndex - 1;
+              if (bottom.length == 0) return Container();
               if (bottom_idx == -1) bottom_idx = bottom.length - 1;
 
               return Container(
@@ -167,24 +163,8 @@ class DressRoomSelectDialog extends StatelessWidget {
             padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
             color: backgroundColor,
             onPressed: () async {
-              // Provider.of<DressRoomModel>(context, listen: false)
-              //     .makeCoordinate(top_idx, bottom_idx);
-              FlutterSecureStorage _storage = new FlutterSecureStorage();
-              String token = await _storage.read(key: 'jwt_token');
-              final response = await http.post('${Api.endpoint}/coordination/',
-                  headers: {
-                    "Content-Type": "application/json",
-                    "Accept": "application/json",
-                    'Authorization': "Bearer ${token}",
-                  },
-                  body: jsonEncode({
-                    'top_product_id': top[top_idx].product_id,
-                    'bottom_product_id': bottom[bottom_idx].product_id,
-                    'name': '나만의 룩'
-                  }));
-              print(response.statusCode);
-              print(top_idx);
-              print(bottom_idx);
+              Provider.of<LookBookService>(context, listen: false)
+                  .addItem(top[top_idx], bottom[bottom_idx]);
               print(top[top_idx].product_name);
               print(bottom[bottom_idx].product_name);
             },

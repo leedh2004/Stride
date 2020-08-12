@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/viewmodels/views/look_book.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -8,12 +7,9 @@ import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/lookbook/dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 
 class LookBookItem extends StatelessWidget {
   final Coordinate item;
@@ -42,7 +38,7 @@ class LookBookItem extends StatelessWidget {
                       child: Container(
                     height: 200,
                     child: CachedNetworkImage(
-                      imageUrl: item.top_thumbnail_url,
+                      imageUrl: item.top.thumbnail_url,
                       fit: BoxFit.cover,
                       httpHeaders: {
                         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
@@ -62,21 +58,12 @@ class LookBookItem extends StatelessWidget {
                       child: Container(
                     height: 200,
                     child: CachedNetworkImage(
-                      imageUrl: item.bottom_thumbnail_url,
+                      imageUrl: item.bottom.thumbnail_url,
                       fit: BoxFit.cover,
                       httpHeaders: {
                         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                       },
                     ),
-                    // child: FancyShimmerImage(
-                    //   imageUrl: item.bottom_thumbnail_url,
-                    //   boxFit: BoxFit.cover,
-                    //   errorWidget: Icon(Icons.error),
-                    //   shimmerBaseColor: backgroundTransparentColor,
-                    //   shimmerHighlightColor: backgroundColor,
-                    //   shimmerBackColor: backgroundColor,
-                    //   // placeholder: (context, url) => LoadingWidget(),
-                    // )),
                   )),
                 ],
               ),
