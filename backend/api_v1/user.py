@@ -25,6 +25,7 @@ def insert_user_size():
 
 
 @user.route('/birth', methods=['POST'])
+@login_required
 def insert_user_birth_year():
     body = request.get_json()
     year = body['birth']
