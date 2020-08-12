@@ -94,10 +94,10 @@ def create_coord():
         top_product_id = body['top_product_id']
         bottom_product_id = body['bottom_product_id']
         default_look_name = body['name']
-        insert_coordination(default_look_name, top_product_id, bottom_product_id)
+        coor_id = insert_coordination(default_look_name, top_product_id, bottom_product_id)
     except:
         return jsonify("Fail"), 500
-    return 'Success', 200
+    return coor_id, 200
 
 
 @coordination.route('/delete', methods=['POST'])
