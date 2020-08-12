@@ -8,12 +8,17 @@ production:
     - develop
 
   before_script:
+    - apk update
+    - apk upgrade
+    - apk add bash
+    - apk add openssh
+    - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
     - mkdir -p ~/.ssh
-    - echo -e “$PRIVATE_KEY” > ~/.ssh/id_rsa
-    # Sets the permission to 600 to prevent a problem with AWS
-    # that it’s too unprotected.
-    - chmod 600 ~/.ssh/id_rsa
-    - ‘[[ -f /.dockerenv ]] && echo -e “Host *\n\tStrictHostKeyChecking no\n\n” > ~/.ssh/config’
+    - echo -e "$PRIVATE_KEY" > ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan gitlab.com >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
+    - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
   script:
     - bash ./.gitlab-deploy-prod.sh
 
