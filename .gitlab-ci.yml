@@ -16,7 +16,7 @@ production:
      - mkdir -p ~/.ssh
      - chmod 700 ~/.ssh
    script:
-     - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "pkill -9 -ef python3\ \app.py; sudo su; cd dodamshindam; git checkout develop; git pull; cd backend; nohup python3 app.py &; exit;exit;"
+     - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "sudo su; pkill python3; cd dodamshindam; git checkout develop; git pull; cd backend; nohup python3 app.py &; exit; exit"
 
    environment:
      name: production
