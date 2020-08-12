@@ -1,16 +1,58 @@
-# app
+# Stride
+Flutter App, Note what I have to do.
 
-A new Flutter project.
+## TO-DO
 
-## Getting Started
+#### LoginPage
+- [x] 카카오 로그인 기능
+- [x] 서버에 요청 전송
+- [ ] 애플 로그인 기능
 
-This project is a starting point for a Flutter application.
+#### Mypage
+- [ ] 들어갈 메뉴 생각하기 // 사이즈 수정, 로그아웃, 고객센터, 앱 리뷰쓰기
+- [ ] List View로 UI 생성
+- [ ] 본인 나이 입력받기
+- [ ] 본인 사이즈 입력받기
 
-A few resources to get you started if this is your first Flutter project:
+#### Swipe View
+- [x] 스와이프 UI 및 애니메이션 구현
+- [x] 데이터 부족 시 Request 전송 후, 데이터 채워 넣기
+- [x] 스와이프 결과 API Request 전송
+- [ ] 선물 버튼 클릭 시 구매 페이지로 이동
+- [ ] O, X 버튼 클릭 시 애니메이션 생성
+- [ ] 좋아요 하면 SnackBar Push 
+- [ ] Long Press시 사이즈 보여주기
+- [ ] 이미지 클릭 시 다른 이미지 보여주기 (Image.copycrop)
+- [ ] 토글버튼 클릭 시, 데이터 갱신
+- [ ] 카테고리 별로 받기
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+#### Dress Room
+- [x] 드레스룸 UI 구현
+- [x] Make Button 기능
+- [x] 삭제 기능
+- [x] Request 전송
+- [ ] 드레스룸 나갔다 들어오면 선택된 것 풀어주기
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+#### Look Book
+- [x] 룩북 UI 구현
+- [x] 룩북 이름 수정 기능
+- [x] 룩북 삭제 기능
+
+#### 튜토리얼 페이지
+- [ ] 어떤 식으로 튜토리얼 할 지 생각하기
+- [ ] 본인 나이 입력받기
+- [ ] 본인 사이즈 입력받기
+
+#### 그 외
+- [ ] Loading시 gif가 필요함, 우선은 라이브러리 사용 (pub.dev)
+- [ ] 구매할때 API 날리기
+- [ ] 구매, 좋아요, 싫어요, 메뉴전환 Analytics 붙이기
+- [ ] 쇼핑몰 이름바꾸기
+- [ ] 줄 자 버튼 달기
+- [ ] Crashlytics 붙이기
+- [ ] 푸쉬알림
+- [ ] 이미지메이커 만들기
+- [ ] 이미지 클릭시 이미지 변경
+- [ ] 마이페이지 가짜로라도 만들기
+- [ ] 토글과 버튼의 위치 바꾸기 // 이한솔 멘토와 이야기해보기
+- [ ] 유저햅틱 // 이한솔 멘토와 이야기해보기
