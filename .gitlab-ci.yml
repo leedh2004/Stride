@@ -4,9 +4,6 @@ stages:
 production:
   stage: deploy_aws
 
-  only:
-    - develop
-
   before_script:
     - apk update
     - apk upgrade
