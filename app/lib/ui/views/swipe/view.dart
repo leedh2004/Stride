@@ -1,6 +1,11 @@
+import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/api.dart';
+import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,21 +18,29 @@ class SwipeView extends StatefulWidget {
 }
 
 class _SwipeViewState extends State<SwipeView> {
-  TabController tabController;
+  //TabController tabController;
   bool enabled = true;
 
   @override
   Widget build(BuildContext context) {
     return Column(children: <Widget>[
-      BaseWidget<SwipeModel>(
-          model: SwipeModel(
-              Provider.of(context), Provider.of(context, listen: false)),
-          onModelReady: (model) {
-            model.fetchItems();
-          },
-          builder: (context, model, child) {
-            return SwipeCardSection(context);
-          }),
+      Consumer<List<SwipeCard>>(
+        builder: (context, items, child) {
+          if (items == null || items.length < 2) {
+            return LoadingWidget();
+          } else {
+            return BaseWidget<SwipeModel>(
+                model: SwipeModel(
+                    Provider.of<Api>(context),
+                    Provider.of<DressRoomService>(context),
+                    Provider.of<SwipeService>(context),
+                    items),
+                builder: (context, model, child) {
+                  return SwipeCardSection(context, model);
+                });
+          }
+        },
+      ),
       Transform.scale(
         scale: 1.5,
         child: Switch(

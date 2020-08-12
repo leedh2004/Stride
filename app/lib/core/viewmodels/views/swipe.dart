@@ -1,77 +1,62 @@
 import 'dart:convert';
-
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/api.dart';
 import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/base_model.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class SwipeModel extends BaseModel {
   Api _api;
   DressRoomService _dressRoomService;
-  SwipeModel(Api api, DressRoomService dressRoomService) {
+  SwipeService _swipeService;
+  List<SwipeCard> items;
+  int curIdx;
+
+  SwipeModel(Api api, DressRoomService dressRoomService,
+      SwipeService swipeService, List<SwipeCard> serviceItems) {
     _api = api;
     _dressRoomService = dressRoomService;
-  }
-  List<Product> items;
-  int curIdx = 0;
-
-  Future fetchItems() async {
-    setBusy(true);
-    items = await _api.getCards();
-    setBusy(false);
+    _swipeService = swipeService;
+    items = serviceItems;
+    curIdx = swipeService.curIdx;
+    print("SwipeModel 생성!");
   }
 
-  void nextItem() {
+  void nextItem() async {
     setBusy(true);
     curIdx++;
+    _swipeService.curIdx++;
+    if (curIdx + 5 == _swipeService.length) {
+      List<SwipeCard> temp = await _swipeService.getSwipeCards();
+      items = [...items, ...temp];
+      print(items.length);
+    }
     setBusy(false);
   }
 
   Future likeRequest() async {
-    FlutterSecureStorage _storage = new FlutterSecureStorage();
-    String token = await _storage.read(key: 'jwt_token');
+    print("LIKE please!!");
     final response = await _api.client.post('${Api.endpoint}/home/like',
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   "Accept": "application/json",
-        //   'Authorization': "Bearer ${token}",
-        // },
         data: jsonEncode({'product_id': items[curIdx].product_id}));
-    print(response.statusCode);
-    // _dressRoomService.items.add(items[curIdx]);
-    print(items[curIdx].product_name);
-    print("!!!");
-    await _dressRoomService.addItem(items[curIdx]);
-    print("???");
-    nextItem();
+    print("Like ${response.statusCode}");
+    Product item = Product.fromJson(items[curIdx].toJson());
+    print(item.product_name);
+    await _dressRoomService.addItem(item);
+    //nextItem();
   }
 
   void dislikeRequest() async {
-    FlutterSecureStorage _storage = new FlutterSecureStorage();
-    String token = await _storage.read(key: 'jwt_token');
     final response = await _api.client.post('${Api.endpoint}/home/dislike',
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   "Accept": "application/json",
-        //   'Authorization': "Bearer ${token}",
-        // },
         data: jsonEncode({'product_id': items[curIdx].product_id}));
-    print(response.statusCode);
-    nextItem();
+    print("Dislike ${response.statusCode}");
+    //nextItem();
   }
 
   void passRequest() async {
-    FlutterSecureStorage _storage = new FlutterSecureStorage();
-    String token = await _storage.read(key: 'jwt_token');
     final response = await _api.client.post('${Api.endpoint}/home/pass',
-        // headers: {
-        //   "Content-Type": "application/json",
-        //   "Accept": "application/json",
-        //   'Authorization': "Bearer ${token}",
-        // },
         data: jsonEncode({'product_id': items[curIdx].product_id}));
-    print(response.statusCode);
-    nextItem();
+    print("Pass ${response.statusCode}");
+    //nextItem();
   }
 }

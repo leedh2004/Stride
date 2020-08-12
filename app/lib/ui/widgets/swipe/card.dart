@@ -1,18 +1,11 @@
 import 'dart:math';
-
-import 'package:app/core/models/product.dart';
-import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
-import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-import '../loading.dart';
 
 List<Alignment> cardsAlign = [
   Alignment(0.0, 0.0),
@@ -22,8 +15,10 @@ List<Alignment> cardsAlign = [
 List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
-  int _curIdx = 0;
-  SwipeCardSection(BuildContext context) {
+  SwipeModel model;
+
+  SwipeCardSection(BuildContext context, SwipeModel _model) {
+    model = _model;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
         MediaQuery.of(context).size.height * 0.65);
     cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
@@ -38,7 +33,6 @@ class SwipeCardSection extends StatefulWidget {
 
 class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
-  List<Product> items;
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
 
@@ -56,7 +50,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     // for (cardsCounter = 0; cardsCounter < 3; cardsCounter++) {
     //   cards.add(SwipeCardAlignment(cardsCounter));
     // }
-
     frontCardAlign = cardsAlign[2];
     // Init the animation controller
     _controller =
@@ -69,113 +62,85 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   @override
   Widget build(BuildContext context) {
-    return BaseWidget<SwipeModel>(
-      model:
-          SwipeModel(Provider.of(context), Provider.of(context, listen: false)),
-      onModelReady: (model) {
-        model.fetchItems();
-      },
-      builder: (context, model, child) {
-        return model.busy
-            ? LoadingWidget()
-            : Expanded(
-                child: Stack(
-                children: <Widget>[
-                  backCard(context),
-                  middleCard(context),
-                  frontCard(context),
-                  nopeTextWidget(),
-                  passTextWidget(),
-                  likeTextWidget(),
-                  _controller.status != AnimationStatus.forward
-                      ? SizedBox.expand(
-                          child: GestureDetector(
-                          // While dragging the first card
-                          // onHorizontalDragStart: (details) => {},
-                          onPanUpdate: (DragUpdateDetails details) {
-                            // Add what the user swiped in the last frame to the alignment of the card
-                            double pass = 0.0;
-                            double like = 0.0;
-                            double nope = 0.0;
-                            details.globalPosition.dy;
-                            if (frontCardAlign.x > 2.5) {
-                              //LIKE
-                              like = frontCardAlign.x / 6;
-                              if (like >= 1) like = 1.0;
-                            } else if (frontCardAlign.x < -2.5) {
-                              nope = -frontCardAlign.x / 6;
-                              if (nope >= 1) nope = 1.0;
-                            } else if (frontCardAlign.y < -2) {
-                              // PASS
-                              pass = -(frontCardAlign.y / 12);
-                              if (pass >= 1) pass = 1.0;
-                            }
-                            setState(() {
-                              opacityLike = like;
-                              opacityNope = nope;
-                              opacityPass = pass;
-                              print(details.delta.dx);
-                              print(details.delta.dy);
-                              frontCardAlign = Alignment(
-                                  frontCardAlign.x +
-                                      15 *
-                                          details.delta.dx /
-                                          MediaQuery.of(context).size.width,
-                                  frontCardAlign.y +
-                                      40 *
-                                          details.delta.dy /
-                                          MediaQuery.of(context).size.height);
-                              frontCardRot =
-                                  frontCardAlign.x; // * rotation speed;
-                            });
-                          },
-                          // When releasing the first card
-                          onPanEnd: (_) {
-                            // If the front card was swiped far enough to count as swiped
-                            setState(() {
-                              opacityPass = 0.0;
-                              opacityLike = 0.0;
-                              opacityNope = 0.0;
-                            });
-                            if (frontCardAlign.x > 3.0) {
-                              model.likeRequest();
-                              //print(Provider.of<DressRoomService>(context,
-                              //                                   listen: false).items[0];
-                              //);
-
-                              //Provider.of<List<Product>>(context, listen: false)
-                              //    .add(model.items[model.curIdx]);
-                              // Provider.of<DressRoomService>(context,
-                              //         listen: false)
-                              //     .addItem([
-                              //   ...Provider.of<List<Product>>(context,
-                              //       listen: false),
-                              //   model.items[model.curIdx]
-                              // ]);
-                              print("like");
-                              animateCards();
-                            } else if (frontCardAlign.x < -3.0) {
-                              model.dislikeRequest();
-                              print("dislike");
-                              animateCards();
-                            } else if (frontCardAlign.y < -3.0) {
-                              model.passRequest();
-                              print("pass");
-                              animateCards();
-                            } else {
-                              // Return to the initial rotation and alignment
-                              setState(() {
-                                frontCardAlign = defaultFrontCardAlign;
-                                frontCardRot = 0.0;
-                              });
-                            }
-                          },
-                        ))
-                      : Container(),
-                ],
-              ));
-      },
-    );
+    return Expanded(
+        child: Stack(
+      children: <Widget>[
+        backCard(context),
+        middleCard(context),
+        frontCard(context),
+        nopeTextWidget(),
+        passTextWidget(),
+        likeTextWidget(),
+        _controller.status != AnimationStatus.forward
+            ? SizedBox.expand(
+                child: GestureDetector(
+                // While dragging the first card
+                // onHorizontalDragStart: (details) => {},
+                onPanUpdate: (DragUpdateDetails details) {
+                  // Add what the user swiped in the last frame to the alignment of the card
+                  double pass = 0.0;
+                  double like = 0.0;
+                  double nope = 0.0;
+                  details.globalPosition.dy;
+                  if (frontCardAlign.x > 2.5) {
+                    //LIKE
+                    like = frontCardAlign.x / 6;
+                    if (like >= 1) like = 1.0;
+                  } else if (frontCardAlign.x < -2.5) {
+                    nope = -frontCardAlign.x / 6;
+                    if (nope >= 1) nope = 1.0;
+                  } else if (frontCardAlign.y < -2) {
+                    // PASS
+                    pass = -(frontCardAlign.y / 12);
+                    if (pass >= 1) pass = 1.0;
+                  }
+                  setState(() {
+                    opacityLike = like;
+                    opacityNope = nope;
+                    opacityPass = pass;
+                    print(details.delta.dx);
+                    print(details.delta.dy);
+                    frontCardAlign = Alignment(
+                        frontCardAlign.x +
+                            15 *
+                                details.delta.dx /
+                                MediaQuery.of(context).size.width,
+                        frontCardAlign.y +
+                            40 *
+                                details.delta.dy /
+                                MediaQuery.of(context).size.height);
+                    frontCardRot = frontCardAlign.x; // * rotation speed;
+                  });
+                },
+                // When releasing the first card
+                onPanEnd: (_) {
+                  // If the front card was swiped far enough to count as swiped
+                  setState(() {
+                    opacityPass = 0.0;
+                    opacityLike = 0.0;
+                    opacityNope = 0.0;
+                  });
+                  if (frontCardAlign.x > 3.0) {
+                    widget.model.likeRequest();
+                    animateCards();
+                  } else if (frontCardAlign.x < -3.0) {
+                    widget.model.dislikeRequest();
+                    animateCards();
+                  } else if (frontCardAlign.y < -3.0) {
+                    widget.model.passRequest();
+                    animateCards();
+                  } else {
+                    // Return to the initial rotation and alignment
+                    setState(() {
+                      frontCardAlign = defaultFrontCardAlign;
+                      frontCardRot = 0.0;
+                    });
+                  }
+                },
+              ))
+            : Container(),
+      ],
+    ));
   }
 
   Widget likeTextWidget() {
@@ -277,8 +242,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget backCard(BuildContext context) {
-    Product item =
-        Provider.of<SwipeModel>(context).items[(widget._curIdx + 2) % 9];
+    SwipeCard item =
+        Provider.of<SwipeModel>(context).items[(widget.model.curIdx + 2)];
     return Align(
       alignment: _controller.status == AnimationStatus.forward
           ? CardsAnimation.backCardAlignmentAnim(_controller).value
@@ -292,8 +257,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
-    Product item =
-        Provider.of<SwipeModel>(context).items[(widget._curIdx + 1) % 9];
+    SwipeCard item =
+        Provider.of<SwipeModel>(context).items[(widget.model.curIdx + 1)];
     return Align(
       alignment: _controller.status == AnimationStatus.forward
           ? CardsAnimation.middleCardAlignmentAnim(_controller).value
@@ -308,7 +273,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget frontCard(BuildContext context) {
     //int idx = Provider.of<SwipeModel>(context).curIdx;
-    Product item = Provider.of<SwipeModel>(context).items[widget._curIdx % 9];
+    SwipeCard item =
+        Provider.of<SwipeModel>(context).items[widget.model.curIdx];
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -323,7 +289,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   void changeCardsOrder() {
-    //model.nextItem();
+    widget.model.nextItem();
     setState(() {
       // Swap cards (back card becomes the middle card; middle card becomes the front card, front card becomes a  bottom card)
       // var temp = cards[0];
@@ -331,7 +297,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
       // cards[1] = cards[2];
       // cards[2] = temp;
       // cards[2] = SwipeCardAlignment(cardsCounter);
-      widget._curIdx++;
       frontCardAlign = defaultFrontCardAlign;
       frontCardRot = 0.0;
     });

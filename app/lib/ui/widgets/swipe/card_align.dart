@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/swipeCard.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 class SwipeCardAlignment extends StatelessWidget {
   //final int cardNum;
 
-  final Product item;
+  final SwipeCard item;
   SwipeCardAlignment(this.item);
 
   @override
@@ -33,15 +34,6 @@ class SwipeCardAlignment extends StatelessWidget {
                       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                     },
                     fit: BoxFit.cover),
-                // child: FancyShimmerImage(
-                //   imageUrl: item.thumbnail_url,
-                //   boxFit: BoxFit.cover,
-                //   errorWidget: Icon(Icons.error),
-                //   shimmerHighlightColor: backgroundColor,
-                //   shimmerBackColor: backgroundColor,
-                //   shimmerBaseColor: backgroundTransparentColor,
-                //   // placeholder: (context, url) => LoadingWidget(),
-                // )
               ),
             ),
             Container(
