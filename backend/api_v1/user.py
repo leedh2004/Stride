@@ -22,3 +22,14 @@ def insert_user_size():
     except:
         return jsonify("Fail"), 500
     return jsonify('Success'), 200
+
+
+@user.route('/birth', methods=['POST'])
+def insert_user_birth_year():
+    body = request.get_json()
+    year = body['birth']
+    try:
+        insert_user_birth(year)
+    except:
+        return jsonify('Fail'), 500
+    return jsonify('Success'), 200
