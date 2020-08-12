@@ -4,6 +4,7 @@ stages:
 #Production stage
 production:
    stage: production
+
    before_script:
      - apk update
      - apk upgrade
@@ -15,7 +16,7 @@ production:
      - mkdir -p ~/.ssh
      - chmod 700 ~/.ssh
    script:
-     - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall; cd dodamshindam/backend; git checkout develop; git pull; pip3 install -r requirements.txt; nohup python3 app.py &"
+     - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "forever stopall; sudo su; cd dodamshindam/backend; git checkout develop; git pull; pip3 install -r requirements.txt; nohup python3 app.py &"
 
    environment:
      name: production
