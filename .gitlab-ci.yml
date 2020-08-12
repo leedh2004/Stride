@@ -9,7 +9,7 @@ production:
      - apk upgrade
      - apk add bash
      - apk add openssh
-     - mkdir -p ~/.ssh
+     - mkdir -p /.ssh
      - echo -e "$PRIVATE_KEY" > /.ssh/id_rsa
      - chmod 600 /.ssh/id_rsa
      - cat /.ssh/id_rsa
