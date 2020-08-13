@@ -19,8 +19,6 @@ test:
 deploy:
    stage: deploy
    only:
-     refs:
-       - develop
      changes:
        - "**/backend/*"
 

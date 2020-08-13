@@ -29,6 +29,3 @@ def get_home_clothes():
         pass
     return 'none'
 
-
-#def recommended_list():
-#    return
