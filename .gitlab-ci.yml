@@ -1,14 +1,32 @@
 stages:
-  - production
+  - installation
+  - test
+  - deploy
+
+
+#Installation stage
+installation:
+  stage: installatioin
+
+  script:
+    - apk update
+    - apk upgrade
+    - apk add bash
+
+#Test stage
+test:
+  stage: test
+
+  script: echo 'Api test'
 
 #Production stage
-production:
-   stage: production
+deploy:
+   stage: deploy
 
    before_script:
-     - apk update
-     - apk upgrade
-     - apk add bash
+#     - apk update
+#     - apk upgrade
+#     - apk add bash
      - apk add openssh
      - apk add openssh-client
      - eval "$(ssh-agent -s)"
@@ -19,5 +37,5 @@ production:
      - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "sudo pkill python3; cd dodamshindam; sudo git checkout develop; sudo git pull; cd backend; nohup python3 app.py > /dev/null 2>&1 &"
 
    environment:
-     name: production
+     name: deploy
      url: https://www.api-stride.com
