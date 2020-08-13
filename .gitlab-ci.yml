@@ -11,6 +11,8 @@ before_script:
 #Test stage
 test:
   stage: test
+  only:
+    - develop
   script: echo 'Api test'
 
 #Production stage
@@ -20,7 +22,7 @@ deploy:
      refs:
        - develop
      changes:
-       - backend/*
+       - "**/backend/*"
 
    before_script:
      - apk add openssh
