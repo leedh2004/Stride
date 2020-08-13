@@ -1,22 +1,37 @@
 stages:
-  - deploy_aws
+  - test
+  - deploy
 
-production:
-  stage: deploy_aws
+before_script:
+  - apk update
+  - apk upgrade
+  - apk add bash
 
-  only:
-    - develop
 
-  before_script:
-    - mkdir -p ~/.ssh
-    - echo -e “$PRIVATE_KEY” > ~/.ssh/id_rsa
-    # Sets the permission to 600 to prevent a problem with AWS
-    # that it’s too unprotected.
-    - chmod 600 ~/.ssh/id_rsa
-    - ‘[[ -f /.dockerenv ]] && echo -e “Host *\n\tStrictHostKeyChecking no\n\n” > ~/.ssh/config’
-  script:
-    - bash ./.gitlab-deploy-prod.sh
+#Test stage
+test:
+  stage: test
+  script: echo 'Api test'
 
-  environment:
-    name: production
+#Production stage
+deploy:
+   stage: deploy
+   only:
+     refs:
+       - develop
+     changes:
+       - backend/*
 
+   before_script:
+     - apk add openssh
+     - apk add openssh-client
+     - eval "$(ssh-agent -s)"
+     - echo "$PRIVATE_KEY" | tr -d '\r' | ssh-add -
+     - mkdir -p ~/.ssh
+     - chmod 700 ~/.ssh
+   script:
+     - ssh -o StrictHostKeyChecking=no ubuntu@ec2-15-164-204-203.ap-northeast-2.compute.amazonaws.com "sudo pkill python3; cd dodamshindam; sudo git checkout develop; sudo git pull; cd backend; nohup python3 app.py > /dev/null 2>&1 &"
+
+   environment:
+     name: deploy
+     url: https://www.api-stride.com
