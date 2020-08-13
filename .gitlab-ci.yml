@@ -11,8 +11,6 @@ before_script:
 #Test stage
 test:
   stage: test
-  only:
-    - develop
   script: echo 'Api test'
 
 #Production stage
