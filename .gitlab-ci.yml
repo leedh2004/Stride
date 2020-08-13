@@ -17,6 +17,11 @@ test:
 #Production stage
 deploy:
    stage: deploy
+   only:
+     refs:
+       - develop
+     changes:
+       - backend/*
 
    before_script:
      - apk add openssh
