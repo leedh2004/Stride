@@ -7,20 +7,20 @@ from backend.db.init import *
 def insert_coordination(coor_name, top_product_id, bottom_product_id):
     cursor = service_conn.cursor()
     query = """INSERT INTO coordination(user_id, coor_name, product_top_id, product_bottom_id) VALUES (%s, %s, %s, %s)"""
-    select_query = """SELECT * FROM coordination WHERE user_id = % and product_top_id = %s and product_bottom_id = %s"""
+    select_query = """SELECT coor_id FROM coordination WHERE user_id = %s AND product_top_id = %s AND product_bottom_id = %s"""
     try:
         cursor.execute(query, (g.user_id, coor_name, top_product_id, bottom_product_id))
         service_conn.commit()
         cursor.execute(select_query, (g.user_id, top_product_id, bottom_product_id))
         coor_id = cursor.fetchone()
         load = {'coor_id': coor_id[0]}
+        cursor.close()
         return json.dumps(load, default=json_util.default, ensure_ascii=False)
-
     except:
         service_conn.rollback()
         raise
         pass
-    cursor.close()
+
 
 
 def update_coor_name(update_name, coor_id):
