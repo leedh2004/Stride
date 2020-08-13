@@ -1,17 +1,12 @@
 stages:
-  - installation
   - test
   - deploy
 
+before_script:
+  - apk update
+  - apk upgrade
+  - apk add bash
 
-#Installation stage
-installation:
-  stage: installatioin
-
-  script:
-    - apk update
-    - apk upgrade
-    - apk add bash
 
 #Test stage
 test:
@@ -24,9 +19,6 @@ deploy:
    stage: deploy
 
    before_script:
-#     - apk update
-#     - apk upgrade
-#     - apk add bash
      - apk add openssh
      - apk add openssh-client
      - eval "$(ssh-agent -s)"
