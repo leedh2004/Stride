@@ -20,7 +20,7 @@ deploy:
    stage: deploy
    only:
      refs:
-       - feature/#39
+       - develop
      changes:
        - backend/*
 
