@@ -22,7 +22,7 @@ deploy:
      refs:
        - develop
      changes:
-       - "**/backend/*"
+       - backend/*
 
    before_script:
      - apk add openssh
