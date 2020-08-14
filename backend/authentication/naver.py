@@ -33,8 +33,8 @@ def login():
     user_id = response['id']
     id = str(user_id) + "@naver"
     insert_user(id)
-    if response['email'] is not None:
-        update_user_email(id, response['email'])
+    if str(response['email']) is not None:
+        update_user_email(id, str(response['email']))
 
     token = encode_jwt_token(id) + "," + str(user_id) + ","+"naver"
     return render_template('oauth.html', token=token)
