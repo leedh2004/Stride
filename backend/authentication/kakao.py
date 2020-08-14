@@ -30,6 +30,7 @@ def login():
     print(response.text)
     response = requests.request("POST", url, headers=headers)
     response_json = response.json()
+    print('kakao : ', response_json)
     user_id = response_json.get('id')
     id = str(user_id) + "@kakao"
     insert_user(id)
