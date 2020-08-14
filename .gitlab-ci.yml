@@ -23,6 +23,10 @@ deploy:
        - develop
      changes:
        - backend/*
+       - backend/api_v1/*
+       - backend/db/queries/*
+       - backend/**/*
+       - backend/authentication/*
 
    before_script:
      - apk add openssh
