@@ -35,7 +35,7 @@ def login():
     account = response_json.get('kakao_account')
     id = str(user_id) + "@kakao"
     insert_user(id)
-    if str(account['has_email']) is True:
+    if account['has_email'] is True:
         update_user_email(id, str(account['email']))
 
     token = encode_jwt_token(id) + "," + str(user_id) + ","+"kakao"
