@@ -30,7 +30,7 @@ class ProductModel:
         self.product_id = item[0]
         self.shop_id = item[1]
         self.shop_product_id = item[2]
-        self.product_id = item[3]
+        self.product_url = item[3]
         self.product_name = item[4]
         self.price = item[5]
         self.thumbnail_url = item[6]
