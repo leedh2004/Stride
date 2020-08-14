@@ -16,7 +16,6 @@ List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
-
   SwipeCardSection(BuildContext context, SwipeModel _model) {
     model = _model;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
@@ -26,7 +25,6 @@ class SwipeCardSection extends StatefulWidget {
     cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
         MediaQuery.of(context).size.height * 0.6);
   }
-
   @override
   _SwipeCardSectionState createState() => _SwipeCardSectionState();
 }
@@ -46,6 +44,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   @override
   void initState() {
     super.initState();
+    print("init!!!");
     // Init cards
     // for (cardsCounter = 0; cardsCounter < 3; cardsCounter++) {
     //   cards.add(SwipeCardAlignment(cardsCounter));
@@ -242,8 +241,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget backCard(BuildContext context) {
-    SwipeCard item =
-        Provider.of<SwipeModel>(context).items[(widget.model.curIdx + 2)];
+    print("???");
+    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+        [widget.model.curIdx + 2];
     return Align(
       alignment: _controller.status == AnimationStatus.forward
           ? CardsAnimation.backCardAlignmentAnim(_controller).value
@@ -257,8 +257,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
-    SwipeCard item =
-        Provider.of<SwipeModel>(context).items[(widget.model.curIdx + 1)];
+    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+        [widget.model.curIdx + 1];
     return Align(
       alignment: _controller.status == AnimationStatus.forward
           ? CardsAnimation.middleCardAlignmentAnim(_controller).value
@@ -273,8 +273,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget frontCard(BuildContext context) {
     //int idx = Provider.of<SwipeModel>(context).curIdx;
-    SwipeCard item =
-        Provider.of<SwipeModel>(context).items[widget.model.curIdx];
+    print("FRONT CARD");
+    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+        [widget.model.curIdx];
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
