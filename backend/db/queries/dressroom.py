@@ -1,6 +1,7 @@
 from flask import g
 from backend.db.init import *
 from bson import json_util
+from backend.db.model.product import *
 import json
 
 
@@ -22,18 +23,11 @@ def get_dressroom():
         try:
             cursor.execute(query, (g.user_id, ))
             result = cursor.fetchall()
-            print(result)
-            print('len', len(result))
             product = []
             for item in result:
-                load = {}
-                load['product_id'] = item[0]
-                load['product_url'] = item[3]
-                load['product_name'] = item[4]
-                load['price'] = item[5]
-                load['thumbnail_url'] = item[6]
-                load['type'] = item[8]
-                product.append(load)
+                load = ProductModel()
+                load.fetch_data(item)
+                product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:
             pass
