@@ -29,12 +29,13 @@ def login():
     response = requests.request("GET", url, headers=headers)
     response_json = response.json()
     print(response_json)
-    print('naver1 :', response_json)
     response = response_json.get('response')
-    print('naver :', response)
     user_id = response['id']
     id = str(user_id) + "@naver"
     insert_user(id)
+    if response['email'] is not None:
+        update_user_email(id, response['email'])
+
     token = encode_jwt_token(id) + "," + str(user_id) + ","+"naver"
     return render_template('oauth.html', token=token)
 
