@@ -29,9 +29,9 @@ def login():
     response = requests.request("GET", url, headers=headers)
     response_json = response.json()
     print(response_json)
-
+    print('naver1 :', response_json)
     response = response_json.get('response')
-
+    print('naver :', response)
     user_id = response['id']
     id = str(user_id) + "@naver"
     insert_user(id)
