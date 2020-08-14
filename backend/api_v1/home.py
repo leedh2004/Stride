@@ -19,11 +19,11 @@ def get_clothes():
     try:
         type = request.args.get('type')
         types = ['top', 'dress', 'pants', 'skirt']
-        if type not in types:
-            raise
         if type is None:
             result = get_home_clothes()
         else:
+            if type not in types:
+                raise
             result = get_clothes_category(type)
     except:
         return jsonify("Fail"), 500
