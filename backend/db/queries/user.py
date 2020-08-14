@@ -83,3 +83,17 @@ def update_user_concept(user_id, concept):
     finally:
         cursor.close()
 
+
+def update_user_email(user_id, email):
+    cursor = service_conn.cursor()
+    query = """UPDATE users SET email = %s WHERE user_id = %s"""
+    try:
+        load = (email, user_id)
+        cursor.execute(query, load)
+        service_conn.commit()
+    except:
+        service_conn.rollback()
+        raise
+        pass
+    finally:
+        cursor.close()
