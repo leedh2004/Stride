@@ -2,6 +2,8 @@ from flask import g
 import json
 from bson import json_util
 from backend.db.init import *
+from backend.db.model.coordination import *
+from backend.db.model.product import *
 
 
 def insert_coordination(coor_name, top_product_id, bottom_product_id):
@@ -40,27 +42,28 @@ def get_coodination():
             coordination = cursor.fetchall()
             product = []
             for item in coordination:
+                print(item)
                 load = {}
-                load['coor_id'] = item[0]
-                load['coor_name'] = item[2]
-                product_top_id = item[3]
-                product_bottom_id = item[4]
-                cursor.execute(product_query, (product_top_id, ))
+                coor = CoordinationModel()
+                coor.fetch_data(item)
+                load.update(coor.__dict__)
+                # Top
+                cursor.execute(product_query, (coor.product_top_id, ))
                 product_top = cursor.fetchone()
-                load['top_product_id'] = product_top[0]
-                load['top_product_url'] = product_top[3]
-                load['top_product_name'] = product_top[4]
-                load['top_price'] = product_top[5]
-                load['top_thumbnail_url'] = product_top[6]
-                load['top_type'] = product_top[8]
-                cursor.execute(product_query, (product_bottom_id,))
+                product_top_ins = ProductModel()
+                product_top_ins.fetch_data(product_top)
+                print(product_top_ins.__dict__)
+                for k in product_top_ins.__dict__:
+                    new_key = "top_" + k
+                    load[new_key] = product_top_ins.__dict__[k]
+                # Bottom
+                cursor.execute(product_query, (coor.product_bottom_id,))
                 product_bottom = cursor.fetchone()
-                load['bottom_product_id'] = product_bottom[0]
-                load['bottom_product_url'] = product_bottom[3]
-                load['bottom_product_name'] = product_bottom[4]
-                load['bottom_price'] = product_bottom[5]
-                load['bottom_thumbnail_url'] = product_bottom[6]
-                load['bottom_type'] = product_bottom[8]
+                product_bottom_ins = ProductModel()
+                product_bottom_ins.fetch_data(product_bottom)
+                for k in product_bottom_ins.__dict__:
+                    new_key = "bottom_" + k
+                    load[new_key] = product_bottom_ins.__dict__[k]
                 product.append(load)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:
