@@ -20,7 +20,7 @@ def delete_dressroom(product_id):
 
 def get_dressroom():
     cursor = service_conn.cursor()
-    query = """SELECT * FROM products p, dressroom d WHERE p.product_id = d.product_id AND user_id = %s ORDER BY created_at ASC"""
+    query = """SELECT * FROM products p, dressroom d WHERE p.product_id = d.product_id AND user_id = %s ORDER BY d.created_at ASC"""
     try:
         cursor.execute(query, (g.user_id, ))
         result = cursor.fetchall()
