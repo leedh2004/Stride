@@ -84,12 +84,21 @@ def purchase():
 @login_required
 def get_recommendation():
     try:
-        url = ES_URL
+        QUERY = ''
+        GET_ALL_TYPE_QUERY = ES_URL + '/recommended_list/_search/?q=user_id:'
+        type = request.args.get('type')
+        types = ['top', 'dress', 'pants', 'skirt']
         user_id = str(g.user_id)
-        response = requests.get(url + '/recommended_list/_search/?q=user_id:' + user_id)
+        if type is None:
+            QUERY = GET_ALL_TYPE_QUERY + user_id
+        response = requests.get(QUERY)
         res = response.json()
-        recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
-        result = get_recommended_product(recommended_list)
+        has_hits = res['hits']['hits']
+        if not has_hits:
+            result = get_home_clothes()
+        else:
+            recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
+            result = get_recommended_product(recommended_list)
     except:
         return jsonify('Fail'), 500
     return result, 200
