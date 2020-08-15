@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, g
 import json
+import requests
+from config.oauthconfig import *
 from bson import ObjectId, json_util
 import sys
+
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
@@ -64,4 +67,17 @@ def passes():
     except:
         return jsonify("Fail"), 500
     return 'Success', 200
+
+
+@home.route('/purchase', methods=['POST'])
+@login_required
+def purchase():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_purchases(product_id)
+    except:
+        return
+
+
 
