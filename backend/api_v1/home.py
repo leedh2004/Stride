@@ -80,4 +80,16 @@ def purchase():
         return
 
 
+@home.route('/recommendation', methods=['GET'])
+@login_required
+def get_recommendation():
+    try:
+        url = ES_URL
+        response = requests.get(url + '/recommended_list/_search/?q=user_id:1450140593@kakao')
+        res = response.json()
+        recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
+        result = get_recommended_product(recommended_list)
+    except:
+        return jsonify('Fail'), 500
+    return result, 200
 
