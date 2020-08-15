@@ -39,5 +39,18 @@ def get_clothes_category(type):
         return 'None'
 
 
-
-
+def get_recommended_product(products):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM products WHERE product_id = %s"""
+        try:
+            product = []
+            for product_id in products:
+                cursor.execute(query, (product_id, ))
+                result = cursor.fetchone()
+                load = ProductModel()
+                load.fetch_data(result)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return
