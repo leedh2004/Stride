@@ -85,7 +85,8 @@ def purchase():
 def get_recommendation():
     try:
         url = ES_URL
-        response = requests.get(url + '/recommended_list/_search/?q=user_id:1450140593@kakao')
+        user_id = str(g.user_id)
+        response = requests.get(url + '/recommended_list/_search/?q=user_id:' + user_id)
         res = response.json()
         recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
         result = get_recommended_product(recommended_list)
