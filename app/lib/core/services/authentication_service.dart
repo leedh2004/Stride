@@ -19,7 +19,8 @@ class AuthenticationService {
 
   Future logout() async {
     await _storage.delete(key: 'jwt_token');
-    _userController.add(null); // 이게 맞나..?
+    await _userController.add(null); // 이게 맞나..?
+    print('?');
   }
 
   Future login(String token) async {
@@ -37,6 +38,8 @@ class AuthenticationService {
   Future checkToken() async {
     String token = await _storage.read(key: 'jwt_token');
     print("Bearer ${token}");
+    print("START");
+
     try {
       api.client.options.headers = {
         "Content-Type": "application/json",
@@ -68,5 +71,6 @@ class AuthenticationService {
       print(e.response.statusCode);
       print("에러!!");
     }
+    print("END");
   }
 }

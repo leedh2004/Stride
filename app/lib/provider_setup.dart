@@ -45,7 +45,7 @@ List<SingleChildWidget> uiConsumableProviders = [
     create: (context) =>
         Provider.of<DressRoomService>(context, listen: false).items,
   ),
-  StreamProvider<List<SwipeCard>>(
+  StreamProvider<List<List<SwipeCard>>>(
     create: (context) =>
         Provider.of<SwipeService>(context, listen: false).items,
   ),

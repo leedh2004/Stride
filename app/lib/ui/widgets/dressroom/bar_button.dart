@@ -21,19 +21,23 @@ class DressRoomButtonBar extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: RaisedButton(
-                  padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
-                  color: backgroundColor,
-                  onPressed: () async {
-                    List<Product> top = model.findSelectedTop();
-                    List<Product> bottom = model.findSelectedBotoom();
-                    showMaterialModalBottomSheet(
-                        expand: false,
-                        context: context,
-                        builder: (context, scrollController) =>
-                            DressRoomSelectDialog(top, bottom));
-                  },
-                  child: Text('Make', style: whiteStyle),
-                ),
+                    padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+                    color: backgroundColor,
+                    onPressed: () async {
+                      List<Product> top = model.findSelectedTop();
+                      List<Product> bottom = model.findSelectedBotoom();
+                      showMaterialModalBottomSheet(
+                          expand: false,
+                          context: context,
+                          builder: (context, scrollController) =>
+                              DressRoomSelectDialog(top, bottom));
+                    },
+                    child: FaIcon(
+                      FontAwesomeIcons.thLarge,
+                      color: Colors.white,
+                    )
+                    // child: Text('Make', style: whiteStyle),
+                    ),
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -98,11 +102,13 @@ class DressRoomButtonBar extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: RaisedButton(
-                  padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
-                  color: Colors.black26,
-                  onPressed: () {},
-                  child: Text('Make', style: whiteStyle),
-                ),
+                    padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+                    color: Colors.black26,
+                    onPressed: () {},
+                    child: FaIcon(
+                      FontAwesomeIcons.thLarge,
+                      color: Colors.white,
+                    )),
               ),
               Align(
                 alignment: Alignment.centerRight,

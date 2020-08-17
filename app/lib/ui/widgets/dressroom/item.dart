@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app/core/models/product.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -19,12 +18,9 @@ class DressRoomItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("!!!!!!!!!!!!!!!!");
-    //print(item.price);
-    //print(item.thumbnail_url);
     return Card(
       shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(4),
           side: BorderSide(color: Colors.black45, width: 0.5)),
       elevation: 1,
       clipBehavior: Clip.antiAlias,
@@ -41,15 +37,6 @@ class DressRoomItemWidget extends StatelessWidget {
                     HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                   }),
             ),
-            // child: FancyShimmerImage(
-            //   imageUrl: item.thumbnail_url,
-            //   boxFit: BoxFit.cover,
-            //   errorWidget: Icon(Icons.error),
-            //   shimmerBaseColor: backgroundTransparentColor,
-            //   shimmerHighlightColor: backgroundColor,
-            //   shimmerBackColor: backgroundColor,
-            //   // placeholder: (context, url) => LoadingWidget(),
-            // )),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 5),
@@ -63,10 +50,13 @@ class DressRoomItemWidget extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               item.product_name,
-                              style: subHeaderStyle,
+                              style: dressRoomProductText,
                               overflow: TextOverflow.ellipsis,
                             ),
-                            Text('Price ${item.price}')
+                            Text(
+                              'Price ${item.price}',
+                              style: dressRoomPriceText,
+                            )
                           ],
                         ),
                       ),
@@ -93,11 +83,13 @@ class DressRoomItemWidget extends StatelessWidget {
         Opacity(
           opacity: 1 - opacity / 2,
           child: Align(
-            alignment: Alignment.bottomRight,
+            alignment: Alignment.bottomRight.add(Alignment(0.3, 0.1)),
             child: IconButton(
-              iconSize: 18,
-              icon: FaIcon(FontAwesomeIcons.gift),
-              color: backgroundColor,
+              iconSize: 16,
+              icon: FaIcon(
+                FontAwesomeIcons.gift,
+                color: backgroundColor,
+              ),
               onPressed: () {
                 Navigator.push(
                     context,
