@@ -6,9 +6,11 @@ import 'package:app/core/services/lookbook.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class DressRoomSelectDialog extends StatelessWidget {
@@ -95,7 +97,6 @@ class DressRoomSelectDialog extends StatelessWidget {
               bottom_idx = itemIndex - 1;
               if (bottom.length == 0) return Container();
               if (bottom_idx == -1) bottom_idx = bottom.length - 1;
-
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -160,16 +161,29 @@ class DressRoomSelectDialog extends StatelessWidget {
             },
           ),
           RaisedButton(
-            padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
-            color: backgroundColor,
-            onPressed: () async {
-              Provider.of<LookBookService>(context, listen: false)
-                  .addItem(top[top_idx], bottom[bottom_idx]);
-              print(top[top_idx].product_name);
-              print(bottom[bottom_idx].product_name);
-            },
-            child: Text('Save', style: whiteStyle),
-          )
+              padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+              color: backgroundColor,
+              onPressed: () async {
+                Provider.of<LookBookService>(context, listen: false)
+                    .addItem(top[top_idx], bottom[bottom_idx]);
+                ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+                    duration: Duration(milliseconds: 1500),
+                    content: Row(children: [
+                      Icon(
+                        Icons.check,
+                        color: backgroundColor,
+                      ),
+                      UIHelper.horizontalSpaceMedium,
+                      Text('룩북에 저장되었습니다.'),
+                    ])));
+                Navigator.pop(context);
+              },
+              child: FaIcon(
+                FontAwesomeIcons.chevronCircleDown,
+                color: Colors.white,
+              )
+              //Text('Save', style: whiteStyle),
+              ),
         ],
       )),
     );

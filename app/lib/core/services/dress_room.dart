@@ -16,7 +16,7 @@ class DressRoomService {
   }
 
   void addItem(Product item) async {
-    print("HEY!");
+    print("addItem()");
     List<Product> last = _itemsController.value;
     _itemsController.add([...last, item]);
   }

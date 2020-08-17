@@ -30,12 +30,12 @@ class DressRoomView extends StatelessWidget {
                       shrinkWrap: true,
                       //crossAxisCount: 2,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
+                        crossAxisCount: 3,
                         childAspectRatio: 0.8,
-                        mainAxisSpacing: 20.0,
-                        crossAxisSpacing: 20.0,
+                        mainAxisSpacing: 4.0,
+                        crossAxisSpacing: 4.0,
                       ),
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(8),
                       itemBuilder: (context, index) {
                         print(index);
                         //print(items[index].product_id);

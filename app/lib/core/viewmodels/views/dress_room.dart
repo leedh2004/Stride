@@ -14,8 +14,9 @@ class DressRoomModel extends BaseModel {
     _api = api;
     for (var item in items) {
       if (item.selected == 1) {
-        isAnyOneSelected = true;
-        break;
+        item.selected = 0;
+        //isAnyOneSelected = true;
+        //break;
       }
     }
   }

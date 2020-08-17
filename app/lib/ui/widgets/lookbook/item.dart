@@ -44,15 +44,6 @@ class LookBookItem extends StatelessWidget {
                         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                       },
                     ),
-                    // child: FancyShimmerImage(
-                    //   imageUrl: item.top_thumbnail_url,
-                    //   boxFit: BoxFit.cover,
-                    //   errorWidget: Icon(Icons.error),
-                    //   shimmerBaseColor: backgroundTransparentColor,
-                    //   shimmerHighlightColor: backgroundColor,
-                    //   shimmerBackColor: backgroundColor,
-                    //   // placeholder: (context, url) => LoadingWidget(),
-                    // )),
                   )),
                   Expanded(
                       child: Container(
@@ -79,7 +70,7 @@ class LookBookItem extends StatelessWidget {
                     flex: 2,
                     child: Text(
                       item.name,
-                      style: subHeaderStyle,
+                      style: lookBookNameText,
                     ),
                   ),
                   Expanded(
