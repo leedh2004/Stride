@@ -7,6 +7,7 @@ import 'package:app/ui/shared/text_styles.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SwipeCardAlignment extends StatelessWidget {
   //final int cardNum;
@@ -18,9 +19,9 @@ class SwipeCardAlignment extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          borderRadius: BorderRadius.circular(20),
         ),
-        elevation: 10,
+        elevation: 3,
         clipBehavior: Clip.antiAlias,
         child: Stack(
           alignment: Alignment.bottomLeft,
@@ -66,6 +67,17 @@ class SwipeCardAlignment extends StatelessWidget {
                         style: whiteSmallShadowStyle,
                       )
                     ]),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.all(20),
+                child: FaIcon(
+                  FontAwesomeIcons.rulerVertical,
+                  size: 35,
+                  color: Colors.white,
+                ),
               ),
             ),
           ],

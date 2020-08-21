@@ -20,7 +20,6 @@ class SwipeService {
     index = [0, 0, 0, 0, 0];
     length = [0, 0, 0, 0, 0];
     type = ALL;
-    initCards();
   }
 
   void changeType(int _type) {

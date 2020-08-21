@@ -96,74 +96,87 @@ class _SwipeViewState extends State<SwipeView> {
   Widget clothTypeBar(SwipeModel model) {
     return Container(
       height: 40,
-      margin: EdgeInsets.only(right: 20),
-      padding: EdgeInsets.only(left: 20),
-      child: ListView(
-        // This next line does the trick.
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          InkWell(
-            onTap: () => {setState(() => model.changeType('all'))},
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                'All',
-                style:
-                    model.type == 0 ? subHeaderMainColorStyle : subHeaderStyle,
+      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      child: Row(children: [
+        Expanded(
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: <Widget>[
+              InkWell(
+                onTap: () => {setState(() => model.changeType('all'))},
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text(
+                    'All',
+                    style: model.type == 0
+                        ? subHeaderMainColorStyle
+                        : subHeaderStyle,
+                  ),
+                ),
               ),
-            ),
+              InkWell(
+                onTap: () => {
+                  setState(() {
+                    model.changeType('top');
+                    type = '123';
+                  })
+                },
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text(
+                    'Top',
+                    style: model.type == 1
+                        ? subHeaderMainColorStyle
+                        : subHeaderStyle,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => {setState(() => model.changeType('skirt'))},
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text(
+                    'Skirt',
+                    style: model.type == 2
+                        ? subHeaderMainColorStyle
+                        : subHeaderStyle,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => {setState(() => model.changeType('pants'))},
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text(
+                    'Pants',
+                    style: model.type == 3
+                        ? subHeaderMainColorStyle
+                        : subHeaderStyle,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () => {setState(() => model.changeType('dress'))},
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                  child: Text(
+                    'Dress',
+                    style: model.type == 4
+                        ? subHeaderMainColorStyle
+                        : subHeaderStyle,
+                  ),
+                ),
+              ),
+            ],
           ),
-          InkWell(
-            onTap: () => {
-              setState(() {
-                model.changeType('top');
-                type = '123';
-              })
-            },
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                'Top',
-                style:
-                    model.type == 1 ? subHeaderMainColorStyle : subHeaderStyle,
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () => {setState(() => model.changeType('skirt'))},
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                'Skirt',
-                style:
-                    model.type == 2 ? subHeaderMainColorStyle : subHeaderStyle,
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () => {setState(() => model.changeType('pants'))},
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                'Pants',
-                style:
-                    model.type == 3 ? subHeaderMainColorStyle : subHeaderStyle,
-              ),
-            ),
-          ),
-          InkWell(
-            onTap: () => {setState(() => model.changeType('dress'))},
-            child: Padding(
-              padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Text(
-                'Dress',
-                style:
-                    model.type == 4 ? subHeaderMainColorStyle : subHeaderStyle,
-              ),
-            ),
-          )
-        ],
-      ),
+        ),
+        Container(
+            margin: EdgeInsets.only(left: 10),
+            child: Text(
+              '>',
+              style: subHeaderStyle,
+            ))
+      ]),
     );
   }
 
@@ -175,10 +188,13 @@ class _SwipeViewState extends State<SwipeView> {
           onPressed: () {},
           elevation: 2.0,
           fillColor: Colors.white,
-          child: FaIcon(
-            FontAwesomeIcons.times,
-            size: 25.0,
-            color: Colors.red,
+          child: Padding(
+            padding: EdgeInsets.all(0),
+            child: FaIcon(
+              FontAwesomeIcons.times,
+              size: 30.0,
+              color: Color.fromRGBO(72, 116, 213, 1),
+            ),
           ),
           padding: EdgeInsets.all(10.0),
           shape: CircleBorder(),
@@ -196,7 +212,7 @@ class _SwipeViewState extends State<SwipeView> {
           fillColor: Colors.white,
           child: FaIcon(
             FontAwesomeIcons.gift,
-            size: 25.0,
+            size: 30.0,
             color: backgroundColor,
           ),
           padding: EdgeInsets.all(10.0),
@@ -207,9 +223,9 @@ class _SwipeViewState extends State<SwipeView> {
           elevation: 2.0,
           fillColor: Colors.white,
           child: FaIcon(
-            FontAwesomeIcons.circle,
-            size: 25.0,
-            color: Color.fromRGBO(90, 193, 142, 1),
+            FontAwesomeIcons.heart,
+            size: 30.0,
+            color: pinkColor,
           ),
           padding: EdgeInsets.all(10.0),
           shape: CircleBorder(),
