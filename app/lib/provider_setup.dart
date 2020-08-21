@@ -10,12 +10,19 @@ import 'core/models/swipeCard.dart';
 import 'core/models/user.dart';
 import 'core/services/api.dart';
 
+// 모든 Provider의 집합
 List<SingleChildWidget> providers = [
   ...independentServices,
   ...dependentServices,
   ...uiConsumableProviders
 ];
 
+// 독립적인 Provider
+List<SingleChildWidget> independentServices = [
+  Provider.value(value: Api()),
+];
+
+// 다른 Provider의 값에 의존하는 Provider
 List<SingleChildWidget> dependentServices = [
   ProxyProvider<Api, AuthenticationService>(
     update: (context, api, authenticatonService) => AuthenticationService(api),
@@ -31,11 +38,7 @@ List<SingleChildWidget> dependentServices = [
   ),
 ];
 
-List<SingleChildWidget> independentServices = [
-  Provider.value(value: Api()),
-  Provider.value(value: 0),
-];
-
+// Provider 값의 변화를 관찰하는 UI Observer
 List<SingleChildWidget> uiConsumableProviders = [
   StreamProvider<User>(
     create: (context) =>

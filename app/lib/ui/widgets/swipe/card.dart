@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/constants/type.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -39,9 +41,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
   Alignment frontCardAlign;
   double frontCardRot = 0.0;
-  double opacityPass = 0.0;
-  double opacityLike = 0.0;
-  double opacityNope = 0.0;
+  List<double> _opacity = [0, 0, 0];
 
   @override
   void initState() {
@@ -76,58 +76,60 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
             ? SizedBox.expand(
                 child: GestureDetector(
                 // While dragging the first card
-                // onHorizontalDragStart: (details) => {},
                 onPanUpdate: (DragUpdateDetails details) {
                   // Add what the user swiped in the last frame to the alignment of the card
-                  double pass = 0.0;
-                  double like = 0.0;
-                  double nope = 0.0;
-                  details.globalPosition.dy;
-                  if (frontCardAlign.x > 2.5) {
-                    //LIKE
-                    like = frontCardAlign.x / 5;
-                    if (like >= 1) like = 1.0;
-                  } else if (frontCardAlign.x < -2.5) {
-                    nope = -frontCardAlign.x / 5;
-                    if (nope >= 1) nope = 1.0;
-                  } else if (frontCardAlign.y < -2) {
-                    // PASS
-                    pass = -(frontCardAlign.y / 5);
-                    if (pass >= 1) pass = 1.0;
+                  List<double> opacity = [0, 0, 0];
+                  if (frontCardAlign.x > START_RIGHT) {
+                    // See Heart Icon applying Opacity
+                    opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
+                    if (opacity[LIKE] >= MAX_OPACITY)
+                      opacity[LIKE] = MAX_OPACITY;
+                  } else if (frontCardAlign.x < START_LEFT) {
+                    // See Broken Heart Icon applying Opacity
+                    opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
+                    if (opacity[HATE] >= MAX_OPACITY)
+                      opacity[HATE] = MAX_OPACITY;
+                  } else if (frontCardAlign.y < START_UP) {
+                    // See Pass Icon applying Opacity
+                    opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
+                    if (opacity[PASS] >= MAX_OPACITY)
+                      opacity[PASS] = MAX_OPACITY;
                   }
+                  // Rendering View
                   setState(() {
-                    opacityLike = like;
-                    opacityNope = nope;
-                    opacityPass = pass;
-                    //print(details.delta.dx);
-                    //print(details.delta.dy);
+                    // Set Opacity
+                    _opacity[LIKE] = opacity[LIKE];
+                    _opacity[HATE] = opacity[HATE];
+                    _opacity[PASS] = opacity[PASS];
+                    // Drag Card SPEED
                     frontCardAlign = Alignment(
                         frontCardAlign.x +
-                            15 *
+                            X_SPEED *
                                 details.delta.dx /
                                 MediaQuery.of(context).size.width,
                         frontCardAlign.y +
-                            30 *
+                            Y_SPEED *
                                 details.delta.dy /
                                 MediaQuery.of(context).size.height);
-                    frontCardRot = frontCardAlign.x; // * rotation speed;
+                    frontCardRot = frontCardAlign.x;
                   });
                 },
                 // When releasing the first card
                 onPanEnd: (_) {
                   // If the front card was swiped far enough to count as swiped
                   setState(() {
-                    opacityPass = 0.0;
-                    opacityLike = 0.0;
-                    opacityNope = 0.0;
+                    _opacity[HATE] = 0.0;
+                    _opacity[LIKE] = 0.0;
+                    _opacity[PASS] = 0.0;
                   });
-                  if (frontCardAlign.x > 3.0) {
+                  // Send result reqeust to server
+                  if (frontCardAlign.x > STANDARD_RIGHT) {
                     widget.model.likeRequest();
                     animateCards();
-                  } else if (frontCardAlign.x < -3.0) {
+                  } else if (frontCardAlign.x < STANDARD_LEFT) {
                     widget.model.dislikeRequest();
                     animateCards();
-                  } else if (frontCardAlign.y < -2.0) {
+                  } else if (frontCardAlign.y < STANDARD_UP) {
                     widget.model.passRequest();
                     animateCards();
                   } else {
@@ -156,7 +158,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           child: SizedBox.fromSize(
             size: cardsSize[0],
             child: Opacity(
-              opacity: opacityLike,
+              opacity: _opacity[LIKE],
               child: Container(
                 padding: EdgeInsets.fromLTRB(20, 50, 0, 0),
                 alignment: Alignment.center,
@@ -193,7 +195,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           child: SizedBox.fromSize(
             size: cardsSize[0],
             child: Opacity(
-              opacity: opacityNope,
+              opacity: _opacity[HATE],
               child: Container(
                 padding: EdgeInsets.fromLTRB(0, 50, 20, 0),
                 alignment: Alignment.center,
@@ -231,7 +233,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           child: SizedBox.fromSize(
             size: cardsSize[0],
             child: Opacity(
-              opacity: opacityPass,
+              opacity: _opacity[PASS],
               child: Container(
                 padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                 alignment: Alignment.center,

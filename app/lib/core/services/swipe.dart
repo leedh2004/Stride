@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:rxdart/subjects.dart';
 import 'api.dart';
@@ -18,7 +19,7 @@ class SwipeService {
     _api = api;
     index = [0, 0, 0, 0, 0];
     length = [0, 0, 0, 0, 0];
-    type = 0;
+    type = ALL;
     initCards();
   }
 
@@ -28,32 +29,44 @@ class SwipeService {
   }
 
   Future initCards() async {
-    await getTopSwipeCards();
-    await getDressSwipeCards();
-    await getPantsSwipeCards();
-    await getSkirtSwipeCards();
-    await getAllSwipeCards();
+    await Future.wait([
+      getTopSwipeCards(),
+      getDressSwipeCards(),
+      getPantsSwipeCards(),
+      getSkirtSwipeCards(),
+      getAllSwipeCards()
+    ]);
   }
 
   Future<List<SwipeCard>> getAllSwipeCards() async {
     print("getAllSwipeCards()");
     var temp = List<SwipeCard>();
-    var response = await _api.client.get(
-      '${Api.endpoint}/home/',
-    );
-    var parsed = json.decode(response.data) as List<dynamic>;
+
+    int statusCode = -1;
+    var parsed;
+    // fail시 flag로 토스트 메세지 띄워주기
+    // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
+    while (statusCode != 200) {
+      var response = await _api.client.get(
+        '${Api.endpoint}/home/',
+      );
+      statusCode = response.statusCode;
+      parsed = json.decode(response.data) as List<dynamic>;
+    }
+
     for (var item in parsed) {
       temp.add(SwipeCard.fromJson(item));
     }
-    length[0] += parsed.length;
-    print("service length[0]: ${length[0]}");
+
+    length[ALL] += parsed.length;
     _itemsController.add([
-      [..._itemsController.value[0], ...temp],
-      [..._itemsController.value[1]],
-      [..._itemsController.value[2]],
-      [..._itemsController.value[3]],
-      [..._itemsController.value[4]]
+      [..._itemsController.value[ALL], ...temp],
+      [..._itemsController.value[TOP]],
+      [..._itemsController.value[SKIRT]],
+      [..._itemsController.value[PANTS]],
+      [..._itemsController.value[DRESS]]
     ]);
+
     print("getAllCards() End");
     return temp;
   }
@@ -61,21 +74,29 @@ class SwipeService {
   Future<List<SwipeCard>> getTopSwipeCards() async {
     print("getTopSwipeCards()");
     var temp = List<SwipeCard>();
-    var response = await _api.client.get(
-      '${Api.endpoint}/home?type=top',
-    );
-    var parsed = json.decode(response.data) as List<dynamic>;
+
+    int statusCode = -1;
+    var parsed;
+
+    while (statusCode != 200) {
+      var response = await _api.client.get(
+        '${Api.endpoint}/home?type=top',
+      );
+      statusCode = response.statusCode;
+      parsed = json.decode(response.data) as List<dynamic>;
+    }
+
     for (var item in parsed) {
       temp.add(SwipeCard.fromJson(item));
     }
-    length[1] += parsed.length;
-    print(length[1]);
+
+    length[TOP] += parsed.length;
     _itemsController.add([
-      [..._itemsController.value[0]],
-      [..._itemsController.value[1], ...temp],
-      [..._itemsController.value[2]],
-      [..._itemsController.value[3]],
-      [..._itemsController.value[4]]
+      [..._itemsController.value[ALL]],
+      [..._itemsController.value[TOP], ...temp],
+      [..._itemsController.value[SKIRT]],
+      [..._itemsController.value[PANTS]],
+      [..._itemsController.value[DRESS]]
     ]);
     print("getTopCards() End");
     return temp;
@@ -84,20 +105,27 @@ class SwipeService {
   Future<List<SwipeCard>> getSkirtSwipeCards() async {
     print("getSkirtWipeCards()");
     var temp = List<SwipeCard>();
-    var response = await _api.client.get(
-      '${Api.endpoint}/home?type=skirt',
-    );
-    var parsed = json.decode(response.data) as List<dynamic>;
+
+    int statusCode = -1;
+    var parsed;
+    while (statusCode != 200) {
+      var response = await _api.client.get(
+        '${Api.endpoint}/home?type=skirt',
+      );
+      statusCode = response.statusCode;
+      parsed = json.decode(response.data) as List<dynamic>;
+    }
+
     for (var item in parsed) {
       temp.add(SwipeCard.fromJson(item));
     }
-    length[2] += parsed.length;
+    length[SKIRT] += parsed.length;
     _itemsController.add([
-      [..._itemsController.value[0]],
-      [..._itemsController.value[1]],
-      [..._itemsController.value[2], ...temp],
-      [..._itemsController.value[3]],
-      [..._itemsController.value[4]]
+      [..._itemsController.value[ALL]],
+      [..._itemsController.value[TOP]],
+      [..._itemsController.value[SKIRT], ...temp],
+      [..._itemsController.value[PANTS]],
+      [..._itemsController.value[DRESS]]
     ]);
     print("getSkirtWipeCards() End");
     return temp;
@@ -106,20 +134,25 @@ class SwipeService {
   Future<List<SwipeCard>> getPantsSwipeCards() async {
     print("getPantsSwipeCards()");
     var temp = List<SwipeCard>();
-    var response = await _api.client.get(
-      '${Api.endpoint}/home?type=pants',
-    );
-    var parsed = json.decode(response.data) as List<dynamic>;
+    int statusCode = -1;
+    var parsed;
+    while (statusCode != 200) {
+      var response = await _api.client.get(
+        '${Api.endpoint}/home?type=pants',
+      );
+      statusCode = response.statusCode;
+      parsed = json.decode(response.data) as List<dynamic>;
+    }
     for (var item in parsed) {
       temp.add(SwipeCard.fromJson(item));
     }
-    length[3] += parsed.length;
+    length[PANTS] += parsed.length;
     _itemsController.add([
-      [..._itemsController.value[0]],
-      [..._itemsController.value[1]],
-      [..._itemsController.value[2]],
-      [..._itemsController.value[3], ...temp],
-      [..._itemsController.value[4]]
+      [..._itemsController.value[ALL]],
+      [..._itemsController.value[TOP]],
+      [..._itemsController.value[SKIRT]],
+      [..._itemsController.value[PANTS], ...temp],
+      [..._itemsController.value[DRESS]]
     ]);
     print("getAllPantsSwipeCard() End");
     return temp;
@@ -128,23 +161,25 @@ class SwipeService {
   Future<List<SwipeCard>> getDressSwipeCards() async {
     print("getDressSwipeCards()");
     var temp = List<SwipeCard>();
-    print("service length[1]: ${length[1]}");
-    print("service length[0]: ${length[0]}");
-
-    var response = await _api.client.get(
-      '${Api.endpoint}/home?type=dress',
-    );
-    var parsed = json.decode(response.data) as List<dynamic>;
+    int statusCode = -1;
+    var parsed;
+    while (statusCode != 200) {
+      var response = await _api.client.get(
+        '${Api.endpoint}/home?type=dress',
+      );
+      statusCode = response.statusCode;
+      parsed = json.decode(response.data) as List<dynamic>;
+    }
     for (var item in parsed) {
       temp.add(SwipeCard.fromJson(item));
     }
-    length[4] += parsed.length;
+    length[DRESS] += parsed.length;
     _itemsController.add([
-      [..._itemsController.value[0]],
-      [..._itemsController.value[1]],
-      [..._itemsController.value[2]],
-      [..._itemsController.value[3]],
-      [..._itemsController.value[4], ...temp]
+      [..._itemsController.value[ALL]],
+      [..._itemsController.value[TOP]],
+      [..._itemsController.value[SKIRT]],
+      [..._itemsController.value[PANTS]],
+      [..._itemsController.value[DRESS], ...temp]
     ]);
     print("getAllDressSwipeCard() End");
     return temp;

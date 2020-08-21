@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/constants/type.dart';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/api.dart';
@@ -30,20 +32,20 @@ class SwipeModel extends BaseModel {
   }
   void changeType(String str) {
     if (str == 'all') {
-      _swipeService.changeType(0);
+      _swipeService.changeType(ALL);
       type = _swipeService.type;
     } else if (str == 'top') {
-      _swipeService.changeType(1);
+      _swipeService.changeType(TOP);
       type = _swipeService.type;
       print(type);
     } else if (str == 'skirt') {
-      _swipeService.changeType(2);
+      _swipeService.changeType(SKIRT);
       type = _swipeService.type;
     } else if (str == 'pants') {
-      _swipeService.changeType(3);
+      _swipeService.changeType(PANTS);
       type = _swipeService.type;
     } else if (str == 'dress') {
-      _swipeService.changeType(4);
+      _swipeService.changeType(DRESS);
       type = _swipeService.type;
     }
     notifyListeners();
@@ -56,50 +58,50 @@ class SwipeModel extends BaseModel {
     print("index: ${index[type]} length: ${length[type]}");
 
     if (index[type] + 5 >= length[type]) {
-      if (type == 0) {
+      if (type == ALL) {
         List<SwipeCard> temp = await _swipeService.getAllSwipeCards();
         items = [
-          [...items[0], ...temp],
-          [...items[1]],
-          [...items[2]],
-          [...items[3]],
-          [...items[4]]
+          [...items[ALL], ...temp],
+          [...items[TOP]],
+          [...items[SKIRT]],
+          [...items[PANTS]],
+          [...items[DRESS]]
         ];
-      } else if (type == 1) {
+      } else if (type == TOP) {
         List<SwipeCard> temp = await _swipeService.getTopSwipeCards();
         items = [
-          [...items[0]],
-          [...items[1], ...temp],
-          [...items[2]],
-          [...items[3]],
-          [...items[4]]
+          [...items[ALL]],
+          [...items[TOP], ...temp],
+          [...items[SKIRT]],
+          [...items[PANTS]],
+          [...items[DRESS]]
         ];
-      } else if (type == 2) {
+      } else if (type == SKIRT) {
         List<SwipeCard> temp = await _swipeService.getSkirtSwipeCards();
         items = [
-          [...items[0]],
-          [...items[1]],
-          [...items[2], ...temp],
-          [...items[3]],
-          [...items[4]]
+          [...items[ALL]],
+          [...items[TOP]],
+          [...items[SKIRT], ...temp],
+          [...items[PANTS]],
+          [...items[DRESS]]
         ];
-      } else if (type == 3) {
+      } else if (type == PANTS) {
         List<SwipeCard> temp = await _swipeService.getPantsSwipeCards();
         items = [
-          [...items[0]],
-          [...items[1]],
-          [...items[2]],
-          [...items[3], ...temp],
-          [...items[4]]
+          [...items[ALL]],
+          [...items[TOP]],
+          [...items[SKIRT]],
+          [...items[PANTS], ...temp],
+          [...items[DRESS]]
         ];
-      } else if (type == 4) {
+      } else if (type == DRESS) {
         List<SwipeCard> temp = await _swipeService.getDressSwipeCards();
         items = [
-          [...items[0]],
-          [...items[1]],
-          [...items[2]],
-          [...items[3]],
-          [...items[4], ...temp]
+          [...items[ALL]],
+          [...items[TOP]],
+          [...items[SKIRT]],
+          [...items[PANTS]],
+          [...items[DRESS], ...temp]
         ];
       }
     }

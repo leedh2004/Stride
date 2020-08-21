@@ -134,3 +134,18 @@ IOS / Android 를 두 가지 시장의 빠른 출시와 피드백 반영을 위�
 - [ ] 유저 햅틱고려
 - [ ] 로그아웃하면 서비스 모델 비워주기
 - [ ] 토글 이미지 변경
+
+
+<img src="/uploads/d9ecafa8b7a962008a0b8333c83da7e3/사이즈입력1.png" width=300/>
+<img src="/uploads/fab8b82511de4ae693731fd32e190982/드레스룸_선택_.png" width=300/>
+<img src="/uploads/8c52043d16568cc03ff6adcdd6a7afb8/드레스룸_룩북make.png" width=300/>
+<img src="/uploads/578989824c880d01c8d994b3a8b67da2/룩북.png" width=300/>
+<img src="/uploads/45ae47aa983e37411f30746505e59af9/마이페이지.png" width=300/>
+<img src="(/uploads/1af2ed5e86faca00efbcd0a8c4b4c2bf/스와이프뷰.png" width=300/>
+
+
+![스크린샷_2020-08-20_오전_1.45.09](<img src="/uploads/bca9f0225f3180b9459889fc11f9ce25/스크린샷_2020-08-20_오전_1.45.09.png" width=300/>)
+![스크린샷_2020-08-20_오전_1.32.43](<img src="/uploads/a5555e356fe8efabf6ce5a7b8efc0769/스크린샷_2020-08-20_오전_1.32.43.png" width=300/>)
+![스크린샷_2020-08-20_오전_1.31.36](<img src="/uploads/764be74ee519fc0db7ffd5c0e31e7513/스크린샷_2020-08-20_오전_1.31.36.png" width=300/>)
+
+

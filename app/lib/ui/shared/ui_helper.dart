@@ -6,7 +6,6 @@ class UIHelper {
   static const double _VerticalSpaceSmall = 10.0;
   static const double _VerticalSpaceMedium = 20.0;
   static const double _VerticalSpaceLarge = 60.0;
-
   // Vertical spacing constants. Adjust to your liking.
   static const double _HorizontalSpaceSmall = 10.0;
   static const double _HorizontalSpaceMedium = 20.0;

@@ -37,9 +37,8 @@ class AuthenticationService {
 
   Future checkToken() async {
     String token = await _storage.read(key: 'jwt_token');
+    print("checkToken()");
     print("Bearer ${token}");
-    print("START");
-
     try {
       api.client.options.headers = {
         "Content-Type": "application/json",
@@ -50,19 +49,14 @@ class AuthenticationService {
         '${Api.endpoint}/login/token',
       );
       if (response.statusCode == 200) {
-        //만료안하고 성공
-        //여기서 고유 아이디 정보를 받아와야함.
         //뉴토큰으로 토큰 교체해줘야함.
-        //final responseJson = json.decode(r`esponse.data);
-        print(response.data['new_token']);
         await _storage.delete(key: 'jwt_token');
         await _storage.write(
             key: 'jwt_token', value: response.data['new_token']);
         User user = User(id: 'test');
         _userController.add(user);
       } else {
-        //만료해버림
-        //404헤더가 아님, 403은 만료됐다.
+        // 404, 403
         await _storage.delete(key: 'jwt_token');
         print(await _storage.read(key: 'jwt_token'));
         print("토큰이 없거나 만료되었습니다");

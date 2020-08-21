@@ -1,5 +1,6 @@
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/api.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/dressroom/bar_button.dart';
@@ -13,6 +14,7 @@ class DressRoomView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<List<Product>>(builder: (context, items, child) {
       if (items == null) {
+        Provider.of<DressRoomService>(context).getDressRoom();
         return LoadingWidget();
       } else {
         return BaseWidget<DressRoomModel>(

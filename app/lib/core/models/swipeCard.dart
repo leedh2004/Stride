@@ -33,7 +33,6 @@ class SwipeCard {
     data['price'] = this.price;
     data['product_name'] = this.product_name;
     data['product_url'] = this.product_url;
-    // data['size'] = this.size;
     data['type'] = this.type;
     return data;
   }

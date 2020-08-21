@@ -39,6 +39,7 @@ class _SwipeViewState extends State<SwipeView> {
       builder: (context, items, child) {
         print(type);
         if (items == null || items[type].length < 2) {
+          Provider.of<SwipeService>(context).initCards();
           return LoadingWidget();
         } else {
           if (!tutorial) {
