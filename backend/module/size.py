@@ -19,6 +19,7 @@ def size_matcher(size):
             if free_flag is True:
                 size_tagged = 'free'
             else:
+                if k > 4: continue
                 size_tagged = size_tag[k]
             if size_tagged not in parsed_size.keys():
                 parsed_size[size_tagged] = {}

@@ -22,6 +22,28 @@ def get_home_clothes():
         return 'None'
 
 
+def get_all_type_clothes(num):
+    with db_connect() as (service_conn, cursor):
+        query = """
+        (select * from products where type = 'pants' ORDER BY random() limit 12)
+        union (select * from products where type = 'skirt' ORDER BY random() limit 12) 
+        union (select * from products where type = 'dress' ORDER BY random() limit 13) 
+        union (select * from products where type = 'top' ORDER BY random() limit 13) 
+        """
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            product = []
+            for item in result:
+                load = ProductModel()
+                load.fetch_data(item)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return 'None'
+
+
 def get_clothes_category(type):
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
