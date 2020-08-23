@@ -30,9 +30,14 @@ def login():
     print(response.text)
     response = requests.request("POST", url, headers=headers)
     response_json = response.json()
+    print('kakao : ', response_json)
     user_id = response_json.get('id')
+    account = response_json.get('kakao_account')
     id = str(user_id) + "@kakao"
     insert_user(id)
+    if account['has_email'] is True:
+        update_user_email(id, str(account['email']))
+
     token = encode_jwt_token(id) + "," + str(user_id) + ","+"kakao"
     return render_template('oauth.html', token=token)
 

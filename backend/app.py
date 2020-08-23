@@ -28,7 +28,6 @@ app.register_blueprint(user, url_prefix='/user')
 
 @app.route('/')
 def hello_world():
-    print(request.headers)
     return 'Hello World!'
 
 

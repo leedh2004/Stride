@@ -1,34 +1,85 @@
 from backend.db.init import *
+from backend.db.model.product import *
 from flask import g
 import json
 from bson import json_util
 
 
 def get_home_clothes():
-    cursor = service_conn.cursor()
-    query = """SELECT * FROM Products ORDER BY random() LIMIT 20"""
-    try:
-        cursor.execute(query)
-        result = cursor.fetchall()
-        product = []
-        print('result', result)
-        print(len(result))
-        for item in result:
-            load = {}
-            load['product_id'] = item[0]
-            load['product_url'] = item[3]
-            load['product_name'] = item[4]
-            load['price'] = item[5]
-            load['thumbnail_url'] = item[6]
-            load['image_url'] = item[7]
-            load['type'] = item[8]
-            product.append(load)
-        cursor.close()
-        return json.dumps(product, default=json_util.default, ensure_ascii=False)
-    except:
-        pass
-    return 'none'
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM Products ORDER BY random() LIMIT 10"""
+        try:
+            cursor.execute(query)
+            result = cursor.fetchall()
+            product = []
+            for item in result:
+                load = ProductModel()
+                load.fetch_data(item)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return 'None'
 
 
-#def recommended_list():
-#    return
+def get_all_type_clothes():
+    with db_connect() as (service_conn, cursor):
+        types = ['skirt', 'top', 'dress', 'pants', 'all']
+        query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
+        all_query = """SELECT * FROM Products ORDER BY random() LIMIT 10"""
+        try:
+            product = {
+                'all': [],
+                'skirt': [],
+                'pants': [],
+                'dress': [],
+                'top': []
+            }
+            for type in types:
+                if type is 'all':
+                    cursor.execute(all_query)
+                else:
+                    cursor.execute(query, (type, ))
+                result = cursor.fetchall()
+                for item in result:
+                    load = ProductModel()
+                    load.fetch_data(item)
+                    product[type].append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return 'None'
+
+
+def get_clothes_category(type):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
+        try:
+            cursor.execute(query, (type,))
+            result = cursor.fetchall()
+            product = []
+            for item in result:
+                load = ProductModel()
+                load.fetch_data(item)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return 'None'
+
+
+def get_recommended_product(products):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM products WHERE product_id = %s"""
+        try:
+            product = []
+            for product_id in products:
+                cursor.execute(query, (product_id, ))
+                result = cursor.fetchone()
+                load = ProductModel()
+                load.fetch_data(result)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except:
+            pass
+        return
