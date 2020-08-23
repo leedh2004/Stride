@@ -19,6 +19,7 @@ version: 1.0.0+1
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
+#? 쓰려면 올려야 한대
 
 dependencies:
   cupertino_icons: ^0.1.3

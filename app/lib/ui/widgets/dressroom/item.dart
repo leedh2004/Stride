@@ -84,44 +84,42 @@ class DressRoomItemWidget extends StatelessWidget {
       ),
       Container(
         margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-        child: Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(
-                item.product_name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-              Stack(
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(priceText(item.price) + '원',
-                        style: TextStyle(fontWeight: FontWeight.bold)),
-                  ),
-                  Align(
-                    alignment: Alignment.centerRight + Alignment(-0.2, 0),
-                    child: InkWell(
-                      onTap: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    ProductWebView(item.product_url)))
-                      },
-                      child: FaIcon(
-                        FontAwesomeIcons.store,
-                        color: backgroundColor,
-                        size: 16,
-                      ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              item.product_name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(item.price + '원',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Align(
+                  alignment: Alignment.centerRight + Alignment(-0.2, 0),
+                  child: InkWell(
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductWebView(item.product_url)))
+                    },
+                    child: FaIcon(
+                      FontAwesomeIcons.store,
+                      color: backgroundColor,
+                      size: 16,
                     ),
                   ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            )
+          ],
         ),
       )
     ]);

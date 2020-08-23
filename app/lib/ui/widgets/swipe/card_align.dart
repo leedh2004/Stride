@@ -65,7 +65,7 @@ class SwipeCardAlignment extends StatelessWidget {
                           style: whiteShadowStyle,
                         ),
                         Text(
-                          priceText(item.price) + '원',
+                          item.price + '원',
                           style: whiteSmallShadowStyle,
                         )
                       ]),

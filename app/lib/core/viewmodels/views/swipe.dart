@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:app/core/constants/app_constants.dart';
-import 'package:app/core/constants/type.dart';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/api.dart';

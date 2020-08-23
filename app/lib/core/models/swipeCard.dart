@@ -1,11 +1,17 @@
+import 'package:app/core/models/product_size.dart';
+import 'package:app/ui/shared/text_styles.dart';
+
 class SwipeCard {
   int product_id;
   String thumbnail_url;
-  int price;
+  String price;
   String product_name;
   String product_url;
   String type;
-  int selected = 0;
+  //int selected = 0;
+  dynamic image_urls;
+  ProductSize product_size;
+
   // String size;
 
   SwipeCard(
@@ -14,16 +20,19 @@ class SwipeCard {
       this.price,
       this.product_name,
       this.product_url,
-      // this.size,
+      this.image_urls,
       this.type});
 
   SwipeCard.fromJson(Map<String, dynamic> json) {
     product_id = json['product_id'];
     thumbnail_url = json['thumbnail_url'];
-    price = json['price'];
+    price = priceText(json['price']);
     product_name = json['product_name'];
     product_url = json['product_url'];
+    image_urls = json['image_url'];
+    image_urls = [thumbnail_url, ...image_urls];
     type = json['type'];
+    product_size = ProductSize.fromJson(json['size']);
   }
 
   Map<String, dynamic> toJson() {
