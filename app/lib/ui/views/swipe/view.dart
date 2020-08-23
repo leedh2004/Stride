@@ -60,8 +60,9 @@ class _SwipeViewState extends State<SwipeView> {
               builder: (context, model, child) {
                 return Stack(children: [
                   Align(
-                      alignment: Alignment.topCenter,
-                      child: clothTypeBar(model)),
+                    alignment: Alignment.topCenter,
+                    child: clothTypeBar(model),
+                  ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Column(
@@ -82,8 +83,8 @@ class _SwipeViewState extends State<SwipeView> {
                             ),
                           ),
                           buttonRow(model),
+                          UIHelper.verticalSpaceSmall,
                           SwipeCardSection(context, model),
-                          UIHelper.verticalSpaceMedium
                         ]),
                   ),
                 ]);

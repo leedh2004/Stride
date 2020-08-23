@@ -46,3 +46,16 @@ const blueHeaderStyle = TextStyle(
 
 const inputPurpleStyle = TextStyle(
     color: backgroundColor, fontSize: 24, fontWeight: FontWeight.w700);
+
+String priceText(int price) {
+  String str = price.toString();
+  String ret = "";
+  int idx = str.length - 1;
+  int cnt = 0;
+  for (int i = idx; i >= 0; i--) {
+    ret = str[i] + ret;
+    cnt++;
+    if (cnt % 3 == 0 && idx != 0) ret = ',' + ret;
+  }
+  return ret;
+}

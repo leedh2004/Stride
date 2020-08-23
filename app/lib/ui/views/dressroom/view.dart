@@ -33,9 +33,9 @@ class DressRoomView extends StatelessWidget {
                       //crossAxisCount: 2,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,
-                        childAspectRatio: 0.8,
-                        mainAxisSpacing: 4.0,
-                        crossAxisSpacing: 4.0,
+                        childAspectRatio: 0.6,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 8.0,
                       ),
                       padding: EdgeInsets.all(8),
                       itemBuilder: (context, index) {
