@@ -22,22 +22,29 @@ def get_home_clothes():
         return 'None'
 
 
-def get_all_type_clothes(num):
+def get_all_type_clothes():
     with db_connect() as (service_conn, cursor):
-        query = """
-        (select * from products where type = 'pants' ORDER BY random() limit 12)
-        union (select * from products where type = 'skirt' ORDER BY random() limit 12) 
-        union (select * from products where type = 'dress' ORDER BY random() limit 13) 
-        union (select * from products where type = 'top' ORDER BY random() limit 13) 
-        """
+        types = ['skirt', 'top', 'dress', 'pants', 'all']
+        query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
+        all_query = """SELECT * FROM Products ORDER BY random() LIMIT 10"""
         try:
-            cursor.execute(query)
-            result = cursor.fetchall()
-            product = []
-            for item in result:
-                load = ProductModel()
-                load.fetch_data(item)
-                product.append(load.__dict__)
+            product = {
+                'all': [],
+                'skirt': [],
+                'pants': [],
+                'dress': [],
+                'top': []
+            }
+            for type in types:
+                if type is 'all':
+                    cursor.execute(all_query)
+                else:
+                    cursor.execute(query, (type, ))
+                result = cursor.fetchall()
+                for item in result:
+                    load = ProductModel()
+                    load.fetch_data(item)
+                    product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:
             pass
