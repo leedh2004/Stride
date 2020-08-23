@@ -37,7 +37,7 @@ def get_clothes():
 @login_required
 def get_all_type_clothes_limit_num():
     try:
-        result = get_all_type_clothes(50)
+        result = get_all_type_clothes()
     except:
         return jsonify("Fail"), 500
     return result, 200
