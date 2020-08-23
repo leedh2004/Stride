@@ -1,5 +1,6 @@
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/api.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/dressroom/bar_button.dart';
@@ -13,6 +14,7 @@ class DressRoomView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<List<Product>>(builder: (context, items, child) {
       if (items == null) {
+        Provider.of<DressRoomService>(context).getDressRoom();
         return LoadingWidget();
       } else {
         return BaseWidget<DressRoomModel>(
@@ -30,12 +32,12 @@ class DressRoomView extends StatelessWidget {
                       shrinkWrap: true,
                       //crossAxisCount: 2,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.8,
-                        mainAxisSpacing: 20.0,
-                        crossAxisSpacing: 20.0,
+                        crossAxisCount: 3,
+                        childAspectRatio: 0.6,
+                        mainAxisSpacing: 10.0,
+                        crossAxisSpacing: 8.0,
                       ),
-                      padding: EdgeInsets.all(16),
+                      padding: EdgeInsets.all(8),
                       itemBuilder: (context, index) {
                         print(index);
                         //print(items[index].product_id);

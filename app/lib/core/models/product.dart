@@ -1,7 +1,10 @@
+import 'package:app/core/models/product_size.dart';
+import 'package:app/ui/shared/text_styles.dart';
+
 class Product {
   int product_id;
+  String price;
   String thumbnail_url;
-  int price;
   String product_name;
   String product_url;
   String type;
@@ -20,7 +23,7 @@ class Product {
   Product.fromJson(Map<String, dynamic> json) {
     product_id = json['product_id'];
     thumbnail_url = json['thumbnail_url'];
-    price = json['price'];
+    price = priceText(json['price']);
     product_name = json['product_name'];
     product_url = json['product_url'];
     type = json['type'];

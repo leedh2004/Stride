@@ -12,11 +12,9 @@ class DressRoomService {
   DressRoomService(Api api) {
     print("DressRoomService 생성!");
     _api = api;
-    getDressRoom();
   }
 
   void addItem(Product item) async {
-    print("HEY!");
     List<Product> last = _itemsController.value;
     _itemsController.add([...last, item]);
   }

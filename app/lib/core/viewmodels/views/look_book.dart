@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/services/api.dart';
 import 'package:app/core/viewmodels/base_model.dart';

@@ -14,22 +14,9 @@ class DressRoomModel extends BaseModel {
     _api = api;
     for (var item in items) {
       if (item.selected == 1) {
-        isAnyOneSelected = true;
-        break;
+        item.selected = 0;
       }
     }
-  }
-
-  void selectItem(int index) {
-    items[index].selected = 1 - items[index].selected;
-    isAnyOneSelected = false;
-    for (var item in items) {
-      if (item.selected == 1) {
-        isAnyOneSelected = true;
-        break;
-      }
-    }
-    notifyListeners();
   }
 
   List<Product> findSelectedTop() {
@@ -53,6 +40,18 @@ class DressRoomModel extends BaseModel {
     return bottom;
   }
 
+  void selectItem(int index) {
+    items[index].selected = 1 - items[index].selected;
+    isAnyOneSelected = false;
+    for (var item in items) {
+      if (item.selected == 1) {
+        isAnyOneSelected = true;
+        break;
+      }
+    }
+    notifyListeners();
+  }
+
   void removeItem() async {
     List<int> removedIds = List<int>();
     for (var element in items) {
@@ -71,8 +70,7 @@ class DressRoomModel extends BaseModel {
   void makeCoordinate(int top, int bottom) async {
     final response = await _api.client.post('${Api.endpoint}/coordination/',
         data: jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
-    print("here?");
-    print(response.statusCode);
+    print("makeCoordinate() ${response.statusCode}");
   }
 
   @override

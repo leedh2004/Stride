@@ -14,7 +14,6 @@ class LookBookService {
   LookBookService(Api api) {
     print("LookBookService 생성!");
     _api = api;
-    getLookBook();
   }
 
   void addItem(Product top, Product bottom) async {
@@ -33,7 +32,7 @@ class LookBookService {
       }
     } catch (e) {
       if (e is DioError) {
-        print(e.response.statusCode);
+        print('Error ${e.response.statusCode}');
       }
     }
   }

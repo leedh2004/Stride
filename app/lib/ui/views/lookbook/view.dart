@@ -1,5 +1,6 @@
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/services/api.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/viewmodels/views/look_book.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/lookbook/item.dart';
@@ -12,6 +13,7 @@ class LookBookView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<List<Coordinate>>(builder: (context, items, child) {
       if (items == null) {
+        Provider.of<LookBookService>(context).getLookBook();
         return LoadingWidget();
       } else {
         return BaseWidget<LookBookModel>(
@@ -30,8 +32,8 @@ class LookBookView extends StatelessWidget {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       childAspectRatio: 1,
-                      mainAxisSpacing: 10.0,
-                      crossAxisSpacing: 10.0,
+                      mainAxisSpacing: 16.0,
+                      crossAxisSpacing: 16.0,
                     ),
                     padding: EdgeInsets.all(5),
                     itemBuilder: (context, index) {

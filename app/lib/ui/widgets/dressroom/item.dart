@@ -1,10 +1,8 @@
 import 'dart:io';
-
 import 'package:app/core/models/product.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
-import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -19,96 +17,111 @@ class DressRoomItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //print("!!!!!!!!!!!!!!!!");
-    //print(item.price);
-    //print(item.thumbnail_url);
-    return Card(
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.black45, width: 0.5)),
-      elevation: 1,
-      clipBehavior: Clip.antiAlias,
-      child: Stack(children: <Widget>[
-        Column(
+    return Column(children: [
+      Expanded(
+        child: Stack(children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                child: AspectRatio(
+                  aspectRatio: 18 / 1,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(3),
+                    child: CachedNetworkImage(
+                        imageUrl: item.thumbnail_url,
+                        fit: BoxFit.cover,
+                        httpHeaders: {
+                          HttpHeaders.refererHeader:
+                              "http://api-stride.com:5000/"
+                        }),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          InkWell(
+            onTap: () {
+              Provider.of<DressRoomModel>(context, listen: false)
+                  .selectItem(index);
+            },
+            child: Opacity(
+              opacity: opacity,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(3)),
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              ),
+            ),
+          ),
+          Opacity(
+            opacity: opacity,
+            child: Align(
+              alignment: Alignment.center,
+              child: IconButton(
+                iconSize: 20,
+                icon: FaIcon(
+                  FontAwesomeIcons.search,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (opacity == 1) {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                ProductWebView(item.product_url)));
+                  } else {
+                    Provider.of<DressRoomModel>(context, listen: false)
+                        .selectItem(index);
+                  }
+                },
+              ),
+            ),
+          ),
+        ]),
+      ),
+      Container(
+        margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            AspectRatio(
-              aspectRatio: 18 / 17,
-              child: CachedNetworkImage(
-                  imageUrl: item.thumbnail_url,
-                  fit: BoxFit.cover,
-                  httpHeaders: {
-                    HttpHeaders.refererHeader: "http://api-stride.com:5000/"
-                  }),
+            Text(
+              item.product_name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
-            // child: FancyShimmerImage(
-            //   imageUrl: item.thumbnail_url,
-            //   boxFit: BoxFit.cover,
-            //   errorWidget: Icon(Icons.error),
-            //   shimmerBaseColor: backgroundTransparentColor,
-            //   shimmerHighlightColor: backgroundColor,
-            //   shimmerBackColor: backgroundColor,
-            //   // placeholder: (context, url) => LoadingWidget(),
-            // )),
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: 5),
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text(
-                              item.product_name,
-                              style: subHeaderStyle,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            Text('Price ${item.price}')
-                          ],
-                        ),
-                      ),
-                      UIHelper.horizontalSpaceMediumLarge
-                    ]),
-              ),
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(item.price + '원',
+                      style: TextStyle(fontWeight: FontWeight.bold)),
+                ),
+                Align(
+                  alignment: Alignment.centerRight + Alignment(-0.2, 0),
+                  child: InkWell(
+                    onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ProductWebView(item.product_url)))
+                    },
+                    child: FaIcon(
+                      FontAwesomeIcons.store,
+                      color: backgroundColor,
+                      size: 16,
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         ),
-        InkWell(
-          onTap: () {
-            Provider.of<DressRoomModel>(context, listen: false)
-                .selectItem(index);
-          },
-          child: Opacity(
-            opacity: opacity,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(0, 0, 0, 0.4),
-                  border: Border.all(color: backgroundColor, width: 5)),
-            ),
-          ),
-        ),
-        Opacity(
-          opacity: 1 - opacity / 2,
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: IconButton(
-              iconSize: 18,
-              icon: FaIcon(FontAwesomeIcons.gift),
-              color: backgroundColor,
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ProductWebView(item.product_url)));
-              },
-            ),
-          ),
-        ),
-      ]),
-    );
+      )
+    ]);
   }
 }

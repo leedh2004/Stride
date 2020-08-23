@@ -19,21 +19,35 @@ class DressRoomButtonBar extends StatelessWidget {
         ? Stack(
             children: <Widget>[
               Align(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+                alignment: Alignment.centerLeft,
+                child: IconButton(
                   color: backgroundColor,
-                  onPressed: () async {
-                    List<Product> top = model.findSelectedTop();
-                    List<Product> bottom = model.findSelectedBotoom();
-                    showMaterialModalBottomSheet(
-                        expand: false,
-                        context: context,
-                        builder: (context, scrollController) =>
-                            DressRoomSelectDialog(top, bottom));
-                  },
-                  child: Text('Make', style: whiteStyle),
+                  padding: EdgeInsets.only(left: 30),
+                  alignment: Alignment.centerRight,
+                  icon: FaIcon(FontAwesomeIcons.solidFolder),
+                  onPressed: () {},
                 ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: FlatButton(
+                    padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
+                    color: backgroundColor,
+                    onPressed: () async {
+                      List<Product> top = model.findSelectedTop();
+                      List<Product> bottom = model.findSelectedBotoom();
+                      showMaterialModalBottomSheet(
+                          expand: false,
+                          context: context,
+                          builder: (context, scrollController) =>
+                              DressRoomSelectDialog(top, bottom));
+                    },
+                    child: Text(
+                      'MAKE',
+                      style: whiteStyle,
+                    )
+                    // child: Text('Make', style: whiteStyle),
+                    ),
               ),
               Align(
                 alignment: Alignment.centerRight,
@@ -96,13 +110,25 @@ class DressRoomButtonBar extends StatelessWidget {
         : Stack(
             children: <Widget>[
               Align(
-                alignment: Alignment.center,
-                child: RaisedButton(
-                  padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
+                alignment: Alignment.centerLeft,
+                child: IconButton(
                   color: Colors.black26,
+                  padding: EdgeInsets.only(left: 30),
+                  alignment: Alignment.centerRight,
+                  icon: FaIcon(FontAwesomeIcons.solidFolder),
                   onPressed: () {},
-                  child: Text('Make', style: whiteStyle),
                 ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: FlatButton(
+                    padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
+                    color: Colors.black26,
+                    onPressed: () {},
+                    child: Text(
+                      'MAKE',
+                      style: whiteStyle,
+                    )),
               ),
               Align(
                 alignment: Alignment.centerRight,
