@@ -33,6 +33,15 @@ def get_clothes():
     return result, 200
 
 
+@home.route('/all', methods=['GET'])
+@login_required
+def get_all_type_clothes_limit_num():
+    try:
+        result = get_all_type_clothes(50)
+    except:
+        return jsonify("Fail"), 500
+    return result, 200
+
 @home.route('/like', methods=['POST'])
 @login_required
 def like():
