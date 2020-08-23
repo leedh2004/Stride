@@ -8,8 +8,9 @@ class SwipeCard {
   String product_name;
   String product_url;
   String type;
+  int length;
   //int selected = 0;
-  dynamic image_urls;
+  List<dynamic> image_urls;
   ProductSize product_size;
 
   // String size;
@@ -31,6 +32,7 @@ class SwipeCard {
     product_url = json['product_url'];
     image_urls = json['image_url'];
     image_urls = [thumbnail_url, ...image_urls];
+    length = image_urls.length;
     type = json['type'];
     product_size = ProductSize.fromJson(json['size']);
   }

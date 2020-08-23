@@ -1,6 +1,5 @@
 import 'package:app/core/models/product.dart';
 import 'package:app/ui/shared/text_styles.dart';
-import 'package:kakao_flutter_sdk/local.dart';
 
 class Coordinate {
   int id;

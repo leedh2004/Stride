@@ -1,10 +1,8 @@
 import 'dart:math';
 import 'package:app/core/constants/app_constants.dart';
-import 'package:app/core/constants/type.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -37,6 +35,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
+  int index = 0;
 
   final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
   Alignment frontCardAlign;
@@ -74,76 +73,123 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         likeTextWidget(),
         _controller.status != AnimationStatus.forward
             ? SizedBox.expand(
+                child: Container(
+                margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
                 child: GestureDetector(
-                // While dragging the first card
-                onPanUpdate: (DragUpdateDetails details) {
-                  // Add what the user swiped in the last frame to the alignment of the card
-                  List<double> opacity = [0, 0, 0];
-                  if (frontCardAlign.x > START_RIGHT) {
-                    // See Heart Icon applying Opacity
-                    opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
-                    if (opacity[LIKE] >= MAX_OPACITY)
-                      opacity[LIKE] = MAX_OPACITY;
-                  } else if (frontCardAlign.x < START_LEFT) {
-                    // See Broken Heart Icon applying Opacity
-                    opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
-                    if (opacity[HATE] >= MAX_OPACITY)
-                      opacity[HATE] = MAX_OPACITY;
-                  } else if (frontCardAlign.y < START_UP) {
-                    // See Pass Icon applying Opacity
-                    opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
-                    if (opacity[PASS] >= MAX_OPACITY)
-                      opacity[PASS] = MAX_OPACITY;
-                  }
-                  // Rendering View
-                  setState(() {
-                    // Set Opacity
-                    _opacity[LIKE] = opacity[LIKE];
-                    _opacity[HATE] = opacity[HATE];
-                    _opacity[PASS] = opacity[PASS];
-                    // Drag Card SPEED
-                    frontCardAlign = Alignment(
-                        frontCardAlign.x +
-                            X_SPEED *
-                                details.delta.dx /
-                                MediaQuery.of(context).size.width,
-                        frontCardAlign.y +
-                            Y_SPEED *
-                                details.delta.dy /
-                                MediaQuery.of(context).size.height);
-                    frontCardRot = frontCardAlign.x;
-                  });
-                },
-                // When releasing the first card
-                onPanEnd: (_) {
-                  // If the front card was swiped far enough to count as swiped
-                  setState(() {
-                    _opacity[HATE] = 0.0;
-                    _opacity[LIKE] = 0.0;
-                    _opacity[PASS] = 0.0;
-                  });
-                  // Send result reqeust to server
-                  if (frontCardAlign.x > STANDARD_RIGHT) {
-                    widget.model.likeRequest();
-                    animateCards();
-                  } else if (frontCardAlign.x < STANDARD_LEFT) {
-                    widget.model.dislikeRequest();
-                    animateCards();
-                  } else if (frontCardAlign.y < STANDARD_UP) {
-                    widget.model.passRequest();
-                    animateCards();
-                  } else {
-                    // Return to the initial rotation and alignment
+                  // behavior: HitTestBehavior.deferToChild,
+                  onTap: () {
                     setState(() {
-                      frontCardAlign = defaultFrontCardAlign;
-                      frontCardRot = 0.0;
+                      index++;
                     });
-                  }
-                },
+                  },
+                  onTapUp: (details) {
+                    print(details.globalPosition.dy);
+                  },
+                  // While dragging the first card
+                  onPanUpdate: (DragUpdateDetails details) {
+                    // Add what the user swiped in the last frame to the alignment of the card
+                    List<double> opacity = [0, 0, 0];
+                    if (frontCardAlign.x > START_RIGHT) {
+                      // See Heart Icon applying Opacity
+                      opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
+                      if (opacity[LIKE] >= MAX_OPACITY)
+                        opacity[LIKE] = MAX_OPACITY;
+                    } else if (frontCardAlign.x < START_LEFT) {
+                      // See Broken Heart Icon applying Opacity
+                      opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
+                      if (opacity[HATE] >= MAX_OPACITY)
+                        opacity[HATE] = MAX_OPACITY;
+                    } else if (frontCardAlign.y < START_UP) {
+                      // See Pass Icon applying Opacity
+                      opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
+                      if (opacity[PASS] >= MAX_OPACITY)
+                        opacity[PASS] = MAX_OPACITY;
+                    }
+                    // Rendering View
+                    setState(() {
+                      // Set Opacity
+                      _opacity[LIKE] = opacity[LIKE];
+                      _opacity[HATE] = opacity[HATE];
+                      _opacity[PASS] = opacity[PASS];
+                      // Drag Card SPEED
+                      frontCardAlign = Alignment(
+                          frontCardAlign.x +
+                              X_SPEED *
+                                  details.delta.dx /
+                                  MediaQuery.of(context).size.width,
+                          frontCardAlign.y +
+                              Y_SPEED *
+                                  details.delta.dy /
+                                  MediaQuery.of(context).size.height);
+                      frontCardRot = frontCardAlign.x;
+                    });
+                  },
+                  // When releasing the first card
+                  onPanEnd: (_) {
+                    // If the front card was swiped far enough to count as swiped
+                    setState(() {
+                      _opacity[HATE] = 0.0;
+                      _opacity[LIKE] = 0.0;
+                      _opacity[PASS] = 0.0;
+                    });
+                    // Send result reqeust to server
+                    if (frontCardAlign.x > STANDARD_RIGHT) {
+                      widget.model.likeRequest();
+                      animateCards();
+                    } else if (frontCardAlign.x < STANDARD_LEFT) {
+                      widget.model.dislikeRequest();
+                      animateCards();
+                    } else if (frontCardAlign.y < STANDARD_UP) {
+                      widget.model.passRequest();
+                      animateCards();
+                    } else {
+                      // Return to the initial rotation and alignment
+                      setState(() {
+                        frontCardAlign = defaultFrontCardAlign;
+                        frontCardRot = 0.0;
+                      });
+                    }
+                  },
+                ),
               ))
             : Container(),
+        //RulerWidget()
       ],
     ));
+  }
+
+  Widget RulerWidget() {
+    return Align(
+        alignment: _controller.status == AnimationStatus.forward
+            ? CardsAnimation.frontCardDisappearAlignmentAnim(
+                    _controller, frontCardAlign)
+                .value
+            : frontCardAlign,
+        child: Transform.rotate(
+          angle: (pi / 180.0) * frontCardRot,
+          child: SizedBox.fromSize(
+            size: cardsSize[0],
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+                child: IconButton(
+                  icon: FaIcon(
+                    FontAwesomeIcons.rulerVertical,
+                    size: 35,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    var item = Provider.of<SwipeModel>(context, listen: false)
+                            .items[widget.model.type]
+                        [(widget.model.index[widget.model.type])];
+                    print(item.product_size.free.length);
+                  },
+                ),
+              ),
+            ),
+          ),
+        ));
   }
 
   Widget likeTextWidget() {
@@ -270,7 +316,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           size: _controller.status == AnimationStatus.forward
               ? CardsAnimation.backCardSizeAnim(_controller).value
               : cardsSize[2],
-          child: SwipeCardAlignment(item)),
+          child: SwipeCardAlignment(item, 0)),
     );
   }
 
@@ -286,7 +332,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           size: _controller.status == AnimationStatus.forward
               ? CardsAnimation.middleCardSizeAnim(_controller).value
               : cardsSize[1],
-          child: SwipeCardAlignment(item)),
+          child: SwipeCardAlignment(item, 0)),
     );
   }
 
@@ -304,7 +350,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         child: Transform.rotate(
           angle: (pi / 180.0) * frontCardRot,
           child: SizedBox.fromSize(
-              size: cardsSize[0], child: SwipeCardAlignment(item)),
+              size: cardsSize[0], child: SwipeCardAlignment(item, index)),
         ));
   }
 
@@ -317,6 +363,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
       // cards[1] = cards[2];
       // cards[2] = temp;
       // cards[2] = SwipeCardAlignment(cardsCounter);
+      index = 0;
       frontCardAlign = defaultFrontCardAlign;
       frontCardRot = 0.0;
     });

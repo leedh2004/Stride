@@ -116,11 +116,11 @@ class _SwipeViewState extends State<SwipeView> {
                 ),
               ),
               InkWell(
-                onTap: () => {
+                onTap: () {
+                  print("???");
                   setState(() {
                     model.changeType('top');
-                    type = '123';
-                  })
+                  });
                 },
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 10, 20, 10),

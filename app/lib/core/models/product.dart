@@ -3,8 +3,8 @@ import 'package:app/ui/shared/text_styles.dart';
 
 class Product {
   int product_id;
-  String price;
   String thumbnail_url;
+  String price;
   String product_name;
   String product_url;
   String type;
@@ -19,6 +19,15 @@ class Product {
       this.product_url,
       // this.size,
       this.type});
+
+  Product.fromSwipeCard(Map<String, dynamic> json) {
+    product_id = json['product_id'];
+    thumbnail_url = json['thumbnail_url'];
+    price = json['price'];
+    product_name = json['product_name'];
+    product_url = json['product_url'];
+    type = json['type'];
+  }
 
   Product.fromJson(Map<String, dynamic> json) {
     product_id = json['product_id'];
