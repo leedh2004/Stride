@@ -114,12 +114,12 @@ class _InputFirstPageState extends State<InputFirstPage> {
                 _height = value;
               }),
               value: _height,
-              max: 180,
-              min: 140,
+              max: 175,
+              min: 145,
             ),
           ),
         ),
-        _height.toInt() == 140
+        _height.toInt() == 145
             ? RichText(
                 text: TextSpan(
                     style: new TextStyle(
@@ -127,10 +127,10 @@ class _InputFirstPageState extends State<InputFirstPage> {
                       color: Colors.black,
                     ),
                     children: [
-                    TextSpan(text: '140', style: inputPurpleStyle),
+                    TextSpan(text: '145', style: inputPurpleStyle),
                     TextSpan(text: ' cm 이하')
                   ]))
-            : _height.toInt() == 180
+            : _height.toInt() == 175
                 ? RichText(
                     text: TextSpan(
                         style: new TextStyle(
@@ -138,7 +138,7 @@ class _InputFirstPageState extends State<InputFirstPage> {
                           color: Colors.black,
                         ),
                         children: [
-                        TextSpan(text: '180', style: inputPurpleStyle),
+                        TextSpan(text: '175', style: inputPurpleStyle),
                         TextSpan(text: ' cm 이상')
                       ]))
                 : RichText(
@@ -170,12 +170,12 @@ class _InputFirstPageState extends State<InputFirstPage> {
                 _weight = value;
               }),
               value: _weight,
-              max: 100,
-              min: 30,
+              max: 70,
+              min: 40,
             ),
           ),
         ),
-        _weight.toInt() == 30
+        _weight.toInt() == 40
             ? RichText(
                 text: TextSpan(
                     style: new TextStyle(
@@ -183,10 +183,10 @@ class _InputFirstPageState extends State<InputFirstPage> {
                       color: Colors.black,
                     ),
                     children: [
-                    TextSpan(text: '30', style: inputPurpleStyle),
+                    TextSpan(text: '40', style: inputPurpleStyle),
                     TextSpan(text: ' kg 이하')
                   ]))
-            : _weight.toInt() == 100
+            : _weight.toInt() == 70
                 ? RichText(
                     text: TextSpan(
                         style: new TextStyle(
@@ -194,7 +194,7 @@ class _InputFirstPageState extends State<InputFirstPage> {
                           color: Colors.black,
                         ),
                         children: [
-                        TextSpan(text: '100', style: inputPurpleStyle),
+                        TextSpan(text: '70', style: inputPurpleStyle),
                         TextSpan(text: ' kg 이상')
                       ]))
                 : RichText(

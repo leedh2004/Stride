@@ -205,9 +205,11 @@ class _SwipeViewState extends State<SwipeView> {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => ProductWebView(model
-                        .items[model.type][model.index[model.type]]
-                        .product_url)));
+                    builder: (context) => ProductWebView(
+                        model.items[model.type][model.index[model.type]]
+                            .product_url,
+                        model.items[model.type][model.index[model.type]]
+                            .shop_mall)));
           },
           elevation: 2.0,
           fillColor: Colors.white,
