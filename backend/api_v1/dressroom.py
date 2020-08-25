@@ -13,7 +13,7 @@ dressroom = Blueprint('dressroom', __name__)
 
 
 @dressroom.route('/', methods=['GET'])
-# @login_required
+@login_required
 def get_dress():
     try:
         result = get_dressroom()
@@ -22,12 +22,11 @@ def get_dress():
     return result, 200
 
 
-@dressroom.route('/delete', methods=['POST'])
+@dressroom.route('/', methods=['DELETE'])
 @login_required
 def delete_dress():
     try:
-        body = request.get_json()
-        product_id = body['product_id']
+        product_id = request.args.get('product_id')
         delete_dressroom(product_id)
     except:
         return jsonify("Fail"), 500
@@ -47,7 +46,7 @@ def create_folder():
     return jsonify("Success"), 200
 
 
-@dressroom.route('/folder/name', method=['PUT'])
+@dressroom.route('/folder/name', methods=['PUT'])
 def modify_folder():
     try:
         body = request.get_json()
@@ -57,10 +56,10 @@ def modify_folder():
     except Exception as Ex:
         print(Ex)
         return jsonify("Fail"), 500
-    return jsonify("Success"), 200
+    return jsonify("Success"), 201
 
 
-@dressroom.route('/folder/move', method=['PUT'])
+@dressroom.route('/folder/move', methods=['PUT'])
 def move_item():
     try:
         body = request.get_json()
@@ -70,14 +69,13 @@ def move_item():
     except Exception as Ex:
         print(Ex)
         return jsonify("Fail"), 500
-    return jsonify("Success"), 200
+    return jsonify("Success"), 201
 
 
-@dressroom.route('/folder/delete', method=['PUT'])
+@dressroom.route('/folder', methods=['DELETE'])
 def delete_folder():
     try:
-        body = request.get_json()
-        folder_id = body['folder_id']
+        folder_id = request.args.get('folder_id')
         delete_dressroom_folder(folder_id)
     except Exception as Ex:
         print(Ex)
