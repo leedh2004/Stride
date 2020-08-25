@@ -26,7 +26,7 @@ def get_clothes():
             result = get_home_clothes()
         else:
             if type not in types:
-                raise
+                return jsonify("Fail"), 500
             result = get_clothes_category(type)
     except:
         return jsonify("Fail"), 500

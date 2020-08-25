@@ -1,4 +1,6 @@
 from flask import Flask, g, request
+from gevent.pywsgi import WSGIServer
+
 import sys
 sys.path.append('../')
 sys.path.append('../../')
@@ -32,4 +34,10 @@ def hello_world():
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Development
+    # app.run(host='0.0.0.0', port=5000)
+
+    # Production
+    print("Server on 5000 Port")
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
