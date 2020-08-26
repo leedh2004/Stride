@@ -22,11 +22,12 @@ def get_dress():
     return result, 200
 
 
-@dressroom.route('/', methods=['DELETE'])
+@dressroom.route('/', methods=['PUT'])
 @login_required
 def delete_dress():
     try:
-        product_id = request.args.get('product_id')
+        body = request.get_json()
+        product_id = body['product_id']
         delete_dressroom(product_id)
     except:
         return jsonify("Fail"), 500
