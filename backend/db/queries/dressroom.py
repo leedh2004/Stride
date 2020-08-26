@@ -29,7 +29,7 @@ def get_dressroom():
             product['info'] = []
             cursor.execute(get_folder_query, (g.user_id, ))
             result = cursor.fetchall()
-            result.append(('default', 'default'))
+            result.append((0, 'default'))
             for item in result:
                 folder_id = item[0]
                 folder_name = item[1]
@@ -74,7 +74,7 @@ def move_dressroom_folder(folder_id, product_id):
     with db_connect() as (service_conn, cursor):
         query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id IN %s"""
         try:
-            if folder_id == 'default':
+            if folder_id == 0:
                 cursor.execute(query, (None, g.user_id, product_id))
             else:
                 cursor.execute(query, (folder_id, g.user_id, product_id))
