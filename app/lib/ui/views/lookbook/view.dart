@@ -11,48 +11,44 @@ import '../base_widget.dart';
 class LookBookView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<List<Coordinate>>(builder: (context, items, child) {
-      if (items == null) {
-        Provider.of<LookBookService>(context).getLookBook();
-        return LoadingWidget();
-      } else {
-        return BaseWidget<LookBookModel>(
-          model: LookBookModel(items, Provider.of<Api>(context)),
-          builder: (context, model, child) {
-            Widget showWidget;
-            if (model.busy) {
-              showWidget = LoadingWidget();
-            } else {
-              showWidget = Container(
-                alignment: Alignment.topLeft,
-                child: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 1,
-                      mainAxisSpacing: 16.0,
-                      crossAxisSpacing: 16.0,
-                    ),
-                    padding: EdgeInsets.all(5),
-                    itemBuilder: (context, index) {
-                      print("$index 전달");
-                      return LookBookItem(
-                          item: model.items[index], index: index);
-                    },
-                    itemCount: model.items.length,
-                  ),
+    return BaseWidget<LookBookModel>(
+      model:
+          LookBookModel(Provider.of<LookBookService>(context, listen: false)),
+      builder: (context, model, child) {
+        Widget showWidget;
+        if (model.service.items == null) {
+          showWidget = LoadingWidget();
+          model.getLookBook();
+        } else {
+          print("???");
+          showWidget = Container(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: EdgeInsets.all(16),
+              child: GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 1,
+                  mainAxisSpacing: 16.0,
+                  crossAxisSpacing: 16.0,
                 ),
-              );
-            }
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 500),
-              child: showWidget,
-            );
-          },
+                padding: EdgeInsets.all(5),
+                itemBuilder: (context, index) {
+                  print("$index 전달");
+                  return LookBookItem(
+                      item: model.service.items[index], index: index);
+                },
+                itemCount: model.service.items.length,
+              ),
+            ),
+          );
+        }
+        return AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: showWidget,
         );
-      }
-    });
+      },
+    );
   }
 }

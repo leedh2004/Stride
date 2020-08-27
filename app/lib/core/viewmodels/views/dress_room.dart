@@ -1,76 +1,68 @@
-import 'dart:convert';
 import 'package:app/core/models/product.dart';
-import 'package:app/core/services/api.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class DressRoomModel extends BaseModel {
-  List<Product> items;
-  bool isAnyOneSelected = false;
-  Api _api;
+  //List<Product> items;
+  DressRoomService _service;
+  Set<int> selectedIdx = new Set();
+  int top_cnt = 0;
+  int bottom_cnt = 0;
+  int current_folder = 0;
 
-  DressRoomModel(List<Product> serviceItems, Api api) {
+  DressRoomModel(DressRoomService service) {
     print("DressRoomModel 생성!");
-    items = serviceItems;
-    _api = api;
-    for (var item in items) {
-      if (item.selected == 1) {
-        item.selected = 0;
-      }
-    }
+    _service = service;
+  }
+
+  void changeFolder(int folderId) {
+    _service.changeFolder(folderId);
+    current_folder = _service.current_folder;
+    notifyListeners();
+  }
+
+  Future getDressRoom() async {
+    await _service.getDressRoom();
+    notifyListeners();
   }
 
   List<Product> findSelectedTop() {
-    List<Product> top = List<Product>();
-    for (int i = 0; i < items.length; i++) {
-      if (items[i].selected == 1 && items[i].type == 'top') {
-        top.add(items[i]);
-      }
-    }
+    List<Product> top = _service.findSelectedTop(selectedIdx.toList());
     return top;
   }
 
   List<Product> findSelectedBotoom() {
-    List<Product> bottom = List<Product>();
-    for (int i = 0; i < items.length; i++) {
-      if (items[i].selected == 1 &&
-          (items[i].type == 'skirt' || items[i].type == 'pants')) {
-        bottom.add(items[i]);
-      }
-    }
+    List<Product> bottom = _service.findSelectedBottom(selectedIdx.toList());
     return bottom;
   }
 
   void selectItem(int index) {
-    items[index].selected = 1 - items[index].selected;
-    isAnyOneSelected = false;
-    for (var item in items) {
-      if (item.selected == 1) {
-        isAnyOneSelected = true;
-        break;
-      }
+    // 그런데 이렇게 하면 모든게 렌더링 될텐데 이게 맞는건가..?
+    if (selectedIdx.contains(index)) {
+      if (_service.isTop(index))
+        top_cnt--;
+      else if (_service.isBottom(index)) bottom_cnt--;
+      selectedIdx.remove(index);
+    } else {
+      if (_service.isTop(index))
+        top_cnt++;
+      else if (_service.isBottom(index)) bottom_cnt++;
+      selectedIdx.add(index);
     }
     notifyListeners();
   }
 
-  void removeItem() async {
-    List<int> removedIds = List<int>();
-    for (var element in items) {
-      if (element.selected == 1) {
-        removedIds.add(element.product_id);
-      }
-    }
-    final response = await _api.client.post('${Api.endpoint}/dressroom/delete/',
-        data: jsonEncode({'product_id': removedIds}));
-    if (response.statusCode == 200) {
-      items.removeWhere((element) => element.selected == 1);
-    }
+  Future removeItem() async {
+    await _service.removeItem(selectedIdx.toList());
+    selectedIdx.clear();
     notifyListeners();
   }
 
-  void makeCoordinate(int top, int bottom) async {
-    final response = await _api.client.post('${Api.endpoint}/coordination/',
-        data: jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
-    print("makeCoordinate() ${response.statusCode}");
+  Future makeCoordinate(int top, int bottom) async {
+    // API 콜이니까 드레스룸 서비스에서 하는게 맞는듯
+    await _service.makeCoordinate(top, bottom);
+    print(top);
+    selectedIdx.clear();
   }
 
   @override

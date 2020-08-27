@@ -1,5 +1,3 @@
-import 'package:app/core/models/product.dart';
-import 'package:app/core/services/api.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/views/base_widget.dart';
@@ -12,18 +10,23 @@ import 'package:provider/provider.dart';
 class DressRoomView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<List<Product>>(builder: (context, items, child) {
-      if (items == null) {
-        Provider.of<DressRoomService>(context).getDressRoom();
-        return LoadingWidget();
-      } else {
-        return BaseWidget<DressRoomModel>(
-          model: DressRoomModel(items, Provider.of<Api>(context)),
-          builder: (context, model, child) {
-            Widget showWidget;
-            if (model.busy) {
+    //Consumer를 없앴음, StreamProvider도 없애버림
+    return BaseWidget<DressRoomModel>(
+        model: DressRoomModel(
+            Provider.of<DressRoomService>(context, listen: false)),
+        builder: (context, model, child) {
+          Widget showWidget;
+          if (model.busy) {
+            showWidget = LoadingWidget();
+          } else {
+            if (Provider.of<DressRoomService>(context)
+                    .items[model.current_folder] ==
+                null) {
+              model.getDressRoom();
               showWidget = LoadingWidget();
             } else {
+              var items = Provider.of<DressRoomService>(context)
+                  .items[model.current_folder];
               showWidget = Column(children: <Widget>[
                 Expanded(
                   child: Padding(
@@ -39,10 +42,10 @@ class DressRoomView extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(8),
                       itemBuilder: (context, index) {
-                        print(index);
-                        //print(items[index].product_id);
-                        return DressRoomItemWidget(items[index],
-                            model.items[index].selected.toDouble(), index);
+                        double opacity = 0;
+                        if (model.selectedIdx.contains(index)) opacity = 1;
+                        return DressRoomItemWidget(
+                            items[index], opacity, index);
                       },
                       itemCount: items.length,
                     ),
@@ -55,9 +58,7 @@ class DressRoomView extends StatelessWidget {
               duration: Duration(milliseconds: 500),
               child: showWidget,
             );
-          },
-        );
-      }
-    });
+          }
+        });
   }
 }

@@ -1,12 +1,14 @@
 class Size {
-  double length, hem, shoulder, bust, waist, hip, thigh;
+  Map<String, double> map = new Map();
   Size.fromJson(Map<String, dynamic> json) {
-    length = json['length'] ?? 0;
-    hem = json['hem'] ?? 0;
-    shoulder = json['shoulder'] ?? 0;
-    bust = json['bust'] ?? 0;
-    waist = json['waist'] ?? 0;
-    hip = json['hip'] ?? 0;
-    thigh = json['thigh'] ?? 0;
+    map['length'] = json['length'] ?? 0;
+    map['hem'] = json['hem'] ?? 0;
+    map['shoulder'] = json['shoulder'] ?? 0;
+    map['bust'] = json['bust'] ?? 0;
+    map['waist'] = json['waist'] ?? 0;
+    map['hip'] = json['hip'] ?? 0;
+    map['thigh'] = json['thigh'] ?? 0;
+    map['arm_length'] = json['arm_length'] ?? 0;
+    map['rise'] = json['rise'] ?? 0;
   }
 }

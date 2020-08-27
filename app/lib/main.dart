@@ -454,9 +454,11 @@ class Stride extends StatelessWidget {
       child: MaterialApp(
         title: 'stride',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-        ),
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            //for modal..
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent),
         initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
       ),

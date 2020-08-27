@@ -1,5 +1,4 @@
 import 'package:app/core/models/map_mall.dart';
-import 'package:app/core/models/product_size.dart';
 import 'package:app/ui/shared/text_styles.dart';
 
 class Product {
@@ -9,7 +8,6 @@ class Product {
   String product_name;
   String product_url;
   String type;
-  int selected = 0;
   String shop_mall;
   // String size;
 

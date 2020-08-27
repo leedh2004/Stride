@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';

@@ -157,7 +157,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    print(widget.item.product_size.free.length);
+                    print("wtf");
                   },
                 ),
               ),

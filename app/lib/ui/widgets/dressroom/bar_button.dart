@@ -15,7 +15,7 @@ class DressRoomButtonBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return model.isAnyOneSelected
+    return model.selectedIdx.isNotEmpty
         ? Stack(
             children: <Widget>[
               Align(
@@ -28,27 +28,9 @@ class DressRoomButtonBar extends StatelessWidget {
                   onPressed: () {},
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: FlatButton(
-                    padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
-                    color: backgroundColor,
-                    onPressed: () async {
-                      List<Product> top = model.findSelectedTop();
-                      List<Product> bottom = model.findSelectedBotoom();
-                      showMaterialModalBottomSheet(
-                          expand: false,
-                          context: context,
-                          builder: (context, scrollController) =>
-                              DressRoomSelectDialog(top, bottom));
-                    },
-                    child: Text(
-                      'MAKE',
-                      style: whiteStyle,
-                    )
-                    // child: Text('Make', style: whiteStyle),
-                    ),
-              ),
+              model.top_cnt > 0 && model.bottom_cnt > 0
+                  ? MakeButton(model, context)
+                  : DisableMakeButton(),
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
@@ -76,34 +58,7 @@ class DressRoomButtonBar extends StatelessWidget {
                                 .removeItem();
                           })
                         ..show();
-                    }
-                    // final result = await showDialog(
-                    //     context: context,
-                    //     builder: (context) {
-                    //return DeleteAlertDialog();
-                    // if (result == "remove") {
-                    //   Provider.of<DressRoomModel>(context, listen: false)
-                    //       .removeItem();
-                    //   final snackBar = SnackBar(
-                    //     duration: Duration(seconds: 1),
-                    //     content: Text(
-                    //       '아이템이 정상적으로 삭제 되었습니다.',
-                    //     ),
-                    // action: SnackBarAction(
-                    //   textColor: Colors.yellow,
-                    //   label: '확인',
-                    //   onPressed: () {
-                    //     // Some code to undo the change.
-                    //   },
-                    // ),
-                    // );
-
-                    // Find the Scaffold in the widget tree and use
-                    // it to show a SnackBar.
-                    // Scaffold.of(context).showSnackBar(snackBar);
-                    // }
-                    // },
-                    ),
+                    }),
               ),
             ],
           )
@@ -119,17 +74,7 @@ class DressRoomButtonBar extends StatelessWidget {
                   onPressed: () {},
                 ),
               ),
-              Align(
-                alignment: Alignment.center,
-                child: FlatButton(
-                    padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
-                    color: Colors.black26,
-                    onPressed: () {},
-                    child: Text(
-                      'MAKE',
-                      style: whiteStyle,
-                    )),
-              ),
+              DisableMakeButton(),
               Align(
                 alignment: Alignment.centerRight,
                 child: IconButton(
@@ -143,4 +88,42 @@ class DressRoomButtonBar extends StatelessWidget {
             ],
           );
   }
+}
+
+Widget MakeButton(DressRoomModel model, BuildContext context) {
+  return (Align(
+    alignment: Alignment.center,
+    child: FlatButton(
+        padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
+        color: backgroundColor,
+        onPressed: () async {
+          List<Product> top = model.findSelectedTop();
+          List<Product> bottom = model.findSelectedBotoom();
+          showMaterialModalBottomSheet(
+              expand: false,
+              context: context,
+              builder: (context, scrollController) =>
+                  DressRoomSelectDialog(top, bottom));
+        },
+        child: Text(
+          'MAKE',
+          style: whiteStyle,
+        )
+        // child: Text('Make', style: whiteStyle),
+        ),
+  ));
+}
+
+Widget DisableMakeButton() {
+  return (Align(
+    alignment: Alignment.center,
+    child: FlatButton(
+        padding: EdgeInsets.fromLTRB(60, 8, 60, 8),
+        color: Colors.black26,
+        onPressed: () {},
+        child: Text(
+          'MAKE',
+          style: whiteStyle,
+        )),
+  ));
 }

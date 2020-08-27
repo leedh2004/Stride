@@ -2,20 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/swipeCard.dart';
-import 'package:rxdart/subjects.dart';
 import 'api.dart';
 
 class SwipeService {
-  BehaviorSubject<List<List<SwipeCard>>> _itemsController = BehaviorSubject();
-  Stream<List<List<SwipeCard>>> get items => _itemsController.stream;
+  // BehaviorSubject<List<List<SwipeCard>>> _itemsController = BehaviorSubject();
+  // Stream<List<List<SwipeCard>>> get items => _itemsController.stream;
   Api _api;
   List<int> index;
   List<int> length;
   int type;
+  List<List<SwipeCard>> items;
 
   SwipeService(Api api) {
     print("SwipeService 생성!");
-    _itemsController.add([[], [], [], [], []]); // All, Top, Skirt, Pants, Dress
+    // _itemsController.add([[], [], [], [], []]); // All, Top, Skirt, Pants, Dress
     _api = api;
     index = [0, 0, 0, 0, 0];
     length = [0, 0, 0, 0, 0];
@@ -28,20 +28,21 @@ class SwipeService {
   }
 
   Future initCards() async {
+    items = [[], [], [], [], []];
     if (length[0] == 0) {
       var response = await _api.client.get('${Api.endpoint}/home/all');
       if (response.statusCode == 200) {
-        var items = json.decode(response.data) as Map<String, dynamic>;
+        var data = json.decode(response.data) as Map<String, dynamic>;
         List<SwipeCard> all = new List<SwipeCard>();
         List<SwipeCard> top = new List<SwipeCard>();
         List<SwipeCard> dress = new List<SwipeCard>();
         List<SwipeCard> skirt = new List<SwipeCard>();
         List<SwipeCard> pants = new List<SwipeCard>();
-        var parsedAll = items['all'] as List<dynamic>;
-        var parsedTop = items['top'] as List<dynamic>;
-        var parsedDress = items['dress'] as List<dynamic>;
-        var parsedSkirt = items['skirt'] as List<dynamic>;
-        var parsedPants = items['pants'] as List<dynamic>;
+        var parsedAll = data['all'] as List<dynamic>;
+        var parsedTop = data['top'] as List<dynamic>;
+        var parsedDress = data['dress'] as List<dynamic>;
+        var parsedSkirt = data['skirt'] as List<dynamic>;
+        var parsedPants = data['pants'] as List<dynamic>;
         for (var item in parsedAll) {
           all.add(SwipeCard.fromJson(item));
         }
@@ -57,13 +58,7 @@ class SwipeService {
         for (var item in parsedPants) {
           pants.add(SwipeCard.fromJson(item));
         }
-        _itemsController.add([
-          [..._itemsController.value[ALL], ...all],
-          [..._itemsController.value[TOP], ...top],
-          [..._itemsController.value[SKIRT], ...skirt],
-          [..._itemsController.value[PANTS], ...pants],
-          [..._itemsController.value[DRESS], ...dress]
-        ]);
+        items = [all, top, skirt, pants, dress];
         length = [10, 10, 10, 10, 10];
       } else {
         print(response.statusCode);
@@ -85,13 +80,13 @@ class SwipeService {
         temp.add(SwipeCard.fromJson(item));
       }
       length[ALL] += parsed.length;
-      _itemsController.add([
-        [..._itemsController.value[ALL], ...temp],
-        [..._itemsController.value[TOP]],
-        [..._itemsController.value[SKIRT]],
-        [..._itemsController.value[PANTS]],
-        [..._itemsController.value[DRESS]]
-      ]);
+      items = [
+        [...items[ALL], ...temp],
+        [...items[TOP]],
+        [...items[SKIRT]],
+        [...items[PANTS]],
+        [...items[DRESS]]
+      ];
       print("length[ALL]: ${length[ALL]}");
     } else {
       print("Network Error getAllSwipeCard() ${response.statusCode}");
@@ -115,13 +110,13 @@ class SwipeService {
       }
 
       length[TOP] += parsed.length;
-      _itemsController.add([
-        [..._itemsController.value[ALL]],
-        [..._itemsController.value[TOP], ...temp],
-        [..._itemsController.value[SKIRT]],
-        [..._itemsController.value[PANTS]],
-        [..._itemsController.value[DRESS]]
-      ]);
+      items = [
+        [...items[ALL]],
+        [...items[TOP], ...temp],
+        [...items[SKIRT]],
+        [...items[PANTS]],
+        [...items[DRESS]]
+      ];
       print("length[TOP]: ${length[TOP]}");
     } else {
       print("Network Error getTopSwipeCard() ${response.statusCode}");
@@ -143,13 +138,13 @@ class SwipeService {
         temp.add(SwipeCard.fromJson(item));
       }
       length[SKIRT] += parsed.length;
-      _itemsController.add([
-        [..._itemsController.value[ALL]],
-        [..._itemsController.value[TOP]],
-        [..._itemsController.value[SKIRT], ...temp],
-        [..._itemsController.value[PANTS]],
-        [..._itemsController.value[DRESS]]
-      ]);
+      items = [
+        [...items[ALL]],
+        [...items[TOP]],
+        [...items[SKIRT], ...temp],
+        [...items[PANTS]],
+        [...items[DRESS]]
+      ];
       print("length[SKIRT]: ${length[SKIRT]}");
     } else {
       print("Network Error getSkirtSwipeCard() ${response.statusCode}");
@@ -170,13 +165,13 @@ class SwipeService {
         temp.add(SwipeCard.fromJson(item));
       }
       length[PANTS] += parsed.length;
-      _itemsController.add([
-        [..._itemsController.value[ALL]],
-        [..._itemsController.value[TOP]],
-        [..._itemsController.value[SKIRT]],
-        [..._itemsController.value[PANTS], ...temp],
-        [..._itemsController.value[DRESS]]
-      ]);
+      items = [
+        [...items[ALL]],
+        [...items[TOP]],
+        [...items[SKIRT]],
+        [...items[PANTS], ...temp],
+        [...items[DRESS]]
+      ];
       print("length[PANTS]: ${length[PANTS]}");
     } else {
       print("Network Error getPantsSwipeCard() ${response.statusCode}");
@@ -197,13 +192,13 @@ class SwipeService {
         temp.add(SwipeCard.fromJson(item));
       }
       length[DRESS] += parsed.length;
-      _itemsController.add([
-        [..._itemsController.value[ALL]],
-        [..._itemsController.value[TOP]],
-        [..._itemsController.value[SKIRT]],
-        [..._itemsController.value[PANTS]],
-        [..._itemsController.value[DRESS], ...temp]
-      ]);
+      items = [
+        [...items[ALL]],
+        [...items[TOP]],
+        [...items[SKIRT]],
+        [...items[PANTS]],
+        [...items[DRESS], ...temp]
+      ];
       print("length[DRESS]: ${length[DRESS]}");
     } else {
       print("Network Error getDressSwipeCard() ${response.statusCode}");

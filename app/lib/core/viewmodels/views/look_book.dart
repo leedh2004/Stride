@@ -1,36 +1,29 @@
 import 'dart:convert';
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/services/api.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class LookBookModel extends BaseModel {
-  Api _api;
-  List<Coordinate> items;
+  LookBookService service;
 
-  LookBookModel(List<Coordinate> serviceItems, Api api) {
+  LookBookModel(LookBookService _service) {
     print("LookBookModel 생성!");
-    items = serviceItems;
-    _api = api;
+    service = _service;
   }
 
-  void removeItem(int id) async {
-    final response = await _api.client.post(
-        '${Api.endpoint}/coordination/delete',
-        data: jsonEncode({'coor_id': id}));
-    print("removeItem ${response.statusCode}");
-    if (response.statusCode == 200) {
-      items.removeWhere((element) => element.id == id);
-    }
+  Future removeItem(int id) async {
+    await service.removeItem(id);
     notifyListeners();
   }
 
-  void rename(int index, String name) async {
-    final response = await _api.client.put('${Api.endpoint}/coordination/',
-        data: jsonEncode({'coor_id': items[index].id, 'update_name': name}));
-    print("rename ${response.statusCode}");
-    if (response.statusCode == 200) {
-      items[index].name = name;
-    }
+  Future rename(int index, String name) async {
+    await service.rename(index, name);
+    notifyListeners();
+  }
+
+  Future getLookBook() async {
+    await service.getLookBook();
     notifyListeners();
   }
 

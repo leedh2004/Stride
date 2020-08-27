@@ -173,7 +173,6 @@ class DressRoomSelectDialog extends StatelessWidget {
               onPressed: () async {
                 print(top[top_idx].product_name);
                 print(bottom[bottom_idx].product_name);
-
                 Provider.of<LookBookService>(context, listen: false)
                     .addItem(top[top_idx], bottom[bottom_idx]);
                 ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(

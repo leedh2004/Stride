@@ -10,6 +10,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
 import 'package:app/ui/widgets/swipe/input_dialog.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -35,62 +36,63 @@ class _SwipeViewState extends State<SwipeView> {
   @override
   Widget build(BuildContext context) {
     int type = Provider.of<SwipeService>(context).type;
-    return Consumer<List<List<SwipeCard>>>(
-      builder: (context, items, child) {
-        print(type);
-        if (items == null || items[type].length < 2) {
-          Provider.of<SwipeService>(context).initCards();
-          return LoadingWidget();
-        } else {
-          if (!tutorial) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              showMaterialModalBottomSheet(
-                  expand: false,
-                  context: context,
-                  builder: (context, scrollController) => InputInfoDialog());
-            });
-            tutorial = true;
-          }
-          return BaseWidget<SwipeModel>(
-              model: SwipeModel(
-                  Provider.of<Api>(context),
-                  Provider.of<DressRoomService>(context),
-                  Provider.of<SwipeService>(context),
-                  items),
-              builder: (context, model, child) {
-                return Stack(children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: clothTypeBar(model),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                        verticalDirection: VerticalDirection.up,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          UIHelper.verticalSpaceSmall,
-                          Transform.scale(
-                            scale: 1.5,
-                            child: Switch(
-                              value: enabled,
-                              onChanged: (value) {
-                                setState(() {
-                                  enabled = value;
-                                });
-                              },
-                              activeColor: backgroundColor,
-                            ),
-                          ),
-                          buttonRow(model),
-                          UIHelper.verticalSpaceSmall,
-                          SwipeCardSection(context, model),
-                        ]),
-                  ),
-                ]);
+    return FadeIn(
+      delay: 1,
+      child: BaseWidget<SwipeModel>(
+          model: SwipeModel(
+            Provider.of<DressRoomService>(context),
+            Provider.of<SwipeService>(context),
+          ),
+          builder: (context, model, child) {
+            if (!tutorial) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                showMaterialModalBottomSheet(
+                    expand: false,
+                    context: context,
+                    builder: (context, scrollController) => InputInfoDialog());
               });
-        }
-      },
+              tutorial = true;
+            }
+            if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
+            if (Provider.of<SwipeService>(context).items == null) {
+              model.initCards();
+              return LoadingWidget();
+            }
+            return FadeIn(
+              delay: 2,
+              child: Stack(children: [
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: clothTypeBar(model),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Column(
+                      verticalDirection: VerticalDirection.up,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        UIHelper.verticalSpaceSmall,
+                        Transform.scale(
+                          scale: 1.5,
+                          child: Switch(
+                            value: enabled,
+                            onChanged: (value) async {
+                              setState(() {
+                                enabled = value;
+                              });
+                              if (enabled) await model.test();
+                            },
+                            activeColor: backgroundColor,
+                          ),
+                        ),
+                        buttonRow(model),
+                        UIHelper.verticalSpaceSmall,
+                        SwipeCardSection(context, model),
+                      ]),
+                ),
+              ]),
+            );
+          }),
     );
   }
 
@@ -202,14 +204,12 @@ class _SwipeViewState extends State<SwipeView> {
         ),
         RawMaterialButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => ProductWebView(
-                        model.items[model.type][model.index[model.type]]
-                            .product_url,
-                        model.items[model.type][model.index[model.type]]
-                            .shop_mall)));
+            Navigator.push(context, MaterialPageRoute(builder: (context) {}));
+            // ProductWebView(
+            //   model.items[model.type][model.index[model.type]]
+            //       .product_url,
+            //   model.items[model.type][model.index[model.type]]
+            //       .shop_mall)))}
           },
           elevation: 2.0,
           fillColor: Colors.white,

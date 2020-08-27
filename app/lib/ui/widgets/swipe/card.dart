@@ -1,9 +1,11 @@
 import 'dart:math';
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
+import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -46,11 +48,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   void initState() {
     super.initState();
     print("init!!!");
-    // Init cards
-    // for (cardsCounter = 0; cardsCounter < 3; cardsCounter++) {
-    //   cards.add(SwipeCardAlignment(cardsCounter));
-    // }
-    // Init the animation controller
     _controller =
         AnimationController(duration: Duration(milliseconds: 500), vsync: this);
     _controller.addListener(() => setState(() {}));
@@ -71,88 +68,111 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         nopeTextWidget(),
         passTextWidget(),
         likeTextWidget(),
-        _controller.status != AnimationStatus.forward
-            ? SizedBox.expand(
-                child: Container(
-                margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                child: GestureDetector(
-                  // behavior: HitTestBehavior.deferToChild,
-                  onTap: () {
-                    setState(() {
-                      index++;
-                    });
-                  },
-                  onTapUp: (details) {
-                    print(details.globalPosition.dy);
-                  },
-                  // While dragging the first card
-                  onPanUpdate: (DragUpdateDetails details) {
-                    // Add what the user swiped in the last frame to the alignment of the card
-                    List<double> opacity = [0, 0, 0];
-                    if (frontCardAlign.x > START_RIGHT) {
-                      // See Heart Icon applying Opacity
-                      opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
-                      if (opacity[LIKE] >= MAX_OPACITY)
-                        opacity[LIKE] = MAX_OPACITY;
-                    } else if (frontCardAlign.x < START_LEFT) {
-                      // See Broken Heart Icon applying Opacity
-                      opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
-                      if (opacity[HATE] >= MAX_OPACITY)
-                        opacity[HATE] = MAX_OPACITY;
-                    } else if (frontCardAlign.y < START_UP) {
-                      // See Pass Icon applying Opacity
-                      opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
-                      if (opacity[PASS] >= MAX_OPACITY)
-                        opacity[PASS] = MAX_OPACITY;
-                    }
-                    // Rendering View
-                    setState(() {
-                      // Set Opacity
-                      _opacity[LIKE] = opacity[LIKE];
-                      _opacity[HATE] = opacity[HATE];
-                      _opacity[PASS] = opacity[PASS];
-                      // Drag Card SPEED
-                      frontCardAlign = Alignment(
-                          frontCardAlign.x +
-                              X_SPEED *
-                                  details.delta.dx /
-                                  MediaQuery.of(context).size.width,
-                          frontCardAlign.y +
-                              Y_SPEED *
-                                  details.delta.dy /
-                                  MediaQuery.of(context).size.height);
-                      frontCardRot = frontCardAlign.x;
-                    });
-                  },
-                  // When releasing the first card
-                  onPanEnd: (_) {
-                    // If the front card was swiped far enough to count as swiped
-                    setState(() {
-                      _opacity[HATE] = 0.0;
-                      _opacity[LIKE] = 0.0;
-                      _opacity[PASS] = 0.0;
-                    });
-                    // Send result reqeust to server
-                    if (frontCardAlign.x > STANDARD_RIGHT) {
-                      widget.model.likeRequest();
-                      animateCards();
-                    } else if (frontCardAlign.x < STANDARD_LEFT) {
-                      widget.model.dislikeRequest();
-                      animateCards();
-                    } else if (frontCardAlign.y < STANDARD_UP) {
-                      widget.model.passRequest();
-                      animateCards();
-                    } else {
-                      // Return to the initial rotation and alignment
-                      setState(() {
-                        frontCardAlign = defaultFrontCardAlign;
-                        frontCardRot = 0.0;
-                      });
-                    }
-                  },
-                ),
-              ))
-            : Container(),
+        if (_controller.status != AnimationStatus.forward)
+          SizedBox.expand(
+              child: Container(
+            margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
+            child: GestureDetector(
+              // behavior: HitTestBehavior.deferToChild,
+              onLongPress: () {
+                // showGeneralDialog(
+                //   context: context,
+                //   barrierColor:
+                //       Colors.black12.withOpacity(0.6), // background color
+                //   barrierDismissible:
+                //       false, // should dialog be dismissed when tapped outside
+                //   barrierLabel: "Dialog", // label for barrier
+                //   transitionDuration: Duration(
+                //       milliseconds:
+                //           400), // how long it takes to popup dialog after button click
+                //   pageBuilder: (_, __, ___) {
+                //     // your widget implementation
+                //     return SizeDialog(Provider.of<SwipeModel>(context)
+                //             .items[widget.model.type]
+                //         [(widget.model.index[widget.model.type])]);
+                //   },
+                // );
+                Navigator.of(context).push(PageRouteBuilder(
+                    opaque: false,
+                    pageBuilder: (___, _, __) => SizeDialog(
+                        Provider.of<SwipeService>(context)
+                                .items[widget.model.type]
+                            [(widget.model.index[widget.model.type])])));
+              },
+              onTap: () {
+                setState(() {
+                  index++;
+                });
+              },
+              onTapUp: (details) {
+                print(details.globalPosition.dy);
+              },
+              // While dragging the first card
+              onPanUpdate: (DragUpdateDetails details) {
+                // Add what the user swiped in the last frame to the alignment of the card
+                List<double> opacity = [0, 0, 0];
+                if (frontCardAlign.x > START_RIGHT) {
+                  // See Heart Icon applying Opacity
+                  opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
+                  if (opacity[LIKE] >= MAX_OPACITY) opacity[LIKE] = MAX_OPACITY;
+                } else if (frontCardAlign.x < START_LEFT) {
+                  // See Broken Heart Icon applying Opacity
+                  opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
+                  if (opacity[HATE] >= MAX_OPACITY) opacity[HATE] = MAX_OPACITY;
+                } else if (frontCardAlign.y < START_UP) {
+                  // See Pass Icon applying Opacity
+                  opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
+                  if (opacity[PASS] >= MAX_OPACITY) opacity[PASS] = MAX_OPACITY;
+                }
+                // Rendering View
+                setState(() {
+                  // Set Opacity
+                  _opacity[LIKE] = opacity[LIKE];
+                  _opacity[HATE] = opacity[HATE];
+                  _opacity[PASS] = opacity[PASS];
+                  // Drag Card SPEED
+                  frontCardAlign = Alignment(
+                      frontCardAlign.x +
+                          X_SPEED *
+                              details.delta.dx /
+                              MediaQuery.of(context).size.width,
+                      frontCardAlign.y +
+                          Y_SPEED *
+                              details.delta.dy /
+                              MediaQuery.of(context).size.height);
+                  frontCardRot = frontCardAlign.x;
+                });
+              },
+              // When releasing the first card
+              onPanEnd: (_) {
+                // If the front card was swiped far enough to count as swiped
+                setState(() {
+                  _opacity[HATE] = 0.0;
+                  _opacity[LIKE] = 0.0;
+                  _opacity[PASS] = 0.0;
+                });
+                // Send result reqeust to server
+                if (frontCardAlign.x > STANDARD_RIGHT) {
+                  widget.model.likeRequest();
+                  animateCards();
+                } else if (frontCardAlign.x < STANDARD_LEFT) {
+                  widget.model.dislikeRequest();
+                  animateCards();
+                } else if (frontCardAlign.y < STANDARD_UP) {
+                  widget.model.passRequest();
+                  animateCards();
+                } else {
+                  // Return to the initial rotation and alignment
+                  setState(() {
+                    frontCardAlign = defaultFrontCardAlign;
+                    frontCardRot = 0.0;
+                  });
+                }
+              },
+            ),
+          ))
+        else
+          Container(),
         //RulerWidget()
       ],
     ));
@@ -180,10 +200,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     color: Colors.white,
                   ),
                   onPressed: () {
-                    var item = Provider.of<SwipeModel>(context, listen: false)
+                    var item = Provider.of<SwipeService>(context, listen: false)
                             .items[widget.model.type]
                         [(widget.model.index[widget.model.type])];
-                    print(item.product_size.free.length);
                   },
                 ),
               ),
@@ -251,7 +270,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     //     borderRadius: BorderRadius.all(Radius.circular(10)),
                     //     border: Border.all(color: pinkColor, width: 5)),
                     child: FaIcon(
-                      FontAwesomeIcons.heartBroken,
+                      FontAwesomeIcons.times,
                       size: 100,
                       color: Colors.lightBlueAccent,
                     )
@@ -305,7 +324,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget backCard(BuildContext context) {
-    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
         [(widget.model.index[widget.model.type]) + 2];
 
     return Align(
@@ -321,7 +340,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
-    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
         [(widget.model.index[widget.model.type]) + 1];
 
     return Align(
@@ -337,8 +356,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget frontCard(BuildContext context) {
-    //int idx = Provider.of<SwipeModel>(context).curIdx;
-    SwipeCard item = Provider.of<SwipeModel>(context).items[widget.model.type]
+    //int idx = Provider.of<SwipeService>(context).curIdx;
+    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
         [(widget.model.index[widget.model.type])];
 
     return Align(

@@ -8,27 +8,28 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class SwipeModel extends BaseModel {
-  Api _api;
   DressRoomService _dressRoomService;
   SwipeService _swipeService;
-  List<List<SwipeCard>> items;
   List<int> index;
   List<int> length;
-
+  bool trick = false;
   int type;
 
-  SwipeModel(Api api, DressRoomService dressRoomService,
-      SwipeService swipeService, List<List<SwipeCard>> serviceItems) {
-    _api = api;
+  SwipeModel(DressRoomService dressRoomService, SwipeService swipeService) {
     _dressRoomService = dressRoomService;
     _swipeService = swipeService;
     type = swipeService.type;
     index = swipeService.index;
     length = swipeService.length;
-    items = serviceItems;
     print("SwipeModel 생성!");
     //print(items[1][0].product_name);
   }
+
+  Future initCards() async {
+    await _swipeService.initCards();
+    notifyListeners();
+  }
+
   void changeType(String str) {
     if (str == 'all') {
       _swipeService.changeType(ALL);
@@ -50,6 +51,18 @@ class SwipeModel extends BaseModel {
     notifyListeners();
   }
 
+  void test() async {
+    print("TEST");
+    setBusy(true);
+    trick = true;
+    await Future.delayed(Duration(milliseconds: 500));
+    nextItem();
+    print('?');
+    trick = false;
+    setBusy(false);
+    notifyListeners();
+  }
+
   void nextItem() async {
     setBusy(true);
     print("nextItem()");
@@ -58,50 +71,15 @@ class SwipeModel extends BaseModel {
 
     if (index[type] + 5 >= length[type]) {
       if (type == ALL) {
-        List<SwipeCard> temp = await _swipeService.getAllSwipeCards();
-        items = [
-          [...items[ALL], ...temp],
-          [...items[TOP]],
-          [...items[SKIRT]],
-          [...items[PANTS]],
-          [...items[DRESS]]
-        ];
+        await _swipeService.getAllSwipeCards();
       } else if (type == TOP) {
-        List<SwipeCard> temp = await _swipeService.getTopSwipeCards();
-        items = [
-          [...items[ALL]],
-          [...items[TOP], ...temp],
-          [...items[SKIRT]],
-          [...items[PANTS]],
-          [...items[DRESS]]
-        ];
+        await _swipeService.getTopSwipeCards();
       } else if (type == SKIRT) {
-        List<SwipeCard> temp = await _swipeService.getSkirtSwipeCards();
-        items = [
-          [...items[ALL]],
-          [...items[TOP]],
-          [...items[SKIRT], ...temp],
-          [...items[PANTS]],
-          [...items[DRESS]]
-        ];
+        await _swipeService.getSkirtSwipeCards();
       } else if (type == PANTS) {
-        List<SwipeCard> temp = await _swipeService.getPantsSwipeCards();
-        items = [
-          [...items[ALL]],
-          [...items[TOP]],
-          [...items[SKIRT]],
-          [...items[PANTS], ...temp],
-          [...items[DRESS]]
-        ];
+        await _swipeService.getPantsSwipeCards();
       } else if (type == DRESS) {
-        List<SwipeCard> temp = await _swipeService.getDressSwipeCards();
-        items = [
-          [...items[ALL]],
-          [...items[TOP]],
-          [...items[SKIRT]],
-          [...items[PANTS]],
-          [...items[DRESS], ...temp]
-        ];
+        await _swipeService.getDressSwipeCards();
       }
     }
     setBusy(false);
@@ -109,28 +87,28 @@ class SwipeModel extends BaseModel {
 
   Future likeRequest() async {
     print("LIKE!!");
-    int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/like',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Like ${response.statusCode}");
-    Product item = Product.fromSwipeCard(items[type][cur].toJson());
-    print(item.product_name);
-    await _dressRoomService.addItem(item);
+    // int cur = index[type];
+    // final response = await _api.client.post('${Api.endpoint}/home/like',
+    //     data: jsonEncode({'product_id': items[type][cur].product_id}));
+    // print("Like ${response.statusCode}");
+    // Product item = Product.fromSwipeCard(items[type][cur].toJson());
+    // print(item.product_name);
+    // await _dressRoomService.addItem(item);
   }
 
   void dislikeRequest() async {
-    print("DISLIKE!!");
-    int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/dislike',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Dislike ${response.statusCode}");
+    // print("DISLIKE!!");
+    // int cur = index[type];
+    // final response = await _api.client.post('${Api.endpoint}/home/dislike',
+    //     data: jsonEncode({'product_id': items[type][cur].product_id}));
+    // print("Dislike ${response.statusCode}");
   }
 
   void passRequest() async {
-    print("PASS!!");
-    int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/pass',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Pass ${response.statusCode}");
+    // print("PASS!!");
+    // int cur = index[type];
+    // final response = await _api.client.post('${Api.endpoint}/home/pass',
+    //     data: jsonEncode({'product_id': items[type][cur].product_id}));
+    // print("Pass ${response.statusCode}");
   }
 }
