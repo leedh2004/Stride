@@ -29,6 +29,7 @@ class LookBookService {
         List<Coordinate> last = _itemsController.value;
         Coordinate item = new Coordinate(coor_id, "나만의 룩", top, bottom);
         _itemsController.add([...last, item]);
+        print("!");
       }
     } catch (e) {
       if (e is DioError) {

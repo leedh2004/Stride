@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -16,6 +14,7 @@ import 'package:provider/provider.dart';
 class DressRoomSelectDialog extends StatelessWidget {
   final List<Product> top;
   final List<Product> bottom;
+  final CarouselController _controller = CarouselController();
   int top_idx = 0;
   int bottom_idx = 0;
   DressRoomSelectDialog(this.top, this.bottom);
@@ -29,12 +28,17 @@ class DressRoomSelectDialog extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           CarouselSlider.builder(
+            carouselController: _controller,
             itemCount: top.length,
-            options: CarouselOptions(height: 280.0),
+            options: CarouselOptions(
+                height: 280.0,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  print(index);
+                  top_idx = index;
+                }),
             itemBuilder: (context, int itemIndex) {
               if (top.length == 0) return Container();
-              top_idx = itemIndex - 1;
-              if (top_idx == -1) top_idx = top.length - 1;
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -91,12 +95,15 @@ class DressRoomSelectDialog extends StatelessWidget {
           ),
           UIHelper.verticalSpaceMedium,
           CarouselSlider.builder(
-            options: CarouselOptions(height: 280.0),
+            options: CarouselOptions(
+                height: 280.0,
+                enableInfiniteScroll: false,
+                onPageChanged: (index, reason) {
+                  bottom_idx = index;
+                }),
             itemCount: bottom.length,
             itemBuilder: (context, int itemIndex) {
-              bottom_idx = itemIndex - 1;
               if (bottom.length == 0) return Container();
-              if (bottom_idx == -1) bottom_idx = bottom.length - 1;
               return Container(
                   width: MediaQuery.of(context).size.width,
                   margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -164,6 +171,9 @@ class DressRoomSelectDialog extends StatelessWidget {
               padding: EdgeInsets.fromLTRB(24, 8, 24, 8),
               color: backgroundColor,
               onPressed: () async {
+                print(top[top_idx].product_name);
+                print(bottom[bottom_idx].product_name);
+
                 Provider.of<LookBookService>(context, listen: false)
                     .addItem(top[top_idx], bottom[bottom_idx]);
                 ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(

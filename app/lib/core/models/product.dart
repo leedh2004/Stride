@@ -1,14 +1,16 @@
+import 'package:app/core/models/map_mall.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/ui/shared/text_styles.dart';
 
 class Product {
   int product_id;
-  String price;
   String thumbnail_url;
+  String price;
   String product_name;
   String product_url;
   String type;
   int selected = 0;
+  String shop_mall;
   // String size;
 
   Product(
@@ -20,6 +22,16 @@ class Product {
       // this.size,
       this.type});
 
+  Product.fromSwipeCard(Map<String, dynamic> json) {
+    product_id = json['product_id'];
+    thumbnail_url = json['thumbnail_url'];
+    price = json['price'];
+    product_name = json['product_name'];
+    product_url = json['product_url'];
+    type = json['type'];
+    shop_mall = json['shop_mall'];
+  }
+
   Product.fromJson(Map<String, dynamic> json) {
     product_id = json['product_id'];
     thumbnail_url = json['thumbnail_url'];
@@ -27,6 +39,7 @@ class Product {
     product_name = json['product_name'];
     product_url = json['product_url'];
     type = json['type'];
+    shop_mall = shoppingmall[json['shop_id']];
   }
 
   Map<String, dynamic> toJson() {

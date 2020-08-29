@@ -3,15 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ProductWebView extends StatelessWidget {
+  final String mall;
   final String url;
-  ProductWebView(this.url);
+  ProductWebView(this.url, this.mall);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: backgroundColor,
-        title: Text('육육걸즈'),
+        title: Text(mall),
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {

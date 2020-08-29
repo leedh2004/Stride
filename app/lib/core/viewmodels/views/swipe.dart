@@ -113,7 +113,7 @@ class SwipeModel extends BaseModel {
     final response = await _api.client.post('${Api.endpoint}/home/like',
         data: jsonEncode({'product_id': items[type][cur].product_id}));
     print("Like ${response.statusCode}");
-    Product item = Product.fromJson(items[type][cur].toJson());
+    Product item = Product.fromSwipeCard(items[type][cur].toJson());
     print(item.product_name);
     await _dressRoomService.addItem(item);
   }

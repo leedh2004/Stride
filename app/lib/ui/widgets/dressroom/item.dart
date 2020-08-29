@@ -70,8 +70,8 @@ class DressRoomItemWidget extends StatelessWidget {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) =>
-                                ProductWebView(item.product_url)));
+                            builder: (context) => ProductWebView(
+                                item.product_url, item.shop_mall)));
                   } else {
                     Provider.of<DressRoomModel>(context, listen: false)
                         .selectItem(index);
@@ -107,8 +107,8 @@ class DressRoomItemWidget extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  ProductWebView(item.product_url)))
+                              builder: (context) => ProductWebView(
+                                  item.product_url, item.shop_mall)))
                     },
                     child: FaIcon(
                       FontAwesomeIcons.store,
