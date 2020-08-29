@@ -30,7 +30,8 @@ app.register_blueprint(user, url_prefix='/user')
 
 @app.route('/')
 def hello_world():
-    return 'Hello World! CI TEST6 only develop'
+    return 'Hello World! CI TEST7 only develop'
+
 
 
 if __name__ == '__main__':
