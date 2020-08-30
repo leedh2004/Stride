@@ -29,7 +29,7 @@ class LookBookView extends StatelessWidget {
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 1,
+                  childAspectRatio: 0.7,
                   mainAxisSpacing: 16.0,
                   crossAxisSpacing: 16.0,
                 ),
