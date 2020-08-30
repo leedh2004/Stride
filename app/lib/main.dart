@@ -453,9 +453,10 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  runZoned(() {
-    runApp(Stride());
-  }, onError: Crashlytics.instance.recordError);
+  // runZoned(() {
+  //   runApp(Stride());
+  // }, onError: Crashlytics.instance.recordError);
+  runApp(Stride());
 }
 
 class Stride extends StatelessWidget {

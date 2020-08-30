@@ -96,8 +96,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     opaque: false,
                     pageBuilder: (___, _, __) => SizeDialog(
                         Provider.of<SwipeService>(context)
-                                .items[widget.model.type]
-                            [(widget.model.index[widget.model.type])])));
+                            .items[widget.model.type][(widget.model.index)])));
               },
               onTap: () {
                 setState(() {
@@ -201,8 +200,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   ),
                   onPressed: () {
                     var item = Provider.of<SwipeService>(context, listen: false)
-                            .items[widget.model.type]
-                        [(widget.model.index[widget.model.type])];
+                        .items[widget.model.type][(widget.model.index)];
                   },
                 ),
               ),
@@ -325,7 +323,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget backCard(BuildContext context) {
     SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index[widget.model.type]) + 2];
+        [(widget.model.index) + 2];
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
@@ -341,7 +339,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget middleCard(BuildContext context) {
     SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index[widget.model.type]) + 1];
+        [(widget.model.index) + 1];
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
@@ -358,7 +356,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   Widget frontCard(BuildContext context) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
     SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index[widget.model.type])];
+        [(widget.model.index)];
 
     return Align(
         alignment: _controller.status == AnimationStatus.forward

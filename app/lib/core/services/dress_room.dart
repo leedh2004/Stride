@@ -11,6 +11,7 @@ class DressRoomService {
   Map<int, String> folder = new Map(); // folder_id, folder_name
   Api _api;
   int current_folder = 0;
+  bool init = false;
 
   //이제 생성자에 아무것도 요청안함
   DressRoomService(Api api) {
@@ -30,8 +31,9 @@ class DressRoomService {
         items[current_folder][index].type == 'skirt');
   }
 
-  addItem(Product item) async {
-    items[current_folder].add(item);
+  void addItem(Product item) {
+    print(item.product_name);
+    items[0].add(item);
   }
 
   Future getDressRoom() async {
@@ -48,6 +50,7 @@ class DressRoomService {
       }
       items[info['folder_id']] = temp;
     }
+    init = true;
     return;
   }
 

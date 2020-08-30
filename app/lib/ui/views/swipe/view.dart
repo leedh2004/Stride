@@ -1,5 +1,4 @@
 import 'package:app/core/models/swipeCard.dart';
-import 'package:app/core/services/api.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -35,7 +34,6 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
-    int type = Provider.of<SwipeService>(context).type;
     return FadeIn(
       delay: 0.5,
       child: BaseWidget<SwipeModel>(
@@ -54,8 +52,11 @@ class _SwipeViewState extends State<SwipeView> {
               tutorial = true;
             }
             if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
-            if (Provider.of<SwipeService>(context).items == null) {
+            if (Provider.of<SwipeService>(context).init == false) {
               model.initCards();
+              if (Provider.of<DressRoomService>(context).init == false) {
+                Provider.of<DressRoomService>(context).getDressRoom();
+              }
               return LoadingWidget();
             }
             return FadeIn(
@@ -103,75 +104,22 @@ class _SwipeViewState extends State<SwipeView> {
       child: Row(children: [
         Expanded(
           child: ListView(
-            scrollDirection: Axis.horizontal,
-            children: <Widget>[
-              InkWell(
-                onTap: () => {setState(() => model.changeType('all'))},
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text(
-                    'All',
-                    style: model.type == 0
-                        ? subHeaderMainColorStyle
-                        : subHeaderStyle,
+              scrollDirection: Axis.horizontal,
+              children: List.generate(TYPE.length, (index) {
+                return InkWell(
+                  onTap: () =>
+                      {setState(() => model.changeType('${TYPE[index]}'))},
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      '${TYPE[index][0].toUpperCase() + TYPE[index].substring(1)}',
+                      style: model.type == TYPE[index]
+                          ? subHeaderMainColorStyle
+                          : subHeaderStyle,
+                    ),
                   ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  print("???");
-                  setState(() {
-                    model.changeType('top');
-                  });
-                },
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text(
-                    'Top',
-                    style: model.type == 1
-                        ? subHeaderMainColorStyle
-                        : subHeaderStyle,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () => {setState(() => model.changeType('skirt'))},
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text(
-                    'Skirt',
-                    style: model.type == 2
-                        ? subHeaderMainColorStyle
-                        : subHeaderStyle,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () => {setState(() => model.changeType('pants'))},
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text(
-                    'Pants',
-                    style: model.type == 3
-                        ? subHeaderMainColorStyle
-                        : subHeaderStyle,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () => {setState(() => model.changeType('dress'))},
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                  child: Text(
-                    'Dress',
-                    style: model.type == 4
-                        ? subHeaderMainColorStyle
-                        : subHeaderStyle,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                );
+              })),
         ),
         Container(
             margin: EdgeInsets.only(left: 10),
@@ -204,12 +152,11 @@ class _SwipeViewState extends State<SwipeView> {
         ),
         RawMaterialButton(
           onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {}));
-            // ProductWebView(
-            //   model.items[model.type][model.index[model.type]]
-            //       .product_url,
-            //   model.items[model.type][model.index[model.type]]
-            //       .shop_mall)))}
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              SwipeCard item = Provider.of<SwipeService>(context)
+                  .items[model.type][model.index];
+              return ProductWebView(item.product_url, item.shop_mall);
+            }));
           },
           elevation: 2.0,
           fillColor: Colors.white,

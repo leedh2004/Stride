@@ -10,7 +10,7 @@ class SwipeCardAlignment extends StatefulWidget {
   int index;
   List<dynamic> images = new List<dynamic>();
   SwipeCardAlignment(SwipeCard _item, int _index) {
-    print("NEW");
+    // print("NEW");
     item = _item;
     index = _index;
     if (index >= item.length) {
@@ -48,7 +48,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
   @override
   void didUpdateWidget(SwipeCardAlignment oldWidget) {
     // TODO: implement didUpdateWidget
-    print("WTF!");
+    // print("WTF!");
     for (int i = 0; i < widget.images.length; i++) {
       precacheImage(widget.images[i].image, context);
     }
@@ -58,7 +58,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
 
   @override
   Widget build(BuildContext context) {
-    print("BUILD");
+    // print("BUILD");
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: Card(
