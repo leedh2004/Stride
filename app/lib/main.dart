@@ -436,17 +436,33 @@
 //   }
 // }
 
+import 'dart:async';
+
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/provider_setup.dart';
 import 'package:app/ui/router.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() {
-  runApp(Stride());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  Crashlytics.instance.enableInDevMode = true;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  runZoned(() {
+    runApp(Stride());
+  }, onError: Crashlytics.instance.recordError);
 }
 
 class Stride extends StatelessWidget {
+  static FirebaseAnalytics analytics = FirebaseAnalytics();
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -461,6 +477,7 @@ class Stride extends StatelessWidget {
             splashColor: Colors.transparent),
         initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
+        navigatorObservers: [observer],
       ),
     );
   }

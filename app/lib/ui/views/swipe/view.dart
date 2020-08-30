@@ -37,7 +37,7 @@ class _SwipeViewState extends State<SwipeView> {
   Widget build(BuildContext context) {
     int type = Provider.of<SwipeService>(context).type;
     return FadeIn(
-      delay: 1,
+      delay: 0.5,
       child: BaseWidget<SwipeModel>(
           model: SwipeModel(
             Provider.of<DressRoomService>(context),
@@ -59,7 +59,7 @@ class _SwipeViewState extends State<SwipeView> {
               return LoadingWidget();
             }
             return FadeIn(
-              delay: 2,
+              delay: 0.5,
               child: Stack(children: [
                 Align(
                   alignment: Alignment.topCenter,
