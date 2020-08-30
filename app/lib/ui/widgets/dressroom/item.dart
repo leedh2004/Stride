@@ -4,6 +4,7 @@ import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
+import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -67,14 +68,15 @@ class DressRoomItemWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (opacity == 1) {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      Stride.analytics.logViewItem(
-                          itemId: item.product_id.toString(),
-                          itemName: item.product_name,
-                          itemCategory: item.shop_mall);
-                      return ProductWebView(item.product_url, item.shop_mall);
-                    }));
+                    Stride.analytics
+                        .logEvent(name: 'DRESS_ROOM_VIEW_SIZE', parameters: {
+                      'itemId': item.product_id.toString(),
+                      'itemName': item.product_name,
+                      'itemCategory': item.shop_mall
+                    });
+                    Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (___, _, __) => ProductDialog(item)));
                   } else {
                     Provider.of<DressRoomModel>(context, listen: false)
                         .selectItem(index);

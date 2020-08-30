@@ -50,6 +50,7 @@ class SwipeCard {
     data['product_url'] = this.product_url;
     data['type'] = this.type;
     data['shop_mall'] = this.shop_mall;
+    data['product_size'] = this.product_size;
     return data;
   }
 }

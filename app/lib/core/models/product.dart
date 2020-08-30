@@ -1,4 +1,5 @@
 import 'package:app/core/models/map_mall.dart';
+import 'package:app/core/models/product_size.dart';
 import 'package:app/ui/shared/text_styles.dart';
 
 class Product {
@@ -9,6 +10,7 @@ class Product {
   String product_url;
   String type;
   String shop_mall;
+  ProductSize product_size;
   // String size;
 
   Product(
@@ -28,6 +30,7 @@ class Product {
     product_url = json['product_url'];
     type = json['type'];
     shop_mall = json['shop_mall'];
+    product_size = ProductSize.fromJson(json['product_size']);
   }
 
   Product.fromJson(Map<String, dynamic> json) {
@@ -37,6 +40,7 @@ class Product {
     product_name = json['product_name'];
     product_url = json['product_url'];
     type = json['type'];
+    product_size = ProductSize.fromJson(json['size']);
     shop_mall = shoppingmall[json['shop_id']];
   }
 

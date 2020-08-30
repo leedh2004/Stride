@@ -24,7 +24,9 @@ class LookBookItem extends StatelessWidget {
           flex: 5,
           child: InkWell(
             onTap: () {
-              showDialog(context: context, child: LookBookDialog(item));
+              Navigator.of(context).push(PageRouteBuilder(
+                  opaque: false,
+                  pageBuilder: (___, _, __) => LookBookDialog(item)));
             },
             child: Row(
               children: <Widget>[
