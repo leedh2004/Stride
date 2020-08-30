@@ -1,6 +1,8 @@
 from flask import Flask, g, request
 from gevent.pywsgi import WSGIServer
-
+import logging
+from logbeam import CloudWatchLogsHandler
+from datetime import datetime
 import sys
 sys.path.append('../')
 sys.path.append('../../')
@@ -13,6 +15,11 @@ from backend.api_v1.user import user
 from backend.authentication.kakao import kakao
 from backend.authentication.naver import naver
 from flask_cors import CORS
+
+dt = datetime.now()
+log_name = str(dt.year) +'-'+ str(dt.month) +'-'+ str(dt.day)
+LOG_FORMAT = "[%(asctime)-10s] - %(message)s"
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -27,11 +34,40 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(naver, url_prefix='/naver')
 app.register_blueprint(user, url_prefix='/user')
 
+cw_handler = CloudWatchLogsHandler(
+    log_group_name='stride',
+    log_stream_name='api-stride',
+    buffer_duration=10000,
+    batch_count=10,
+    batch_size=1048576
+)
+dev_cw_handler = CloudWatchLogsHandler(
+    log_group_name='stride',
+    log_stream_name='api-dev-stride',
+    buffer_duration=10000,
+    batch_count=10,
+    batch_size=1048576
+)
+
 
 @app.route('/')
 def hello_world():
+    g.user_id = 'test'
     return 'Hello World! CI TEST7 only develop'
 
+@app.after_request
+def log(response):
+    print(request.base_url)
+    if 'http://0.0.0.0:5000' in request.base_url: # dev
+        logger = logging.getLogger('api-dev-stride')
+        logger.addHandler(dev_cw_handler)
+    else:
+        logger = logging.getLogger("api-stride")
+        logger.addHandler(cw_handler)
+    log_msg = "{0}/{1}/{2}/{3}".format(str(g.user_id), str(request), str(response.status), str(response.get_data()))
+    logger.info(log_msg)
+
+    return response
 
 
 if __name__ == '__main__':
