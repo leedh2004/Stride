@@ -22,14 +22,14 @@ def delete_dressroom(product_id):
 def get_dressroom():
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM products p, dressroom d WHERE p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at ASC"""
-        get_folder_query = """SELECT folder_id, folder_name FROM dressfolder WHERE user_id = %s"""
+        get_folder_query = """SELECT folder_id, folder_name FROM dressfolder WHERE user_id = %s ORDER BY created_at ASC"""
         get_default_query = """SELECT * FROM products p, dressroom d WHERE p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at ASC"""
         try:
             product = {}
             product['info'] = []
             cursor.execute(get_folder_query, (g.user_id, ))
             result = cursor.fetchall()
-            result.append((0, 'default'))
+            result.insert(0, (0, 'default'))
             for item in result:
                 folder_id = item[0]
                 folder_name = item[1]
