@@ -128,7 +128,7 @@ IOS / Android 를 두 가지 시장의 빠른 출시와 피드백 반영을 위�
 - [x] 토글과 버튼의 위치 바꾸기
 - [ ] Loading시 gif가 필요함, 우선은 라이브러리 사용 (pub.dev)
 - [ ] 구매, 좋아요, 싫어요, 메뉴전환 Analytics 붙이기
-- [ ] Crashlytics 붙이기
+- [x] Crashlytics 붙이기
 - [x] 쇼핑몰 이름바꾸기
 - [ ] FCM 연동
 - [ ] 유저 햅틱고려
