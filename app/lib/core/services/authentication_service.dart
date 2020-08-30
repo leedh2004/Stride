@@ -23,9 +23,9 @@ class AuthenticationService {
     print('?');
   }
 
-  Future login(String token) async {
+  Future login(String token, String id) async {
     await _storage.write(key: 'jwt_token', value: token);
-    User user = User(id: 'test');
+    User user = User(id: id);
     _userController.add(user);
     api.client.options.headers = {
       "Content-Type": "application/json",
@@ -48,6 +48,7 @@ class AuthenticationService {
       final response = await api.client.get(
         '${Api.endpoint}/login/token',
       );
+      print(response.data);
       if (response.statusCode == 200) {
         //뉴토큰으로 토큰 교체해줘야함.
         await _storage.delete(key: 'jwt_token');

@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/lookbook.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
@@ -173,6 +174,7 @@ class DressRoomSelectDialog extends StatelessWidget {
               onPressed: () async {
                 print(top[top_idx].product_name);
                 print(bottom[bottom_idx].product_name);
+                Stride.analytics.logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
                 Provider.of<LookBookService>(context, listen: false)
                     .addItem(top[top_idx], bottom[bottom_idx]);
                 ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(

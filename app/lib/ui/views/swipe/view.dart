@@ -2,6 +2,7 @@ import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
@@ -81,7 +82,15 @@ class _SwipeViewState extends State<SwipeView> {
                               setState(() {
                                 enabled = value;
                               });
-                              if (enabled) await model.test();
+
+                              if (enabled) {
+                                Stride.analytics
+                                    .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
+                                await model.test();
+                              } else {
+                                Stride.analytics
+                                    .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
+                              }
                             },
                             activeColor: backgroundColor,
                           ),
@@ -107,8 +116,12 @@ class _SwipeViewState extends State<SwipeView> {
               scrollDirection: Axis.horizontal,
               children: List.generate(TYPE.length, (index) {
                 return InkWell(
-                  onTap: () =>
-                      {setState(() => model.changeType('${TYPE[index]}'))},
+                  onTap: () {
+                    setState(() => model.changeType('${TYPE[index]}'));
+                    Stride.analytics.logEvent(
+                      name: 'SWIPE_CHANGE_MENU_${TYPE[index]}',
+                    );
+                  },
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
                     child: Text(
@@ -155,6 +168,10 @@ class _SwipeViewState extends State<SwipeView> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               SwipeCard item = Provider.of<SwipeService>(context)
                   .items[model.type][model.index];
+              Stride.analytics.logViewItem(
+                  itemId: item.product_id.toString(),
+                  itemName: item.product_name,
+                  itemCategory: item.shop_mall);
               return ProductWebView(item.product_url, item.shop_mall);
             }));
           },

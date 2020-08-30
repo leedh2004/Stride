@@ -3,6 +3,7 @@ import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
@@ -145,6 +146,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               // When releasing the first card
               onPanEnd: (_) {
                 // If the front card was swiped far enough to count as swiped
+                String type = Provider.of<SwipeService>(context).type;
+                int index = Provider.of<SwipeService>(context).index[type];
+                SwipeCard item =
+                    Provider.of<SwipeService>(context).items[type][index];
                 setState(() {
                   _opacity[HATE] = 0.0;
                   _opacity[LIKE] = 0.0;
@@ -152,13 +157,28 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 });
                 // Send result reqeust to server
                 if (frontCardAlign.x > STANDARD_RIGHT) {
+                  Stride.analytics.logEvent(name: 'LIKE', parameters: {
+                    'itemId': item.product_id.toString(),
+                    'itemName': item.product_name,
+                    'itemCategory': item.shop_mall
+                  });
                   widget.model.likeRequest();
                   animateCards();
                 } else if (frontCardAlign.x < STANDARD_LEFT) {
+                  Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
+                    'itemId': item.product_id.toString(),
+                    'itemName': item.product_name,
+                    'itemCategory': item.shop_mall
+                  });
                   widget.model.dislikeRequest();
                   animateCards();
                 } else if (frontCardAlign.y < STANDARD_UP) {
                   widget.model.passRequest();
+                  Stride.analytics.logEvent(name: 'PASS', parameters: {
+                    'itemId': item.product_id.toString(),
+                    'itemName': item.product_name,
+                    'itemCategory': item.shop_mall
+                  });
                   animateCards();
                 } else {
                   // Return to the initial rotation and alignment

@@ -1,6 +1,7 @@
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -65,6 +66,12 @@ class SizeDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Stride.analytics.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
+      'itemId': item.product_id.toString(),
+      'itemName': item.product_name,
+      'itemCategory': item.shop_mall
+    });
+
     if (keys == 0) Navigator.pop(context);
     return Scaffold(
       backgroundColor: Colors.transparent,

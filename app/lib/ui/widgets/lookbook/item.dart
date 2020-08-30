@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/viewmodels/views/look_book.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/lookbook/dialog.dart';
@@ -113,6 +114,7 @@ class LookBookItem extends StatelessWidget {
                           btnCancelOnPress: () {},
                           btnOkOnPress: () async {
                             print(index);
+                            Stride.analytics.logEvent(name: "LOOK_BOOK_RENAME");
                             Provider.of<LookBookModel>(context, listen: false)
                                 .rename(index, _textController.text);
                           })
@@ -141,8 +143,7 @@ class LookBookItem extends StatelessWidget {
                           btnCancelColor: pinkColor,
                           btnCancelOnPress: () {},
                           btnOkOnPress: () {
-                            print('wtf');
-                            print(index);
+                            Stride.analytics.logEvent(name: "LOOK_BOOK_REMOVE");
                             Provider.of<LookBookModel>(context, listen: false)
                                 .removeItem(item.id);
                           })

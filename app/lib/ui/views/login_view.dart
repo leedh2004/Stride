@@ -10,6 +10,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../main.dart';
+
 class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -77,6 +79,8 @@ class KakaoLoginPage extends StatelessWidget {
   final storage = new FlutterSecureStorage();
 
   Widget build(BuildContext context) {
+    Stride.analytics.logLogin();
+
     return Scaffold(
       body: SafeArea(
           child: WebView(
@@ -88,9 +92,9 @@ class KakaoLoginPage extends StatelessWidget {
                 List<String> info = msg.message.split(',');
                 //await storage.write(key: 'jwt_token', value: msg.message);
                 Provider.of<AuthenticationService>(context, listen: false)
-                    .login(info[0]);
-                print(info[1]); // id
-                print(info[2]); // channel
+                    .login(info[0], info[1] + '@' + info[2]);
+                //print(info[1]); // id
+                //print(info[2]); // channel
                 Navigator.pop(context);
               })
         ].toSet(),
@@ -107,6 +111,8 @@ class NaverLoginPage extends StatelessWidget {
   String client_id = "5cowST1OYAYIE38vxCq0";
   @override
   Widget build(BuildContext context) {
+    Stride.analytics.logLogin();
+
     return Scaffold(
       body: SafeArea(
           child: WebView(
@@ -114,11 +120,12 @@ class NaverLoginPage extends StatelessWidget {
           JavascriptChannel(
               name: 'jwt_token',
               onMessageReceived: (JavascriptMessage msg) async {
+                print("!!");
                 print(msg.message);
                 List<String> info = msg.message.split(',');
                 //await storage.write(key: 'jwt_token', value: msg.message);
                 Provider.of<AuthenticationService>(context, listen: false)
-                    .login(info[0]);
+                    .login(info[0], info[1] + '@' + info[2]);
                 print(info[1]); // id
                 print(info[2]); // channel
                 Navigator.pop(context);

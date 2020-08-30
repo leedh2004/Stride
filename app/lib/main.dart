@@ -466,6 +466,7 @@ class Stride extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    analytics.logAppOpen(); // 앱 시작.
     return MultiProvider(
       providers: providers,
       child: MaterialApp(

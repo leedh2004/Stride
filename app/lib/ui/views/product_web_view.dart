@@ -2,6 +2,8 @@ import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+import '../../main.dart';
+
 class ProductWebView extends StatelessWidget {
   final String mall;
   final String url;

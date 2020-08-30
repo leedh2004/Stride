@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -66,11 +67,14 @@ class DressRoomItemWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (opacity == 1) {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProductWebView(
-                                item.product_url, item.shop_mall)));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      Stride.analytics.logViewItem(
+                          itemId: item.product_id.toString(),
+                          itemName: item.product_name,
+                          itemCategory: item.shop_mall);
+                      return ProductWebView(item.product_url, item.shop_mall);
+                    }));
                   } else {
                     Provider.of<DressRoomModel>(context, listen: false)
                         .selectItem(index);
@@ -103,11 +107,14 @@ class DressRoomItemWidget extends StatelessWidget {
                   alignment: Alignment.centerRight + Alignment(-0.2, 0),
                   child: InkWell(
                     onTap: () => {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ProductWebView(
-                                  item.product_url, item.shop_mall)))
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        Stride.analytics.logViewItem(
+                            itemId: item.product_id.toString(),
+                            itemName: item.product_name,
+                            itemCategory: item.shop_mall);
+                        ProductWebView(item.product_url, item.shop_mall);
+                      }))
                     },
                     child: FaIcon(
                       FontAwesomeIcons.store,

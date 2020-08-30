@@ -3,6 +3,7 @@ import 'package:app/ui/views/service_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../main.dart';
 import 'login_view.dart';
 
 class RootView extends StatelessWidget {
@@ -13,6 +14,7 @@ class RootView extends StatelessWidget {
       if (user == null) {
         showWidget = LoginView();
       } else {
+        Stride.analytics.setUserId(user.id);
         showWidget = ServiceView();
       }
       return AnimatedSwitcher(

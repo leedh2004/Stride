@@ -1,12 +1,12 @@
 import 'package:app/core/models/product.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/widgets/dressroom/select_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
@@ -33,6 +33,8 @@ class DressRoomButtonBar extends StatelessWidget {
                             .folder;
                     var folderKeys = folder.keys.toList();
                     var folderNames = folder.values.toList();
+                    Stride.analytics
+                        .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
                     showMaterialModalBottomSheet(
                         context: context,
                         builder: (context, scrollController) {
@@ -154,6 +156,8 @@ class DressRoomButtonBar extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     icon: FaIcon(FontAwesomeIcons.trash),
                     onPressed: () {
+                      Stride.analytics
+                          .logEvent(name: "DRESS_ROOM_REMOVE_BUTTON_CLICKED");
                       AwesomeDialog(
                           context: context,
                           dialogType: DialogType.ERROR,
@@ -169,6 +173,8 @@ class DressRoomButtonBar extends StatelessWidget {
                           btnCancelColor: pinkColor,
                           btnCancelOnPress: () {},
                           btnOkOnPress: () {
+                            Stride.analytics
+                                .logEvent(name: "DRESS_ROOM_REMOVE_ITEM");
                             Provider.of<DressRoomModel>(context, listen: false)
                                 .removeItem();
                           })
@@ -214,6 +220,7 @@ Widget MakeButton(DressRoomModel model, BuildContext context) {
         onPressed: () async {
           List<Product> top = model.findSelectedTop();
           List<Product> bottom = model.findSelectedBotoom();
+          Stride.analytics.logEvent(name: "DRESS_ROOM_MAKE_BUTTON_CLICKED");
           showMaterialModalBottomSheet(
               expand: false,
               context: context,

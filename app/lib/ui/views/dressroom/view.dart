@@ -1,5 +1,6 @@
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
+import 'package:app/main.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/dressroom/bar_button.dart';
@@ -44,6 +45,8 @@ class DressRoomView extends StatelessWidget {
                           ? InkWell(
                               onTap: () {
                                 model.changeFolder(folderKeys[index]);
+                                Stride.analytics
+                                    .logEvent(name: "DRESS_ROOM_FOLDER_CHANGE");
                               },
                               child: Container(
                                   margin: EdgeInsets.only(right: 10),
