@@ -1,4 +1,6 @@
 from flask import Flask, g, request
+from gevent.pywsgi import WSGIServer
+
 import sys
 sys.path.append('../')
 sys.path.append('../../')
@@ -28,8 +30,15 @@ app.register_blueprint(user, url_prefix='/user')
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'Hello World! CI TEST7 only develop'
+
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Development
+    # app.run(host='0.0.0.0', port=5000)
+
+    # Production
+    print("Server on 5000 Port")
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
