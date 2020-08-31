@@ -12,7 +12,8 @@ def insert_like(product_id):
             service_conn.commit()
             cursor.execute(sequence_query, (g.user_id, product_id))
             service_conn.commit()
-        except:
+        except Exception as ex:
+            print(ex)
             service_conn.rollback()
             raise
 
@@ -23,7 +24,8 @@ def insert_dislikes(product_id):
         try:
             cursor.execute(query, (g.user_id, product_id))
             service_conn.commit()
-        except:
+        except Exception as ex:
+            print(ex)
             service_conn.rollback()
             raise
 
@@ -34,7 +36,8 @@ def insert_pass(product_id):
         try:
             cursor.execute(query, (g.user_id, product_id))
             service_conn.commit()
-        except:
+        except Exception as ex:
+            print(ex)
             service_conn.rollback()
             raise
 
@@ -45,6 +48,7 @@ def insert_purchases(product_id):
         try:
             cursor.execute(query, (g.user_id, product_id))
             service_conn.commit()
-        except:
+        except Exception as ex:
+            print(ex)
             service_conn.rollback()
             raise

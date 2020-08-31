@@ -86,7 +86,8 @@ def purchase():
         product_id = body['product_id']
         insert_purchases(product_id)
     except:
-        return
+        return jsonify("Fail"), 500
+    return 'Success', 200
 
 
 @home.route('/recommendation', methods=['GET'])
@@ -111,4 +112,3 @@ def get_recommendation():
     except:
         return jsonify('Fail'), 500
     return result, 200
-
