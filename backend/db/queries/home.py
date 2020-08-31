@@ -17,7 +17,8 @@ def get_home_clothes():
                 load.fetch_data(item)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
-        except:
+        except Exception as ex:
+            print(ex)
             pass
         return 'None'
 
@@ -46,7 +47,8 @@ def get_all_type_clothes():
                     load.fetch_data(item)
                     product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
-        except:
+        except Exception as ex:
+            print(ex)
             pass
         return 'None'
 
@@ -63,7 +65,8 @@ def get_clothes_category(type):
                 load.fetch_data(item)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
-        except:
+        except Exception as ex:
+            print(ex)
             pass
         return 'None'
 
@@ -80,6 +83,7 @@ def get_recommended_product(products):
                 load.fetch_data(result)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
-        except:
+        except Exception as ex:
+            print(ex)
             pass
         return
