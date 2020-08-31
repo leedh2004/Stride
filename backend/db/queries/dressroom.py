@@ -61,8 +61,9 @@ def create_dressroom_folder(product_id, name):
             service_conn.commit()
             cursor.execute(select_query, (g.user_id, name))
             item = cursor.fetchone()
-            cursor.execute(update_query, (item[0], g.user_id, product_id))
-            service_conn.commit()
+            if product_id != -1:
+                cursor.execute(update_query, (item[0], g.user_id, product_id))
+                service_conn.commit()
             load = DressfolderModel()
             load.fetch_data(item)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
@@ -90,8 +91,8 @@ def move_dressroom_folder(folder_id, product_id):
 
 def delete_dressroom_folder(folder_id):
     with db_connect() as (service_conn, cursor):
-        delete_dress_query = """DELETE FROM dressroom WHERE folder_id = %s"""
-        delete_folder_query = """DELETE FROM dressfolder WHERE folder_id = %s"""
+        delete_dress_query = """DELETE FROM dressroom WHERE folder_id = %s::int"""
+        delete_folder_query = """DELETE FROM dressfolder WHERE folder_id = %s::int"""
         try:
             cursor.execute(delete_dress_query, (folder_id, ))
             service_conn.commit()
