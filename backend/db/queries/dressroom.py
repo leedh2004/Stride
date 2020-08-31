@@ -55,15 +55,16 @@ def create_dressroom_folder(product_id, name):
     with db_connect() as (service_conn, cursor):
         query = """INSERT INTO dressfolder(user_id, folder_name) VALUES (%s, %s)"""
         select_query = """SELECT * FROM dressfolder WHERE user_id = %s AND folder_name = %s"""
-        update_query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id IN %s"""
+        update_query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id = %s"""
         try:
             cursor.execute(query, (g.user_id, name))
             service_conn.commit()
             cursor.execute(select_query, (g.user_id, name))
             item = cursor.fetchone()
             if product_id != -1:
-                cursor.execute(update_query, (item[0], g.user_id, product_id))
-                service_conn.commit()
+                for product in product_id:
+                    cursor.execute(update_query, (item[0], g.user_id, product))
+                    service_conn.commit()
             load = DressfolderModel()
             load.fetch_data(item)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
@@ -76,12 +77,14 @@ def create_dressroom_folder(product_id, name):
 
 def move_dressroom_folder(folder_id, product_id):
     with db_connect() as (service_conn, cursor):
-        query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id IN %s"""
+        query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id = %s"""
         try:
             if folder_id == 0:
-                cursor.execute(query, (None, g.user_id, product_id))
+                for item in product_id:
+                    cursor.execute(query, (None, g.user_id, item))
             else:
-                cursor.execute(query, (folder_id, g.user_id, product_id))
+                for item in product_id:
+                    cursor.execute(query, (None, g.user_id, item))
             service_conn.commit()
         except Exception as ex:
             print(ex)
@@ -94,7 +97,7 @@ def delete_dressroom_folder(folder_id):
         delete_dress_query = """DELETE FROM dressroom WHERE folder_id = %s::int"""
         delete_folder_query = """DELETE FROM dressfolder WHERE folder_id = %s::int"""
         try:
-            cursor.execute(delete_dress_query, (folder_id, ))
+            cursor.execute(delete_dress_query, (folder_id,))
             service_conn.commit()
             cursor.execute(delete_folder_query, (folder_id,))
             service_conn.commit()
