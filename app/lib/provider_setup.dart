@@ -37,7 +37,7 @@ List<SingleChildWidget> dependentServices = [
 
 // Provider 값의 변화를 관찰하는 UI Observer
 List<SingleChildWidget> uiConsumableProviders = [
-  StreamProvider<User>(
+  StreamProvider<StrideUser>(
     create: (context) =>
         Provider.of<AuthenticationService>(context, listen: false).user,
   ),

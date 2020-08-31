@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'package:app/core/models/user.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxdart/subjects.dart';
 import 'api.dart';
 
 class AuthenticationService {
-  StreamController<User> _userController = BehaviorSubject<User>();
-  Stream<User> get user => _userController.stream;
+  StreamController<StrideUser> _userController = BehaviorSubject<StrideUser>();
+  Stream<StrideUser> get user => _userController.stream;
   FlutterSecureStorage _storage = new FlutterSecureStorage();
   Api api;
 
@@ -25,7 +26,20 @@ class AuthenticationService {
 
   Future login(String token, String id) async {
     await _storage.write(key: 'jwt_token', value: token);
-    User user = User(id: id);
+    StrideUser user = StrideUser(id: id);
+    try {
+      print("WTFFFFF!");
+      print(id);
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: id + '.com', password: "SuperSecretPassword!");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e.toString());
+    }
     _userController.add(user);
     api.client.options.headers = {
       "Content-Type": "application/json",
@@ -48,13 +62,27 @@ class AuthenticationService {
       final response = await api.client.get(
         '${Api.endpoint}/login/token',
       );
-      print(response.data);
+      // print(response.data);
       if (response.statusCode == 200) {
+        var Id = response.data['user_id'];
+        print("WTFF!!");
+        print(Id);
         //뉴토큰으로 토큰 교체해줘야함.
         await _storage.delete(key: 'jwt_token');
         await _storage.write(
             key: 'jwt_token', value: response.data['new_token']);
-        User user = User(id: 'test');
+        StrideUser user = StrideUser(id: Id);
+        try {
+          UserCredential userCredential = await FirebaseAuth.instance
+              .signInWithEmailAndPassword(
+                  email: Id + '.com', password: "SuperSecretPassword!");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            print('No user found for that email.');
+          } else if (e.code == 'wrong-password') {
+            print('Wrong password provided for that user.');
+          }
+        }
         _userController.add(user);
       } else {
         // 404, 403

@@ -443,6 +443,7 @@ import 'package:app/provider_setup.dart';
 import 'package:app/ui/router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -453,6 +454,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
   // runZoned(() {
   //   runApp(Stride());
   // }, onError: Crashlytics.instance.recordError);
@@ -463,7 +465,7 @@ class Stride extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics();
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
-
+  static FirebaseAuth auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     analytics.logAppOpen(); // 앱 시작.

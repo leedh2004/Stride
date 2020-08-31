@@ -1,4 +1,4 @@
-class User {
+class StrideUser {
   String id;
-  User({this.id});
+  StrideUser({this.id});
 }

@@ -53,6 +53,10 @@ class SwipeModel extends BaseModel {
     await _swipeService.passRequest();
   }
 
+  void purchaseItem(int id) async {
+    await _swipeService.purchaseItem(id);
+  }
+
   void test() async {
     print("TEST");
     setBusy(true);

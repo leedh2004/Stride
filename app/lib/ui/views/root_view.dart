@@ -10,7 +10,7 @@ class RootView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget showWidget;
-    return Consumer<User>(builder: (context, user, child) {
+    return Consumer<StrideUser>(builder: (context, user, child) {
       if (user == null) {
         showWidget = LoginView();
       } else {

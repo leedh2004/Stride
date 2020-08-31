@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
@@ -160,50 +159,58 @@ class _ProductDialogState extends State<ProductDialog> {
                                 ),
                                 children: [
                                   Container(
-                                    height: 60,
                                     child: Row(children: [
-                                      Center(
-                                        child: Text(
-                                          'SIZE',
-                                          style: tableHeaderSizeText,
+                                      Expanded(
+                                        flex: 1,
+                                        child: Center(
+                                          child: Text(
+                                            'SIZE',
+                                            style: tableHeaderSizeText,
+                                          ),
                                         ),
                                       ),
-                                      ...List.generate(widget.keys.length,
-                                          (index) {
-                                        var ret = widget.keys[index];
-                                        if (ret == widget.current) {
-                                          return InkWell(
-                                              onTap: () {},
-                                              child: Container(
-                                                width: 30,
-                                                height: 20,
-                                                margin: EdgeInsets.all(8),
-                                                color: backgroundColor,
-                                                child: Center(
-                                                  child: Text(
-                                                    '$ret',
-                                                    style: whiteStyle,
-                                                  ),
-                                                ),
-                                              ));
-                                        } else {
-                                          return InkWell(
-                                            onTap: () {
-                                              setState(() {
-                                                widget.current = ret;
-                                              });
-                                            },
-                                            child: Container(
-                                                width: 30,
-                                                height: 20,
-                                                color: Colors.black26,
-                                                margin: EdgeInsets.all(8),
-                                                child: Center(
-                                                    child: Text('$ret'))),
-                                          );
-                                        }
-                                        ;
-                                      })
+                                      Expanded(
+                                        flex: 2,
+                                        child: Wrap(
+                                            direction: Axis.horizontal,
+                                            children: List.generate(
+                                                widget.keys.length, (index) {
+                                              var ret = widget.keys[index];
+                                              if (ret == widget.current) {
+                                                return InkWell(
+                                                    onTap: () {},
+                                                    child: Container(
+                                                      width: 35,
+                                                      height: 30,
+                                                      margin: EdgeInsets.all(4),
+                                                      color: backgroundColor,
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${ret.toUpperCase()}',
+                                                          style: whiteStyle,
+                                                        ),
+                                                      ),
+                                                    ));
+                                              } else {
+                                                return InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      widget.current = ret;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      width: 35,
+                                                      height: 30,
+                                                      color: Colors.black26,
+                                                      margin: EdgeInsets.all(4),
+                                                      child: Center(
+                                                          child: Text(
+                                                              '${ret.toUpperCase()}'))),
+                                                );
+                                              }
+                                              ;
+                                            })),
+                                      ),
                                     ]),
                                   ),
                                 ]),

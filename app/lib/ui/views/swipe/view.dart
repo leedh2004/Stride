@@ -172,6 +172,7 @@ class _SwipeViewState extends State<SwipeView> {
                   itemId: item.product_id.toString(),
                   itemName: item.product_name,
                   itemCategory: item.shop_mall);
+              model.purchaseItem(item.product_id);
               return ProductWebView(item.product_url, item.shop_mall);
             }));
           },

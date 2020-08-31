@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -115,7 +116,10 @@ class DressRoomItemWidget extends StatelessWidget {
                             itemId: item.product_id.toString(),
                             itemName: item.product_name,
                             itemCategory: item.shop_mall);
-                        ProductWebView(item.product_url, item.shop_mall);
+                        // 이 부분 코드는 나중에 수정해야할 듯.
+                        Provider.of<SwipeService>(context, listen: false)
+                            .purchaseItem(item.product_id);
+                        return ProductWebView(item.product_url, item.shop_mall);
                       }))
                     },
                     child: FaIcon(

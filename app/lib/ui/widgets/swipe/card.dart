@@ -146,10 +146,13 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               // When releasing the first card
               onPanEnd: (_) {
                 // If the front card was swiped far enough to count as swiped
-                String type = Provider.of<SwipeService>(context).type;
-                int index = Provider.of<SwipeService>(context).index[type];
+                String type =
+                    Provider.of<SwipeService>(context, listen: false).type;
+                int index = Provider.of<SwipeService>(context, listen: false)
+                    .index[type];
                 SwipeCard item =
-                    Provider.of<SwipeService>(context).items[type][index];
+                    Provider.of<SwipeService>(context, listen: false)
+                        .items[type][index];
                 setState(() {
                   _opacity[HATE] = 0.0;
                   _opacity[LIKE] = 0.0;
