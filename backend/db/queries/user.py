@@ -1,6 +1,7 @@
 from backend.db.init import *
 from flask import g
-
+import json
+from bson import json_util
 
 def insert_user(user_id):
     with db_connect() as (service_conn, cursor):
@@ -49,14 +50,15 @@ def select_user(user_id):
 
 def update_user_size(size):
     with db_connect() as (service_conn, cursor):
-        query = """UPDATE users SET length = %s , waist = %s , hip = %s, thigh = %s, rise = %s, hem = %s, shoulder = %s, bust = %s, arm_length = %s where id = %s"""
+        query = """UPDATE users SET waist = %s , hip = %s, thigh = %s, shoulder = %s, bust = %s WHERE user_id = %s"""
         ts_query = """UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE user_id = %s"""
         try:
-            load = (size['length'], size['waist'], size['hip'], size['thigh'], size['rise'], size['hem'], size['shoulder'], size['bust'], size['arm_length'], g.user_id)
+            load = (size['waist'], size['hip'], size['thigh'], size['hem'], size['shoulder'], size['bust'], g.user_id)
             cursor.execute(query, load)
             service_conn.commit()
             cursor.execute(ts_query, (g.user_id, ))
             service_conn.commit()
+            update_user_profile_view(g.user_id)
         except:
             service_conn.rollback()
             raise
@@ -81,6 +83,34 @@ def update_user_email(user_id, email):
             load = (email, user_id)
             cursor.execute(query, load)
             service_conn.commit()
+        except:
+            service_conn.rollback()
+            raise
+
+
+def update_user_profile_view(user_id):
+    with db_connect() as (service_conn, cursor):
+        query = """UPDATE user SET profile_flag = True WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (user_id,))
+            service_conn.commit()
+        except:
+            service_conn.rollback()
+            raise
+
+
+def select_user_profile_flag(user_id):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT profile_flag FROM users WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (user_id,))
+            flag = cursor.fetchall()
+            flag = flag[0]
+            if flag is True:
+                result = {'profile_flag':True}
+            else:
+                result = {'profile_flag':False}
+            return json.dumps(result, default=json_util.default, ensure_ascii=False)
         except:
             service_conn.rollback()
             raise
