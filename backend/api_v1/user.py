@@ -34,3 +34,4 @@ def insert_user_birth_year():
     except:
         return jsonify('Fail'), 500
     return jsonify('Success'), 200
+
