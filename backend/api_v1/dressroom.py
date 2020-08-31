@@ -41,11 +41,11 @@ def create_folder():
         body = request.get_json()
         product_id = body['product_id']
         name = body['folder_name']
-        create_dressroom_folder(product_id, name)
+        result = create_dressroom_folder(product_id, name)
     except Exception as Ex:
         print(Ex)
         return jsonify("Fail"), 500
-    return jsonify("Success"), 200
+    return jsonify(result), 200
 
 
 @dressroom.route('/folder/name', methods=['PUT'])
