@@ -51,15 +51,18 @@ def get_dressroom():
             pass
 
 
-def create_dressroom_folder(name):
+def create_dressroom_folder(product_id, name):
     with db_connect() as (service_conn, cursor):
         query = """INSERT INTO dressfolder(user_id, folder_name) VALUES (%s, %s)"""
         select_query = """SELECT * FROM dressfolder WHERE user_id = %s AND folder_name = %s"""
+        update_query = """UPDATE dressroom SET folder_id = %s WHERE user_id = %s AND product_id IN %s"""
         try:
             cursor.execute(query, (g.user_id, name))
             service_conn.commit()
             cursor.execute(select_query, (g.user_id, name))
             item = cursor.fetchone()
+            cursor.execute(update_query, (item[0], g.user_id, product_id))
+            service_conn.commit()
             load = DressfolderModel()
             load.fetch_data(item)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
