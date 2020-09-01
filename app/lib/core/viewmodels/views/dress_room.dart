@@ -18,6 +18,7 @@ class DressRoomModel extends BaseModel {
   void changeFolder(int folderId) {
     _service.changeFolder(folderId);
     current_folder = _service.current_folder;
+    selectedIdx.clear();
     notifyListeners();
   }
 
@@ -63,6 +64,32 @@ class DressRoomModel extends BaseModel {
     await _service.makeCoordinate(top, bottom);
     print(top);
     selectedIdx.clear();
+  }
+
+  Future createFolder(String folderName) async {
+    await _service.createFolder(folderName, selectedIdx.toList());
+    selectedIdx.clear();
+    notifyListeners();
+  }
+
+  Future renameFolder(int folderId, String newName) async {
+    await _service.renameFolder(folderId, newName);
+    notifyListeners();
+  }
+
+  Future moveFolder(int toId) async {
+    await _service.moveFolder(toId);
+    selectedIdx.clear();
+    notifyListeners();
+  }
+
+  Future deleteFolder(int folderId) async {
+    if (await _service.deleteFolder(folderId)) {
+      print("!!!!!!!!!!!!!!!!!!!!");
+      notifyListeners();
+    } else {
+      print("delete 서버 실패");
+    }
   }
 
   @override

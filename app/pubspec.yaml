@@ -87,6 +87,11 @@ flutter:
     - images/menu_icon/s_menu_heart.png
     - images/menu_icon/s_menu_lookbook.png
     - images/menu_icon/s_menu_swipe.png
+    - images/test.jpg
+    - images/test2.jpg
+    - images/test3.jpg
+    - images/test4.jpg
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

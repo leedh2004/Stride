@@ -14,8 +14,7 @@ class DressRoomView extends StatelessWidget {
   Widget build(BuildContext context) {
     //Consumer를 없앴음, StreamProvider도 없애버림
     return BaseWidget<DressRoomModel>(
-        model: DressRoomModel(
-            Provider.of<DressRoomService>(context, listen: false)),
+        model: DressRoomModel(Provider.of<DressRoomService>(context)),
         builder: (context, model, child) {
           Widget showWidget;
           if (model.busy) {
@@ -32,6 +31,7 @@ class DressRoomView extends StatelessWidget {
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
+              print(folder);
               showWidget = Column(children: <Widget>[
                 Container(
                   margin: EdgeInsets.fromLTRB(15, 15, 0, 0),

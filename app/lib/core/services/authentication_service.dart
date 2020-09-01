@@ -69,8 +69,8 @@ class AuthenticationService {
         print(Id);
         //뉴토큰으로 토큰 교체해줘야함.
         await _storage.delete(key: 'jwt_token');
-        await _storage.write(
-            key: 'jwt_token', value: response.data['new_token']);
+        await _storage.write(key: 'jwt_token', value: response.data['token']);
+        print("!!!!!!!!!!!!!!!!!!!");
         StrideUser user = StrideUser(id: Id);
         try {
           UserCredential userCredential = await FirebaseAuth.instance

@@ -107,4 +107,58 @@ class DressRoomService {
     }
     return;
   }
+
+  Future createFolder(String folderName, List<int> selectedIdx) async {
+    List<int> selectedIds = new List();
+    List<Product> selectedProduct = new List();
+    for (var idx in selectedIdx) {
+      selectedIds.add(items[current_folder][idx].product_id);
+      selectedProduct.add(items[current_folder][idx]);
+    }
+    var response;
+    if (selectedIds.length == 0) {
+      response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+          data: jsonEncode({'product_id': -1, 'folder_name': folderName}));
+    } else {
+      response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+          data: jsonEncode(
+              {'product_id': selectedIds, 'folder_name': folderName}));
+    }
+    if (response.statusCode == 200) {
+      var parsed = json.decode(response.data) as Map<String, dynamic>;
+      int newId = parsed['folder_id'];
+      print(newId);
+      folder[newId] = folderName;
+      items[newId] = selectedProduct;
+      for (var item in selectedProduct) {
+        items[current_folder].remove(item);
+      }
+    } else {
+      print("Error ${response.statusCode}");
+    }
+  }
+
+  Future<bool> deleteFolder(int folderId) async {
+    final response = await _api.client
+        .delete('${Api.endpoint}/dressroom/folder?folder_id=${folderId}');
+    if (response.statusCode == 200) {
+      folder.remove(folderId);
+      items.remove(folderId);
+      return true;
+    }
+    return false;
+  }
+
+  Future renameFolder(int folderId, String newName) async {
+    final response = await _api.client.put(
+        '${Api.endpoint}/dressroom/folder/name',
+        data: jsonEncode({'folder_id': folderId, 'update_name': newName}));
+    if (response.statusCode == 201) {
+      folder[folderId] = newName;
+    } else {
+      print("Error ${response.statusCode}");
+    }
+  }
+
+  Future moveFolder(int toId) async {}
 }

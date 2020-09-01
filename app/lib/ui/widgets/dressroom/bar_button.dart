@@ -4,6 +4,7 @@ import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/ui/widgets/dressroom/folder_dialog.dart';
 import 'package:app/ui/widgets/dressroom/select_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,13 @@ import 'package:provider/provider.dart';
 class DressRoomButtonBar extends StatelessWidget {
   final DressRoomModel model;
   DressRoomButtonBar(this.model);
+  TextEditingController _textController = TextEditingController();
+
+  void _handleSubmitted(String text) {
+    // print(_textController.text);
+    model.createFolder(_textController.text);
+    _textController.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,116 +39,14 @@ class DressRoomButtonBar extends StatelessWidget {
                     var folder =
                         Provider.of<DressRoomService>(context, listen: false)
                             .folder;
-                    var folderKeys = folder.keys.toList();
+                    var folderIds = folder.keys.toList();
                     var folderNames = folder.values.toList();
                     Stride.analytics
                         .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
                     showMaterialModalBottomSheet(
                         context: context,
                         builder: (context, scrollController) {
-                          return ListView(
-                            shrinkWrap: true,
-                            children: [
-                              Container(
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '폴더 선택',
-                                        style: subHeaderStyle,
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: IconButton(
-                                          icon: FaIcon(
-                                              FontAwesomeIcons.folderPlus),
-                                          onPressed: () {
-                                            showMaterialModalBottomSheet(
-                                                context: context,
-                                                builder: (context,
-                                                    scrollController) {
-                                                  TextEditingController
-                                                      _textController =
-                                                      TextEditingController();
-                                                  return Padding(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets
-                                                            .bottom),
-                                                    child: ListView(
-                                                      shrinkWrap: true,
-                                                      children: [
-                                                        ListTile(
-                                                          title: Text(
-                                                            '폴더 추가',
-                                                            style:
-                                                                subHeaderStyle,
-                                                          ),
-                                                        ),
-                                                        TextField(
-                                                          controller:
-                                                              _textController,
-                                                          onSubmitted:
-                                                              (String text) {
-                                                            print(
-                                                                _textController
-                                                                    .text);
-                                                            _textController
-                                                                .clear();
-                                                          },
-                                                          decoration:
-                                                              InputDecoration
-                                                                  .collapsed(
-                                                                      hintText:
-                                                                          "폴더명을 입력해주세요"),
-                                                        ),
-                                                        RaisedButton(
-                                                          onPressed: () {},
-                                                          padding: EdgeInsets
-                                                              .fromLTRB(100, 20,
-                                                                  100, 20),
-                                                          color:
-                                                              backgroundColor,
-                                                          child: Text(
-                                                            '확인',
-                                                            style: whiteStyle,
-                                                          ),
-                                                        )
-                                                      ],
-                                                    ),
-                                                  );
-                                                });
-                                          }),
-                                    )
-                                  ],
-                                ),
-                              ),
-                              ...List.generate(folderNames.length, (index) {
-                                String folderName = folderNames[index];
-                                if (folderName == 'default')
-                                  folderName = '기본 폴더';
-                                return ListTile(
-                                  onTap: () {
-                                    print("ONTAP");
-                                  },
-                                  leading: IconButton(
-                                      icon:
-                                          FaIcon(FontAwesomeIcons.timesCircle),
-                                      onPressed: () {}),
-                                  trailing: IconButton(
-                                      icon: FaIcon(FontAwesomeIcons.pencilAlt),
-                                      onPressed: () {
-                                        print("pencil");
-                                      }),
-                                  title: Text('$folderName'),
-                                );
-                              })
-                            ],
-                          );
+                          return FolderDialog(model);
                         });
                   },
                 ),

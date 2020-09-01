@@ -71,24 +71,10 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
             alignment: Alignment.bottomLeft,
             children: <Widget>[
               SizedBox.expand(
-                child: AspectRatio(
-                  aspectRatio: 11 / 16,
-                  child: widget.images[widget.index],
-                  // child: CachedNetworkImage(
-                  //     imageUrl: item.image_urls[index],
-                  //     httpHeaders: {
-                  //       HttpHeaders.refererHeader: "http://api-stride.com:5000/"
-                  //     },
-                  //     fit: BoxFit.cover),
-                ),
-              ),
-              //   child: CachedNetworkImage(
-              //       imageUrl: widget.item.image_urls[widget.index],
-              //       httpHeaders: {
-              //         HttpHeaders.refererHeader: "http://api-stride.com:5000/"
-              //       },
-              //       fit: BoxFit.cover),
-              // ),
+                  child: AspectRatio(
+                aspectRatio: 11 / 16,
+                child: widget.images[widget.index],
+              )),
               Align(
                 alignment: Alignment.topLeft,
                 child: Row(

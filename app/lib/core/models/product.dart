@@ -30,7 +30,7 @@ class Product {
     product_url = json['product_url'];
     type = json['type'];
     shop_mall = json['shop_mall'];
-    product_size = ProductSize.fromJson(json['product_size']);
+    product_size = json['product_size'];
   }
 
   Product.fromJson(Map<String, dynamic> json) {
