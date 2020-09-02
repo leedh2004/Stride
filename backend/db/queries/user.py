@@ -111,7 +111,7 @@ def select_user_profile_flag(user_id):
             print('1', flag)
             flag = flag[0]
             print('2', flag)
-            if flag is True:
+            if flag[0] is True:
                 return True
             else:
                 return False

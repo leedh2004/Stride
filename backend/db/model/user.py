@@ -22,8 +22,8 @@ class UserSizeModel:
         self.bust = self.decimal_parser(item[4])
 
 
-    def decimal_parser(self, size):
+    def decimal_parser(self, sizes):
         size = []
-        for item in size:
-            size.append(Decimal(item))
+        for item in sizes:
+            size.append(float(item))
         return size
