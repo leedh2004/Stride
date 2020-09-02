@@ -101,16 +101,13 @@ def update_user_profile_view(user_id):
             raise
 
 
-def select_user_profile_flag(user_id):
+def select_user_profile_flag():
     with db_connect() as (service_conn, cursor):
         query = """SELECT profile_flag FROM users WHERE user_id = %s"""
         try:
-            print('user-flag, user_id', g.user_id)
             cursor.execute(query, (g.user_id,))
             flag = cursor.fetchall()
-            print('1', flag)
             flag = flag[0]
-            print('2', flag)
             if flag[0] is True:
                 return True
             else:
@@ -120,17 +117,14 @@ def select_user_profile_flag(user_id):
             raise
 
 
-def select_user_size(user_id):
+def select_user_size():
     with db_connect() as (service_conn, cursor):
         query = """SELECT waist, hip, thigh, hem, shoulder, bust FROM users WHERE user_id = %s"""
         try:
-            print('user-size, user_id', g.user_id)
             cursor.execute(query, (g.user_id, ))
             item = cursor.fetchone()
-            print(item)
             load = UserSizeModel()
             load.fetch_data(item)
-            print(load.__dict__)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except:
             service_conn.rollback()
