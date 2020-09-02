@@ -17,6 +17,7 @@ user = Blueprint('user', __name__)
 def insert_user_size():
     body = request.get_json()
     size = body['size']
+    print('api in', size)
     try:
         update_user_size(size)
     except:
