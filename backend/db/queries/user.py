@@ -60,7 +60,8 @@ def update_user_size(size):
             cursor.execute(ts_query, (g.user_id, ))
             service_conn.commit()
             update_user_profile_view(g.user_id)
-        except:
+        except Exception as Ex:
+            print(Ex)
             service_conn.rollback()
             raise
 
