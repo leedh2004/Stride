@@ -105,7 +105,7 @@ def select_user_profile_flag(user_id):
     with db_connect() as (service_conn, cursor):
         query = """SELECT profile_flag FROM users WHERE user_id = %s"""
         try:
-            cursor.execute(query, (user_id,))
+            cursor.execute(query, (g.user_id,))
             flag = cursor.fetchall()
             flag = flag[0]
             if flag is True:
@@ -121,7 +121,7 @@ def select_user_size(user_id):
     with db_connect() as (service_conn, cursor):
         query = """SELECT waist, hip, thigh, hem, shoulder, bust FROM users WHERE user_id = %s"""
         try:
-            cursor.execute(query, (user_id, ))
+            cursor.execute(query, (g.user_id, ))
             item = cursor.fetchone()
             load = UserSizeModel()
             load.fetch_data(item)
