@@ -25,5 +25,8 @@ class UserSizeModel:
     def decimal_parser(self, sizes):
         size = []
         for item in sizes:
-            size.append(float(item))
+            if item is None:
+                size.append(None)
+            else:
+                size.append(float(item))
         return size
