@@ -3,10 +3,17 @@ class StrideUser {
   int birth_year;
   bool profile_flag;
   //bool hasSize;
-  List<int> shoulder;
-  List<int> bust;
-  List<int> waist;
-  List<int> hip;
-  List<int> thigh;
-  StrideUser({this.id, this.profile_flag});
+  List shoulder;
+  List bust;
+  List waist;
+  List hip;
+  List thigh;
+  StrideUser(
+      {this.id,
+      this.profile_flag,
+      this.shoulder,
+      this.bust,
+      this.waist,
+      this.hip,
+      this.thigh});
 }

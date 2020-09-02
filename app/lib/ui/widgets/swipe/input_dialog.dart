@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:app/core/models/tutorial.dart';
+import 'package:app/core/models/user.dart';
 import 'package:app/core/services/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/widgets/swipe/input_first.dart';
@@ -174,8 +175,9 @@ class _InputInfoDialogState extends State<InputInfoDialog> {
                 _shoulderflag,
                 _breastflag
               ])) {
+                Provider.of<StrideUser>(context, listen: false).profile_flag =
+                    true;
                 Navigator.pop(context);
-                setState(() => page++);
               }
             },
           ),

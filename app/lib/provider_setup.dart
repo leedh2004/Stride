@@ -18,6 +18,7 @@ List<SingleChildWidget> providers = [
 // 독립적인 Provider
 List<SingleChildWidget> independentServices = [
   Provider.value(value: Api()),
+  // Provider.value(value: AppleSignInAvailable())
 ];
 
 // 다른 Provider의 값에 의존하는 Provider

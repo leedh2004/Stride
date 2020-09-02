@@ -1,20 +1,48 @@
-import 'dart:convert';
-
+import 'package:app/core/services/apple_sign_in.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:apple_sign_in/apple_sign_in_button.dart';
+import 'package:apple_sign_in/scope.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import '../../main.dart';
 
 class LoginView extends StatelessWidget {
+  Future<void> _signInWithApple(BuildContext context) async {
+    try {
+      final authService =
+          Provider.of<AuthenticationService>(context, listen: false);
+      await authService.loginWithApple(scopes: [Scope.email, Scope.fullName]);
+      // print('uid: ${user.uid}');
+    } catch (e) {
+      // TODO: Show alert here
+      print(e);
+    }
+  }
+
+  Future<void> _signInWithKakao(BuildContext context) async {
+    final installed = await isKakaoTalkInstalled();
+    final authCode = installed
+        ? await AuthCodeClient.instance.requestWithTalk()
+        : await AuthCodeClient.instance.request();
+    // AccessTokenResponse token = await AuthApiClient.instance.issueAccessToken(authCode);
+    AccessTokenResponse token =
+        await AuthApi.instance.issueAccessToken(authCode);
+    Provider.of<AuthenticationService>(context, listen: false)
+        .login(token.accessToken, "kakao");
+  }
+
   @override
   Widget build(BuildContext context) {
+    final appleSignInAvailable =
+        Provider.of<AppleSignInAvailable>(context, listen: false);
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -31,13 +59,14 @@ class LoginView extends StatelessWidget {
                 style: whiteHeaderStyle,
               ),
               UIHelper.verticalSpaceMedium,
+              if (appleSignInAvailable.isAvailable)
+                AppleSignInButton(
+                  style: ButtonStyle.black, // style as needed
+                  type: ButtonType.signIn, // style as needed
+                  onPressed: () => _signInWithApple(context),
+                ),
               RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => KakaoLoginPage()));
-                },
+                onPressed: () => _signInWithKakao(context),
                 color: Colors.yellow[200],
                 child: SizedBox(
                   width: 130,
@@ -74,7 +103,7 @@ class LoginView extends StatelessWidget {
 
 class KakaoLoginPage extends StatelessWidget {
   @override
-  String redirect_uri = "http://api-stride.com:5000/kakao/oauth";
+  String redirect_uri = "https://api-stride.com/kakao/oauth";
   String client_id = "ffc1ec82f333d835621df9caa8511e64";
   final storage = new FlutterSecureStorage();
 
@@ -105,7 +134,7 @@ class KakaoLoginPage extends StatelessWidget {
 }
 
 class NaverLoginPage extends StatelessWidget {
-  String redirect_url = "http://api-stride.com:5000/naver/oauth";
+  String redirect_url = "https://api-stride.com/naver/oauth";
   String client_id = "5cowST1OYAYIE38vxCq0";
   @override
   Widget build(BuildContext context) {

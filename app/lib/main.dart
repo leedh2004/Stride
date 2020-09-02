@@ -439,6 +439,7 @@
 import 'dart:async';
 
 import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/services/auth_service.dart';
 import 'package:app/provider_setup.dart';
 import 'package:app/ui/router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -447,18 +448,27 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 
+import 'core/services/apple_sign_in.dart';
+
 Future<void> main() async {
+  // WidgetsFlutterBinding.ensureInitialized();
+  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
+  KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  final appleSignInAvailable = await AppleSignInAvailable.check();
 
   // runZoned(() {
   //   runApp(Stride());
   // }, onError: Crashlytics.instance.recordError);
-  runApp(Stride());
+  // runApp(Stride());
+  runApp(Provider<AppleSignInAvailable>.value(
+      value: appleSignInAvailable, child: Stride()));
 }
 
 class Stride extends StatelessWidget {
@@ -471,17 +481,20 @@ class Stride extends StatelessWidget {
     analytics.logAppOpen(); // 앱 시작.
     return MultiProvider(
       providers: providers,
-      child: MaterialApp(
-        title: 'stride',
-        theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            //for modal..
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent),
-        initialRoute: RoutePaths.Root,
-        onGenerateRoute: Router.generateRoute,
-        navigatorObservers: [observer],
+      child: Provider<AuthService>(
+        create: (_) => AuthService(),
+        child: MaterialApp(
+          title: 'stride',
+          theme: ThemeData(
+              primarySwatch: Colors.blue,
+              visualDensity: VisualDensity.adaptivePlatformDensity,
+              //for modal..
+              highlightColor: Colors.transparent,
+              splashColor: Colors.transparent),
+          initialRoute: RoutePaths.Root,
+          onGenerateRoute: Router.generateRoute,
+          navigatorObservers: [observer],
+        ),
       ),
     );
   }
