@@ -15,6 +15,7 @@ from backend.api_v1.user import user
 from backend.api_v1.auth import auth
 from backend.authentication.kakao import kakao
 from backend.authentication.naver import naver
+from backend.authentication.auth import *
 from flask_cors import CORS
 
 dt = datetime.now()
@@ -56,23 +57,34 @@ except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth', '/auth/token'
 def hello_world():
     return 'Hello World! CI TEST7 only develop'
 
-# @app.after_request
-# def log(response):
-#     print(request.path)
-#     if request.path in except_url:
-#         return response
-#     else:
-#         if 'http://0.0.0.0:5000' in request.base_url: # dev
-#             logger = logging.getLogger('api-dev-stride')
-#             logger.addHandler(dev_cw_handler)
-#         else:
-#             logger = logging.getLogger("api-stride")
-#             logger.addHandler(cw_handler)
-#         print(request.data)
-#         log_msg = "{0}-{1}-{2}-{3}".format(str(g.user_id), str(request), str(response.status), str(response.get_data()))
-#         logger.info(log_msg)
-#
-#     return response
+
+@app.after_request
+def log(response):
+    user = ''
+    access_token = None
+    headers = request.headers.get("Authorization")
+    if headers is not None:
+        access_token = headers.split(' ')[1]
+    if access_token is not None:
+        try:
+            payload = decode_jwt_token(access_token)
+            user = payload['user_id']
+        except jwt.InvalidTokenError:
+            user = 'unidentified'
+    else:
+        user = 'unidentified'
+    if 'http://0.0.0.0:5000' in request.base_url: # dev
+        logger = logging.getLogger('api-dev-stride')
+        logger.addHandler(dev_cw_handler)
+    else:
+        logger = logging.getLogger("api-stride")
+        logger.addHandler(cw_handler)
+    if request.method in ['GET', 'DELETE']:
+        log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), str(response.get_data()))
+    else:
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), str(response.get_data()), str(request.get_data()))
+    logger.info(log_msg)
+    return response
 
 
 if __name__ == '__main__':
