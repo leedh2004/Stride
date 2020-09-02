@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, g
 import requests
 import json
 from bson import ObjectId, json_util
@@ -31,10 +31,12 @@ def login():
         account = response_json.get('kakao_account')
         id = str(user_id) + "@kakao"
         insert_user(id)
+        user_id = str(id) + "@" + "kakao"
+        print('user_id', user_id)
+        g.user_id = user_id
         if account['has_email'] is True:
             update_user_email(id, str(account['email']))
         flag = select_user_profile_flag()
         size = select_user_size()
         token = encode_jwt_token(id)
-        user_id = str(id) + "@" + "kakao"
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
