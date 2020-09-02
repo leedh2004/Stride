@@ -14,7 +14,7 @@ auth = Blueprint('auth', __name__)
 @auth.route('/token', methods=['POST'])
 def login():
     body = request.get_json()
-    access_token = body['product_id']
+    access_token = body['access_token']
     channel = body['channel']
     headers = {
         'Content-Type': "application/x-www-form-urlencoded",
