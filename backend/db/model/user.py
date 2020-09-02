@@ -26,7 +26,8 @@ class UserSizeModel:
         size = []
         print(sizes)
         if sizes is None:
-            size.append(None)
-        for item in sizes:
-            size.append(float(item))
+            size = None
+        else:
+            for item in sizes:
+                size.append(float(item))
         return size
