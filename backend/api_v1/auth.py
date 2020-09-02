@@ -31,7 +31,7 @@ def login():
         account = response_json.get('kakao_account')
         id = str(user_id) + "@kakao"
         insert_user(id)
-        user_id = str(id) + "@" + "kakao"
+        user_id = str(id)
         print('user_id', user_id)
         g.user_id = user_id
         if account['has_email'] is True:
