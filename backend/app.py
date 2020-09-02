@@ -58,8 +58,9 @@ def hello_world():
 @app.after_request
 def log(response):
     print(request.base_url)
+    print(g.user_id)
     if g.user_id == None:
-        g.user_id = 'test'
+        return response
     if 'http://0.0.0.0:5000' in request.base_url: # dev
         logger = logging.getLogger('api-dev-stride')
         logger.addHandler(dev_cw_handler)
