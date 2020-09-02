@@ -90,6 +90,7 @@ class KakaoLoginPage extends StatelessWidget {
               onMessageReceived: (JavascriptMessage msg) async {
                 print(msg.message);
                 List<String> info = msg.message.split(',');
+                // print(info);
                 Provider.of<AuthenticationService>(context, listen: false)
                     .login(info[0], info[1] + '@' + info[2]);
                 Navigator.pop(context);
@@ -119,6 +120,7 @@ class NaverLoginPage extends StatelessWidget {
               onMessageReceived: (JavascriptMessage msg) async {
                 print("!!");
                 print(msg.message);
+                // print(info);
                 List<String> info = msg.message.split(',');
                 //await storage.write(key: 'jwt_token', value: msg.message);
                 Provider.of<AuthenticationService>(context, listen: false)

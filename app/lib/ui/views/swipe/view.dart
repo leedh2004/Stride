@@ -1,4 +1,5 @@
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/models/user.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -27,7 +28,6 @@ class _SwipeViewState extends State<SwipeView> {
 
   bool enabled = true;
   String type = 'all';
-  bool tutorial = false;
   @override
   void initState() {
     super.initState();
@@ -35,6 +35,7 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
+    print("BUILD SWIPE????????");
     return FadeIn(
       delay: 0.5,
       child: BaseWidget<SwipeModel>(
@@ -43,15 +44,7 @@ class _SwipeViewState extends State<SwipeView> {
             Provider.of<SwipeService>(context),
           ),
           builder: (context, model, child) {
-            if (!tutorial) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                showMaterialModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    builder: (context, scrollController) => InputInfoDialog());
-              });
-              tutorial = true;
-            }
+            print("BUILDER SWIPE!!!!!!!!!!");
             if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
             if (Provider.of<SwipeService>(context).init == false) {
               model.initCards();
@@ -59,6 +52,14 @@ class _SwipeViewState extends State<SwipeView> {
                 Provider.of<DressRoomService>(context).getDressRoom();
               }
               return LoadingWidget();
+            }
+            if (!Provider.of<StrideUser>(context, listen: false).profile_flag) {
+              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                showMaterialModalBottomSheet(
+                    expand: false,
+                    context: context,
+                    builder: (context, scrollController) => InputInfoDialog());
+              });
             }
             return FadeIn(
               delay: 0.5,

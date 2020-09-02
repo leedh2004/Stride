@@ -65,16 +65,19 @@ class AuthenticationService {
       // print(response.data);
       if (response.statusCode == 200) {
         print(response.data);
-        var Id = response.data['user_id'];
+        var parsed = response.data as Map<String, dynamic>;
+        var id = parsed['user_id'];
+        StrideUser user =
+            StrideUser(id: id, profile_flag: parsed['profile_flag']);
+
         //뉴토큰으로 토큰 교체해줘야함.
         await _storage.delete(key: 'jwt_token');
         await _storage.write(key: 'jwt_token', value: response.data['token']);
-        print("!!!!!!!!!!!!!!!!!!!");
-        StrideUser user = StrideUser(id: Id);
+
         try {
           UserCredential userCredential = await FirebaseAuth.instance
               .signInWithEmailAndPassword(
-                  email: Id + '.com', password: "SuperSecretPassword!");
+                  email: id + '.com', password: "SuperSecretPassword!");
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
             print('No user found for that email.');
