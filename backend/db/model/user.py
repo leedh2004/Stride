@@ -24,7 +24,6 @@ class UserSizeModel:
 
     def decimal_parser(self, sizes):
         size = []
-        print(sizes)
         if sizes is None:
             size = None
         else:
