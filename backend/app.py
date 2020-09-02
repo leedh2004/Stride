@@ -12,6 +12,7 @@ from backend.api_v1.coordination import coordination
 from backend.api_v1.login import login
 from backend.api_v1.home import home
 from backend.api_v1.user import user
+from backend.api_v1.auth import auth
 from backend.authentication.kakao import kakao
 from backend.authentication.naver import naver
 from flask_cors import CORS
@@ -33,6 +34,7 @@ app.register_blueprint(kakao, url_prefix='/kakao')
 app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(naver, url_prefix='/naver')
 app.register_blueprint(user, url_prefix='/user')
+app.register_blueprint(auth, url_prefix='/auth')
 
 cw_handler = CloudWatchLogsHandler(
     log_group_name='stride',
@@ -48,7 +50,7 @@ dev_cw_handler = CloudWatchLogsHandler(
     batch_count=10,
     batch_size=1048576
 )
-except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth']
+except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth', '/auth/oauth']
 
 @app.route('/')
 def hello_world():
