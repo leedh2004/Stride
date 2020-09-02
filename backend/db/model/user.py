@@ -15,9 +15,15 @@ class UserSizeModel:
 
 
     def fetch_data(self, item):
-        self.waist = Decimal(item[0])
-        self.hip = Decimal(item[1])
-        self.thigh = Decimal(item[2])
-        self.shoulder = Decimal(item[3])
-        self.bust = Decimal(item[4])
+        self.waist = self.decimal_parser(item[0])
+        self.hip = self.decimal_parser(item[1])
+        self.thigh = self.decimal_parser(item[2])
+        self.shoulder = self.decimal_parser(item[3])
+        self.bust = self.decimal_parser(item[4])
 
+
+    def decimal_parser(self, size):
+        size = []
+        for item in size:
+            size.append(Decimal(item))
+        return size
