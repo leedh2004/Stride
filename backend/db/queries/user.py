@@ -2,6 +2,7 @@ from backend.db.init import *
 from flask import g
 import json
 from bson import json_util
+from backend.db.model.user import *
 
 def insert_user(user_id):
     with db_connect() as (service_conn, cursor):
@@ -107,10 +108,23 @@ def select_user_profile_flag(user_id):
             flag = cursor.fetchall()
             flag = flag[0]
             if flag is True:
-                result = {'profile_flag':True}
+                return True
             else:
-                result = {'profile_flag':False}
-            return json.dumps(result, default=json_util.default, ensure_ascii=False)
+                return False
+        except:
+            service_conn.rollback()
+            raise
+
+
+def select_user_size(user_id):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT waist, hip, thigh, hem, shoulder, bust FROM users WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (user_id, ))
+            item = cursor.fetchone()
+            load = UserSizeModel()
+            load.fetch_data(item)
+            return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except:
             service_conn.rollback()
             raise
