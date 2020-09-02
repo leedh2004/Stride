@@ -48,27 +48,27 @@ dev_cw_handler = CloudWatchLogsHandler(
     batch_count=10,
     batch_size=1048576
 )
-
+except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth']
 
 @app.route('/')
 def hello_world():
-    g.user_id = 'test'
     return 'Hello World! CI TEST7 only develop'
 
 @app.after_request
 def log(response):
-    print(request.base_url)
-    print(g.user_id)
-    if g.user_id == None:
+    print(request.path)
+    if request.path in except_url:
         return response
-    if 'http://0.0.0.0:5000' in request.base_url: # dev
-        logger = logging.getLogger('api-dev-stride')
-        logger.addHandler(dev_cw_handler)
     else:
-        logger = logging.getLogger("api-stride")
-        logger.addHandler(cw_handler)
-    log_msg = "{0}/{1}/{2}/{3}".format(str(g.user_id), str(request), str(response.status), str(response.get_data()))
-    logger.info(log_msg)
+        if 'http://0.0.0.0:5000' in request.base_url: # dev
+            logger = logging.getLogger('api-dev-stride')
+            logger.addHandler(dev_cw_handler)
+        else:
+            logger = logging.getLogger("api-stride")
+            logger.addHandler(cw_handler)
+        print(request.data)
+        log_msg = "{0}-{1}-{2}-{3}".format(str(g.user_id), str(request), str(response.status), str(response.get_data()))
+        logger.info(log_msg)
 
     return response
 
