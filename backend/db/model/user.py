@@ -13,11 +13,9 @@ class UserSizeModel:
         self.shoulder = []
         self.bust = []
         self.size = {
-            'length': self.length,
             'waist': self.waist,
             'hip': self.hip,
             'thigh': self.thigh,
-            'rise': self.rise,
             'hem': self.hem,
             'shoulder': self.shoulder,
             'bust': self.bust
