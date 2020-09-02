@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'core/models/user.dart';
 import 'core/services/api.dart';
+import 'core/services/tutorial.dart';
 
 // 모든 Provider의 집합
 List<SingleChildWidget> providers = [
@@ -32,6 +33,9 @@ List<SingleChildWidget> dependentServices = [
   ),
   ProxyProvider<Api, SwipeService>(
     update: (context, api, dressRoomService) => SwipeService(api),
+  ),
+  ProxyProvider<Api, TutorialService>(
+    update: (context, api, dressRoomService) => TutorialService(api),
   ),
 ];
 

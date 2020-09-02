@@ -1,3 +1,4 @@
+import 'package:app/core/models/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
@@ -7,31 +8,33 @@ import 'package:app/ui/widgets/swipe/sliderTheme.dart';
 import 'package:flutter/material.dart';
 
 class InputThirdPage extends StatefulWidget {
+  var shoulderRange;
+  var shoulderflag;
+  var breastRange;
+  var breastflag;
+  var waistRange;
+  var waistflag;
+  var hipRange;
+  var hipflag;
+  var thighRange;
+  var thighflag;
+  InputThirdPage(
+      {this.shoulderRange,
+      this.shoulderflag,
+      this.breastRange,
+      this.breastflag,
+      this.waistRange,
+      this.waistflag,
+      this.hipRange,
+      this.hipflag,
+      this.thighRange,
+      this.thighflag});
+
   @override
   _InputThirdPageState createState() => _InputThirdPageState();
 }
 
-class RangeWrapper {
-  RangeValues value;
-  RangeWrapper(this.value);
-}
-
-class FlagWrapper {
-  bool value;
-  FlagWrapper(this.value);
-}
-
 class _InputThirdPageState extends State<InputThirdPage> {
-  var _shoulderRange = RangeWrapper(RangeValues(35, 45));
-  var _shoulderflag = FlagWrapper(true);
-  var _breastRange = RangeWrapper(RangeValues(40, 50));
-  var _breastflag = FlagWrapper(true);
-  var _waistRange = RangeWrapper(RangeValues(30, 40));
-  var _waistflag = FlagWrapper(true);
-  var _hipRange = RangeWrapper(RangeValues(40, 50));
-  var _hipflag = FlagWrapper(true);
-  var _thighRange = RangeWrapper(RangeValues(30, 35));
-  var _thighflag = FlagWrapper(true);
   // 아께 30 ~ 50
   // 가슴 30 ~ 60
   // 허리 20 ~ 50
@@ -42,6 +45,10 @@ class _InputThirdPageState extends State<InputThirdPage> {
   //어깨, 가슴, 허리, 힙, 밑단, 암홀, 소매길이,
   Widget mySlider(String type, FlagWrapper flag, RangeWrapper rangeWrapper,
       double maxRange, double minRange) {
+    String unit = 'cm';
+    if (type == '허리(둘레)') {
+      unit = '인치';
+    }
     return Column(children: [
       Row(
         children: [
@@ -81,12 +88,12 @@ class _InputThirdPageState extends State<InputThirdPage> {
             TextSpan(
                 text: '${rangeWrapper.value.start.toInt()}',
                 style: TextStyle(fontWeight: FontWeight.w700)),
-            TextSpan(text: 'cm '),
-            TextSpan(text: '~'),
+            TextSpan(text: unit),
+            TextSpan(text: ' ~ '),
             TextSpan(
                 text: '${rangeWrapper.value.end.toInt()}',
                 style: TextStyle(fontWeight: FontWeight.w700)),
-            TextSpan(text: 'cm '),
+            TextSpan(text: unit),
           ]))
     ]);
   }
@@ -122,11 +129,11 @@ class _InputThirdPageState extends State<InputThirdPage> {
         style: TextStyle(fontSize: 12.0),
       ),
       UIHelper.verticalSpaceSmall,
-      mySlider('어깨', _shoulderflag, _shoulderRange, 50, 30),
-      mySlider('가슴', _breastflag, _breastRange, 60, 30),
-      mySlider('허리', _waistflag, _waistRange, 50, 20),
-      mySlider('엉덩이', _hipflag, _hipRange, 60, 30),
-      mySlider('허벅지', _thighflag, _thighRange, 40, 20),
+      mySlider('어깨(단면)', widget.shoulderflag, widget.shoulderRange, 50, 30),
+      mySlider('가슴(둘레)', widget.breastflag, widget.breastRange, 110, 70),
+      mySlider('허리(둘레)', widget.waistflag, widget.waistRange, 40, 20),
+      mySlider('엉덩이(둘레)', widget.hipflag, widget.hipRange, 110, 80),
+      mySlider('허벅지(단면)', widget.thighflag, widget.thighRange, 45, 18),
 // 아께 30 ~ 50
       // 가슴 30 ~ 60
       // 허리 20 ~ 50

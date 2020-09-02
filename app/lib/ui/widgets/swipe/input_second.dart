@@ -6,17 +6,13 @@ import 'package:app/ui/widgets/swipe/purple_circle.dart';
 import 'package:flutter/material.dart';
 
 class InputSecondPage extends StatefulWidget {
+  Map<String, bool> size;
+  InputSecondPage(this.size);
   @override
   _InputSecondPageState createState() => _InputSecondPageState();
 }
 
 class _InputSecondPageState extends State<InputSecondPage> {
-  var xs = false;
-  var s = true;
-  var m = true;
-  var l = false;
-  var xl = false;
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -49,36 +45,40 @@ class _InputSecondPageState extends State<InputSecondPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RaisedButton(
-              color: xs ? backgroundColor : null,
+              color: widget.size['xs'] ? backgroundColor : null,
               onPressed: () {
                 setState(() {
-                  xs = !xs;
+                  widget.size['xs'] = !widget.size['xs'];
                 });
               },
-              child:
-                  Text('XS', style: xs ? TextStyle(color: Colors.white) : null),
+              child: Text('XS',
+                  style: widget.size['xs']
+                      ? TextStyle(color: Colors.white)
+                      : null),
             ),
             UIHelper.horizontalSpaceSmall,
             RaisedButton(
-              color: s ? backgroundColor : null,
+              color: widget.size['s'] ? backgroundColor : null,
               onPressed: () {
                 setState(() {
-                  s = !s;
+                  widget.size['s'] = !widget.size['s'];
                 });
               },
-              child:
-                  Text('S', style: s ? TextStyle(color: Colors.white) : null),
+              child: Text('S',
+                  style:
+                      widget.size['s'] ? TextStyle(color: Colors.white) : null),
             ),
             UIHelper.horizontalSpaceSmall,
             RaisedButton(
-              color: m ? backgroundColor : null,
+              color: widget.size['m'] ? backgroundColor : null,
               onPressed: () {
                 setState(() {
-                  m = !m;
+                  widget.size['m'] = !widget.size['m'];
                 });
               },
-              child:
-                  Text('M', style: m ? TextStyle(color: Colors.white) : null),
+              child: Text('M',
+                  style:
+                      widget.size['m'] ? TextStyle(color: Colors.white) : null),
             ),
           ],
         ),
@@ -87,25 +87,28 @@ class _InputSecondPageState extends State<InputSecondPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             RaisedButton(
-              color: l ? backgroundColor : null,
+              color: widget.size['l'] ? backgroundColor : null,
               onPressed: () {
                 setState(() {
-                  l = !l;
+                  widget.size['l'] = !widget.size['l'];
                 });
               },
-              child:
-                  Text('L', style: l ? TextStyle(color: Colors.white) : null),
+              child: Text('L',
+                  style:
+                      widget.size['l'] ? TextStyle(color: Colors.white) : null),
             ),
             UIHelper.horizontalSpaceSmall,
             RaisedButton(
-              color: xl ? backgroundColor : null,
+              color: widget.size['xl'] ? backgroundColor : null,
               onPressed: () {
                 setState(() {
-                  xl = !xl;
+                  widget.size['xl'] = !widget.size['xl'];
                 });
               },
-              child:
-                  Text('XL', style: xl ? TextStyle(color: Colors.white) : null),
+              child: Text('XL',
+                  style: widget.size['xl']
+                      ? TextStyle(color: Colors.white)
+                      : null),
             ),
           ],
         )

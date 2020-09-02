@@ -35,7 +35,6 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
-    print("BUILD SWIPE????????");
     return FadeIn(
       delay: 0.5,
       child: BaseWidget<SwipeModel>(
@@ -44,7 +43,6 @@ class _SwipeViewState extends State<SwipeView> {
             Provider.of<SwipeService>(context),
           ),
           builder: (context, model, child) {
-            print("BUILDER SWIPE!!!!!!!!!!");
             if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
             if (Provider.of<SwipeService>(context).init == false) {
               model.initCards();
