@@ -33,8 +33,8 @@ def login():
         insert_user(id)
         if account['has_email'] is True:
             update_user_email(id, str(account['email']))
-        flag = select_user_profile_flag(id)
-        size = select_user_size(id)
+        flag = select_user_profile_flag()
+        size = select_user_size()
         token = encode_jwt_token(id)
         user_id = str(id) + "@" + "kakao"
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
