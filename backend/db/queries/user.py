@@ -54,7 +54,7 @@ def update_user_size(size):
         query = """UPDATE users SET waist = %s , hip = %s, thigh = %s, shoulder = %s, bust = %s WHERE user_id = %s"""
         ts_query = """UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE user_id = %s"""
         try:
-            load = (size['waist'], size['hip'], size['thigh'], size['hem'], size['shoulder'], size['bust'], g.user_id)
+            load = (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], g.user_id)
             cursor.execute(query, load)
             service_conn.commit()
             cursor.execute(ts_query, (g.user_id, ))

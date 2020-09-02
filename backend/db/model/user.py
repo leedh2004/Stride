@@ -9,7 +9,6 @@ class UserSizeModel:
         self.waist = []
         self.hip = []
         self.thigh = []
-        self.hem = []
         self.shoulder = []
         self.bust = []
 
@@ -18,7 +17,6 @@ class UserSizeModel:
         self.waist = item[0]
         self.hip = item[1]
         self.thigh = item[2]
-        self.hem = item[3]
-        self.shoulder = item[4]
-        self.bust = item[5]
+        self.shoulder = item[3]
+        self.bust = item[4]
 
