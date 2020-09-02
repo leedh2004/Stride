@@ -35,19 +35,21 @@ def delete_dress():
 
 
 @dressroom.route('/folder', methods=['POST'])
+@login_required
 def create_folder():
     try:
         body = request.get_json()
         product_id = body['product_id']
         name = body['folder_name']
-        create_dressroom_folder(product_id, name)
+        result = create_dressroom_folder(product_id, name)
     except Exception as Ex:
         print(Ex)
         return jsonify("Fail"), 500
-    return jsonify("Success"), 200
+    return jsonify(result), 200
 
 
 @dressroom.route('/folder/name', methods=['PUT'])
+@login_required
 def modify_folder():
     try:
         body = request.get_json()
@@ -61,6 +63,7 @@ def modify_folder():
 
 
 @dressroom.route('/folder/move', methods=['PUT'])
+@login_required
 def move_item():
     try:
         body = request.get_json()
@@ -74,6 +77,7 @@ def move_item():
 
 
 @dressroom.route('/folder', methods=['DELETE'])
+@login_required
 def delete_folder():
     try:
         folder_id = request.args.get('folder_id')

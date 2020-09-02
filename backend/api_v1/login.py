@@ -32,11 +32,17 @@ def user_login():
     if int(compare.days) < 3:
         new_token = encode_jwt_token(user_id)
         g.user_id = user_id
-        return jsonify({"token": new_token, "user_id": user_id})
+        result = select_user_profile_flag(user_id)
+        size = select_user_size(user_id)
+        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size}), 200
     elif int(compare.days) < 0:
         return jsonify("Fail"), 403
     else:
         new_token = encode_jwt_token(user_id)
         update_login_timestamp(user_id)
         g.user_id = user_id
-        return jsonify({"new_token": new_token, "user_id": user_id}), 200
+        result = select_user_profile_flag(user_id)
+        size = select_user_size(user_id)
+        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size}), 200
+
+## return user size, flag, token, user_id
