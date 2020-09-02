@@ -92,7 +92,7 @@ def update_user_email(user_id, email):
 
 def update_user_profile_view(user_id):
     with db_connect() as (service_conn, cursor):
-        query = """UPDATE user SET profile_flag = True WHERE user_id = %s"""
+        query = """UPDATE users SET profile_flag = True WHERE user_id = %s"""
         try:
             cursor.execute(query, (user_id,))
             service_conn.commit()
