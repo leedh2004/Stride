@@ -12,14 +12,7 @@ class UserSizeModel:
         self.hem = []
         self.shoulder = []
         self.bust = []
-        self.size = {
-            'waist': self.waist,
-            'hip': self.hip,
-            'thigh': self.thigh,
-            'hem': self.hem,
-            'shoulder': self.shoulder,
-            'bust': self.bust
-        }
+
 
     def fetch_data(self, item):
         self.waist = item[0]
