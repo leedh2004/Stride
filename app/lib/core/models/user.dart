@@ -1,10 +1,12 @@
 class StrideUser {
   String id;
-  int age;
-  List shoulder;
-  List bust;
-  List waist;
-  List hip;
-  List thigh;
+  int birth_year;
+  bool hasTutorial;
+  bool hasSize;
+  List<int> shoulder;
+  List<int> bust;
+  List<int> waist;
+  List<int> hip;
+  List<int> thigh;
   StrideUser({this.id});
 }

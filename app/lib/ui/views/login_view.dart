@@ -90,11 +90,8 @@ class KakaoLoginPage extends StatelessWidget {
               onMessageReceived: (JavascriptMessage msg) async {
                 print(msg.message);
                 List<String> info = msg.message.split(',');
-                //await storage.write(key: 'jwt_token', value: msg.message);
                 Provider.of<AuthenticationService>(context, listen: false)
                     .login(info[0], info[1] + '@' + info[2]);
-                //print(info[1]); // id
-                //print(info[2]); // channel
                 Navigator.pop(context);
               })
         ].toSet(),

@@ -64,9 +64,8 @@ class AuthenticationService {
       );
       // print(response.data);
       if (response.statusCode == 200) {
+        print(response.data);
         var Id = response.data['user_id'];
-        print("WTFF!!");
-        print(Id);
         //뉴토큰으로 토큰 교체해줘야함.
         await _storage.delete(key: 'jwt_token');
         await _storage.write(key: 'jwt_token', value: response.data['token']);
