@@ -1,4 +1,5 @@
 import sys
+from decimal import Decimal
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
@@ -14,9 +15,9 @@ class UserSizeModel:
 
 
     def fetch_data(self, item):
-        self.waist = item[0]
-        self.hip = item[1]
-        self.thigh = item[2]
-        self.shoulder = item[3]
-        self.bust = item[4]
+        self.waist = Decimal(item[0])
+        self.hip = Decimal(item[1])
+        self.thigh = Decimal(item[2])
+        self.shoulder = Decimal(item[3])
+        self.bust = Decimal(item[4])
 
