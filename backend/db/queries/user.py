@@ -106,10 +106,9 @@ def select_user_profile_flag():
         query = """SELECT profile_flag FROM users WHERE user_id = %s"""
         try:
             cursor.execute(query, (g.user_id,))
-            flag = cursor.fetchone()
-            print('flag')
+            flag = cursor.fetchall()
             flag = flag[0]
-            if flag is True:
+            if flag[0] is True:
                 return True
             else:
                 return False
