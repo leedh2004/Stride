@@ -50,7 +50,7 @@ dev_cw_handler = CloudWatchLogsHandler(
     batch_count=10,
     batch_size=1048576
 )
-except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth', '/auth/oauth']
+except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth', '/auth/token']
 
 @app.route('/')
 def hello_world():
