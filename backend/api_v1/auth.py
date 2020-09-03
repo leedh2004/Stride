@@ -20,7 +20,6 @@ def login():
         'Content-Type': "application/x-www-form-urlencoded",
         'Cache-Control': "no-cache"
     }
-    print(body)
     if channel == 'kakao':
         url = "https://kapi.kakao.com/v2/user/me"
         headers.update({"Authorization": "Bearer " + str(access_token)})
@@ -29,7 +28,7 @@ def login():
         print('kakao : ', response_json)
         user_id = response_json.get('id')
         account = response_json.get('kakao_account')
-        id = str(user_id) + "@kakao"
+        id = str(user_id) + "@kakao.com"
         insert_user(id)
         user_id = str(id)
         print('user_id', user_id)
