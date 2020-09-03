@@ -39,11 +39,21 @@ class SwipeService {
     print(type);
   }
 
-  Future nextItem() async {
-    if (index[type] + 5 >= length[type]) {
-      await getCards();
-    }
+  void nextItem() async {
+    print(index[type]);
+    print("THIS ITEM");
+    print(items[type][index[type]].product_name);
+    print("NEXT ITEM");
+    print(items[type][index[type] + 1].product_name);
     index[type]++;
+    if (index[type] + 5 >= length[type]) {
+      print("부족하므로 getCards()");
+      items[type] = items[type].sublist(index[type]);
+      index[type] = 0;
+      length[type] = items[type].length;
+      getCards();
+    }
+    print("INDEX++");
   }
 
   Future initCards() async {
@@ -58,6 +68,11 @@ class SwipeService {
         for (var item in parsed) {
           temp.add(SwipeCard.fromJson(item));
         }
+        //FOR DEBUG
+        for (var item in temp) {
+          print(item.product_name);
+        }
+        //
         items[type] = temp;
         length[type] += temp.length;
       }
@@ -88,8 +103,15 @@ class SwipeService {
       for (var item in parsed) {
         temp.add(SwipeCard.fromJson(item));
       }
+      print("getCards ${index[type]}");
+      //FOR DEBUG
+      print("SUBLIST");
+      List<SwipeCard> test = items[type].sublist(index[type]);
+      for (var item in test) {
+        print(item.product_name);
+      }
       items[type] = [...items[type], ...temp];
-      length[type] += parsed.length;
+      length[type] = items[type].length;
     } else {
       print("Network Error getAllSwipeCard() ${response.statusCode}");
     }
