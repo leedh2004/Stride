@@ -74,10 +74,10 @@ def log(response):
     else:
         user = 'unidentified'
     if 'http://0.0.0.0:5000' in request.base_url: # dev
-        logger = logging.getLogger('api-dev-stride')
+        logger = logging.getLogger(log_name)
         logger.addHandler(dev_cw_handler)
     else:
-        logger = logging.getLogger("api-stride")
+        logger = logging.getLogger(log_name)
         logger.addHandler(cw_handler)
     if request.method in ['GET', 'DELETE']:
         log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), str(response.get_data()))
