@@ -440,7 +440,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app/core/constants/app_constants.dart';
-import 'package:app/core/services/auth_service.dart';
 import 'package:app/provider_setup.dart';
 import 'package:app/ui/router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -501,20 +500,17 @@ class Stride extends StatelessWidget {
     analytics.logAppOpen(); // 앱 시작.
     return MultiProvider(
       providers: providers,
-      child: Provider<AuthService>(
-        create: (_) => AuthService(),
-        child: MaterialApp(
-          title: 'stride',
-          theme: ThemeData(
-              primarySwatch: Colors.blue,
-              visualDensity: VisualDensity.adaptivePlatformDensity,
-              //for modal..
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent),
-          initialRoute: RoutePaths.Root,
-          onGenerateRoute: Router.generateRoute,
-          navigatorObservers: [observer],
-        ),
+      child: MaterialApp(
+        title: 'stride',
+        theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            //for modal..
+            highlightColor: Colors.transparent,
+            splashColor: Colors.transparent),
+        initialRoute: RoutePaths.Root,
+        onGenerateRoute: Router.generateRoute,
+        navigatorObservers: [observer],
       ),
     );
   }

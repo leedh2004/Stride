@@ -16,7 +16,7 @@ class LookBookView extends StatelessWidget {
           LookBookModel(Provider.of<LookBookService>(context, listen: false)),
       builder: (context, model, child) {
         Widget showWidget;
-        if (model.service.items == null) {
+        if (model.service.init == false) {
           showWidget = LoadingWidget();
           model.getLookBook();
         } else {

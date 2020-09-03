@@ -11,21 +11,27 @@ class SwipeService {
   // Stream<List<List<SwipeCard>>> get items => _itemsController.stream;
   Api _api;
   String type;
-  Map<String, int> index = new Map();
-  Map<String, int> length = new Map();
-  Map<String, List<SwipeCard>> items = new Map();
+  Map<String, int> index;
+  Map<String, int> length;
+  Map<String, List<SwipeCard>> items;
   bool init = false;
 
   SwipeService(Api api) {
     print("SwipeService 생성!");
+    initialize();
     _api = api;
+  }
+
+  bool initialize() {
+    index = new Map();
+    length = new Map();
+    items = new Map();
     for (var type in TYPE) {
       index[type] = 0;
       length[type] = 0;
       items[type] = [];
     }
     type = 'all';
-    print(type);
   }
 
   void changeType(String _type) {
@@ -41,12 +47,11 @@ class SwipeService {
   }
 
   Future initCards() async {
-    print('init');
+    initialize();
     var response = await _api.client.get('${Api.endpoint}/home/all');
     if (response.statusCode == 200) {
       var data = json.decode(response.data) as Map<String, dynamic>;
       print(data);
-
       for (var type in TYPE) {
         List<SwipeCard> temp = new List<SwipeCard>();
         var parsed = data[type] as List<dynamic>;

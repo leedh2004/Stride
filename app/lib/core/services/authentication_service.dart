@@ -26,6 +26,7 @@ class AuthenticationService {
   Future logout() async {
     await _storage.delete(key: 'jwt_token');
     await _userController.add(null); // 이게 맞나..?
+    await _firebaseAuth.signOut();
     print('?');
   }
 
@@ -75,6 +76,7 @@ class AuthenticationService {
       String id = parsed['user_id'];
       String token = parsed['token'];
       print(id);
+      if (channel == 'apple') id += "@apple.com";
       print(token);
       // 토큰이 없을 때만 일로 오니까 !
       await _storage.write(key: 'jwt_token', value: token);
@@ -87,18 +89,18 @@ class AuthenticationService {
           hip: size['hip'],
           thigh: size['thigh']);
       try {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: id + '.com', password: "SuperSecretPassword!");
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: id, password: "SuperSecretPassword!");
       } on FirebaseAuthException catch (e) {
+        print(e.toString());
         if (e.code == 'email-already-in-use') {
-          UserCredential userCredential = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: id + '.com', password: "SuperSecretPassword!");
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: id, password: "SuperSecretPassword!");
         }
       } catch (e) {
         print(e.toString());
       }
+
       _userController.add(user);
       api.client.options.headers = {
         "Content-Type": "application/json",
@@ -143,9 +145,8 @@ class AuthenticationService {
         await _storage.delete(key: 'jwt_token');
         await _storage.write(key: 'jwt_token', value: response.data['token']);
         try {
-          UserCredential userCredential = await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: id + '.com', password: "SuperSecretPassword!");
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: id, password: "SuperSecretPassword!");
         } on FirebaseAuthException catch (e) {
           if (e.code == 'user-not-found') {
             print('No user found for that email.');

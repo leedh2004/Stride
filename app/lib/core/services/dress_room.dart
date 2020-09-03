@@ -37,6 +37,11 @@ class DressRoomService {
   }
 
   Future getDressRoom() async {
+    folder_id = new List();
+    items = new Map();
+    folder = new Map();
+    current_folder = 0;
+
     var response = await _api.client.get(
       '${Api.endpoint}/dressroom/',
     );

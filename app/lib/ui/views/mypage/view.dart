@@ -1,5 +1,8 @@
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/services/authentication_service.dart';
+import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -84,7 +87,12 @@ class MyPageView extends StatelessWidget {
                         leading: FaIcon(FontAwesomeIcons.signOutAlt),
                         title: Text('로그아웃'),
                         onTap: () {
-                          print("logout");
+                          Provider.of<SwipeService>(context, listen: false)
+                              .init = false;
+                          Provider.of<DressRoomService>(context, listen: false)
+                              .init = false;
+                          Provider.of<LookBookService>(context, listen: false)
+                              .init = false;
                           Provider.of<AuthenticationService>(context,
                                   listen: false)
                               .logout();

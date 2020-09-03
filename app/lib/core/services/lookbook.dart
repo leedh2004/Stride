@@ -8,6 +8,7 @@ import 'api.dart';
 class LookBookService {
   List<Coordinate> items;
   Api _api;
+  bool init = false;
 
   LookBookService(Api api) {
     print("LookBookService 생성!");
@@ -48,7 +49,7 @@ class LookBookService {
       temp.add(Coordinate.fromJson(item));
     }
     items = temp;
-    print("?");
+    init = true;
   }
 
   Future rename(int index, String name) async {
