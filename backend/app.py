@@ -39,14 +39,14 @@ app.register_blueprint(auth, url_prefix='/auth')
 
 cw_handler = CloudWatchLogsHandler(
     log_group_name='stride',
-    log_stream_name='api-stride',
+    log_stream_name=log_name,
     buffer_duration=10000,
     batch_count=10,
     batch_size=1048576
 )
 dev_cw_handler = CloudWatchLogsHandler(
     log_group_name='stride',
-    log_stream_name='api-dev-stride',
+    log_stream_name=log_name,
     buffer_duration=10000,
     batch_count=10,
     batch_size=1048576
