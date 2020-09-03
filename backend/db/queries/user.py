@@ -54,13 +54,14 @@ def update_user_size(size):
         query = """UPDATE users SET waist = %s , hip = %s, thigh = %s, shoulder = %s, bust = %s WHERE user_id = %s"""
         ts_query = """UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE user_id = %s"""
         try:
-            load = (size['waist'], size['hip'], size['thigh'], size['hem'], size['shoulder'], size['bust'], g.user_id)
+            load = (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], g.user_id)
             cursor.execute(query, load)
             service_conn.commit()
             cursor.execute(ts_query, (g.user_id, ))
             service_conn.commit()
             update_user_profile_view(g.user_id)
-        except:
+        except Exception as Ex:
+            print(Ex)
             service_conn.rollback()
             raise
 
@@ -91,7 +92,7 @@ def update_user_email(user_id, email):
 
 def update_user_profile_view(user_id):
     with db_connect() as (service_conn, cursor):
-        query = """UPDATE user SET profile_flag = True WHERE user_id = %s"""
+        query = """UPDATE users SET profile_flag = True WHERE user_id = %s"""
         try:
             cursor.execute(query, (user_id,))
             service_conn.commit()
@@ -100,14 +101,14 @@ def update_user_profile_view(user_id):
             raise
 
 
-def select_user_profile_flag(user_id):
+def select_user_profile_flag():
     with db_connect() as (service_conn, cursor):
         query = """SELECT profile_flag FROM users WHERE user_id = %s"""
         try:
-            cursor.execute(query, (user_id,))
+            cursor.execute(query, (g.user_id,))
             flag = cursor.fetchall()
             flag = flag[0]
-            if flag is True:
+            if flag[0] is True:
                 return True
             else:
                 return False
@@ -116,11 +117,11 @@ def select_user_profile_flag(user_id):
             raise
 
 
-def select_user_size(user_id):
+def select_user_size():
     with db_connect() as (service_conn, cursor):
         query = """SELECT waist, hip, thigh, hem, shoulder, bust FROM users WHERE user_id = %s"""
         try:
-            cursor.execute(query, (user_id, ))
+            cursor.execute(query, (g.user_id, ))
             item = cursor.fetchone()
             load = UserSizeModel()
             load.fetch_data(item)
