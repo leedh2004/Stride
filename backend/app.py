@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, g, request
 from gevent.pywsgi import WSGIServer
 import logging
