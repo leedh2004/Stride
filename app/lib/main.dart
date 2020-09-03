@@ -437,6 +437,7 @@
 // }
 
 import 'dart:async';
+import 'dart:io';
 
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/services/auth_service.dart';
@@ -447,6 +448,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
@@ -462,7 +464,25 @@ Future<void> main() async {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   final appleSignInAvailable = await AppleSignInAvailable.check();
-
+  final FirebaseMessaging fcm = FirebaseMessaging();
+  if (Platform.isIOS) {
+    fcm.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
+    fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('onMessage: $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('onResume: $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('onLaunch: $message');
+      },
+    );
+  }
   // runZoned(() {
   //   runApp(Stride());
   // }, onError: Crashlytics.instance.recordError);

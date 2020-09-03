@@ -10,6 +10,7 @@
         android:label="app"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
+        
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -38,8 +39,11 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="FLUTTER_NOTIFICATION_CLICK" /> 
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        
         <activity android:name="com.kakao.sdk.flutter.AuthCodeCustomTabsActivity">
           <intent-filter android:label="flutter_web_auth">
               <action android:name="android.intent.action.VIEW" />
