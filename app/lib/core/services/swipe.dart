@@ -39,21 +39,14 @@ class SwipeService {
     print(type);
   }
 
-  void nextItem() async {
-    print(index[type]);
-    print("THIS ITEM");
-    print(items[type][index[type]].product_name);
-    print("NEXT ITEM");
-    print(items[type][index[type] + 1].product_name);
+  void nextItem() {
     index[type]++;
     if (index[type] + 5 >= length[type]) {
-      print("부족하므로 getCards()");
       items[type] = items[type].sublist(index[type]);
       index[type] = 0;
       length[type] = items[type].length;
       getCards();
     }
-    print("INDEX++");
   }
 
   Future initCards() async {
@@ -98,6 +91,7 @@ class SwipeService {
         '${Api.endpoint}/home?type=${type}',
       );
     }
+
     if (response.statusCode == 200) {
       var parsed = json.decode(response.data) as List<dynamic>;
       for (var item in parsed) {
@@ -106,10 +100,10 @@ class SwipeService {
       print("getCards ${index[type]}");
       //FOR DEBUG
       print("SUBLIST");
-      List<SwipeCard> test = items[type].sublist(index[type]);
-      for (var item in test) {
-        print(item.product_name);
-      }
+      // List<SwipeCard> test = items[type].sublist(index[type]);
+      // for (var item in test) {
+      //   print(item.product_name);
+      // }
       items[type] = [...items[type], ...temp];
       length[type] = items[type].length;
     } else {

@@ -35,74 +35,70 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
-    return FadeIn(
-      delay: 0.5,
-      child: BaseWidget<SwipeModel>(
-          model: SwipeModel(
-            Provider.of<DressRoomService>(context),
-            Provider.of<SwipeService>(context),
-          ),
-          builder: (context, model, child) {
-            if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
-            if (Provider.of<SwipeService>(context).init == false) {
-              model.initCards();
-              if (Provider.of<DressRoomService>(context).init == false) {
-                Provider.of<DressRoomService>(context).getDressRoom();
-              }
-              return LoadingWidget();
+    return BaseWidget<SwipeModel>(
+        model: SwipeModel(
+          Provider.of<DressRoomService>(context),
+          Provider.of<SwipeService>(context),
+        ),
+        builder: (context, model, child) {
+          if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
+          if (Provider.of<SwipeService>(context).init == false) {
+            model.initCards();
+            if (Provider.of<DressRoomService>(context).init == false) {
+              Provider.of<DressRoomService>(context).getDressRoom();
             }
-            if (!Provider.of<StrideUser>(context, listen: false).profile_flag) {
-              WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-                showMaterialModalBottomSheet(
-                    expand: false,
-                    context: context,
-                    builder: (context, scrollController) => InputInfoDialog());
-              });
-            }
-            return FadeIn(
-              delay: 0.5,
-              child: Stack(children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: clothTypeBar(model),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                      verticalDirection: VerticalDirection.up,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        UIHelper.verticalSpaceSmall,
-                        Transform.scale(
-                          scale: 1.5,
-                          child: Switch(
-                            value: enabled,
-                            onChanged: (value) async {
-                              setState(() {
-                                enabled = value;
-                              });
-
-                              if (enabled) {
-                                Stride.analytics
-                                    .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
-                                await model.test();
-                              } else {
-                                Stride.analytics
-                                    .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
-                              }
-                            },
-                            activeColor: backgroundColor,
-                          ),
+            return LoadingWidget();
+          }
+          if (!Provider.of<StrideUser>(context, listen: false).profile_flag) {
+            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+              showMaterialModalBottomSheet(
+                  expand: false,
+                  context: context,
+                  builder: (context, scrollController) => InputInfoDialog());
+            });
+          }
+          return FadeIn(
+            delay: 0.3,
+            child: Stack(children: [
+              Align(
+                alignment: Alignment.topCenter,
+                child: clothTypeBar(model),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Column(
+                    verticalDirection: VerticalDirection.up,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      UIHelper.verticalSpaceSmall,
+                      Transform.scale(
+                        scale: 1.5,
+                        child: Switch(
+                          value: enabled,
+                          onChanged: (value) async {
+                            setState(() {
+                              enabled = value;
+                            });
+                            if (enabled) {
+                              Stride.analytics
+                                  .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
+                              await model.test();
+                            } else {
+                              Stride.analytics
+                                  .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
+                            }
+                          },
+                          activeColor: backgroundColor,
                         ),
-                        buttonRow(model),
-                        UIHelper.verticalSpaceSmall,
-                        SwipeCardSection(context, model),
-                      ]),
-                ),
-              ]),
-            );
-          }),
-    );
+                      ),
+                      buttonRow(model),
+                      UIHelper.verticalSpaceSmall,
+                      SwipeCardSection(context, model),
+                    ]),
+              ),
+            ]),
+          );
+        });
   }
 
   Widget clothTypeBar(SwipeModel model) {

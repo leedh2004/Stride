@@ -42,20 +42,20 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
   Alignment frontCardAlign;
+
   double frontCardRot = 0.0;
   List<double> _opacity = [0, 0, 0];
 
   @override
   void initState() {
     super.initState();
-    print("init!!!");
     _controller =
-        AnimationController(duration: Duration(milliseconds: 500), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((AnimationStatus status) {
       if (status == AnimationStatus.completed) changeCardsOrder();
     });
-    frontCardAlign = cardsAlign[2];
+    frontCardAlign = cardsAlign[0];
   }
 
   @override
@@ -74,25 +74,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               child: Container(
             margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
             child: GestureDetector(
-              // behavior: HitTestBehavior.deferToChild,
               onLongPress: () {
-                // showGeneralDialog(
-                //   context: context,
-                //   barrierColor:
-                //       Colors.black12.withOpacity(0.6), // background color
-                //   barrierDismissible:
-                //       false, // should dialog be dismissed when tapped outside
-                //   barrierLabel: "Dialog", // label for barrier
-                //   transitionDuration: Duration(
-                //       milliseconds:
-                //           400), // how long it takes to popup dialog after button click
-                //   pageBuilder: (_, __, ___) {
-                //     // your widget implementation
-                //     return SizeDialog(Provider.of<SwipeModel>(context)
-                //             .items[widget.model.type]
-                //         [(widget.model.index[widget.model.type])]);
-                //   },
-                // );
                 Navigator.of(context).push(PageRouteBuilder(
                     opaque: false,
                     pageBuilder: (___, _, __) => SizeDialog(
@@ -105,7 +87,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 });
               },
               onTapUp: (details) {
-                print(details.globalPosition.dy);
+                Size size = MediaQuery.of(context).size;
+                print("SIZE: ${size.width}, ${size.height}");
+                print("X ${details.globalPosition.dx}");
+                print("Y ${details.globalPosition.dy}");
               },
               // While dragging the first card
               onPanUpdate: (DragUpdateDetails details) {
