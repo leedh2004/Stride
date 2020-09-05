@@ -39,6 +39,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
   int index = 0;
+  bool move_flag = false;
 
   final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
   Alignment frontCardAlign;
@@ -50,12 +51,36 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((AnimationStatus status) {
-      if (status == AnimationStatus.completed) changeCardsOrder();
+      if (status == AnimationStatus.completed) {
+        if (move_flag)
+          changeCardsOrder();
+        else {
+          setState(() {
+            frontCardAlign = defaultFrontCardAlign;
+            frontCardRot = 0.0;
+          });
+        }
+      }
     });
     frontCardAlign = cardsAlign[0];
+  }
+
+  void changeCardsOrder() {
+    widget.model.nextItem();
+    setState(() {
+      index = 0;
+      frontCardAlign = defaultFrontCardAlign;
+      frontCardRot = 0.0;
+    });
+  }
+
+  void animateCards() {
+    _controller.stop();
+    _controller.value = 0.0;
+    _controller.forward();
   }
 
   @override
@@ -65,7 +90,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
       children: <Widget>[
         backCard(context),
         middleCard(context),
-        frontCard(context),
+        frontCard(context, widget.model),
         nopeTextWidget(),
         passTextWidget(),
         likeTextWidget(),
@@ -74,38 +99,25 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               child: Container(
             margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
             child: GestureDetector(
-              onLongPress: () {
-                Navigator.of(context).push(PageRouteBuilder(
-                    opaque: false,
-                    pageBuilder: (___, _, __) => SizeDialog(
-                        Provider.of<SwipeService>(context)
-                            .items[widget.model.type][(widget.model.index)])));
-              },
-              onTap: () {
-                setState(() {
-                  index++;
-                });
-              },
               onTapUp: (details) {
-                Size size = MediaQuery.of(context).size;
-                print("SIZE: ${size.width}, ${size.height}");
-                print("X ${details.globalPosition.dx}");
-                print("Y ${details.globalPosition.dy}");
+                double standard = MediaQuery.of(context).size.width / 2;
+                if (standard < details.globalPosition.dx) {
+                  widget.model.nextImage();
+                } else {
+                  widget.model.prevImage();
+                }
               },
               // While dragging the first card
               onPanUpdate: (DragUpdateDetails details) {
-                // Add what the user swiped in the last frame to the alignment of the card
                 List<double> opacity = [0, 0, 0];
+
                 if (frontCardAlign.x > START_RIGHT) {
-                  // See Heart Icon applying Opacity
                   opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
                   if (opacity[LIKE] >= MAX_OPACITY) opacity[LIKE] = MAX_OPACITY;
                 } else if (frontCardAlign.x < START_LEFT) {
-                  // See Broken Heart Icon applying Opacity
                   opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
                   if (opacity[HATE] >= MAX_OPACITY) opacity[HATE] = MAX_OPACITY;
                 } else if (frontCardAlign.y < START_UP) {
-                  // See Pass Icon applying Opacity
                   opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
                   if (opacity[PASS] >= MAX_OPACITY) opacity[PASS] = MAX_OPACITY;
                 }
@@ -145,6 +157,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 });
                 // Send result reqeust to server
                 if (frontCardAlign.x > STANDARD_RIGHT) {
+                  move_flag = true;
                   Stride.analytics.logEvent(name: 'LIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
@@ -153,6 +166,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   widget.model.likeRequest();
                   animateCards();
                 } else if (frontCardAlign.x < STANDARD_LEFT) {
+                  move_flag = true;
                   Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
@@ -161,6 +175,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   widget.model.dislikeRequest();
                   animateCards();
                 } else if (frontCardAlign.y < STANDARD_UP) {
+                  move_flag = true;
                   widget.model.passRequest();
                   Stride.analytics.logEvent(name: 'PASS', parameters: {
                     'itemId': item.product_id.toString(),
@@ -170,22 +185,24 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   animateCards();
                 } else {
                   // Return to the initial rotation and alignment
-                  setState(() {
-                    frontCardAlign = defaultFrontCardAlign;
-                    frontCardRot = 0.0;
-                  });
+                  move_flag = false;
+                  animateCards();
+                  // setState(() {
+                  //   frontCardAlign = defaultFrontCardAlign;
+                  //   frontCardRot = 0.0;
+                  // });
                 }
               },
             ),
           ))
         else
           Container(),
-        //RulerWidget()
+        rulerWidget(),
       ],
     ));
   }
 
-  Widget RulerWidget() {
+  Widget rulerWidget() {
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -203,12 +220,16 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 child: IconButton(
                   icon: FaIcon(
                     FontAwesomeIcons.rulerVertical,
-                    size: 35,
-                    color: Colors.white,
+                    size: 50,
+                    color: Colors.transparent,
                   ),
                   onPressed: () {
-                    var item = Provider.of<SwipeService>(context, listen: false)
-                        .items[widget.model.type][(widget.model.index)];
+                    Navigator.of(context).push(PageRouteBuilder(
+                        opaque: false,
+                        pageBuilder: (___, _, __) => SizeDialog(
+                            Provider.of<SwipeService>(context)
+                                    .items[widget.model.type]
+                                [(widget.model.index)])));
                   },
                 ),
               ),
@@ -235,19 +256,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    //     border: Border.all(color: greenColor, width: 5)),
                     child: FaIcon(
                       FontAwesomeIcons.solidHeart,
                       size: 100,
                       color: pinkColor,
-                    )
-                    // Text(
-                    //   'LIKE',
-                    //   style: greenHeaderStyle,
-                    // ),
-                    ),
+                    )),
               ),
             ),
           ),
@@ -272,20 +285,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    //     border: Border.all(color: pinkColor, width: 5)),
                     child: FaIcon(
                       FontAwesomeIcons.times,
                       size: 100,
                       color: Colors.lightBlueAccent,
-                    )
-
-                    // Text(
-                    //   'NOPE',
-                    //   style: redHeaderStyle,
-                    // ),
-                    ),
+                    )),
               ),
             ),
           ),
@@ -310,19 +314,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    // decoration: BoxDecoration(
-                    //     borderRadius: BorderRadius.all(Radius.circular(10)),
-                    //     border: Border.all(color: Colors.white, width: 5)),
                     child: FaIcon(
                       FontAwesomeIcons.chevronCircleUp,
                       size: 100,
                       color: Colors.white,
-                    )
-                    // Text(
-                    //   'PASS',
-                    //   style: whiteHeaderStyle,
-                    // ),
-                    ),
+                    )),
               ),
             ),
           ),
@@ -361,7 +357,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     );
   }
 
-  Widget frontCard(BuildContext context) {
+  Widget frontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
     SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
         [(widget.model.index)];
@@ -375,29 +371,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         child: Transform.rotate(
           angle: (pi / 180.0) * frontCardRot,
           child: SizedBox.fromSize(
-              size: cardsSize[0], child: SwipeCardAlignment(item, index)),
+              size: cardsSize[0],
+              child: SwipeCardAlignment(item, model.image_index)),
         ));
-  }
-
-  void changeCardsOrder() {
-    widget.model.nextItem();
-    setState(() {
-      // Swap cards (back card becomes the middle card; middle card becomes the front card, front card becomes a  bottom card)
-      // var temp = cards[0];
-      // cards[0] = cards[1];
-      // cards[1] = cards[2];
-      // cards[2] = temp;
-      // cards[2] = SwipeCardAlignment(cardsCounter);
-      index = 0;
-      frontCardAlign = defaultFrontCardAlign;
-      frontCardRot = 0.0;
-    });
-  }
-
-  void animateCards() {
-    _controller.stop();
-    _controller.value = 0.0;
-    _controller.forward();
   }
 }
 
@@ -430,16 +406,21 @@ class CardsAnimation {
 
   static Animation<Alignment> frontCardDisappearAlignmentAnim(
       AnimationController parent, Alignment beginAlign) {
-    if (beginAlign.x < 3 && beginAlign.x > -3) {
+    if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
+      if (beginAlign.y > STANDARD_UP) {
+        return AlignmentTween(begin: beginAlign, end: Alignment(0, 0)).animate(
+            CurvedAnimation(
+                parent: parent,
+                curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+      }
       return AlignmentTween(
               begin: beginAlign,
               end: Alignment(
-                  0.0, beginAlign.y - 30) // Has swiped to the left or right?
+                  0.0, beginAlign.y - 100) // Has swiped to the left or right?
               )
           .animate(CurvedAnimation(
               parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
     }
-
     return AlignmentTween(
             begin: beginAlign,
             end: Alignment(

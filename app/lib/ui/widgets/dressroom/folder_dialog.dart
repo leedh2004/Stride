@@ -36,12 +36,16 @@ class _FolderDialogState extends State<FolderDialog> {
         Container(
             child: Stack(alignment: Alignment.center, children: [
           Align(
-            alignment: Alignment.center,
-            child: Text(
-              '폴더 선택',
-              style: subHeaderStyle,
-            ),
-          ),
+              alignment: Alignment.center,
+              child: widget.model.selectedIdx.isEmpty
+                  ? Text(
+                      '폴더 보기',
+                      style: subHeaderStyle,
+                    )
+                  : Text(
+                      '폴더 이동',
+                      style: subHeaderStyle,
+                    )),
           Align(
               alignment: Alignment.centerRight,
               child: IconButton(
@@ -57,7 +61,13 @@ class _FolderDialogState extends State<FolderDialog> {
           if (folderName == 'default') folderName = '기본 폴더';
           return ListTile(
             onTap: () {
-              print("ONTAP");
+              if (widget.model.selectedIdx.isNotEmpty) {
+                widget.model.moveFolder(folderIds[index]);
+                Navigator.pop(context);
+                // Scaffold.of(context).showSnackBar(SnackBar(
+                //   content: Text('!!!'),
+                // ));
+              }
             },
             leading: IconButton(
                 icon: FaIcon(FontAwesomeIcons.timesCircle),

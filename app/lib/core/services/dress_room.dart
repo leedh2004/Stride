@@ -95,16 +95,19 @@ class DressRoomService {
       removeIds.add(items[current_folder][idx].product_id);
     final response = await _api.client.put('${Api.endpoint}/dressroom/',
         data: jsonEncode({'product_id': removeIds}));
+
     if (response.statusCode == 200) {
       int cnt = 0;
       var temp = new List<Product>();
+      selectedIdx.sort();
       for (int i = 0; i < items[current_folder].length; i++) {
         if (i == selectedIdx[cnt]) {
           cnt++;
           if (cnt == selectedIdx.length) cnt--; // 초과 막음
           continue;
-        } else
+        } else {
           temp.add(items[current_folder][i]);
+        }
       }
       items[current_folder] = temp;
     } else {
@@ -165,5 +168,23 @@ class DressRoomService {
     }
   }
 
-  Future moveFolder(int toId) async {}
+  Future moveFolder(int toId, List<int> selectedIdx) async {
+    List<int> selectedIds = new List();
+    List<Product> selectedProduct = new List();
+    for (var idx in selectedIdx) {
+      selectedIds.add(items[current_folder][idx].product_id);
+      selectedProduct.add(items[current_folder][idx]);
+    }
+    var response;
+    response = await _api.client.put('${Api.endpoint}/dressroom/folder/move',
+        data: jsonEncode({'folder_id': toId, 'product_id': selectedIds}));
+    if (response.statusCode == 201) {
+      items[toId] = [...items[toId], ...selectedProduct];
+      for (var item in selectedProduct) {
+        items[current_folder].remove(item);
+      }
+    } else {
+      print("Error ${response.statusCode}");
+    }
+  }
 }

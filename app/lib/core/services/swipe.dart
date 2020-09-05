@@ -14,6 +14,7 @@ class SwipeService {
   Map<String, int> index;
   Map<String, int> length;
   Map<String, List<SwipeCard>> items;
+  Set<int> precached = new Set();
   bool init = false;
 
   SwipeService(Api api) {
@@ -40,6 +41,7 @@ class SwipeService {
   }
 
   void nextItem() {
+    precached.remove(items[type][index[type]].product_id);
     index[type]++;
     if (index[type] + 5 >= length[type]) {
       items[type] = items[type].sublist(index[type]);

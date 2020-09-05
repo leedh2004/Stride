@@ -9,6 +9,7 @@ class SwipeModel extends BaseModel {
   bool trick = false;
   String type;
   int index;
+  int image_index = 0;
 
   SwipeModel(DressRoomService _dressRoomService, SwipeService swipeService) {
     dressRoomService = _dressRoomService;
@@ -26,10 +27,26 @@ class SwipeModel extends BaseModel {
     notifyListeners();
   }
 
+  void nextImage() {
+    int max_length = _swipeService.items[type][index].image_urls.length - 1;
+    if (image_index < max_length) {
+      image_index++;
+      notifyListeners();
+    }
+  }
+
+  void prevImage() {
+    if (image_index > 0) {
+      image_index--;
+      notifyListeners();
+    }
+  }
+
   void changeType(String str) {
     _swipeService.changeType(str);
     type = _swipeService.type;
     index = _swipeService.index[type];
+    image_index = 0;
     notifyListeners();
   }
 
@@ -37,6 +54,7 @@ class SwipeModel extends BaseModel {
     setBusy(true);
     await _swipeService.nextItem();
     index = _swipeService.index[type];
+    image_index = 0;
     setBusy(false);
   }
 

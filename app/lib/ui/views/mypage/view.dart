@@ -25,24 +25,12 @@ class MyPageView extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(
-                  width: 200,
-                  height: 200,
-                  child: Image.asset(
-                    'images/profile.png',
+                Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text(
+                    '마이페이지',
+                    style: headerStyle,
                   ),
-                ),
-                Column(
-                  children: [
-                    Text(
-                      '반가워요!',
-                      style: subHeaderStyle,
-                    ),
-                    Text(
-                      '황희담 님',
-                      style: headerStyle,
-                    )
-                  ],
                 )
               ],
             ),
@@ -71,14 +59,14 @@ class MyPageView extends StatelessWidget {
                       ListTile(
                         contentPadding: EdgeInsets.only(left: 50),
                         leading: FaIcon(FontAwesomeIcons.phoneSquareAlt),
-                        title: Text('고객센터'),
+                        title: Text('문의﹒건의'),
                         onTap: () {},
                       ),
                       Divider(),
                       ListTile(
                         contentPadding: EdgeInsets.only(left: 50),
                         leading: FaIcon(FontAwesomeIcons.appStoreIos),
-                        title: Text('앱 리뷰쓰기'),
+                        title: Text('앱 피드백'),
                         onTap: () {},
                       ),
                       Divider(),
@@ -101,8 +89,35 @@ class MyPageView extends StatelessWidget {
                       Divider(),
                       ListTile(
                         contentPadding: EdgeInsets.only(left: 50),
+                        leading: FaIcon(FontAwesomeIcons.signOutAlt),
+                        title: Text('회원탈퇴'),
+                        onTap: () {
+                          Provider.of<SwipeService>(context, listen: false)
+                              .init = false;
+                          Provider.of<DressRoomService>(context, listen: false)
+                              .init = false;
+                          Provider.of<LookBookService>(context, listen: false)
+                              .init = false;
+                          Provider.of<AuthenticationService>(context,
+                                  listen: false)
+                              .logout();
+                        },
+                      ),
+                      Divider(),
+                      ListTile(
+                        contentPadding: EdgeInsets.only(left: 50),
                         leading: FaIcon(FontAwesomeIcons.code),
-                        title: Text('튜토리얼'),
+                        title: Text('개인정보 처리방침'),
+                        onTap: () {
+                          print('?');
+                          Navigator.pushNamed(context, RoutePaths.Tutorial);
+                        },
+                      ),
+                      Divider(),
+                      ListTile(
+                        contentPadding: EdgeInsets.only(left: 50),
+                        leading: FaIcon(FontAwesomeIcons.code),
+                        title: Text('서비스 이용약관'),
                         onTap: () {
                           print('?');
                           Navigator.pushNamed(context, RoutePaths.Tutorial);

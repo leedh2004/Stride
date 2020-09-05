@@ -78,7 +78,7 @@ class DressRoomModel extends BaseModel {
   }
 
   Future moveFolder(int toId) async {
-    await _service.moveFolder(toId);
+    await _service.moveFolder(toId, selectedIdx.toList());
     selectedIdx.clear();
     notifyListeners();
   }

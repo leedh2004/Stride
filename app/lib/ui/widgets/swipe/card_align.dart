@@ -1,14 +1,17 @@
 import 'dart:io';
 
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 class SwipeCardAlignment extends StatefulWidget {
   SwipeCard item;
   int index;
   List<dynamic> images = new List<dynamic>();
+
   SwipeCardAlignment(SwipeCard _item, int _index) {
     // print("NEW");
     item = _item;
@@ -49,16 +52,19 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
   void didUpdateWidget(SwipeCardAlignment oldWidget) {
     // TODO: implement didUpdateWidget
     // print("WTF!");
-    for (int i = 0; i < widget.images.length; i++) {
-      precacheImage(widget.images[i].image, context);
-    }
-
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
     // print("BUILD");
+    Set precached = Provider.of<SwipeService>(context, listen: false).precached;
+    if (!precached.contains(widget.item.product_id)) {
+      for (int i = 0; i < widget.images.length; i++) {
+        precacheImage(widget.images[i].image, context);
+      }
+      precached.add(widget.item.product_id);
+    }
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: Card(
@@ -136,15 +142,18 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
               ),
               Align(
                 alignment: Alignment.bottomRight,
-                child: IconButton(
-                  icon: FaIcon(
-                    FontAwesomeIcons.rulerVertical,
-                    size: 35,
-                    color: Colors.white,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+                  child: IconButton(
+                    icon: FaIcon(
+                      FontAwesomeIcons.rulerVertical,
+                      size: 35,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      print("wtf");
+                    },
                   ),
-                  onPressed: () {
-                    print("wtf");
-                  },
                 ),
               ),
             ],

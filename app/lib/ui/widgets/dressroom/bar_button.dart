@@ -36,11 +36,11 @@ class DressRoomButtonBar extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   icon: FaIcon(FontAwesomeIcons.solidFolder),
                   onPressed: () {
-                    var folder =
-                        Provider.of<DressRoomService>(context, listen: false)
-                            .folder;
-                    var folderIds = folder.keys.toList();
-                    var folderNames = folder.values.toList();
+                    // var folder =
+                    //     Provider.of<DressRoomService>(context, listen: false)
+                    //         .folder;
+                    // var folderIds = folder.keys.toList();
+                    // var folderNames = folder.values.toList();
                     Stride.analytics
                         .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
                     showMaterialModalBottomSheet(
@@ -94,11 +94,24 @@ class DressRoomButtonBar extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: IconButton(
-                  color: Colors.black26,
+                  color: backgroundColor,
                   padding: EdgeInsets.only(left: 30),
                   alignment: Alignment.centerRight,
                   icon: FaIcon(FontAwesomeIcons.solidFolder),
-                  onPressed: () {},
+                  onPressed: () {
+                    // var folder =
+                    //     Provider.of<DressRoomService>(context, listen: false)
+                    //         .folder;
+                    // var folderIds = folder.keys.toList();
+                    // var folderNames = folder.values.toList();
+                    Stride.analytics
+                        .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
+                    showMaterialModalBottomSheet(
+                        context: context,
+                        builder: (context, scrollController) {
+                          return FolderDialog(model);
+                        });
+                  },
                 ),
               ),
               DisableMakeButton(),

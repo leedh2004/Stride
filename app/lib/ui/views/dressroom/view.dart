@@ -1,7 +1,9 @@
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/dressroom/bar_button.dart';
 import 'package:app/ui/widgets/dressroom/item.dart';
@@ -31,7 +33,6 @@ class DressRoomView extends StatelessWidget {
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
-              print(folder);
               showWidget = Column(children: <Widget>[
                 Container(
                   margin: EdgeInsets.fromLTRB(15, 15, 0, 0),
@@ -76,29 +77,55 @@ class DressRoomView extends StatelessWidget {
                     }),
                   ),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.all(8),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      //crossAxisCount: 2,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        childAspectRatio: 0.6,
-                        mainAxisSpacing: 10.0,
-                        crossAxisSpacing: 8.0,
-                      ),
+                if (items.length > 0)
+                  Expanded(
+                    child: Padding(
                       padding: EdgeInsets.all(8),
-                      itemBuilder: (context, index) {
-                        double opacity = 0;
-                        if (model.selectedIdx.contains(index)) opacity = 1;
-                        return DressRoomItemWidget(
-                            items[index], opacity, index);
-                      },
-                      itemCount: items.length,
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        //crossAxisCount: 2,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          childAspectRatio: 0.6,
+                          mainAxisSpacing: 10.0,
+                          crossAxisSpacing: 8.0,
+                        ),
+                        padding: EdgeInsets.all(8),
+                        itemBuilder: (context, index) {
+                          double opacity = 0;
+                          if (model.selectedIdx.contains(index)) opacity = 1;
+                          return DressRoomItemWidget(
+                              items[index], opacity, index);
+                        },
+                        itemCount: items.length,
+                      ),
                     ),
                   ),
-                ),
+                if (items.length == 0)
+                  Expanded(
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.center + Alignment(0, -0.25),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'images/love.png',
+                              width: 100,
+                              height: 100,
+                            ),
+                            Text("좋아하는 상품이 없어요", style: headerStyle),
+                            UIHelper.verticalSpaceSmall,
+                            Text("예쁜 아이템을 오른쪽으로 스와이프해서",
+                                style: dressRoomsubHeaderStyle),
+                            Text("나만의 드레스룸을 꾸며 보아요",
+                                style: dressRoomsubHeaderStyle),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 DressRoomButtonBar(model)
               ]);
             }
