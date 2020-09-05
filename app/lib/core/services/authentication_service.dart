@@ -5,6 +5,7 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxdart/subjects.dart';
@@ -14,13 +15,14 @@ class AuthenticationService {
   StreamController<StrideUser> _userController = BehaviorSubject<StrideUser>();
   Stream<StrideUser> get user => _userController.stream;
   FlutterSecureStorage _storage = new FlutterSecureStorage();
+  bool init = false;
   Api api;
   final _firebaseAuth = FirebaseAuth.instance;
 
   AuthenticationService(Api apiService) {
     print("AuthenticationService 생성!!");
     api = apiService;
-    checkToken();
+    //checkToken();
   }
 
   Future logout() async {
@@ -155,15 +157,18 @@ class AuthenticationService {
           }
         }
         _userController.add(user);
+        init = true;
       } else {
         // 404, 403
         await _storage.delete(key: 'jwt_token');
         print(await _storage.read(key: 'jwt_token'));
         print("토큰이 없거나 만료되었습니다");
+        init = true;
       }
     } on DioError catch (e) {
       print(e.response.statusCode);
       print("에러!!");
+      init = true;
     }
     print("END");
   }

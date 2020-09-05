@@ -27,10 +27,6 @@ class ServiceView extends StatelessWidget {
                 elevation: 0,
                 backgroundColor: backgroundColor,
                 bottom: TabBar(
-                  // indicator: null,
-                  // indicator: UnderlineTabIndicator(
-                  //     borderSide: BorderSide(color: Colors.white, width: 3.0),
-                  //     insets: EdgeInsets.fromLTRB(20, 0, 20, 5)),
                   indicatorColor: Colors.transparent,
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.white,

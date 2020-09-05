@@ -1,10 +1,11 @@
 import 'package:app/core/services/apple_sign_in.dart';
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/core/viewmodels/auth.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/views/base_widget.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/all.dart';
@@ -42,60 +43,67 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     final appleSignInAvailable =
         Provider.of<AppleSignInAvailable>(context, listen: false);
-
+    Widget showWidget;
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [gradientStart, backgroundColor],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter)),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text(
-                'stride',
-                style: whiteHeaderStyle,
-              ),
-              UIHelper.verticalSpaceMedium,
-              if (appleSignInAvailable.isAvailable)
-                AppleSignInButton(
-                  style: ButtonStyle.black, // style as needed
-                  type: ButtonType.signIn, // style as needed
-                  onPressed: () => _signInWithApple(context),
+      body: BaseWidget<AuthenticationModel>(
+        model: AuthenticationModel(Provider.of(context)),
+        builder: (context, model, child) {
+          if (model.authService.init == true) {
+            showWidget = Container(
+              child: Stack(children: [
+                Container(
+                  child: Image.asset('images/intro.png'),
                 ),
-              RaisedButton(
-                onPressed: () => _signInWithKakao(context),
-                color: Colors.yellow[200],
-                child: SizedBox(
-                  width: 130,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[Text('카카오 로그인')],
+                if (Provider.of<AuthenticationService>(context).init == true)
+                  Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        FadeIn(
+                          delay: 1,
+                          child: SizedBox(
+                            width: 300,
+                            child: RaisedButton(
+                              padding: EdgeInsets.all(0),
+                              onPressed: () => _signInWithKakao(context),
+                              child: Image.asset('images/kakao_login.png'),
+                            ),
+                          ),
+                        ),
+                        if (appleSignInAvailable.isAvailable)
+                          UIHelper.verticalSpaceMedium,
+                        if (appleSignInAvailable.isAvailable)
+                          FadeIn(
+                            delay: 1,
+                            child: SizedBox(
+                              width: 300,
+                              child: AppleSignInButton(
+                                style: ButtonStyle.black, // style as needed
+                                type: ButtonType.signIn, // style as needed
+                                onPressed: () => _signInWithApple(context),
+                              ),
+                            ),
+                          ),
+                        UIHelper.verticalSpaceLarge,
+                        UIHelper.verticalSpaceLarge,
+                      ],
+                    ),
                   ),
-                ),
-              ),
-              UIHelper.verticalSpaceMedium,
-              RaisedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => NaverLoginPage()));
-                },
-                color: Colors.green,
-                child: SizedBox(
-                  width: 130,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[Text('네이버 로그인')],
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+              ]),
+            );
+          } else {
+            model.init();
+            showWidget = Container(
+                child: Stack(children: [
+              Container(
+                child: Image.asset('images/intro.png'),
+              )
+            ]));
+          }
+          return AnimatedSwitcher(
+              duration: Duration(milliseconds: 500), child: showWidget);
+        },
       ),
     );
   }
