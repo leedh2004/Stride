@@ -8,6 +8,7 @@ sys.path.append('../../')
 sys.path.append('../../../')
 from backend.db.queries.user import *
 from backend.authentication.auth import *
+from backend.app import *
 
 
 login = Blueprint('login', __name__)
@@ -20,7 +21,7 @@ def user_login():
     try:
         decoded_token = decode_jwt_token(token)
     except jwt.DecodeError:
-        return jsonify("Decode Fail"), 404
+        return jsonify({"version": app_version}), 404
     user_id = decoded_token['user_id']
     result = select_user(user_id)
     if result is None:
@@ -34,15 +35,15 @@ def user_login():
         g.user_id = user_id
         flag = select_user_profile_flag()
         size = select_user_size()
-        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
+        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": flag, "size": size, "version": app_version}), 200
     elif int(compare.days) < 0:
-        return jsonify("Fail"), 403
+        return jsonify({"version": app_version}), 403
     else:
         new_token = encode_jwt_token(user_id)
         update_login_timestamp(user_id)
         g.user_id = user_id
         result = select_user_profile_flag()
         size = select_user_size()
-        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size}), 200
+        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size, "version": app_version}), 200
 
 ## return user size, flag, token, user_id
