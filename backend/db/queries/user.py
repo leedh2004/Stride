@@ -119,12 +119,13 @@ def select_user_profile_flag():
 
 def select_user_size():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT waist, hip, thigh, hem, shoulder, bust FROM users WHERE user_id = %s"""
+        query = """SELECT waist, hip, thigh, shoulder, bust FROM users WHERE user_id = %s"""
         try:
             cursor.execute(query, (g.user_id, ))
             item = cursor.fetchone()
             load = UserSizeModel()
             load.fetch_data(item)
+
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except:
             service_conn.rollback()
