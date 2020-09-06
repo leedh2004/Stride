@@ -36,6 +36,7 @@ class ProductModel:
         self.thumbnail_url = item[6]
         self.image_url = item[7]
         self.type = item[8]
+        self.shop_name = item[28]
         list_size_parse(self.length, item[9])
         list_size_parse(self.waist, item[10])
         list_size_parse(self.hip, item[11])

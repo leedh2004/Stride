@@ -36,7 +36,7 @@ def update_coor_name(update_name, coor_id):
 def get_coodination():
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM coordination WHERE user_id = %s ORDER BY created_at ASC"""
-        product_query = """SELECT * FROM products WHERE product_id = %s"""
+        product_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id = %s"""
         try:
             cursor.execute(query, (g.user_id, ))
             coordination = cursor.fetchall()
