@@ -69,7 +69,7 @@ class SizeDialog extends StatelessWidget {
     Stride.analytics.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
       'itemId': item.product_id.toString(),
       'itemName': item.product_name,
-      'itemCategory': item.shop_mall
+      'itemCategory': item.shop_name
     });
 
     if (keys == 0) Navigator.pop(context);

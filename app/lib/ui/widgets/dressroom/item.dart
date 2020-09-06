@@ -73,7 +73,7 @@ class DressRoomItemWidget extends StatelessWidget {
                         .logEvent(name: 'DRESS_ROOM_VIEW_SIZE', parameters: {
                       'itemId': item.product_id.toString(),
                       'itemName': item.product_name,
-                      'itemCategory': item.shop_mall
+                      'itemCategory': item.shop_name
                     });
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
@@ -115,11 +115,11 @@ class DressRoomItemWidget extends StatelessWidget {
                         Stride.analytics.logViewItem(
                             itemId: item.product_id.toString(),
                             itemName: item.product_name,
-                            itemCategory: item.shop_mall);
+                            itemCategory: item.shop_name);
                         // 이 부분 코드는 나중에 수정해야할 듯.
                         Provider.of<SwipeService>(context, listen: false)
                             .purchaseItem(item.product_id);
-                        return ProductWebView(item.product_url, item.shop_mall);
+                        return ProductWebView(item.product_url, item.shop_name);
                       }))
                     },
                     child: FaIcon(

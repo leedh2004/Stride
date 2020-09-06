@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';

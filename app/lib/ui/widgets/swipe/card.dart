@@ -161,7 +161,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   Stride.analytics.logEvent(name: 'LIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   widget.model.likeRequest();
                   animateCards();
@@ -170,7 +170,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   widget.model.dislikeRequest();
                   animateCards();
@@ -180,7 +180,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   Stride.analytics.logEvent(name: 'PASS', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   animateCards();
                 } else {

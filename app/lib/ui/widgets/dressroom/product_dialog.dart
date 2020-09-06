@@ -80,7 +80,7 @@ class _ProductDialogState extends State<ProductDialog> {
     Stride.analytics.logEvent(name: "DRESS_ROOM_SHOW_SIZE", parameters: {
       'itemId': widget.item.product_id.toString(),
       'itemName': widget.item.product_name,
-      'itemCategory': widget.item.shop_mall
+      'itemCategory': widget.item.shop_name
     });
 
     if (widget.keys == 0) Navigator.pop(context);
@@ -145,7 +145,7 @@ class _ProductDialogState extends State<ProductDialog> {
                     Expanded(
                       flex: 1,
                       child: Column(children: [
-                        Text('${widget.item.shop_mall}'),
+                        Text('${widget.item.shop_name}'),
                         Text('${widget.item.product_name}'),
                         Text('${widget.item.price}'),
                         Table(

@@ -14,7 +14,7 @@ class SwipeCard {
   //int selected = 0;
   List<dynamic> image_urls;
   ProductSize product_size;
-  String shop_mall;
+  String shop_name;
 
   // String size;
 
@@ -38,7 +38,7 @@ class SwipeCard {
     length = image_urls.length;
     type = json['type'];
     product_size = ProductSize.fromJson(json['size']);
-    shop_mall = shoppingmall[json['shop_id']];
+    shop_name = json['shop_name'];
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +49,7 @@ class SwipeCard {
     data['product_name'] = this.product_name;
     data['product_url'] = this.product_url;
     data['type'] = this.type;
-    data['shop_mall'] = this.shop_mall;
+    data['shop_name'] = this.shop_name;
     data['product_size'] = this.product_size;
     return data;
   }

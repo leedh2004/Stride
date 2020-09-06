@@ -144,9 +144,6 @@ class _TutorialViewState extends State<TutorialView> {
                 }
                 return LoadingWidget();
               }
-              // if (!Provider.of<StrideUser>(context, listen: false)
-              //     .profile_flag) {
-
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 if (!size) {
                   showMaterialModalBottomSheet(
@@ -158,63 +155,61 @@ class _TutorialViewState extends State<TutorialView> {
                   size = true;
                 }
               });
-              // }
               return FadeIn(
                 delay: 0.3,
                 child: Stack(children: [
                   Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Column(
-                        verticalDirection: VerticalDirection.down,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                    alignment: Alignment.topCenter,
+                    child: upperTextBar(context, upText, pass, cnt),
+                  ),
+                  // verticalDirection: VerticalDirection.down,
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Column(
                         children: [
-                          UIHelper.verticalSpaceLarge,
-                          Stack(children: [
-                            Align(
-                              alignment: Alignment.center,
-                              child: Container(
-                                child: Text(
-                                  '$cnt',
-                                  style: TutorialheaderStyle,
-                                ),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: InkWell(
-                                onTap: () {
-                                  print("!!!");
-                                  Provider.of<AuthenticationService>(context,
-                                          listen: false)
-                                      .tutorialPass();
-                                },
-                                child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 5, 20, 0),
-                                    child: pass),
-                              ),
-                            )
-                          ]),
-                          UIHelper.verticalSpaceMedium,
-                          upText,
                           TutorialSwipeCardSection(context, model, callback),
-                          //
-                          // Text(
-                          //   '아이템을 좌/우/위로 스와이프해보세요.',
-                          //   style: TutorialSubHeaderStyle,
-                          // ),
-                          UIHelper.verticalSpaceSmall,
                           Container(width: 50, height: 50, child: image),
                           UIHelper.verticalSpaceMedium,
                           downText,
-                          UIHelper.verticalSpaceLarge,
-                          // Text(
-                          //   '10개의 아이템을 평가해주세요 :) ',
-                          //   style: TutorialSubHeaderStyle,
-                          // ),
-                        ]),
-                  ),
+                          UIHelper.verticalSpaceMedium,
+                        ],
+                      ))
                 ]),
               );
             }));
+  }
+
+  Widget upperTextBar(BuildContext context, Text upText, Text pass, int cnt) {
+    return Container(
+        height: 120,
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Column(children: [
+          UIHelper.verticalSpaceMedium,
+          Stack(children: [
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                child: Text(
+                  '$cnt',
+                  style: TutorialheaderStyle,
+                ),
+              ),
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: InkWell(
+                onTap: () {
+                  Provider.of<AuthenticationService>(context, listen: false)
+                      .tutorialPass();
+                },
+                child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 5, 20, 0), child: pass),
+              ),
+            )
+          ]),
+          UIHelper.verticalSpaceMedium,
+          upText,
+        ]));
   }
 }

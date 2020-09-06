@@ -158,9 +158,9 @@ class _SwipeViewState extends State<SwipeView> {
               Stride.analytics.logViewItem(
                   itemId: item.product_id.toString(),
                   itemName: item.product_name,
-                  itemCategory: item.shop_mall);
+                  itemCategory: item.shop_name);
               model.purchaseItem(item.product_id);
-              return ProductWebView(item.product_url, item.shop_mall);
+              return ProductWebView(item.product_url, item.shop_name);
             }));
           },
           elevation: 2.0,

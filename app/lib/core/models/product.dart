@@ -9,7 +9,7 @@ class Product {
   String product_name;
   String product_url;
   String type;
-  String shop_mall;
+  String shop_name;
   ProductSize product_size;
   // String size;
 
@@ -29,7 +29,7 @@ class Product {
     product_name = json['product_name'];
     product_url = json['product_url'];
     type = json['type'];
-    shop_mall = json['shop_mall'];
+    shop_name = json['shop_name'];
     product_size = json['product_size'];
   }
 
@@ -41,7 +41,7 @@ class Product {
     product_url = json['product_url'];
     type = json['type'];
     product_size = ProductSize.fromJson(json['size']);
-    shop_mall = shoppingmall[json['shop_id']];
+    shop_name = json['shop_name'];
   }
 
   Map<String, dynamic> toJson() {

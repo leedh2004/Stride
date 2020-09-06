@@ -11,10 +11,15 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+Alignment align = Alignment.center + Alignment(0, 0.5);
+
 List<Alignment> cardsAlign = [
-  Alignment(0.0, 0.0),
-  Alignment(0.0, 0.0),
-  Alignment(0.0, 0.0)
+  align,
+  align,
+  align
+  // Alignment.center,
+  // Alignment.center,
+  // Alignment.center
 ];
 
 List<Size> cardsSize = List(3);
@@ -45,7 +50,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
   int index = 0;
   bool move_flag = false;
 
-  final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
+  final Alignment defaultFrontCardAlign = align;
   Alignment frontCardAlign;
 
   double frontCardRot = 0.0;
@@ -102,6 +107,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
         if (_controller.status != AnimationStatus.forward)
           SizedBox.expand(
               child: Container(
+            // color: backgroundColor,
             margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
             child: GestureDetector(
               onTapUp: (details) {
@@ -166,7 +172,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                   Stride.analytics.logEvent(name: 'LIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   widget.model.likeRequest();
                   animateCards();
@@ -175,7 +181,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                   Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   widget.model.dislikeRequest();
                   animateCards();
@@ -185,7 +191,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                   Stride.analytics.logEvent(name: 'PASS', parameters: {
                     'itemId': item.product_id.toString(),
                     'itemName': item.product_name,
-                    'itemCategory': item.shop_mall
+                    'itemCategory': item.shop_name
                   });
                   animateCards();
                 } else {
@@ -413,7 +419,7 @@ class CardsAnimation {
       AnimationController parent, Alignment beginAlign) {
     if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
       if (beginAlign.y > STANDARD_UP) {
-        return AlignmentTween(begin: beginAlign, end: Alignment(0, 0)).animate(
+        return AlignmentTween(begin: beginAlign, end: align).animate(
             CurvedAnimation(
                 parent: parent,
                 curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
