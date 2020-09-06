@@ -19,9 +19,6 @@ from backend.authentication.naver import naver
 from backend.authentication.auth import *
 from flask_cors import CORS
 
-## MOBILE VERSION
-app_version = '0.1.0'
-
 dt = datetime.now()
 log_name = str(dt.year) +'-'+ str(dt.month) +'-'+ str(dt.day)
 LOG_FORMAT = "[%(asctime)-10s] - %(message)s"

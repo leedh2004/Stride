@@ -8,9 +8,8 @@ sys.path.append('../../')
 sys.path.append('../../../')
 from backend.db.queries.user import *
 from backend.authentication.auth import *
-from backend.app import *
 
-
+app_version = "0.1.0"
 login = Blueprint('login', __name__)
 
 
