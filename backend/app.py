@@ -38,7 +38,7 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(naver, url_prefix='/naver')
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(auth, url_prefix='/auth')
-log_stream = 'api-log.'
+log_stream = 'api-log'
 
 
 
@@ -62,11 +62,11 @@ def log(response):
     elif 'prod' in mode:
         logger = logging.getLogger(log_stream + mode)
         logger.addHandler(cw_handler)
-
+    res_data = response.get_data().decode('utf-8')
     if request.method in ['GET', 'DELETE']:
-        log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), str(response.get_data()))
+        log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), res_data)
     else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), str(response.get_data()), str(request.get_data()))
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), res_data, str(request.get_data()))
     logger.info(log_msg)
     return response
 
