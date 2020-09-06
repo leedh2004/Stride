@@ -63,4 +63,7 @@ def authentication():
             payload = None
         if payload is None:
             return False
+        else:
+            user_id = payload["user_id"]
+            return user_id
     return True
