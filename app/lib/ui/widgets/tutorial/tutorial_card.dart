@@ -27,15 +27,19 @@ List<Size> cardsSize = List(3);
 class TutorialSwipeCardSection extends StatefulWidget {
   Function callback;
   SwipeModel model;
+  Size cardSize;
   TutorialSwipeCardSection(
       BuildContext context, SwipeModel _model, Function _callback) {
     model = _model;
+    double standard = 0.6;
+    if (MediaQuery.of(context).size.height > 800) standard = 0.65;
+
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.65);
+        MediaQuery.of(context).size.height * (standard + 0.05));
     cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.6);
+        MediaQuery.of(context).size.height * standard);
     cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.6);
+        MediaQuery.of(context).size.height * standard);
     callback = _callback;
   }
   @override
@@ -105,107 +109,116 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
         passTextWidget(),
         likeTextWidget(),
         if (_controller.status != AnimationStatus.forward)
-          SizedBox.expand(
-              child: Container(
-            // color: backgroundColor,
-            margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
-            child: GestureDetector(
-              onTapUp: (details) {
-                double standard = MediaQuery.of(context).size.width / 2;
-                if (standard < details.globalPosition.dx) {
-                  widget.model.nextImage();
-                } else {
-                  widget.model.prevImage();
-                }
-              },
-              // While dragging the first card
-              onPanUpdate: (DragUpdateDetails details) {
-                List<double> opacity = [0, 0, 0];
+          Align(
+            alignment: cardsAlign[0],
+            child: SizedBox(
+                width: cardsSize[0].width,
+                height: cardsSize[0].height,
+                child: Container(
+                  margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                  child: GestureDetector(
+                    onTapUp: (details) {
+                      double standard = MediaQuery.of(context).size.width / 2;
+                      if (standard < details.globalPosition.dx) {
+                        widget.model.nextImage();
+                      } else {
+                        widget.model.prevImage();
+                      }
+                    },
+                    // While dragging the first card
+                    onPanUpdate: (DragUpdateDetails details) {
+                      List<double> opacity = [0, 0, 0];
 
-                if (frontCardAlign.x > START_RIGHT) {
-                  opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
-                  if (opacity[LIKE] >= MAX_OPACITY) opacity[LIKE] = MAX_OPACITY;
-                } else if (frontCardAlign.x < START_LEFT) {
-                  opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
-                  if (opacity[HATE] >= MAX_OPACITY) opacity[HATE] = MAX_OPACITY;
-                } else if (frontCardAlign.y < START_UP) {
-                  opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
-                  if (opacity[PASS] >= MAX_OPACITY) opacity[PASS] = MAX_OPACITY;
-                }
-                // Rendering View
-                setState(() {
-                  // Set Opacity
-                  _opacity[LIKE] = opacity[LIKE];
-                  _opacity[HATE] = opacity[HATE];
-                  _opacity[PASS] = opacity[PASS];
-                  // Drag Card SPEED
-                  frontCardAlign = Alignment(
-                      frontCardAlign.x +
-                          X_SPEED *
-                              details.delta.dx /
-                              MediaQuery.of(context).size.width,
-                      frontCardAlign.y +
-                          Y_SPEED *
-                              details.delta.dy /
-                              MediaQuery.of(context).size.height);
-                  frontCardRot = frontCardAlign.x;
-                });
-              },
-              // When releasing the first card
-              onPanEnd: (_) {
-                // If the front card was swiped far enough to count as swiped
-                String type =
-                    Provider.of<SwipeService>(context, listen: false).type;
-                int index = Provider.of<SwipeService>(context, listen: false)
-                    .index[type];
-                SwipeCard item =
-                    Provider.of<SwipeService>(context, listen: false)
-                        .items[type][index];
-                setState(() {
-                  _opacity[HATE] = 0.0;
-                  _opacity[LIKE] = 0.0;
-                  _opacity[PASS] = 0.0;
-                });
-                // Send result reqeust to server
-                if (frontCardAlign.x > STANDARD_RIGHT) {
-                  move_flag = true;
-                  Stride.analytics.logEvent(name: 'LIKE', parameters: {
-                    'itemId': item.product_id.toString(),
-                    'itemName': item.product_name,
-                    'itemCategory': item.shop_name
-                  });
-                  widget.model.likeRequest();
-                  animateCards();
-                } else if (frontCardAlign.x < STANDARD_LEFT) {
-                  move_flag = true;
-                  Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
-                    'itemId': item.product_id.toString(),
-                    'itemName': item.product_name,
-                    'itemCategory': item.shop_name
-                  });
-                  widget.model.dislikeRequest();
-                  animateCards();
-                } else if (frontCardAlign.y < STANDARD_UP) {
-                  move_flag = true;
-                  widget.model.passRequest();
-                  Stride.analytics.logEvent(name: 'PASS', parameters: {
-                    'itemId': item.product_id.toString(),
-                    'itemName': item.product_name,
-                    'itemCategory': item.shop_name
-                  });
-                  animateCards();
-                } else {
-                  // Return to the initial rotation and alignment
-                  move_flag = false;
-                  animateCards();
-                  // setState(() {
-                  //   frontCardAlign = defaultFrontCardAlign;
-                  //   frontCardRot = 0.0;
-                  // });
-                }
-              },
-            ),
-          ))
+                      if (frontCardAlign.x > START_RIGHT) {
+                        opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
+                        if (opacity[LIKE] >= MAX_OPACITY)
+                          opacity[LIKE] = MAX_OPACITY;
+                      } else if (frontCardAlign.x < START_LEFT) {
+                        opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
+                        if (opacity[HATE] >= MAX_OPACITY)
+                          opacity[HATE] = MAX_OPACITY;
+                      } else if (frontCardAlign.y < START_UP / 2) {
+                        opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
+                        if (opacity[PASS] >= MAX_OPACITY)
+                          opacity[PASS] = MAX_OPACITY;
+                      }
+                      // Rendering View
+                      setState(() {
+                        // Set Opacity
+                        _opacity[LIKE] = opacity[LIKE];
+                        _opacity[HATE] = opacity[HATE];
+                        _opacity[PASS] = opacity[PASS];
+                        // Drag Card SPEED
+                        frontCardAlign = Alignment(
+                            frontCardAlign.x +
+                                X_SPEED *
+                                    details.delta.dx /
+                                    MediaQuery.of(context).size.width,
+                            frontCardAlign.y +
+                                Y_SPEED *
+                                    details.delta.dy /
+                                    MediaQuery.of(context).size.height);
+                        frontCardRot = frontCardAlign.x;
+                      });
+                    },
+                    // When releasing the first card
+                    onPanEnd: (_) {
+                      // If the front card was swiped far enough to count as swiped
+                      String type =
+                          Provider.of<SwipeService>(context, listen: false)
+                              .type;
+                      int index =
+                          Provider.of<SwipeService>(context, listen: false)
+                              .index[type];
+                      SwipeCard item =
+                          Provider.of<SwipeService>(context, listen: false)
+                              .items[type][index];
+                      setState(() {
+                        _opacity[HATE] = 0.0;
+                        _opacity[LIKE] = 0.0;
+                        _opacity[PASS] = 0.0;
+                      });
+                      // Send result reqeust to server
+                      if (frontCardAlign.x > STANDARD_RIGHT) {
+                        move_flag = true;
+                        Stride.analytics.logEvent(name: 'LIKE', parameters: {
+                          'itemId': item.product_id.toString(),
+                          'itemName': item.product_name,
+                          'itemCategory': item.shop_name
+                        });
+                        widget.model.likeRequest();
+                        animateCards();
+                      } else if (frontCardAlign.x < STANDARD_LEFT) {
+                        move_flag = true;
+                        Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
+                          'itemId': item.product_id.toString(),
+                          'itemName': item.product_name,
+                          'itemCategory': item.shop_name
+                        });
+                        widget.model.dislikeRequest();
+                        animateCards();
+                      } else if (frontCardAlign.y < STANDARD_UP / 2) {
+                        move_flag = true;
+                        widget.model.passRequest();
+                        Stride.analytics.logEvent(name: 'PASS', parameters: {
+                          'itemId': item.product_id.toString(),
+                          'itemName': item.product_name,
+                          'itemCategory': item.shop_name
+                        });
+                        animateCards();
+                      } else {
+                        // Return to the initial rotation and alignment
+                        move_flag = false;
+                        animateCards();
+                        // setState(() {
+                        //   frontCardAlign = defaultFrontCardAlign;
+                        //   frontCardRot = 0.0;
+                        // });
+                      }
+                    },
+                  ),
+                )),
+          )
         else
           Container(),
         rulerWidget(),
@@ -418,7 +431,7 @@ class CardsAnimation {
   static Animation<Alignment> frontCardDisappearAlignmentAnim(
       AnimationController parent, Alignment beginAlign) {
     if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
-      if (beginAlign.y > STANDARD_UP) {
+      if (beginAlign.y > STANDARD_UP / 2) {
         return AlignmentTween(begin: beginAlign, end: align).animate(
             CurvedAnimation(
                 parent: parent,
@@ -427,7 +440,7 @@ class CardsAnimation {
       return AlignmentTween(
               begin: beginAlign,
               end: Alignment(
-                  0.0, beginAlign.y - 100) // Has swiped to the left or right?
+                  0.0, beginAlign.y - 20) // Has swiped to the left or right?
               )
           .animate(CurvedAnimation(
               parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));

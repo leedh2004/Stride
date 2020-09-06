@@ -449,6 +449,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 
@@ -498,6 +499,9 @@ class Stride extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     analytics.logAppOpen(); // 앱 시작.
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
     return MultiProvider(
       providers: providers,
       child: MaterialApp(

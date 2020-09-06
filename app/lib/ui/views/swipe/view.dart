@@ -1,5 +1,4 @@
 import 'package:app/core/models/swipeCard.dart';
-import 'package:app/core/models/user.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -10,11 +9,9 @@ import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
-import 'package:app/ui/widgets/swipe/input_dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 import '../base_widget.dart';
 
@@ -58,36 +55,34 @@ class _SwipeViewState extends State<SwipeView> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Column(
-                    verticalDirection: VerticalDirection.up,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      UIHelper.verticalSpaceSmall,
-                      Transform.scale(
-                        scale: 1.5,
-                        child: Switch(
-                          value: enabled,
-                          onChanged: (value) async {
-                            setState(() {
-                              enabled = value;
-                            });
-                            if (enabled) {
-                              Stride.analytics
-                                  .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
-                              await model.test();
-                            } else {
-                              Stride.analytics
-                                  .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
-                            }
-                          },
-                          activeColor: backgroundColor,
-                        ),
-                      ),
-                      buttonRow(model),
-                      UIHelper.verticalSpaceSmall,
-                      SwipeCardSection(context, model),
-                    ]),
+                child:
+                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  buttonRow(model),
+                  UIHelper.verticalSpaceSmall,
+                  Transform.scale(
+                    scale: 1.5,
+                    child: Switch(
+                      value: enabled,
+                      onChanged: (value) async {
+                        setState(() {
+                          enabled = value;
+                        });
+                        if (enabled) {
+                          Stride.analytics
+                              .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
+                          await model.test();
+                        } else {
+                          Stride.analytics
+                              .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
+                        }
+                      },
+                      activeColor: backgroundColor,
+                    ),
+                  ),
+                  UIHelper.verticalSpaceSmall,
+                ]),
               ),
+              SwipeCardSection(context, model),
             ]),
           );
         });

@@ -162,17 +162,19 @@ class _TutorialViewState extends State<TutorialView> {
                     alignment: Alignment.topCenter,
                     child: upperTextBar(context, upText, pass, cnt),
                   ),
+                  // upperTextBar(context, upText, pass, cnt),
                   // verticalDirection: VerticalDirection.down,
                   // mainAxisAlignment: MainAxisAlignment.start,
                   Align(
                       alignment: Alignment.bottomCenter,
                       child: Column(
+                        verticalDirection: VerticalDirection.up,
                         children: [
-                          TutorialSwipeCardSection(context, model, callback),
-                          Container(width: 50, height: 50, child: image),
                           UIHelper.verticalSpaceMedium,
                           downText,
                           UIHelper.verticalSpaceMedium,
+                          Container(width: 50, height: 50, child: image),
+                          TutorialSwipeCardSection(context, model, callback),
                         ],
                       ))
                 ]),
@@ -182,9 +184,10 @@ class _TutorialViewState extends State<TutorialView> {
 
   Widget upperTextBar(BuildContext context, Text upText, Text pass, int cnt) {
     return Container(
-        height: 120,
+        height: 160,
         margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Column(children: [
+          UIHelper.verticalSpaceMedium,
           UIHelper.verticalSpaceMedium,
           Stack(children: [
             Align(
@@ -204,11 +207,11 @@ class _TutorialViewState extends State<TutorialView> {
                       .tutorialPass();
                 },
                 child: Padding(
-                    padding: EdgeInsets.fromLTRB(0, 5, 20, 0), child: pass),
+                    padding: EdgeInsets.fromLTRB(0, 5, 10, 0), child: pass),
               ),
             )
           ]),
-          UIHelper.verticalSpaceMedium,
+          UIHelper.verticalSpaceSmall,
           upText,
         ]));
   }

@@ -11,11 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-List<Alignment> cardsAlign = [
-  Alignment(0.0, 0.0),
-  Alignment(0.0, 0.0),
-  Alignment(0.0, 0.0)
-];
+Alignment align = Alignment.center + Alignment(0, -0.9);
+
+List<Alignment> cardsAlign = [align, align, align];
 
 List<Size> cardsSize = List(3);
 
@@ -23,12 +21,18 @@ class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
   SwipeCardSection(BuildContext context, SwipeModel _model) {
     model = _model;
+    double standard = 0.6;
+    if (MediaQuery.of(context).size.height > 800) standard = 0.65;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.65);
+        MediaQuery.of(context).size.height * (standard + 0.05));
     cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.6);
+        MediaQuery.of(context).size.height * standard);
     cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * 0.6);
+        MediaQuery.of(context).size.height * standard);
+    print("HEIGHT");
+    print(MediaQuery.of(context).size.height);
+    //683
+    //896
   }
   @override
   _SwipeCardSectionState createState() => _SwipeCardSectionState();
@@ -41,7 +45,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   int index = 0;
   bool move_flag = false;
 
-  final Alignment defaultFrontCardAlign = Alignment(0.0, 0.0);
+  final Alignment defaultFrontCardAlign = align;
   Alignment frontCardAlign;
 
   double frontCardRot = 0.0;
@@ -85,8 +89,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: Stack(
+    return Stack(
       children: <Widget>[
         backCard(context),
         middleCard(context),
@@ -199,7 +202,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           Container(),
         rulerWidget(),
       ],
-    ));
+    );
   }
 
   Widget rulerWidget() {
@@ -408,7 +411,7 @@ class CardsAnimation {
       AnimationController parent, Alignment beginAlign) {
     if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
       if (beginAlign.y > STANDARD_UP) {
-        return AlignmentTween(begin: beginAlign, end: Alignment(0, 0)).animate(
+        return AlignmentTween(begin: beginAlign, end: align).animate(
             CurvedAnimation(
                 parent: parent,
                 curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
@@ -416,7 +419,7 @@ class CardsAnimation {
       return AlignmentTween(
               begin: beginAlign,
               end: Alignment(
-                  0.0, beginAlign.y - 100) // Has swiped to the left or right?
+                  0.0, beginAlign.y - 20) // Has swiped to the left or right?
               )
           .animate(CurvedAnimation(
               parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));

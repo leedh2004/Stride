@@ -17,11 +17,11 @@ const double MAX_OPACITY = 1.0;
 const int OPACITY_SPEED = 5;
 // SWIPE CARD DRAG SPEED CONSTANT
 const int X_SPEED = 15;
-const int Y_SPEED = 40;
+const int Y_SPEED = 10;
 // SWIPE OPACITY CHANGE STANDARD DISTANCE CONSTANT
-const double START_RIGHT = 2.5;
-const double START_LEFT = -2.5;
-const double START_UP = -2;
+const double START_RIGHT = 2;
+const double START_LEFT = -2;
+const double START_UP = -1;
 // SWIPE REQUEST STANDARD DISTANCE CONSTANT
 const double STANDARD_RIGHT = 4.0;
 const double STANDARD_LEFT = -4.0;
