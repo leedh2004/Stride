@@ -50,8 +50,11 @@ def hello_world():
 @app.after_request
 def log(response):
     user = ''
-    if authentication() is False:
+    result = authentication()
+    if result is False:
         user = 'unidetified'
+    else:
+        user = result
     if mode == 'dev':
         logger = logging.getLogger(log_stream)
         logger.addHandler(dev_cw_handler)
