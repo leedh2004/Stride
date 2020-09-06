@@ -48,3 +48,19 @@ def login_required(f):
             return 'Unauthorized', 401
         return f(*args, **kwargs)
     return decorated_function
+
+
+def authentication():
+    try:
+        headers = request.headers.get("Authorization")
+        access_token = headers.split(' ')[1]
+    except:
+        return False
+    if access_token is not None:
+        try:
+            payload = decode_jwt_token(access_token)
+        except jwt.InvalidTokenError:
+            payload = None
+        if payload is None:
+            return False
+    return True

@@ -19,8 +19,9 @@ from backend.authentication.naver import naver
 from backend.authentication.auth import *
 from flask_cors import CORS
 
+mode = ''
 dt = datetime.now()
-log_name = str(dt.year) +'-'+ str(dt.month) +'-'+ str(dt.day)
+
 LOG_FORMAT = "[%(asctime)-10s] - %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
@@ -37,49 +38,28 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(naver, url_prefix='/naver')
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(auth, url_prefix='/auth')
+log_stream = 'api-log.'
 
-cw_handler = CloudWatchLogsHandler(
-    log_group_name='stride',
-    log_stream_name=log_name,
-    buffer_duration=10000,
-    batch_count=10,
-    batch_size=1048576
-)
-dev_cw_handler = CloudWatchLogsHandler(
-    log_group_name='stride',
-    log_stream_name=log_name,
-    buffer_duration=10000,
-    batch_count=10,
-    batch_size=1048576
-)
-except_url = ['/', '/login/token', '/kakao/oauth', '/naver/oauth', '/auth/token']
 
-@app.route('/')
+
+@app.route('/admin/check')
 def hello_world():
-    return 'Hello World! CI TEST7 only develop'
+    return 'Server ON', 200
 
 
 @app.after_request
 def log(response):
     user = ''
-    access_token = None
-    headers = request.headers.get("Authorization")
-    if headers is not None:
-        access_token = headers.split(' ')[1]
-    if access_token is not None:
-        try:
-            payload = decode_jwt_token(access_token)
-            user = payload['user_id']
-        except jwt.InvalidTokenError:
-            user = 'unidentified'
-    else:
-        user = 'unidentified'
-    if 'http://0.0.0.0:5000' in request.base_url: # dev
-        logger = logging.getLogger(log_name)
+    if authentication() is False:
+        user = 'unidetified'
+    if mode == 'dev':
+        logger = logging.getLogger(log_stream)
         logger.addHandler(dev_cw_handler)
-    else:
-        logger = logging.getLogger(log_name)
+
+    elif 'prod' in mode:
+        logger = logging.getLogger(log_stream + mode)
         logger.addHandler(cw_handler)
+
     if request.method in ['GET', 'DELETE']:
         log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), str(response.get_data()))
     else:
@@ -89,10 +69,27 @@ def log(response):
 
 
 if __name__ == '__main__':
-    # Development
-    # app.run(host='0.0.0.0', port=5000)
+    mode = sys.argv[1]
+    cw_handler = CloudWatchLogsHandler(
+        log_group_name='stride',
+        log_stream_name=log_stream + mode,
+        buffer_duration=10000,
+        batch_count=10,
+        batch_size=1048576
+    )
+    dev_cw_handler = CloudWatchLogsHandler(
+        log_group_name='dev_stride',
+        log_stream_name=log_stream,
+        buffer_duration=10000,
+        batch_count=10,
+        batch_size=1048576
+    )
+    print("Server on 5000 Port, MODE =", mode)
+    if mode == 'dev':
+        app.run(host='0.0.0.0', port=5000)
+    elif 'prod' in mode:
+        http_server = WSGIServer(('', 5000), app)
+        http_server.serve_forever()
+    else:
+        print("Mode Only [dev, prod]")
 
-    # Production
-    print("Server on 5000 Port")
-    http_server = WSGIServer(('', 5000), app)
-    http_server.serve_forever()
