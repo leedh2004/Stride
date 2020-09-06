@@ -124,7 +124,7 @@ def select_user_size():
             cursor.execute(query, (g.user_id, ))
             item = cursor.fetchone()
             load = UserSizeModel()
-            load.fetch_data(item)
+            load.origin_fetch_data(item)
 
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except:
