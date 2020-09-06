@@ -1,6 +1,11 @@
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
+const TutorialheaderStyle = TextStyle(
+    fontSize: 28, fontWeight: FontWeight.w700, color: backgroundColor);
+
+const TutorialSubHeaderStyle = TextStyle(fontSize: 18.0, color: Colors.black54);
+
 const dressRoomProductText = TextStyle(fontSize: 11);
 const dressRoomPriceText =
     TextStyle(fontSize: 10, fontWeight: FontWeight.w700, color: Colors.black87);

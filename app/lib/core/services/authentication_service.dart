@@ -5,14 +5,13 @@ import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxdart/subjects.dart';
 import 'api.dart';
 
 class AuthenticationService {
-  StreamController<StrideUser> _userController = BehaviorSubject<StrideUser>();
+  BehaviorSubject<StrideUser> _userController = BehaviorSubject<StrideUser>();
   Stream<StrideUser> get user => _userController.stream;
   FlutterSecureStorage _storage = new FlutterSecureStorage();
   bool init = false;
@@ -27,9 +26,16 @@ class AuthenticationService {
 
   Future logout() async {
     await _storage.delete(key: 'jwt_token');
-    await _userController.add(null); // 이게 맞나..?
+    _userController.add(null); // 이게 맞나..?
     await _firebaseAuth.signOut();
     print('?');
+  }
+
+  Future tutorialPass() async {
+    StrideUser cur = _userController.value;
+    StrideUser testuser = new StrideUser.clone(cur);
+    testuser.profile_flag = true;
+    _userController.add(testuser);
   }
 
   Future<bool> loginWithApple({List<Scope> scopes = const []}) async {
@@ -78,7 +84,6 @@ class AuthenticationService {
       String id = parsed['user_id'];
       String token = parsed['token'];
       print(id);
-      if (channel == 'apple') id += "@apple.com";
       print(token);
       // 토큰이 없을 때만 일로 오니까 !
       await _storage.write(key: 'jwt_token', value: token);

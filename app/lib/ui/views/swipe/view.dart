@@ -49,14 +49,6 @@ class _SwipeViewState extends State<SwipeView> {
             }
             return LoadingWidget();
           }
-          if (!Provider.of<StrideUser>(context, listen: false).profile_flag) {
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              showMaterialModalBottomSheet(
-                  expand: false,
-                  context: context,
-                  builder: (context, scrollController) => InputInfoDialog());
-            });
-          }
           return FadeIn(
             delay: 0.3,
             child: Stack(children: [

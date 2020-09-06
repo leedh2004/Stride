@@ -52,7 +52,11 @@ class LoginView extends StatelessWidget {
             showWidget = Container(
               child: Stack(children: [
                 Container(
-                  child: Image.asset('images/intro.png'),
+                  width: double.infinity,
+                  child: Image.asset(
+                    'images/intro.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 if (Provider.of<AuthenticationService>(context).init == true)
                   Center(
@@ -95,11 +99,16 @@ class LoginView extends StatelessWidget {
           } else {
             model.init();
             showWidget = Container(
+                width: double.infinity,
                 child: Stack(children: [
-              Container(
-                child: Image.asset('images/intro.png'),
-              )
-            ]));
+                  Container(
+                    width: double.infinity,
+                    child: Image.asset(
+                      'images/intro.png',
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                ]));
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: showWidget);
