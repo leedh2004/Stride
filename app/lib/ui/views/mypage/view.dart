@@ -1,11 +1,14 @@
 import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/models/user.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/ui/widgets/mypage/input_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 // 중간발표때까지 탭하면 가는거 구현, 튜토리얼, 이미지메이커, UI 바꾸기, Crashlytics, Analytics
@@ -53,7 +56,19 @@ class MyPageView extends StatelessWidget {
                         contentPadding: EdgeInsets.only(left: 50),
                         leading: FaIcon(FontAwesomeIcons.tshirt),
                         title: Text('사이즈 수정'),
-                        onTap: () => print("HI"),
+                        onTap: () {
+                          print("!!!");
+                          showMaterialModalBottomSheet(
+                            isDismissible: true,
+                            expand: false,
+                            context: context,
+                            builder: (context, controller) => SizeInputDialog(
+                                Provider.of<AuthenticationService>(context,
+                                        listen: false)
+                                    .userController
+                                    .value),
+                          );
+                        },
                       ),
                       Divider(),
                       ListTile(
@@ -74,23 +89,6 @@ class MyPageView extends StatelessWidget {
                         contentPadding: EdgeInsets.only(left: 50),
                         leading: FaIcon(FontAwesomeIcons.signOutAlt),
                         title: Text('로그아웃'),
-                        onTap: () {
-                          Provider.of<SwipeService>(context, listen: false)
-                              .init = false;
-                          Provider.of<DressRoomService>(context, listen: false)
-                              .init = false;
-                          Provider.of<LookBookService>(context, listen: false)
-                              .init = false;
-                          Provider.of<AuthenticationService>(context,
-                                  listen: false)
-                              .logout();
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.signOutAlt),
-                        title: Text('회원탈퇴'),
                         onTap: () {
                           Provider.of<SwipeService>(context, listen: false)
                               .init = false;

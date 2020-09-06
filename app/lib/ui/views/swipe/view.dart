@@ -1,4 +1,5 @@
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/config.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../base_widget.dart';
+import '../service_view.dart';
 
 class SwipeView extends StatefulWidget {
   @override
@@ -32,6 +34,19 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (Provider.of<ConfigService>(context, listen: false).currentVersion !=
+              Provider.of<ConfigService>(context, listen: false)
+                  .updateVersion &&
+          !Provider.of<ConfigService>(context, listen: false).alreadyShow) {
+        ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+          duration: Duration(milliseconds: 1500),
+          content: Text('Stride앱의 최신 버전이 나왔습니다!'),
+        ));
+        Provider.of<ConfigService>(context, listen: false).alreadyShow = true;
+      }
+    });
+
     return BaseWidget<SwipeModel>(
         model: SwipeModel(
           Provider.of<DressRoomService>(context),

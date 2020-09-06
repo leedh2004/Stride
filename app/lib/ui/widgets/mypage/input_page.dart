@@ -101,33 +101,19 @@ class _InputThirdPageState extends State<InputThirdPage> {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Circle(),
-          UIHelper.horizontalSpaceSmall,
-          Circle(),
-          UIHelper.horizontalSpaceSmall,
-          PurpleCircle(),
-        ],
-      ),
       RichText(
           text: TextSpan(
               style: TextStyle(fontSize: 16.0, color: Colors.black),
               children: [
-            TextSpan(text: '이 정도 '),
             TextSpan(text: '사이즈', style: inputPurpleStyle),
-            TextSpan(text: '가 적당하신가요?'),
+            TextSpan(text: '를 수정하시겠어요?'),
           ])),
       UIHelper.verticalSpaceSmall,
       Text(
         '잘 모르시는 부분은 체크박스를 해제 해주세요!',
         style: TextStyle(fontSize: 12.0),
       ),
-      Text(
-        '마이페이지에서 변경 가능합니다',
-        style: TextStyle(fontSize: 12.0),
-      ),
+
       UIHelper.verticalSpaceSmall,
       mySlider('어깨(단면)', widget.shoulderflag, widget.shoulderRange, 50, 30),
       mySlider('가슴(둘레)', widget.breastflag, widget.breastRange, 110, 70),

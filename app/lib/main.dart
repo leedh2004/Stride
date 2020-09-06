@@ -440,6 +440,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/services/config.dart';
 import 'package:app/provider_setup.dart';
 import 'package:app/ui/router.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -448,6 +449,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
@@ -463,7 +465,7 @@ Future<void> main() async {
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  final appleSignInAvailable = await AppleSignInAvailable.check();
+  final appleSignInAvailable = await ConfigService.check();
   final FirebaseMessaging fcm = FirebaseMessaging();
   if (Platform.isIOS) {
     fcm.requestNotificationPermissions(
@@ -483,12 +485,20 @@ Future<void> main() async {
       },
     );
   }
+
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  final currentVersion = "0.1.0";
+  final updatedVersion = remoteConfig.getString('version');
+  // await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+  // await remoteConfig.activateFetched();
+  // print("VERSION");
   // runZoned(() {
   //   runApp(Stride());
   // }, onError: Crashlytics.instance.recordError);
   // runApp(Stride());
-  runApp(Provider<AppleSignInAvailable>.value(
-      value: appleSignInAvailable, child: Stride()));
+  runApp(Provider<ConfigService>.value(
+      value: ConfigService(appleSignInAvailable, updatedVersion),
+      child: Stride()));
 }
 
 class Stride extends StatelessWidget {
@@ -496,6 +506,7 @@ class Stride extends StatelessWidget {
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
   static FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     analytics.logAppOpen(); // 앱 시작.

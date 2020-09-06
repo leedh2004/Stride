@@ -1,5 +1,6 @@
 import 'package:app/core/services/apple_sign_in.dart';
 import 'package:app/core/services/authentication_service.dart';
+import 'package:app/core/services/config.dart';
 import 'package:app/core/viewmodels/auth.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
@@ -41,8 +42,9 @@ class LoginView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appleSignInAvailable =
-        Provider.of<AppleSignInAvailable>(context, listen: false);
+    ConfigService configService =
+        Provider.of<ConfigService>(context, listen: false);
+
     Widget showWidget;
     return Scaffold(
       body: BaseWidget<AuthenticationModel>(
@@ -75,9 +77,9 @@ class LoginView extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (appleSignInAvailable.isAvailable)
+                        if (configService.isAppleAvailable)
                           UIHelper.verticalSpaceMedium,
-                        if (appleSignInAvailable.isAvailable)
+                        if (configService.isAppleAvailable)
                           FadeIn(
                             delay: 1,
                             child: SizedBox(

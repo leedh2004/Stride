@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:app/core/models/tutorial.dart';
 import 'package:app/core/models/user.dart';
 import 'package:apple_sign_in/apple_sign_in.dart';
 import 'package:apple_sign_in/scope.dart';
@@ -11,8 +12,8 @@ import 'package:rxdart/subjects.dart';
 import 'api.dart';
 
 class AuthenticationService {
-  BehaviorSubject<StrideUser> _userController = BehaviorSubject<StrideUser>();
-  Stream<StrideUser> get user => _userController.stream;
+  BehaviorSubject<StrideUser> userController = BehaviorSubject<StrideUser>();
+  Stream<StrideUser> get user => userController.stream;
   FlutterSecureStorage _storage = new FlutterSecureStorage();
   bool init = false;
   Api api;
@@ -24,18 +25,41 @@ class AuthenticationService {
     //checkToken();
   }
 
+  changeUserSize(List<RangeWrapper> ranges, List<FlagWrapper> flags) {
+    StrideUser user = userController.value;
+    List waistRange =
+        flags[0].value ? [ranges[0].value.start, ranges[0].value.end] : null;
+    List hipRange =
+        flags[1].value ? [ranges[1].value.start, ranges[1].value.end] : null;
+    ;
+    List thighRange =
+        flags[2].value ? [ranges[2].value.start, ranges[2].value.end] : null;
+    ;
+    List shoulderRange =
+        flags[3].value ? [ranges[3].value.start, ranges[3].value.end] : null;
+    ;
+    List bustRange =
+        flags[4].value ? [ranges[4].value.start, ranges[4].value.end] : null;
+    ;
+    user.waist = waistRange;
+    user.hip = hipRange;
+    user.thigh = thighRange;
+    user.shoulder = shoulderRange;
+    user.bust = bustRange;
+  }
+
   Future logout() async {
     await _storage.delete(key: 'jwt_token');
-    _userController.add(null); // 이게 맞나..?
+    userController.add(null); // 이게 맞나..?
     await _firebaseAuth.signOut();
     print('?');
   }
 
   Future tutorialPass() async {
-    StrideUser cur = _userController.value;
+    StrideUser cur = userController.value;
     StrideUser testuser = new StrideUser.clone(cur);
     testuser.profile_flag = true;
-    _userController.add(testuser);
+    userController.add(testuser);
   }
 
   Future<bool> loginWithApple({List<Scope> scopes = const []}) async {
@@ -108,7 +132,7 @@ class AuthenticationService {
         print(e.toString());
       }
 
-      _userController.add(user);
+      userController.add(user);
       api.client.options.headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -120,8 +144,9 @@ class AuthenticationService {
     }
   }
 
-  Future checkToken() async {
+  Future<String> checkToken() async {
     String token = await _storage.read(key: 'jwt_token');
+    String version;
     print("checkToken()");
     print("Bearer ${token}");
     try {
@@ -138,7 +163,7 @@ class AuthenticationService {
         print(response.data);
         var parsed = response.data as Map<String, dynamic>;
         var id = parsed['user_id'];
-        print(parsed['size']);
+        version = parsed['version'];
         var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
         StrideUser user = StrideUser(
             id: id,
@@ -161,7 +186,7 @@ class AuthenticationService {
             print('Wrong password provided for that user.');
           }
         }
-        _userController.add(user);
+        userController.add(user);
         init = true;
       } else {
         // 404, 403
@@ -176,5 +201,6 @@ class AuthenticationService {
       init = true;
     }
     print("END");
+    return version;
   }
 }
