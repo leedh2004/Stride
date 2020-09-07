@@ -147,7 +147,7 @@ class _TutorialViewState extends State<TutorialView> {
               WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                 if (!size) {
                   showMaterialModalBottomSheet(
-                      isDismissible: true,
+                      isDismissible: false,
                       expand: false,
                       context: context,
                       builder: (context, scrollController) =>
