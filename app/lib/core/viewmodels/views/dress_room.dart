@@ -13,6 +13,7 @@ class DressRoomModel extends BaseModel {
   DressRoomModel(DressRoomService service) {
     print("DressRoomModel 생성!");
     _service = service;
+    current_folder = service.current_folder;
   }
 
   void changeFolder(int folderId) {

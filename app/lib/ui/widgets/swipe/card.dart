@@ -11,10 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-Alignment align = Alignment.center + Alignment(0, -0.9);
-
+Alignment align = Alignment.center + Alignment(0, -0.8);
 List<Alignment> cardsAlign = [align, align, align];
-
 List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {

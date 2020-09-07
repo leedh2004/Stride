@@ -109,7 +109,7 @@ class _SwipeViewState extends State<SwipeView> {
   Widget clothTypeBar(SwipeModel model) {
     return Container(
       height: 40,
-      margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
+      margin: EdgeInsets.fromLTRB(20, 5, 20, 0),
       child: Row(children: [
         Expanded(
           child: ListView(
@@ -187,7 +187,9 @@ class _SwipeViewState extends State<SwipeView> {
           shape: CircleBorder(),
         ),
         RawMaterialButton(
-          onPressed: () {},
+          onPressed: () {
+            //model.nextItem();
+          },
           elevation: 2.0,
           fillColor: Colors.white,
           child: FaIcon(
