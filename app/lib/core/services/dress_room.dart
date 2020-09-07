@@ -42,29 +42,37 @@ class DressRoomService {
     folder = new Map();
     current_folder = 0;
 
-    var response = await _api.client.get(
-      '${Api.endpoint}/dressroom/',
-    );
-    var parsed = json.decode(response.data) as Map<String, dynamic>;
-    print(parsed);
-    for (var info in parsed['info']) {
-      folder[info['folder_id']] = info['folder_name'];
-      var temp = List<Product>();
-      for (var item in parsed[folder[info['folder_id']]]) {
-        temp.add(Product.fromJson(item));
+    try {
+      var response = await _api.client.get(
+        '${Api.endpoint}/dressroom/',
+      );
+      if (response.statusCode == 500) {
+        _api.errorCreate(Error());
       }
-      items[info['folder_id']] = temp;
+      var parsed = json.decode(response.data) as Map<String, dynamic>;
+      for (var info in parsed['info']) {
+        folder[info['folder_id']] = info['folder_name'];
+        var temp = List<Product>();
+        for (var item in parsed[folder[info['folder_id']]]) {
+          temp.add(Product.fromJson(item));
+        }
+        items[info['folder_id']] = temp;
+      }
+      init = true;
+      return;
+    } catch (e) {
+      _api.errorCreate(Error());
     }
-    init = true;
-    return;
   }
 
   Future makeCoordinate(int top, int bottom) async {
-    final response = await _api.client.post('${Api.endpoint}/coordination/',
-        data: jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
-    print(top);
-    print(bottom);
-    print("makeCoordinate() ${response.statusCode}");
+    try {
+      final response = await _api.client.post('${Api.endpoint}/coordination/',
+          data:
+              jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
     return;
   }
 
@@ -93,10 +101,9 @@ class DressRoomService {
     List<int> removeIds = new List();
     for (var idx in selectedIdx)
       removeIds.add(items[current_folder][idx].product_id);
-    final response = await _api.client.put('${Api.endpoint}/dressroom/',
-        data: jsonEncode({'product_id': removeIds}));
-
-    if (response.statusCode == 200) {
+    try {
+      final response = await _api.client.put('${Api.endpoint}/dressroom/',
+          data: jsonEncode({'product_id': removeIds}));
       int cnt = 0;
       var temp = new List<Product>();
       selectedIdx.sort();
@@ -110,8 +117,8 @@ class DressRoomService {
         }
       }
       items[current_folder] = temp;
-    } else {
-      print("Error ${response.statusCode}");
+    } catch (e) {
+      _api.errorCreate(Error());
     }
     return;
   }
@@ -123,16 +130,16 @@ class DressRoomService {
       selectedIds.add(items[current_folder][idx].product_id);
       selectedProduct.add(items[current_folder][idx]);
     }
-    var response;
-    if (selectedIds.length == 0) {
-      response = await _api.client.post('${Api.endpoint}/dressroom/folder',
-          data: jsonEncode({'product_id': -1, 'folder_name': folderName}));
-    } else {
-      response = await _api.client.post('${Api.endpoint}/dressroom/folder',
-          data: jsonEncode(
-              {'product_id': selectedIds, 'folder_name': folderName}));
-    }
-    if (response.statusCode == 200) {
+    try {
+      var response;
+      if (selectedIds.length == 0) {
+        response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+            data: jsonEncode({'product_id': -1, 'folder_name': folderName}));
+      } else {
+        response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+            data: jsonEncode(
+                {'product_id': selectedIds, 'folder_name': folderName}));
+      }
       var parsed = json.decode(response.data) as Map<String, dynamic>;
       int newId = parsed['folder_id'];
       print(newId);
@@ -141,30 +148,32 @@ class DressRoomService {
       for (var item in selectedProduct) {
         items[current_folder].remove(item);
       }
-    } else {
-      print("Error ${response.statusCode}");
+    } catch (e) {
+      _api.errorCreate(Error());
     }
   }
 
   Future<bool> deleteFolder(int folderId) async {
-    final response = await _api.client
-        .delete('${Api.endpoint}/dressroom/folder?folder_id=${folderId}');
-    if (response.statusCode == 200) {
+    try {
+      final response = await _api.client
+          .delete('${Api.endpoint}/dressroom/folder?folder_id=${folderId}');
       folder.remove(folderId);
       items.remove(folderId);
       return true;
+    } catch (e) {
+      _api.errorCreate(Error());
     }
     return false;
   }
 
   Future renameFolder(int folderId, String newName) async {
-    final response = await _api.client.put(
-        '${Api.endpoint}/dressroom/folder/name',
-        data: jsonEncode({'folder_id': folderId, 'update_name': newName}));
-    if (response.statusCode == 201) {
+    try {
+      final response = await _api.client.put(
+          '${Api.endpoint}/dressroom/folder/name',
+          data: jsonEncode({'folder_id': folderId, 'update_name': newName}));
       folder[folderId] = newName;
-    } else {
-      print("Error ${response.statusCode}");
+    } catch (e) {
+      _api.errorCreate(Error());
     }
   }
 
@@ -175,16 +184,16 @@ class DressRoomService {
       selectedIds.add(items[current_folder][idx].product_id);
       selectedProduct.add(items[current_folder][idx]);
     }
-    var response;
-    response = await _api.client.put('${Api.endpoint}/dressroom/folder/move',
-        data: jsonEncode({'folder_id': toId, 'product_id': selectedIds}));
-    if (response.statusCode == 201) {
+    try {
+      var response = await _api.client.put(
+          '${Api.endpoint}/dressroom/folder/move',
+          data: jsonEncode({'folder_id': toId, 'product_id': selectedIds}));
       items[toId] = [...items[toId], ...selectedProduct];
       for (var item in selectedProduct) {
         items[current_folder].remove(item);
       }
-    } else {
-      print("Error ${response.statusCode}");
+    } catch (e) {
+      _api.errorCreate(Error());
     }
   }
 }

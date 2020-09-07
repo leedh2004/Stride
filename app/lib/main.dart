@@ -438,7 +438,6 @@
 
 import 'dart:async';
 import 'dart:io';
-
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/provider_setup.dart';
@@ -454,8 +453,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
-
-import 'core/services/apple_sign_in.dart';
 
 Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized();

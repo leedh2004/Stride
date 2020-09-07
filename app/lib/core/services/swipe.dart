@@ -53,8 +53,8 @@ class SwipeService {
 
   Future initCards() async {
     initialize();
-    var response = await _api.client.get('${Api.endpoint}/home/all');
-    if (response.statusCode == 200) {
+    try {
+      var response = await _api.client.get('${Api.endpoint}/home/all');
       var data = json.decode(response.data) as Map<String, dynamic>;
       print(data);
       for (var type in TYPE) {
@@ -71,30 +71,28 @@ class SwipeService {
         items[type] = temp;
         length[type] += temp.length;
       }
-      print("HERE");
-      print(type);
       init = true;
-    } else {
-      print(response.statusCode);
+    } catch (e) {
+      _api.errorCreate(Error());
     }
   }
 
+  // fail시 flag로 토스트 메세지 띄워주기
+  // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
   Future<List<SwipeCard>> getCards() async {
     var temp = List<SwipeCard>();
-    // fail시 flag로 토스트 메세지 띄워주기
-    // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
     var response;
-    if (type == 'all') {
-      response = await _api.client.get(
-        '${Api.endpoint}/home/',
-      );
-    } else {
-      response = await _api.client.get(
-        '${Api.endpoint}/home?type=${type}',
-      );
-    }
+    try {
+      if (type == 'all') {
+        response = await _api.client.get(
+          '${Api.endpoint}/home/',
+        );
+      } else {
+        response = await _api.client.get(
+          '${Api.endpoint}/home?type=${type}',
+        );
+      }
 
-    if (response.statusCode == 200) {
       var parsed = json.decode(response.data) as List<dynamic>;
       for (var item in parsed) {
         temp.add(SwipeCard.fromJson(item));
@@ -108,44 +106,54 @@ class SwipeService {
       // }
       items[type] = [...items[type], ...temp];
       length[type] = items[type].length;
-    } else {
-      print("Network Error getAllSwipeCard() ${response.statusCode}");
+      return temp;
+    } catch (e) {
+      _api.errorCreate(Error());
     }
-    return temp;
   }
 
   Future<Product> likeRequest() async {
     print("LIKE!!");
     int cur = index[type];
-    print(type);
-    print(cur);
-    final response = await _api.client.post('${Api.endpoint}/home/like',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Like ${response.statusCode}");
-    Product item = Product.fromSwipeCard(items[type][cur].toJson());
-    return item;
-    //print(item.product_name);
-    //await _dressRoomService.addItem(item);
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/like',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+      print("Like ${response.statusCode}");
+      Product item = Product.fromSwipeCard(items[type][cur].toJson());
+      return item;
+    } catch (e) {
+      //_api.errorCreate(Error());
+    }
   }
 
   Future dislikeRequest() async {
     print("DISLIKE!!");
     int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/dislike',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Dislike ${response.statusCode}");
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/dislike',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+    } catch (e) {
+      //_api.errorCreate(Error());
+    }
   }
 
   Future passRequest() async {
     print("PASS!!");
     int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/pass',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Pass ${response.statusCode}");
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/pass',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+    } catch (e) {
+      //_api.errorCreate(Error());
+    }
   }
 
   Future purchaseItem(int id) async {
-    await _api.client.post('${Api.endpoint}/home/purchase',
-        data: jsonEncode({'product_id': id}));
+    try {
+      await _api.client.post('${Api.endpoint}/home/purchase',
+          data: jsonEncode({'product_id': id}));
+    } catch (e) {
+      // _api.errorCreate(Error());
+    }
   }
 }

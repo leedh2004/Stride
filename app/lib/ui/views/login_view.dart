@@ -1,4 +1,3 @@
-import 'package:app/core/services/apple_sign_in.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/viewmodels/auth.dart';
@@ -44,7 +43,6 @@ class LoginView extends StatelessWidget {
   Widget build(BuildContext context) {
     ConfigService configService =
         Provider.of<ConfigService>(context, listen: false);
-
     Widget showWidget;
     return Scaffold(
       body: BaseWidget<AuthenticationModel>(
