@@ -2,6 +2,7 @@ import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -47,20 +48,18 @@ class SizeDialog extends StatelessWidget {
     item = _item;
     product_size = _item.product_size;
     keys = product_size.size.keys.toList();
-    if (keys != 0) {
-      if (item.type == 'top')
-        mapper = top;
-      else if (item.type == 'pants')
-        mapper = pants;
-      else if (item.type == 'skirt')
-        mapper = skirt;
-      else if (item.type == 'dress') mapper = dress;
-      header = mapper.keys.toList();
-      for (var h in header) print(h);
-      print(keys);
-      for (String key in keys) {
-        sizeMapper[key] = product_size.size[key];
-      }
+    if (item.type == 'top')
+      mapper = top;
+    else if (item.type == 'pants')
+      mapper = pants;
+    else if (item.type == 'skirt')
+      mapper = skirt;
+    else if (item.type == 'dress') mapper = dress;
+    header = mapper.keys.toList();
+    for (var h in header) print(h);
+    print(keys);
+    for (String key in keys) {
+      sizeMapper[key] = product_size.size[key];
     }
   }
 
@@ -71,8 +70,6 @@ class SizeDialog extends StatelessWidget {
       'itemName': item.product_name,
       'itemCategory': item.shop_name
     });
-
-    if (keys == 0) Navigator.pop(context);
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SizedBox.expand(
@@ -102,19 +99,16 @@ class SizeDialog extends StatelessWidget {
                       },
                       elevation: 2.0,
                       fillColor: Color.fromRGBO(240, 240, 240, 1),
-                      child: Padding(
-                        padding: EdgeInsets.all(0),
-                        child: FaIcon(
-                          FontAwesomeIcons.times,
-                          size: 16.0,
-                          color: Colors.black,
-                        ),
+                      child: FaIcon(
+                        FontAwesomeIcons.times,
+                        size: 16.0,
+                        color: Colors.black,
                       ),
                       shape: CircleBorder(),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                     child: Table(
                       defaultVerticalAlignment:
                           TableCellVerticalAlignment.middle,
@@ -153,9 +147,9 @@ class SizeDialog extends StatelessWidget {
                               children: [
                                 Container(
                                     height: 40,
-                                    child: Center(
-                                        child: Text('${keys[index]}',
-                                            style: tableCellText))),
+                                    child: Padding(
+                                        padding: EdgeInsets.all(4),
+                                        child: ColorSizeBox(keys[index]))),
                                 ...List.generate(header.length, (idx) {
                                   double ret = sizeMapper[keys[index]]
                                       .map[mapper[header[idx]]];
@@ -198,7 +192,48 @@ class SizeDialog extends StatelessWidget {
   }
 }
 
+Widget ColorSizeBox(String size) {
+  if (size == 'free') {
+    return Container(
+        color: backgroundColor,
+        height: 40,
+        child:
+            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+  } else if (size == 'xs') {
+    return Container(
+        color: semiPurple,
+        height: 40,
+        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  } else if (size == 's') {
+    return Container(
+        color: semiPurple,
+        height: 40,
+        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  } else if (size == 'm') {
+    return Container(
+        color: semiPurple,
+        height: 40,
+        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  } else if (size == 'l') {
+    return Container(
+        color: semiBlack,
+        height: 40,
+        child:
+            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+  } else if (size == 'xl') {}
+  return Container(
+      color: semiBlack,
+      height: 40,
+      child:
+          Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+}
+
+const semiPurple = Color.fromRGBO(227, 220, 242, 1);
+const semiBlack = Color.fromRGBO(55, 55, 55, 1);
+
 const tableHeaderSizeText =
     TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
 const tableHeaderText = TextStyle(fontSize: 14);
 const tableCellText = TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
+const tableCellWhiteText =
+    TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white);

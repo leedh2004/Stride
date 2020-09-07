@@ -487,10 +487,11 @@ Future<void> main() async {
   }
 
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  final currentVersion = "0.1.0";
-  final updatedVersion = remoteConfig.getString('version');
-  // await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-  // await remoteConfig.activateFetched();
+  await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+  await remoteConfig.activateFetched();
+  final updatedVersion = remoteConfig.getString('version').trim();
+  print(updatedVersion);
+
   // print("VERSION");
   // runZoned(() {
   //   runApp(Stride());

@@ -39,6 +39,9 @@ class _SwipeViewState extends State<SwipeView> {
               Provider.of<ConfigService>(context, listen: false)
                   .updateVersion &&
           !Provider.of<ConfigService>(context, listen: false).alreadyShow) {
+        print(
+            Provider.of<ConfigService>(context, listen: false).currentVersion);
+        print(Provider.of<ConfigService>(context, listen: false).updateVersion);
         ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
           duration: Duration(milliseconds: 1500),
           content: Text('Stride앱의 최신 버전이 나왔습니다!'),

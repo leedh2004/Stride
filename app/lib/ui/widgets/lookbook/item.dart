@@ -9,6 +9,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
 class LookBookItem extends StatelessWidget {
@@ -24,9 +25,14 @@ class LookBookItem extends StatelessWidget {
           flex: 5,
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(PageRouteBuilder(
-                  opaque: false,
-                  pageBuilder: (___, _, __) => LookBookDialog(item)));
+              showMaterialModalBottomSheet(
+                  context: context,
+                  builder: (context, scrollController) {
+                    return LookBookDialog(item);
+                  });
+              // Navigator.of(context).push(PageRouteBuilder(
+              //     opaque: false,
+              //     pageBuilder: (___, _, __) => LookBookDialog(item)));
             },
             child: Row(
               children: <Widget>[
