@@ -7,7 +7,7 @@ from bson import json_util
 
 def get_home_clothes():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM Products ORDER BY random() LIMIT 10"""
+        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id ORDER BY random() LIMIT 10"""
         try:
             cursor.execute(query)
             result = cursor.fetchall()
@@ -26,8 +26,8 @@ def get_home_clothes():
 def get_all_type_clothes():
     with db_connect() as (service_conn, cursor):
         types = ['skirt', 'top', 'dress', 'pants', 'all']
-        query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
-        all_query = """SELECT * FROM Products ORDER BY random() LIMIT 10"""
+        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s ORDER BY random() LIMIT 10"""
+        all_query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id ORDER BY random() LIMIT 10"""
         try:
             product = {
                 'all': [],
@@ -55,7 +55,7 @@ def get_all_type_clothes():
 
 def get_clothes_category(type):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM Products WHERE type = %s ORDER BY random() LIMIT 10"""
+        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s ORDER BY random() LIMIT 10"""
         try:
             cursor.execute(query, (type,))
             result = cursor.fetchall()
@@ -73,7 +73,7 @@ def get_clothes_category(type):
 
 def get_recommended_product(products):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products WHERE product_id = %s"""
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id = %s"""
         try:
             product = []
             for product_id in products:

@@ -21,6 +21,12 @@ class UserSizeModel:
         self.shoulder = self.decimal_parser(item[3], 'shoulder')
         self.bust = self.decimal_parser(item[4], 'bust')
 
+    def origin_fetch_data(self, item):
+        self.waist = self.decimal_parser(item[0], 'origin')
+        self.hip = self.decimal_parser(item[1], 'origin')
+        self.thigh = self.decimal_parser(item[2], 'origin')
+        self.shoulder = self.decimal_parser(item[3], 'origin')
+        self.bust = self.decimal_parser(item[4], 'origin')
 
     def decimal_parser(self, sizes, tag):
         size = []
@@ -35,4 +41,7 @@ class UserSizeModel:
                 else:
                     size.append(float(item))
         return size
+
+
+
 

@@ -36,6 +36,7 @@ class ProductModel:
         self.thumbnail_url = item[6]
         self.image_url = item[7]
         self.type = item[8]
+        self.shop_name = item[28]
         list_size_parse(self.length, item[9])
         list_size_parse(self.waist, item[10])
         list_size_parse(self.hip, item[11])
@@ -45,8 +46,19 @@ class ProductModel:
         list_size_parse(self.shoulder, item[15])
         list_size_parse(self.bust, item[16])
         self.size_matcher()
+        self.limit_images(4)
 
     def size_matcher(self):
         self.size = size_matcher(self.size)
         del self.thigh, self.waist, self.length, self.bust, self.shoulder, self.hem, self.rise, self.hip
 
+
+    def limit_images(self, limit_args):
+        result = []
+        cnt = 0
+        for image in self.image_url:
+            cnt = cnt + 1
+            result.append(image)
+            if cnt > limit_args:
+                break
+        self.image_url = result

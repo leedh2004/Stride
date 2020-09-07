@@ -44,5 +44,3 @@ def user_login():
         result = select_user_profile_flag()
         size = select_user_size()
         return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size}), 200
-
-## return user size, flag, token, user_id

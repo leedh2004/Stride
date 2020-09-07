@@ -41,6 +41,7 @@ def login():
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
     elif channel == 'apple':
         user_id = access_token
+        user_id = str(user_id).split('@')[0] + '@apple.com'
         insert_user(user_id)
         update_user_email(user_id, user_id)
         g.user_id = user_id
