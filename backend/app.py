@@ -46,6 +46,9 @@ log_stream = 'api-log'
 def hello_world():
     return 'Server ON', 200
 
+@app.route('/error')
+def error_test():
+    return 'error', 500
 
 @app.after_request
 def log(response):
