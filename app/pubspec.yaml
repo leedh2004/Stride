@@ -60,6 +60,7 @@ dependencies:
   animations: ^1.1.2
   intro_slider: ^2.3.1
   flutter_range_slider: ^1.4.0
+  flutter_svg: ^0.18.1
   
 
 
@@ -84,28 +85,31 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - images/profile.png
     - images/store.png
-    - images/menu_icon/menu_heart.png
-    - images/menu_icon/menu_lookbook.png
-    - images/menu_icon/menu_swipe.png
-    - images/menu_icon/menu_mypage.png
-    - images/menu_icon/s_menu_heart.png
-    - images/menu_icon/s_menu_lookbook.png
-    - images/menu_icon/s_menu_swipe.png
-    - images/test.jpg
-    - images/test2.jpg
-    - images/test3.jpg
-    - images/test4.jpg
     - images/love.png
     - images/fashion.png
     - images/intro.png
     - images/kakao_login.png
-    - images/lru.png
     - images/swipe.png
     - images/tap.png
     - images/ruler.png
     - images/fix.png
+    - images/folder_plus.png
+    - images/remove.png
+    - images/left-arrow.png
+    - images/up-arrow.png
+    - images/trash.svg
+    - images/folder.svg
+    - images/edit.svg
+    - images/buy.svg
+    - images/ruler.svg
+    - images/menu_heart.svg
+    - images/menu_swipe.svg
+    - images/menu_lookbook.svg
+    - images/menu_mypage.svg
+    - images/times.svg
+    - images/like.svg
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

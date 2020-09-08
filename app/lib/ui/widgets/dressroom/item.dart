@@ -8,6 +8,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -122,10 +123,10 @@ class DressRoomItemWidget extends StatelessWidget {
                         return ProductWebView(item.product_url, item.shop_name);
                       }))
                     },
-                    child: FaIcon(
-                      FontAwesomeIcons.store,
+                    child: SvgPicture.asset(
+                      'images/buy.svg',
                       color: backgroundColor,
-                      size: 16,
+                      width: 16,
                     ),
                   ),
                 ),

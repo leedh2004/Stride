@@ -44,10 +44,18 @@ class SwipeService {
     precached.remove(items[type][index[type]].product_id);
     index[type]++;
     if (index[type] + 5 >= length[type]) {
+      if (index[type] + 2 >= length[type]) {
+        index[type]--;
+        _api.errorCreate(Error());
+      }
       items[type] = items[type].sublist(index[type]);
       index[type] = 0;
       length[type] = items[type].length;
-      getCards();
+      try {
+        getCards();
+      } catch (e) {
+        index[type]--;
+      }
     }
   }
 
@@ -109,6 +117,7 @@ class SwipeService {
       return temp;
     } catch (e) {
       _api.errorCreate(Error());
+      throw ("some arbitrary error");
     }
   }
 

@@ -8,6 +8,7 @@ import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Map<String, String> pants = {
@@ -104,15 +105,14 @@ class _ProductDialogState extends State<ProductDialog> {
               child: Column(children: [
                 Align(
                   alignment: Alignment.centerRight,
-                  child: RawMaterialButton(
+                  child: FlatButton(
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    elevation: 2.0,
-                    fillColor: Color.fromRGBO(240, 240, 240, 1),
-                    child: FaIcon(
-                      FontAwesomeIcons.times,
-                      size: 16.0,
+                    color: Color.fromRGBO(240, 240, 240, 1),
+                    child: SvgPicture.asset(
+                      'images/times.svg',
+                      width: 16.0,
                       color: Colors.black,
                     ),
                     shape: CircleBorder(),
@@ -193,8 +193,12 @@ class _ProductDialogState extends State<ProductDialog> {
                                                               height: 30,
                                                               margin: EdgeInsets
                                                                   .all(2),
-                                                              color:
-                                                                  backgroundColor,
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      227,
+                                                                      220,
+                                                                      242,
+                                                                      1),
                                                               child: Center(
                                                                 child: Padding(
                                                                   padding:
@@ -204,7 +208,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                                                   child: Text(
                                                                     '${ret.toUpperCase()}',
                                                                     style:
-                                                                        sizeCellWhiteText,
+                                                                        sizeCellText,
                                                                   ),
                                                                 ),
                                                               ),

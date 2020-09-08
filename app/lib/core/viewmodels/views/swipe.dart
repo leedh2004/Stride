@@ -50,7 +50,7 @@ class SwipeModel extends BaseModel {
     notifyListeners();
   }
 
-  void nextItem() async {
+  Future nextItem() async {
     setBusy(true);
     await _swipeService.nextItem();
     index = _swipeService.index[type];

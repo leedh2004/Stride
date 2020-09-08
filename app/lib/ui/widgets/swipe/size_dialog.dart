@@ -4,6 +4,7 @@ import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Map<String, String> pants = {
@@ -93,15 +94,15 @@ class SizeDialog extends StatelessWidget {
                 child: Column(children: [
                   Align(
                     alignment: Alignment.centerRight,
-                    child: RawMaterialButton(
+                    child: FlatButton(
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      elevation: 2.0,
-                      fillColor: Color.fromRGBO(240, 240, 240, 1),
-                      child: FaIcon(
-                        FontAwesomeIcons.times,
-                        size: 16.0,
+                      //elevation: 2.0,
+                      color: Color.fromRGBO(240, 240, 240, 1),
+                      child: SvgPicture.asset(
+                        'images/times.svg',
+                        width: 16.0,
                         color: Colors.black,
                       ),
                       shape: CircleBorder(),
@@ -195,10 +196,9 @@ class SizeDialog extends StatelessWidget {
 Widget ColorSizeBox(String size) {
   if (size == 'free') {
     return Container(
-        color: backgroundColor,
+        color: semiPurple,
         height: 40,
-        child:
-            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
   } else if (size == 'xs') {
     return Container(
         color: semiPurple,
@@ -211,9 +211,10 @@ Widget ColorSizeBox(String size) {
         child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
   } else if (size == 'm') {
     return Container(
-        color: semiPurple,
+        color: backgroundColor,
         height: 40,
-        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+        child:
+            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
   } else if (size == 'l') {
     return Container(
         color: semiBlack,

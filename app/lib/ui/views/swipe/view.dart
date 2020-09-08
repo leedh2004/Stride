@@ -12,6 +12,7 @@ import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../base_widget.dart';
@@ -27,6 +28,8 @@ class _SwipeViewState extends State<SwipeView> {
 
   bool enabled = true;
   String type = 'all';
+  double like_opacity = 0;
+  double dislike_opacity = 0;
   @override
   void initState() {
     super.initState();
@@ -101,6 +104,34 @@ class _SwipeViewState extends State<SwipeView> {
                 ]),
               ),
               SwipeCardSection(context, model),
+              AnimatedOpacity(
+                duration: Duration(milliseconds: 300),
+                opacity: dislike_opacity,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      padding: EdgeInsets.all(3),
+                      child: FaIcon(
+                        FontAwesomeIcons.times,
+                        size: 100,
+                        color: blueColor,
+                      )),
+                ),
+              ),
+              AnimatedOpacity(
+                duration: Duration(milliseconds: 300),
+                opacity: like_opacity,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                      padding: EdgeInsets.all(3),
+                      child: FaIcon(
+                        FontAwesomeIcons.solidHeart,
+                        size: 100,
+                        color: pinkColor,
+                      )),
+                ),
+              ),
             ]),
           );
         });
@@ -149,14 +180,24 @@ class _SwipeViewState extends State<SwipeView> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         RawMaterialButton(
-          onPressed: () {},
+          onPressed: () async {
+            model.dislikeRequest();
+            setState(() {
+              dislike_opacity = 1;
+            });
+            await Future.delayed(Duration(milliseconds: 300));
+            setState(() {
+              dislike_opacity = 0;
+            });
+            model.nextItem();
+          },
           elevation: 2.0,
           fillColor: Colors.white,
           child: Padding(
             padding: EdgeInsets.all(0),
-            child: FaIcon(
-              FontAwesomeIcons.times,
-              size: 30.0,
+            child: SvgPicture.asset(
+              'images/times.svg',
+              width: 25.0,
               color: Color.fromRGBO(72, 116, 213, 1),
             ),
           ),
@@ -178,23 +219,31 @@ class _SwipeViewState extends State<SwipeView> {
           },
           elevation: 2.0,
           fillColor: Colors.white,
-          child: FaIcon(
-            FontAwesomeIcons.gift,
-            size: 30.0,
+          child: SvgPicture.asset(
+            'images/buy.svg',
+            width: 25.0,
             color: backgroundColor,
           ),
           padding: EdgeInsets.all(10.0),
           shape: CircleBorder(),
         ),
         RawMaterialButton(
-          onPressed: () {
-            //model.nextItem();
+          onPressed: () async {
+            model.likeRequest();
+            setState(() {
+              like_opacity = 1;
+            });
+            await Future.delayed(Duration(milliseconds: 300));
+            setState(() {
+              like_opacity = 0;
+            });
+            model.nextItem();
           },
           elevation: 2.0,
           fillColor: Colors.white,
-          child: FaIcon(
-            FontAwesomeIcons.heart,
-            size: 30.0,
+          child: SvgPicture.asset(
+            'images/like.svg',
+            width: 30.0,
             color: pinkColor,
           ),
           padding: EdgeInsets.all(10.0),
