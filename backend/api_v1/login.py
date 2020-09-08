@@ -20,7 +20,7 @@ def user_login():
     try:
         decoded_token = decode_jwt_token(token)
     except jwt.DecodeError:
-        return jsonify("Decode Fail"), 404
+        return jsonify("Decode Fail"), 403
     user_id = decoded_token['user_id']
     result = select_user(user_id)
     if result is None:

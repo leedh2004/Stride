@@ -5,6 +5,7 @@ import requests
 from config.oauthconfig import *
 from bson import ObjectId, json_util
 import sys
+import subprocess
 
 sys.path.append('../')
 sys.path.append('../../')
@@ -21,13 +22,23 @@ home = Blueprint('home', __name__)
 def get_clothes():
     try:
         type = request.args.get('type')
-        types = ['top', 'dress', 'pants', 'skirt']
-        if type is None:
-            result = get_home_clothes()
+        size = request.args.get('size')
+        if select_user_recommenation_flag() is True:
+            path = g.user_id + type
+            if size == 'on':
+                QUERY = ES_URL + '/recommendation_list_size_filtered/_doc/' + path
+            elif size == 'off':
+                QUERY = ES_URL + '/recommendation_list/_doc/' + path
+            response = requests.get(QUERY)
+            res = response.json()
+            recommended_product = list(map(int, res['_source']['recommended_products']))
+            result = get_recommended_product(recommended_product)
         else:
-            if type not in types:
-                return jsonify("Fail"), 500
-            result = get_clothes_category(type)
+            check_like_cnt() ## 좋아요 몇 개 체크..
+            if size == 'on':
+                result = get_type_clothes_sf(type)
+            elif size == 'off':
+                result = get_clothes_category(type)
     except:
         return jsonify("Fail"), 500
     return result, 200
@@ -37,7 +48,29 @@ def get_clothes():
 @login_required
 def get_all_type_clothes_limit_num():
     try:
-        result = get_all_type_clothes()
+        size = request.args.get('size')
+        if select_user_recommenation_flag() is True:
+            user_id = str(g.user_id)
+            types = ['top', 'skirt', 'pants', 'dress']
+            total_product = []
+            for type in types:
+                path = g.user_id + type
+                if size == 'on':
+                    QUERY = ES_URL + '/recommendation_list_size_filtered/_doc/' + path
+                elif size == 'off':
+                    QUERY = ES_URL + '/recommendation_list/_doc/' + path
+                response = requests.get(QUERY)
+                res = response.json()
+                recommended_product = res['_source']['recommended_products']
+                for item in recommended_product:
+                    total_product.append(int(item))
+            result = get_recommended_product_all(total_product)
+        else:
+            check_like_cnt()  ## 좋아요 몇 개 체크..
+            if size == 'on':
+                result = get_all_type_clothes_sf()
+            elif size == 'off':
+                result = get_all_type_clothes()
     except:
         return jsonify("Fail"), 500
     return result, 200
@@ -90,25 +123,3 @@ def purchase():
     return 'Success', 200
 
 
-@home.route('/recommendation', methods=['GET'])
-@login_required
-def get_recommendation():
-    try:
-        QUERY = ''
-        GET_ALL_TYPE_QUERY = ES_URL + '/recommended_list/_search/?q=user_id:'
-        type = request.args.get('type')
-        types = ['top', 'dress', 'pants', 'skirt']
-        user_id = str(g.user_id)
-        if type is None:
-            QUERY = GET_ALL_TYPE_QUERY + user_id
-        response = requests.get(QUERY)
-        res = response.json()
-        has_hits = res['hits']['hits']
-        if not has_hits:
-            result = get_home_clothes()
-        else:
-            recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
-            result = get_recommended_product(recommended_list)
-    except:
-        return jsonify('Fail'), 500
-    return result, 200

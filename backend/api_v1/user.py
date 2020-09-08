@@ -7,6 +7,7 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.db.queries.user import *
+from backend.authentication.encrypt import *
 from backend.authentication.auth import *
 
 user = Blueprint('user', __name__)
@@ -31,8 +32,22 @@ def insert_user_birth_year():
     body = request.get_json()
     year = body['birth']
     try:
+        year = encode_text(year)
         insert_user_birth(year)
     except:
         return jsonify('Fail'), 500
     return jsonify('Success'), 200
+
+
+@user.route('/survey', methods=["POST"])
+@login_required
+def survey():
+    body = request.get_json()
+    comment = body['comment']
+    try:
+        result = insert_survey(comment)
+        if result is True:
+            return jsonify('Success'), 200
+    except:
+        return jsonify("Fail"), 500
 

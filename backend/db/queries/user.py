@@ -130,3 +130,33 @@ def select_user_size():
         except:
             service_conn.rollback()
             raise
+
+
+def insert_survey(cmt):
+    with db_connect() as (service_conn, cursor):
+        query = """INSERT INTO survey(user_id, comment) VALUES(%s, %s)"""
+        try:
+            print(g.user_id, cmt)
+            cursor.execute(query, (g.user_id, cmt))
+            service_conn.commit()
+        except Exception as Ex:
+            print(Ex)
+            service_conn.rollback()
+            raise
+        return True
+
+
+def select_user_recommenation_flag():
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT recommendation_flag FROM users WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (g.user_id,))
+            flag = cursor.fetchall()
+            flag = flag[0]
+            if flag[0] is True:
+                return True
+            else:
+                return False
+        except:
+            service_conn.rollback()
+            raise
