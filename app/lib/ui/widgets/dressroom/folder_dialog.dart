@@ -3,6 +3,8 @@ import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/base_widget.dart';
+import 'package:app/ui/views/service_view.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
@@ -26,6 +28,8 @@ class _FolderDialogState extends State<FolderDialog> {
   var folderNames;
   var curFolderId = 0;
   bool change = false;
+  var buttonColor = backgroundColor;
+  var renameButtonColor = gray;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +80,7 @@ class _FolderDialogState extends State<FolderDialog> {
                     //icon: FaIcon(FontAwesomeIcons.folderPlus),
                     onPressed: () {
                       setState(() {
+                        _textController.text = "";
                         page = "folderCreate";
                       });
                     }))
@@ -102,34 +107,29 @@ class _FolderDialogState extends State<FolderDialog> {
                         ),
                         // icon: FaIcon(FontAwesomeIcons.timesCircle),
                         onPressed: () {
-                          showDialog(
+                          return AwesomeDialog(
                               context: context,
-                              barrierDismissible: false,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: Text('AlertDialog Demo'),
-                                  content: Text("정말로 삭제하시겠습니까?"),
-                                  actions: <Widget>[
-                                    FlatButton(
-                                      child: Text('OK'),
-                                      onPressed: () async {
-                                        await widget.model
-                                            .deleteFolder(folderIds[index]);
-                                        setState(() {
-                                          //just for rebuild
-                                        });
-                                        Navigator.pop(context, "Cancel");
-                                      },
-                                    ),
-                                    FlatButton(
-                                      child: Text('Cancel'),
-                                      onPressed: () {
-                                        Navigator.pop(context, "Cancel");
-                                      },
-                                    ),
-                                  ],
-                                );
-                              });
+                              dialogType: DialogType.ERROR,
+                              customHeader: FaIcon(
+                                FontAwesomeIcons.ban,
+                                color: backgroundColor,
+                                size: 56,
+                              ),
+                              animType: AnimType.BOTTOMSLIDE,
+                              title: '삭제',
+                              desc:
+                                  '선택된 아이템을 폴더를 삭제하겠습니까?\n 폴더 내 아이템은 모두 삭제됩니다.',
+                              btnOkColor: backgroundColor,
+                              btnCancelColor: gray,
+                              btnOkText: '삭제',
+                              btnCancelText: '취소',
+                              btnCancelOnPress: () {},
+                              btnOkOnPress: () async {
+                                await widget.model
+                                    .deleteFolder(folderIds[index]);
+                                Navigator.maybePop(context);
+                              })
+                            ..show();
                         })
                     : FlatButton(
                         child: SvgPicture.asset(
@@ -150,6 +150,7 @@ class _FolderDialogState extends State<FolderDialog> {
                         onPressed: () {
                           setState(() {
                             curFolderId = folderIds[index];
+                            _renameTextController.text = folderName;
                             page = 'folderRename';
                           });
                         })
@@ -186,15 +187,30 @@ class _FolderDialogState extends State<FolderDialog> {
               shrinkWrap: true,
               children: [
                 ListTile(
-                  title: Text(
-                    '폴더 추가',
-                    style: headerStyle,
+                  title: Center(
+                    child: Text(
+                      '폴더 추가',
+                      style: headerStyle,
+                    ),
                   ),
                   leading: FlatButton(
                       child: Image.asset(
                         'images/left-arrow.png',
                         width: 15,
                         height: 15,
+                      ),
+                      //icon: FaIcon(FontAwesomeIcons.folderPlus),
+                      onPressed: () {
+                        setState(() {
+                          page = "default";
+                        });
+                      }),
+                  trailing: FlatButton(
+                      child: Image.asset(
+                        'images/left-arrow.png',
+                        width: 15,
+                        height: 15,
+                        color: Colors.transparent,
                       ),
                       //icon: FaIcon(FontAwesomeIcons.folderPlus),
                       onPressed: () {
@@ -211,7 +227,21 @@ class _FolderDialogState extends State<FolderDialog> {
                     ],
                     autofocus: true,
                     controller: _textController,
+                    onChanged: (text) {
+                      if (folderNames.contains(text)) {
+                        setState(() {
+                          buttonColor = gray;
+                        });
+                      } else {
+                        setState(() {
+                          buttonColor = backgroundColor;
+                        });
+                      }
+                    },
                     onSubmitted: (String text) async {
+                      if (folderNames.contains(text)) {
+                        return;
+                      }
                       await widget.model.createFolder(_textController.text);
                       setState(() {
                         page = "default";
@@ -225,12 +255,15 @@ class _FolderDialogState extends State<FolderDialog> {
                 Container(
                   padding: EdgeInsets.fromLTRB(12, 4, 0, 4),
                   child: Text(
-                    '폴더 이름은 열 글자 이내로 제한됩니다.',
+                    '폴더 이름은 10글자 이내로 제한됩니다.',
                     style: TextStyle(color: Colors.black38),
                   ),
                 ),
                 RaisedButton(
                   onPressed: () async {
+                    if (folderNames.contains(_textController.text)) {
+                      return;
+                    }
                     print(_textController.text);
                     await widget.model.createFolder(_textController.text);
                     setState(() {
@@ -239,7 +272,7 @@ class _FolderDialogState extends State<FolderDialog> {
                     //Navigator.pop(context);
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
-                  color: backgroundColor,
+                  color: buttonColor,
                   child: Text(
                     '확인',
                     style: whiteStyle,
@@ -262,9 +295,11 @@ class _FolderDialogState extends State<FolderDialog> {
               shrinkWrap: true,
               children: [
                 ListTile(
-                  title: Text(
-                    '이름 수정',
-                    style: headerStyle,
+                  title: Center(
+                    child: Text(
+                      '이름 수정',
+                      style: headerStyle,
+                    ),
                   ),
                   leading: FlatButton(
                       child: Image.asset(
@@ -278,16 +313,41 @@ class _FolderDialogState extends State<FolderDialog> {
                           page = "default";
                         });
                       }),
+                  trailing: FlatButton(
+                      child: Image.asset(
+                        'images/left-arrow.png',
+                        width: 15,
+                        height: 15,
+                        color: Colors.transparent,
+                      ),
+                      //icon: FaIcon(FontAwesomeIcons.folderPlus),
+                      onPressed: () {
+                        setState(() {
+                          page = "default";
+                        });
+                      }),
                 ),
                 Container(
                   padding: EdgeInsets.all(12),
                   child: TextField(
+                    onChanged: (text) {
+                      if (folderNames.contains(text)) {
+                        setState(() {
+                          renameButtonColor = gray;
+                        });
+                      } else {
+                        setState(() {
+                          renameButtonColor = backgroundColor;
+                        });
+                      }
+                    },
                     autofocus: true,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(10),
                     ],
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
+                      if (folderNames.contains(text)) return;
                       await widget.model.renameFolder(
                           curFolderId, _renameTextController.text);
                       setState(() {
@@ -300,12 +360,14 @@ class _FolderDialogState extends State<FolderDialog> {
                 Container(
                   padding: EdgeInsets.fromLTRB(12, 4, 0, 4),
                   child: Text(
-                    '폴더 이름은 열 글자 이내로 제한됩니다.',
+                    '폴더 이름은 10글자 이내로 제한됩니다.',
                     style: TextStyle(color: Colors.black38),
                   ),
                 ),
                 RaisedButton(
                   onPressed: () async {
+                    if (folderNames.contains(_renameTextController.text))
+                      return;
                     await widget.model
                         .renameFolder(curFolderId, _renameTextController.text);
                     setState(() {
@@ -313,7 +375,7 @@ class _FolderDialogState extends State<FolderDialog> {
                     });
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
-                  color: backgroundColor,
+                  color: renameButtonColor,
                   child: Text(
                     '확인',
                     style: whiteStyle,

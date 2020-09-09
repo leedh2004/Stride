@@ -48,81 +48,78 @@ class MyPageView extends StatelessWidget {
                       topLeft: Radius.circular(50),
                       topRight: Radius.circular(50)),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: ListView(
-                    children: [
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.tshirt),
-                        title: Text('사이즈 수정'),
-                        onTap: () {
-                          print("!!!");
-                          showMaterialModalBottomSheet(
-                            isDismissible: true,
-                            expand: false,
-                            context: context,
-                            builder: (context, controller) => SizeInputDialog(
-                                Provider.of<AuthenticationService>(context,
-                                        listen: false)
-                                    .userController
-                                    .value),
-                          );
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.phoneSquareAlt),
-                        title: Text('문의﹒건의'),
-                        onTap: () {},
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.appStoreIos),
-                        title: Text('앱 피드백'),
-                        onTap: () {},
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.signOutAlt),
-                        title: Text('로그아웃'),
-                        onTap: () {
-                          Provider.of<SwipeService>(context, listen: false)
-                              .init = false;
-                          Provider.of<DressRoomService>(context, listen: false)
-                              .init = false;
-                          Provider.of<LookBookService>(context, listen: false)
-                              .init = false;
-                          Provider.of<AuthenticationService>(context,
-                                  listen: false)
-                              .logout();
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.code),
-                        title: Text('개인정보 처리방침'),
-                        onTap: () {
-                          print('?');
-                          Navigator.pushNamed(context, RoutePaths.Tutorial);
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        contentPadding: EdgeInsets.only(left: 50),
-                        leading: FaIcon(FontAwesomeIcons.code),
-                        title: Text('서비스 이용약관'),
-                        onTap: () {
-                          print('?');
-                          Navigator.pushNamed(context, RoutePaths.Tutorial);
-                        },
-                      ),
-                    ],
-                  ),
+                child: ListView(
+                  children: [
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.tshirt),
+                      title: Text('사이즈 수정'),
+                      onTap: () {
+                        print("!!!");
+                        showMaterialModalBottomSheet(
+                          isDismissible: true,
+                          expand: false,
+                          context: context,
+                          builder: (_context, controller) => SizeInputDialog(
+                              Provider.of<AuthenticationService>(_context,
+                                      listen: false)
+                                  .userController
+                                  .value),
+                        );
+                      },
+                    ),
+                    Divider(),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.phoneSquareAlt),
+                      title: Text('문의﹒건의'),
+                      onTap: () {},
+                    ),
+                    Divider(),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.appStoreIos),
+                      title: Text('앱 피드백'),
+                      onTap: () {},
+                    ),
+                    Divider(),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.signOutAlt),
+                      title: Text('로그아웃'),
+                      onTap: () {
+                        Provider.of<SwipeService>(context, listen: false).init =
+                            false;
+                        Provider.of<DressRoomService>(context, listen: false)
+                            .init = false;
+                        Provider.of<LookBookService>(context, listen: false)
+                            .init = false;
+                        Provider.of<AuthenticationService>(context,
+                                listen: false)
+                            .logout();
+                      },
+                    ),
+                    Divider(),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.code),
+                      title: Text('개인정보 처리방침'),
+                      onTap: () {
+                        print('?');
+                        Navigator.pushNamed(context, RoutePaths.Tutorial);
+                      },
+                    ),
+                    Divider(),
+                    ListTile(
+                      contentPadding: EdgeInsets.only(left: 50),
+                      leading: FaIcon(FontAwesomeIcons.code),
+                      title: Text('서비스 이용약관'),
+                      onTap: () {
+                        print('?');
+                        Navigator.pushNamed(context, RoutePaths.Tutorial);
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),

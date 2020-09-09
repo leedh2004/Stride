@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
@@ -75,6 +76,7 @@ class ProductDialog extends StatefulWidget {
 }
 
 class _ProductDialogState extends State<ProductDialog> {
+  bool display = true;
   @override
   Widget build(BuildContext context) {
     Stride.analytics.logEvent(name: "DRESS_ROOM_SHOW_SIZE", parameters: {
@@ -83,225 +85,249 @@ class _ProductDialogState extends State<ProductDialog> {
       'itemCategory': widget.item.shop_name
     });
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: SizedBox.expand(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-                child: InkWell(
-              enableFeedback: false,
-              canRequestFocus: false,
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                color: Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            )),
-            Container(
-              color: Colors.white,
-              child: Column(children: [
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: FlatButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    color: Color.fromRGBO(240, 240, 240, 1),
-                    child: SvgPicture.asset(
-                      'images/times.svg',
-                      width: 16.0,
-                      color: Colors.black,
-                    ),
-                    shape: CircleBorder(),
-                  ),
+    return OpacityAnimatedWidget.tween(
+      opacityEnabled: 1,
+      opacityDisabled: 0,
+      duration: Duration(milliseconds: 300),
+      enabled: display,
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SizedBox.expand(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                  child: InkWell(
+                enableFeedback: false,
+                canRequestFocus: false,
+                onTap: () async {
+                  setState(() {
+                    display = false;
+                  });
+                  await Future.delayed(Duration(milliseconds: 300));
+                  Navigator.maybePop(context);
+                },
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                  child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          flex: 1,
-                          child: AspectRatio(
-                            aspectRatio: 9 / 16,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(3),
-                              child: CachedNetworkImage(
-                                  imageUrl: widget.item.thumbnail_url,
-                                  fit: BoxFit.cover,
-                                  httpHeaders: {
-                                    HttpHeaders.refererHeader:
-                                        "http://api-stride.com:5000/"
-                                  }),
+              )),
+              Container(
+                color: Colors.white,
+                child: Column(children: [
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: FlatButton(
+                      onPressed: () async {
+                        setState(() {
+                          display = false;
+                        });
+                        await Future.delayed(Duration(milliseconds: 300));
+
+                        Navigator.maybePop(context);
+                      },
+                      color: Color.fromRGBO(240, 240, 240, 1),
+                      child: SvgPicture.asset(
+                        'images/times.svg',
+                        width: 16.0,
+                        color: Colors.black,
+                      ),
+                      shape: CircleBorder(),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                    child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            flex: 1,
+                            child: AspectRatio(
+                              aspectRatio: 9 / 16,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(3),
+                                child: CachedNetworkImage(
+                                    imageUrl: widget.item.thumbnail_url,
+                                    fit: BoxFit.cover,
+                                    httpHeaders: {
+                                      HttpHeaders.refererHeader:
+                                          "http://api-stride.com:5000/"
+                                    }),
+                              ),
                             ),
                           ),
-                        ),
-                        UIHelper.horizontalSpaceSmall,
-                        Expanded(
-                          flex: 1,
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  '${widget.item.shop_name}',
-                                  style: shopInfoText,
-                                ),
-                                Text('${widget.item.product_name}',
-                                    style: shopInfoText),
-                                UIHelper.verticalSpaceMedium,
-                                Text('${widget.item.price}원',
-                                    style: shopInfoText),
-                                UIHelper.verticalSpaceMedium,
-                                Table(
-                                  children: [
-                                    TableRow(
-                                        decoration: BoxDecoration(
-                                          color:
-                                              Color.fromRGBO(240, 240, 240, 1),
-                                        ),
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(8),
-                                            child: Row(children: [
-                                              Expanded(
-                                                flex: 1,
-                                                child: Center(
-                                                  child: Text(
-                                                    'SIZE',
-                                                    style: tableHeaderSizeText,
+                          UIHelper.horizontalSpaceSmall,
+                          Expanded(
+                            flex: 1,
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '${widget.item.shop_name}',
+                                    style: shopInfoText,
+                                  ),
+                                  Text(
+                                      '${widget.item.product_name} [${widget.item.type.toUpperCase()}]',
+                                      style: shopInfoText),
+                                  UIHelper.verticalSpaceMedium,
+                                  Text('${widget.item.price}원',
+                                      style: shopInfoText),
+                                  UIHelper.verticalSpaceMedium,
+                                  Table(
+                                    children: [
+                                      TableRow(
+                                          decoration: BoxDecoration(
+                                            color: Color.fromRGBO(
+                                                240, 240, 240, 1),
+                                          ),
+                                          children: [
+                                            Container(
+                                              padding: EdgeInsets.all(8),
+                                              child: Row(children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Center(
+                                                    child: Text(
+                                                      'SIZE',
+                                                      style:
+                                                          tableHeaderSizeText,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                              Expanded(
-                                                flex: 3,
-                                                child: Wrap(
-                                                    direction: Axis.horizontal,
-                                                    children: List.generate(
-                                                        widget.keys.length,
-                                                        (index) {
-                                                      var ret =
-                                                          widget.keys[index];
-                                                      if (ret ==
-                                                          widget.current) {
-                                                        return InkWell(
-                                                            onTap: () {},
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Wrap(
+                                                      direction:
+                                                          Axis.horizontal,
+                                                      children: List.generate(
+                                                          widget.keys.length,
+                                                          (index) {
+                                                        var ret =
+                                                            widget.keys[index];
+                                                        if (ret ==
+                                                            widget.current) {
+                                                          return InkWell(
+                                                              onTap: () {},
+                                                              child: Container(
+                                                                width: 35,
+                                                                height: 30,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(2),
+                                                                color:
+                                                                    backgroundColor,
+                                                                child: Center(
+                                                                  child:
+                                                                      Padding(
+                                                                    padding:
+                                                                        EdgeInsets
+                                                                            .all(2),
+                                                                    child: Text(
+                                                                      '${ret.toUpperCase()}',
+                                                                      style:
+                                                                          sizeCellWhiteText,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                              ));
+                                                        } else {
+                                                          return InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                widget.current =
+                                                                    ret;
+                                                              });
+                                                            },
                                                             child: Container(
-                                                              width: 35,
-                                                              height: 30,
-                                                              margin: EdgeInsets
-                                                                  .all(2),
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      227,
-                                                                      220,
-                                                                      242,
-                                                                      1),
-                                                              child: Center(
+                                                                width: 35,
+                                                                height: 30,
+                                                                color: Colors
+                                                                    .black26,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(2),
                                                                 child: Padding(
                                                                   padding:
                                                                       EdgeInsets
                                                                           .all(
                                                                               2),
-                                                                  child: Text(
+                                                                  child: Center(
+                                                                      child:
+                                                                          Text(
                                                                     '${ret.toUpperCase()}',
                                                                     style:
-                                                                        sizeCellText,
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ));
-                                                      } else {
-                                                        return InkWell(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              widget.current =
-                                                                  ret;
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                              width: 35,
-                                                              height: 30,
-                                                              color: Colors
-                                                                  .black26,
-                                                              margin: EdgeInsets
-                                                                  .all(2),
-                                                              child: Padding(
-                                                                padding:
-                                                                    EdgeInsets
-                                                                        .all(2),
-                                                                child: Center(
-                                                                    child: Text(
-                                                                  '${ret.toUpperCase()}',
-                                                                  style:
-                                                                      sizeCellText,
+                                                                        sizeCellWhiteText,
+                                                                  )),
                                                                 )),
-                                                              )),
-                                                        );
-                                                      }
-                                                      ;
-                                                    })),
-                                              ),
-                                            ]),
-                                          ),
-                                        ]),
-                                    ...List.generate(widget.header.length,
-                                        (index) {
-                                      var ret = widget
-                                              .sizeMapper[widget.current].map[
-                                          widget.mapper[widget.header[index]]];
-                                      return TableRow(
-                                          decoration: BoxDecoration(
-                                              border: Border(
-                                                  bottom: BorderSide(
-                                                      color: Theme.of(context)
-                                                          .dividerColor))),
-                                          children: [
-                                            (Container(
-                                              padding: EdgeInsets.all(8),
-                                              child: Row(children: [
-                                                Expanded(
-                                                  child: Center(
-                                                    child: Text(
-                                                      '${widget.header[index]}',
-                                                      style: tableHeaderText,
-                                                    ),
-                                                  ),
+                                                          );
+                                                        }
+                                                        ;
+                                                      })),
                                                 ),
-                                                Expanded(
-                                                  child: Center(
-                                                    child: Text(
-                                                      '$ret',
-                                                      style: tableHeaderText,
+                                              ]),
+                                            ),
+                                          ]),
+                                      ...List.generate(widget.header.length,
+                                          (index) {
+                                        var ret = widget
+                                                .sizeMapper[widget.current].map[
+                                            widget
+                                                .mapper[widget.header[index]]];
+                                        return TableRow(
+                                            decoration: BoxDecoration(
+                                                border: Border(
+                                                    bottom: BorderSide(
+                                                        color: Theme.of(context)
+                                                            .dividerColor))),
+                                            children: [
+                                              (Container(
+                                                padding: EdgeInsets.all(8),
+                                                child: Row(children: [
+                                                  Expanded(
+                                                    child: Center(
+                                                      child: Text(
+                                                        '${widget.header[index]}',
+                                                        style: tableHeaderText,
+                                                      ),
                                                     ),
                                                   ),
-                                                )
-                                              ]),
-                                            )),
-                                          ]);
-                                    }),
-                                  ],
-                                ),
-                              ]),
-                        ),
-                      ]),
-                ),
-              ]),
-            ),
-            Expanded(
-                child: InkWell(
-              enableFeedback: false,
-              canRequestFocus: false,
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                color: Color.fromRGBO(0, 0, 0, 0.4),
+                                                  Expanded(
+                                                    child: Center(
+                                                      child: Text(
+                                                        '$ret',
+                                                        style: tableHeaderText,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ]),
+                                              )),
+                                            ]);
+                                      }),
+                                    ],
+                                  ),
+                                ]),
+                          ),
+                        ]),
+                  ),
+                ]),
               ),
-            )),
-          ],
+              Expanded(
+                  child: InkWell(
+                enableFeedback: false,
+                canRequestFocus: false,
+                onTap: () async {
+                  setState(() {
+                    display = false;
+                  });
+                  await Future.delayed(Duration(milliseconds: 300));
+
+                  Navigator.maybePop(context);
+                },
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              )),
+            ],
+          ),
         ),
       ),
     );

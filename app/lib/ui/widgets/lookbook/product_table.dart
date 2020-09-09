@@ -2,12 +2,16 @@ import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/views/product_web_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 Map<String, String> pants = {
   "총장": "length",
@@ -85,10 +89,10 @@ class _ProductTableState extends State<ProductTable> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          color: Colors.white,
+          padding: EdgeInsets.all(4),
           child: Column(children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
@@ -113,13 +117,40 @@ class _ProductTableState extends State<ProductTable> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(children: [
+                          Text(
+                            '${widget.item.shop_name}',
+                            style: shopInfoText,
+                          ),
+                          ButtonTheme(
+                            minWidth: 36,
+                            height: 20,
+                            child: FlatButton(
+                              onPressed: () {
+                                Navigator.push(context,
+                                    MaterialPageRoute(builder: (context) {
+                                  Stride.analytics.logViewItem(
+                                      itemId: widget.item.product_id.toString(),
+                                      itemName: widget.item.product_name,
+                                      itemCategory: widget.item.shop_name);
+                                  Provider.of<SwipeService>(context,
+                                          listen: false)
+                                      .purchaseItem(widget.item.product_id);
+                                  return ProductWebView(widget.item.product_url,
+                                      widget.item.shop_name);
+                                }));
+                              },
+                              child: SvgPicture.asset(
+                                'images/buy.svg',
+                                width: 16,
+                                height: 16,
+                              ),
+                            ),
+                          )
+                        ]),
                         Text(
-                          '${widget.item.shop_name}',
-                          style: shopInfoText,
-                        ),
-                        Text('${widget.item.product_name}',
+                            '${widget.item.product_name} [${widget.item.type.toUpperCase()}]',
                             style: shopInfoText),
-                        UIHelper.verticalSpaceSmall,
                         Text('${widget.item.price}원', style: shopInfoText),
                         UIHelper.verticalSpaceSmall,
                         Table(
@@ -144,6 +175,7 @@ class _ProductTableState extends State<ProductTable> {
                                       Expanded(
                                         flex: 3,
                                         child: Wrap(
+                                            alignment: WrapAlignment.center,
                                             direction: Axis.horizontal,
                                             children: List.generate(
                                                 widget.keys.length, (index) {
@@ -186,7 +218,8 @@ class _ProductTableState extends State<ProductTable> {
                                                         child: Center(
                                                             child: Text(
                                                           '${ret.toUpperCase()}',
-                                                          style: sizeCellText,
+                                                          style:
+                                                              sizeCellWhiteText,
                                                         )),
                                                       )),
                                                 );

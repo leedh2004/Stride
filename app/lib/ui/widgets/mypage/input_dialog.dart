@@ -3,7 +3,7 @@ import 'package:app/core/models/user.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/widgets/swipe/input_third.dart';
+import 'package:app/ui/widgets/mypage/input_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

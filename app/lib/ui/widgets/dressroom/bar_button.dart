@@ -46,13 +46,13 @@ class DressRoomButtonBar extends StatelessWidget {
                         onPressed: () {
                           Stride.analytics.logEvent(
                               name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
-                          showModalBottomSheet(
+                          showMaterialModalBottomSheet(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
                               ),
                               backgroundColor: Colors.transparent,
                               context: context,
-                              builder: (context) {
+                              builder: (context, scrollcontext) {
                                 return FolderDialog(model);
                               });
                         },
@@ -90,8 +90,10 @@ class DressRoomButtonBar extends StatelessWidget {
                             animType: AnimType.BOTTOMSLIDE,
                             title: '삭제',
                             desc: '선택된 아이템을 드레스룸에서 삭제하겠습니까?',
-                            btnOkColor: greenColor,
-                            btnCancelColor: pinkColor,
+                            btnOkColor: backgroundColor,
+                            btnCancelColor: gray,
+                            btnOkText: '삭제',
+                            btnCancelText: '취소',
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
                               Stride.analytics

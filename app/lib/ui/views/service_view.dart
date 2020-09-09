@@ -60,7 +60,7 @@ class _ServiceViewState extends State<ServiceView>
                 tabs: <Widget>[
                   Tab(
                       icon: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(12),
                     child: SvgPicture.asset(
                       'images/menu_swipe.svg',
                       width: 36,
@@ -72,7 +72,7 @@ class _ServiceViewState extends State<ServiceView>
                   )),
                   Tab(
                       icon: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(12),
                     child: SvgPicture.asset('images/menu_heart.svg',
                         color: _tabController.index == 1
                             ? Colors.black
@@ -80,7 +80,7 @@ class _ServiceViewState extends State<ServiceView>
                   )),
                   Tab(
                       icon: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(12),
                     child: SvgPicture.asset('images/menu_lookbook.svg',
                         width: 36,
                         height: 36,
@@ -90,7 +90,7 @@ class _ServiceViewState extends State<ServiceView>
                   )),
                   Tab(
                       icon: Container(
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.all(12),
                     child: SvgPicture.asset('images/menu_mypage.svg',
                         width: 36,
                         height: 36,

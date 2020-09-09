@@ -155,6 +155,9 @@ class DressRoomService {
 
   Future<bool> deleteFolder(int folderId) async {
     try {
+      if (folderId == current_folder) {
+        current_folder = 0;
+      }
       final response = await _api.client
           .delete('${Api.endpoint}/dressroom/folder?folder_id=${folderId}');
       folder.remove(folderId);

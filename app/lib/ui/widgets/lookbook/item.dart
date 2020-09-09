@@ -8,6 +8,7 @@ import 'package:app/ui/widgets/lookbook/dialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -27,6 +28,7 @@ class LookBookItem extends StatelessWidget {
           child: InkWell(
             onTap: () {
               showMaterialModalBottomSheet(
+                  backgroundColor: Colors.transparent,
                   context: context,
                   builder: (context, scrollController) {
                     return LookBookDialog(item);
@@ -98,6 +100,7 @@ class LookBookItem extends StatelessWidget {
                       ),
                       onPressed: () {
                         final _textController = TextEditingController();
+                        _textController.text = item.name;
                         AwesomeDialog(
                             context: context,
                             keyboardAware: true,
@@ -108,6 +111,8 @@ class LookBookItem extends StatelessWidget {
                               size: 56,
                             ),
                             animType: AnimType.BOTTOMSLIDE,
+                            btnOkText: '수정',
+                            btnCancelText: '취소',
                             body: Column(children: <Widget>[
                               Text(
                                 '수정',
@@ -116,16 +121,22 @@ class LookBookItem extends StatelessWidget {
                               Padding(
                                 padding: EdgeInsets.only(left: 16),
                                 child: TextField(
+                                  autofocus: true,
+                                  inputFormatters: [
+                                    LengthLimitingTextInputFormatter(10),
+                                  ],
                                   controller: _textController,
                                   decoration: InputDecoration.collapsed(
                                       hintText: "새로운 이름을 입력해주세요"),
                                 ),
                               ),
+                              UIHelper.verticalSpaceSmall,
+                              Text('룩북이 이름은 10글자 이하로 제한됩니다.')
                             ]),
                             //),
                             desc: '선택된 아이템의 새로운 이름을 입력해주세요.',
-                            btnOkColor: greenColor,
-                            btnCancelColor: pinkColor,
+                            btnOkColor: backgroundColor,
+                            btnCancelColor: gray,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () async {
                               print(index);
@@ -163,8 +174,10 @@ class LookBookItem extends StatelessWidget {
                             animType: AnimType.BOTTOMSLIDE,
                             title: '삭제',
                             desc: '선택된 아이템을 룩북에서 삭제하겠습니까?',
-                            btnOkColor: greenColor,
-                            btnCancelColor: pinkColor,
+                            btnOkColor: backgroundColor,
+                            btnCancelColor: gray,
+                            btnOkText: '삭제',
+                            btnCancelText: '취소',
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
                               Stride.analytics

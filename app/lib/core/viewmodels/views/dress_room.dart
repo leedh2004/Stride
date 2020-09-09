@@ -87,6 +87,7 @@ class DressRoomModel extends BaseModel {
   Future deleteFolder(int folderId) async {
     if (await _service.deleteFolder(folderId)) {
       print("!!!!!!!!!!!!!!!!!!!!");
+      current_folder = _service.current_folder;
       notifyListeners();
     } else {
       print("delete 서버 실패");

@@ -100,7 +100,7 @@ class _TutorialViewState extends State<TutorialView> {
       image = Image.asset('images/ruler.png');
     } else if (cnt < 20) {
       upText = Text(
-        '어떤 작품을 좋아하실지 조금씩 감이 와요.',
+        '어떤 옷을 좋아하실지 조금씩 감이 와요.',
         style: TutorialSubHeaderStyle,
       );
       downText = Text(

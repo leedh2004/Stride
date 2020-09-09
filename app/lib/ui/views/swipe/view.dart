@@ -1,6 +1,7 @@
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
@@ -15,6 +16,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tutorial_coach_mark/animated_focus_light.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../base_widget.dart';
 import '../service_view.dart';
 
@@ -30,26 +33,37 @@ class _SwipeViewState extends State<SwipeView> {
   String type = 'all';
   double like_opacity = 0;
   double dislike_opacity = 0;
+  bool onflag = false;
+  GlobalKey buyButton = GlobalKey();
+  GlobalKey sizeToggle = GlobalKey();
+  GlobalKey rulerButton = GlobalKey();
+
+  TutorialCoachMark tutorialCoachMark;
+  List<TargetFocus> targets = List();
+
   @override
   void initState() {
+    initTargets();
+    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
   }
 
   @override
+  void dispopse() {
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (Provider.of<ConfigService>(context, listen: false).currentVersion !=
-              Provider.of<ConfigService>(context, listen: false)
-                  .updateVersion &&
-          !Provider.of<ConfigService>(context, listen: false).alreadyShow) {
-        print(
-            Provider.of<ConfigService>(context, listen: false).currentVersion);
-        print(Provider.of<ConfigService>(context, listen: false).updateVersion);
+    var config = Provider.of<ConfigService>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if ((config.currentVersion != config.updateVersion) &&
+          !config.alreadyShow) {
         ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
           duration: Duration(milliseconds: 1500),
           content: Text('Stride앱의 최신 버전이 나왔습니다!'),
         ));
-        Provider.of<ConfigService>(context, listen: false).alreadyShow = true;
+        config.alreadyShow = true;
       }
     });
 
@@ -61,10 +75,13 @@ class _SwipeViewState extends State<SwipeView> {
         builder: (context, model, child) {
           if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
           if (Provider.of<SwipeService>(context).init == false) {
-            model.initCards();
             if (Provider.of<DressRoomService>(context).init == false) {
               Provider.of<DressRoomService>(context).getDressRoom();
             }
+            if (Provider.of<LookBookService>(context).init == false) {
+              Provider.of<LookBookService>(context).getLookBook();
+            }
+            model.initCards();
             return LoadingWidget();
           }
           return FadeIn(
@@ -81,6 +98,7 @@ class _SwipeViewState extends State<SwipeView> {
                   buttonRow(model),
                   UIHelper.verticalSpaceSmall,
                   Transform.scale(
+                    key: sizeToggle,
                     scale: 1.5,
                     child: Switch(
                       value: enabled,
@@ -103,7 +121,7 @@ class _SwipeViewState extends State<SwipeView> {
                   UIHelper.verticalSpaceSmall,
                 ]),
               ),
-              SwipeCardSection(context, model),
+              SwipeCardSection(context, model, rulerButton),
               AnimatedOpacity(
                 duration: Duration(milliseconds: 300),
                 opacity: dislike_opacity,
@@ -175,12 +193,145 @@ class _SwipeViewState extends State<SwipeView> {
     );
   }
 
+  //////////////
+
+  void initTargets() {
+    targets.add(
+      TargetFocus(
+        identify: "Target 0",
+        keyTarget: buyButton,
+        color: backgroundColor,
+        contents: [
+          ContentTarget(
+              align: AlignContent.top,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "구매 버튼",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "쇼핑몰로 이동할 수 있습니다.",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+    targets.add(
+      TargetFocus(
+        identify: "Target 1",
+        keyTarget: rulerButton,
+        color: backgroundColor,
+        contents: [
+          ContentTarget(
+              align: AlignContent.top,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "줄자 버튼",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "상품의 사이즈를 확인할 수 있습니다.",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "Target 2",
+        keyTarget: sizeToggle,
+        color: backgroundColor,
+        contents: [
+          ContentTarget(
+              align: AlignContent.top,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "사이즈 토글",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "스위치가 켜지면 사이즈에 맞는 옷만 볼 수 있습니다.",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  void showTutorial() {
+    tutorialCoachMark = TutorialCoachMark(context,
+        targets: targets,
+        colorShadow: Colors.red,
+        textSkip: "SKIP",
+        hideSkip: true,
+        paddingFocus: 10,
+        opacityShadow: 0.8, onFinish: () {
+      print("finish");
+    }, onClickTarget: (target) {
+      print(target);
+    }, onClickSkip: () {
+      print("skip");
+    })
+      ..show();
+  }
+
+  void _afterLayout(_) {
+    Future.delayed(Duration(milliseconds: 1000), () {
+      print('wtf');
+      showTutorial();
+    });
+  }
+
+  /////////////////////
+
   Widget buttonRow(SwipeModel model) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
         RawMaterialButton(
           onPressed: () async {
+            if (onflag) return false;
+            onflag = true;
             model.dislikeRequest();
             setState(() {
               dislike_opacity = 1;
@@ -190,6 +341,7 @@ class _SwipeViewState extends State<SwipeView> {
               dislike_opacity = 0;
             });
             model.nextItem();
+            onflag = false;
           },
           elevation: 2.0,
           fillColor: Colors.white,
@@ -205,6 +357,7 @@ class _SwipeViewState extends State<SwipeView> {
           shape: CircleBorder(),
         ),
         RawMaterialButton(
+          key: buyButton,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               SwipeCard item = Provider.of<SwipeService>(context)
@@ -229,6 +382,8 @@ class _SwipeViewState extends State<SwipeView> {
         ),
         RawMaterialButton(
           onPressed: () async {
+            if (onflag) return false;
+            onflag = true;
             model.likeRequest();
             setState(() {
               like_opacity = 1;
@@ -238,6 +393,7 @@ class _SwipeViewState extends State<SwipeView> {
               like_opacity = 0;
             });
             model.nextItem();
+            onflag = false;
           },
           elevation: 2.0,
           fillColor: Colors.white,
