@@ -28,7 +28,6 @@ class SwipeView extends StatefulWidget {
 
 class _SwipeViewState extends State<SwipeView> {
   //TabController tabController;
-
   bool enabled = true;
   String type = 'all';
   double like_opacity = 0;

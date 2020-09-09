@@ -90,10 +90,10 @@ class DressRoomButtonBar extends StatelessWidget {
                             animType: AnimType.BOTTOMSLIDE,
                             title: '삭제',
                             desc: '선택된 아이템을 드레스룸에서 삭제하겠습니까?',
-                            btnOkColor: backgroundColor,
-                            btnCancelColor: gray,
                             btnOkText: '삭제',
+                            btnOkColor: backgroundColor,
                             btnCancelText: '취소',
+                            btnCancelColor: gray,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
                               Stride.analytics
