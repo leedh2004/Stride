@@ -8,6 +8,7 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.authentication.auth import *
+from backend.authentication.encrypt import *
 
 auth = Blueprint('auth', __name__)
 
@@ -34,6 +35,7 @@ def login():
         print('user_id', user_id)
         g.user_id = user_id
         if account['has_email'] is True:
+            account['has_email'] = encode_text(account['has_email'])
             update_user_email(id, str(account['email']))
         flag = select_user_profile_flag()
         size = select_user_size()
@@ -43,7 +45,9 @@ def login():
         user_id = access_token
         user_id = str(user_id).split('@')[0] + '@apple.com'
         insert_user(user_id)
-        update_user_email(user_id, user_id)
+        email = user_id
+        email = encode_text(email)
+        update_user_email(email, email)
         g.user_id = user_id
         flag = select_user_profile_flag()
         size = select_user_size()
