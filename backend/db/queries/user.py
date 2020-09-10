@@ -3,6 +3,7 @@ from flask import g
 import json
 from bson import json_util
 from backend.db.model.user import *
+from math import *
 
 def insert_user(user_id):
     with db_connect() as (service_conn, cursor):
@@ -54,7 +55,26 @@ def update_user_size(size):
         query = """UPDATE users SET waist = %s , hip = %s, thigh = %s, shoulder = %s, bust = %s WHERE user_id = %s"""
         ts_query = """UPDATE users SET updated_at = CURRENT_TIMESTAMP WHERE user_id = %s"""
         try:
-            load = (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], g.user_id)
+            sizes = {
+                'waist': [],
+                'hip': [],
+                'thigh': [],
+                'shoulder': [],
+                'bust' : []
+            }
+            tags = ['waist', 'hip', 'thigh', 'shoulder', 'bust']
+            for tag in tags:
+                if size[tag] is None:
+                    sizes[tag] = None
+                else:
+                    for item in size[tag]:
+                        if tag == 'hip' or tag == 'bust':
+                            sizes[tag].append((float(item) / 2))
+                        elif tag == 'waist':
+                            sizes[tag].append(float(floor(float(item) * 1.27)))
+                        else:
+                            sizes[tag].append((float(item)))
+            load = (sizes['waist'], sizes['hip'], sizes['thigh'], sizes['shoulder'], sizes['bust'], g.user_id)
             cursor.execute(query, load)
             service_conn.commit()
             cursor.execute(ts_query, (g.user_id, ))

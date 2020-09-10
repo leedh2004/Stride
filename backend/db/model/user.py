@@ -3,7 +3,7 @@ from decimal import Decimal
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
-
+from math import *
 
 class UserSizeModel:
     def __init__(self):
@@ -22,11 +22,11 @@ class UserSizeModel:
         self.bust = self.decimal_parser(item[4], 'bust')
 
     def origin_fetch_data(self, item):
-        self.waist = self.decimal_parser(item[0], 'origin')
-        self.hip = self.decimal_parser(item[1], 'origin')
-        self.thigh = self.decimal_parser(item[2], 'origin')
-        self.shoulder = self.decimal_parser(item[3], 'origin')
-        self.bust = self.decimal_parser(item[4], 'origin')
+        self.waist = self.decimal_parser(item[0], 'waist')
+        self.hip = self.decimal_parser(item[1], 'hip')
+        self.thigh = self.decimal_parser(item[2], 'thigh')
+        self.shoulder = self.decimal_parser(item[3], 'shoulder')
+        self.bust = self.decimal_parser(item[4], 'bust')
 
     def decimal_parser(self, sizes, tag):
         size = []
@@ -35,11 +35,11 @@ class UserSizeModel:
         else:
             for item in sizes:
                 if tag == 'hip' or tag == 'bust':
-                    size.append(float(item) / 2)
+                    size.append(float(floor(float(item) * 2)))
                 elif tag == 'waist':
-                    size.append(float(item) * 1.27)
+                    size.append(float(floor(float(item) / 1.27)))
                 else:
-                    size.append(float(item))
+                    size.append(float(floor(float(item))))
         return size
 
 

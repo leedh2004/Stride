@@ -10,19 +10,19 @@ type_size_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_i
  AND (ARRAY [%s] <= hip or hip is NULL) 
  AND (ARRAY [%s] <= thigh or thigh is NULL) 
  AND (ARRAY [%s] <= shoulder or shoulder is NULL) 
- AND (ARRAY [%s] <= bust or bust is NULL) AND type = %s ORDER BY random() LIMIT 10"""
+ AND (ARRAY [%s] <= bust or bust is NULL) AND type = %s AND p.active_flag = True ORDER BY random() LIMIT 10"""
 all_size_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id 
  AND (ARRAY [%s] <= waist or waist is NULL) 
  AND (ARRAY [%s] <= hip or hip is NULL) 
  AND (ARRAY [%s] <= thigh or thigh is NULL) 
  AND (ARRAY [%s] <= shoulder or shoulder is NULL) 
- AND (ARRAY [%s] <= bust or bust is NULL) ORDER BY random() LIMIT 10"""
+ AND (ARRAY [%s] <= bust or bust is NULL) AND p.active_flag = True ORDER BY random() LIMIT 10"""
 
 def get_all_type_clothes():
     with db_connect() as (service_conn, cursor):
         types = ['skirt', 'top', 'dress', 'pants', 'all']
-        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s ORDER BY random() LIMIT 10"""
-        all_query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id ORDER BY random() LIMIT 10"""
+        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s AND p.active_flag = True ORDER BY random() LIMIT 10"""
+        all_query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True ORDER BY random() LIMIT 10"""
         try:
             product = {
                 'all': [],
@@ -117,8 +117,8 @@ def get_type_clothes_sf(type):
 
 def get_clothes_category(type):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s ORDER BY random() LIMIT 10"""
-        all_query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id ORDER BY random() LIMIT 10"""
+        query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND type = %s AND p.active_flag = True ORDER BY random() LIMIT 10"""
+        all_query = """SELECT * FROM Products p, Shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True ORDER BY random() LIMIT 10"""
         try:
             if type == 'all':
                 cursor.execute(all_query)
@@ -139,7 +139,7 @@ def get_clothes_category(type):
 
 def get_recommended_product(products):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id IN %s"""
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s"""
         try:
             product = []
             cursor.execute(query, (tuple(products), ))
@@ -154,12 +154,40 @@ def get_recommended_product(products):
             pass
 
 
+# def get_recommended_product_all(products):
+#     with db_connect() as (service_conn, cursor):
+#         query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id IN %s"""
+#         try:
+#             items = []
+#             types = ['top', 'dress', 'pants', 'skirt']
+#             product = {
+#                 'all': [],
+#                 'skirt': [],
+#                 'pants': [],
+#                 'dress': [],
+#                 'top': []
+#             }
+#             cursor.execute(query, (tuple(products), ))
+#             result = cursor.fetchall()
+#             for item in result:
+#                 load = ProductModel()
+#                 load.fetch_data(item)
+#                 product[load.__dict__['type']].append(load.__dict__)
+#                 items.append(load.__dict__)
+#             # for item['']
+#             for type in types:
+#                 product['all'] += (product[type][0:3])
+#                 del product[type][0:3]
+#             return json.dumps(product, default=json_util.default, ensure_ascii=False)
+#         except Exception as ex:
+#             print(ex)
+#             pass
+
 def get_recommended_product_all(products):
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id IN %s"""
         try:
-            items = []
-            types = ['top', 'dress', 'pants', 'skirt']
+            types = ['top', 'dress', 'pants', 'skirt', 'all']
             product = {
                 'all': [],
                 'skirt': [],
@@ -167,20 +195,16 @@ def get_recommended_product_all(products):
                 'dress': [],
                 'top': []
             }
-            cursor.execute(query, (tuple(products), ))
-            result = cursor.fetchall()
-            for item in result:
-                load = ProductModel()
-                load.fetch_data(item)
-                product[load.__dict__['type']].append(load.__dict__)
-                items.append(load.__dict__)
-            # for item['']
             for type in types:
-                product['all'] += (product[type][0:3])
-                del product[type][0:3]
+                cursor.execute(query, (tuple(products[type]), ))
+                result = cursor.fetchall()
+                for item in result:
+                    load = ProductModel()
+                    load.fetch_data(item)
+                    product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
-        except Exception as ex:
-            print(ex)
+        except Exception as Ex:
+            print(Ex)
             pass
 
 

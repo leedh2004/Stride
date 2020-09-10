@@ -84,7 +84,7 @@ def move_dressroom_folder(folder_id, product_id):
                     cursor.execute(query, (None, g.user_id, item))
             else:
                 for item in product_id:
-                    cursor.execute(query, (None, g.user_id, item))
+                    cursor.execute(query, (folder_id, g.user_id, item))
             service_conn.commit()
         except Exception as ex:
             print(ex)
