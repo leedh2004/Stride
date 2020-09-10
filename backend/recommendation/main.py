@@ -1,12 +1,9 @@
 import backend.recommendation.index as index
 import backend.recommendation.queries as queries
-import backend.recommendation.analyze as analyze
 import time
 import backend.recommendation.recommendation as recommendation
 
 es = index.es
-clothes_types = recommendation.clothes_types  # top, dress, skirt, pants
-
 
 
 # size_category should be given as 'top', 'skirt', 'pants', 'dress' or 'all'

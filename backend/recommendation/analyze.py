@@ -57,7 +57,8 @@ def get_user_liked_shop_concepts(user_id):
 
 
 # returns 10 most loved items of given clothes category
-def get_popular_items(clothes_type):
+def get_clothes_type_popular_items(user_id, clothes_type):
+    user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
     res = es.search(
         index="user_ratings",
         body={
@@ -75,7 +76,12 @@ def get_popular_items(clothes_type):
                                 "clothes_type": clothes_type
                             }
                         }
-                    ]
+                    ],
+                    "must_not": {
+                        "terms": {
+                            "product_id": user_seen_items
+                        }
+                    }
                 }
             },
             "aggs": {
@@ -88,9 +94,47 @@ def get_popular_items(clothes_type):
             }
         }
     )
+    print(res)
     res = res['aggregations']['group_by_product']['buckets']
     popular_items = [item['key'] for item in res]
-    # print("popular items:", clothes_type, popular_items)
+    return popular_items
+
+
+def get_all_type_popular_items(user_id):
+    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+    res = es.search(
+        index="user_ratings",
+        body={
+            "size": 0,
+            "query": {
+                "bool": {
+                    "must": [
+                        {
+                            "term": {
+                                "rating": "like"
+                            }
+                        }
+                    ],
+                    "must_not": {
+                        "terms": {
+                            "product_id": user_seen_items
+                        }
+                    }
+                }
+            },
+            "aggs": {
+                "group_by_product": {
+                    "terms": {
+                        "field": "product_id",
+                        "size": 10
+                    }
+                }
+            }
+        }
+    )
+    print(res)
+    res = res['aggregations']['group_by_product']['buckets']
+    popular_items = [item['key'] for item in res]
     return popular_items
 
 
