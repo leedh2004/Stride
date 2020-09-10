@@ -328,7 +328,7 @@ def get_entire_products_from_shop_es(shop_id):
 
 
 # paging 추가해서 patch
-def get_products_from_shop_es(user_id, shop_ids, clothes_type):
+def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type):
     user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
     res = es.search(
         index='products',
@@ -364,7 +364,36 @@ def get_products_from_shop_es(user_id, shop_ids, clothes_type):
     return random.sample(products, 20) if len(products) > 20 else products
 
 
-def get_size_filtered_products_from_shop_es(user_id, shop_ids, clothes_type):
+def get_products_from_shop_es_all_clothes_type(user_id, shop_ids):
+    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+    res = es.search(
+        index='products',
+        body={
+            "_source": ["shop_id", "product_id"],
+            "size": 50,
+            "query": {
+                "bool": {
+                    "filter": [
+                        {
+                            "terms": {
+                                "shop_id": shop_ids
+                            }
+                        }
+                    ],
+                    "must_not": {
+                        "terms": {
+                            "product_id": user_seen_items
+                        }
+                    }
+                }
+            }
+        }
+    )
+    products = [item['_source']['product_id'] for item in res['hits']['hits']]
+    return random.sample(products, 20) if len(products) > 20 else products
+
+
+def get_size_filtered_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type):
     user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
     user_size_data = queries.get_user_size_data(user_id)
     res = es.search(
@@ -404,12 +433,53 @@ def get_size_filtered_products_from_shop_es(user_id, shop_ids, clothes_type):
                         },
                         {
                             "range": {
-                                "max_rise": {"gte": min(user_size_data['rise'])}
+                                "max_shoulder": {"gte": min(user_size_data['shoulder'])}
                             }
                         },
                         {
                             "range": {
-                                "max_hem": {"gte": min(user_size_data['hem'])}
+                                "max_bust": {"gte": min(user_size_data['bust'])}
+                            }
+                        }
+                    ],
+                    "must_not": {
+                        "terms": {
+                            "product_id": user_seen_items
+                        }
+                    }
+                }
+            }
+        }
+    )
+    products = [item['_source']['product_id'] for item in res['hits']['hits']]
+    return random.sample(products, 20) if len(products) > 20 else products
+
+
+def get_size_filtered_products_from_shop_es_all_clothes_type(user_id, shop_ids):
+    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+    user_size_data = queries.get_user_size_data(user_id)
+    res = es.search(
+        index='products',
+        body={
+            "_source": ["shop_id", "product_id"],
+            "size": 50,
+            "query": {
+                "bool": {
+                    "filter": [{"terms": {"shop_id": shop_ids}}],
+                    "must": [
+                        {
+                            "range": {
+                                "max_waist": {"gte": min(user_size_data['waist'])}
+                            }
+                        },
+                        {
+                            "range": {
+                                "max_hip": {"gte": min(user_size_data['hip'])}
+                            }
+                        },
+                        {
+                            "range": {
+                                "max_thigh": {"gte": min(user_size_data['thigh'])}
                             }
                         },
                         {
@@ -420,11 +490,6 @@ def get_size_filtered_products_from_shop_es(user_id, shop_ids, clothes_type):
                         {
                             "range": {
                                 "max_bust": {"gte": min(user_size_data['bust'])}
-                            }
-                        },
-                        {
-                            "range": {
-                                "max_arm_length": {"gte": min(user_size_data['arm_length'])}
                             }
                         }
                     ],
@@ -466,27 +531,12 @@ def get_user_wearable_products(user_id):
                         },
                         {
                             "range": {
-                                "max_rise": {"gte": min(user_size_data['rise'])}
-                            }
-                        },
-                        {
-                            "range": {
-                                "max_hem": {"gte": min(user_size_data['hem'])}
-                            }
-                        },
-                        {
-                            "range": {
                                 "max_shoulder": {"gte": min(user_size_data['shoulder'])}
                             }
                         },
                         {
                             "range": {
                                 "max_bust": {"gte": min(user_size_data['bust'])}
-                            }
-                        },
-                        {
-                            "range": {
-                                "max_arm_length": {"gte": min(user_size_data['arm_length'])}
                             }
                         }
                     ]
@@ -506,13 +556,6 @@ def get_user_unwearable_products(user_id):
             "query": {
                 "bool": {
                     "should": [
-                        {
-                            "range": {
-                                "max_length": {
-                                    "lt": min(user_size_data['length'])
-                                }
-                            }
-                        },
                         {
                             "range": {
                                 "max_waist": {
@@ -536,20 +579,6 @@ def get_user_unwearable_products(user_id):
                         },
                         {
                             "range": {
-                                "max_rise": {
-                                    "lt": min(user_size_data['rise'])
-                                }
-                            }
-                        },
-                        {
-                            "range": {
-                                "max_hem": {
-                                    "lt": min(user_size_data['hem'])
-                                }
-                            }
-                        },
-                        {
-                            "range": {
                                 "max_shoulder": {
                                     "lt": min(user_size_data['shoulder'])
                                 }
@@ -559,13 +588,6 @@ def get_user_unwearable_products(user_id):
                             "range": {
                                 "max_bust": {
                                     "lt": min(user_size_data['bust'])
-                                }
-                            }
-                        },
-                        {
-                            "range": {
-                                "max_arm_length": {
-                                    "lt": min(user_size_data['arm_length'])
                                 }
                             }
                         }

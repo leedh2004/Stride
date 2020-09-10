@@ -9,6 +9,7 @@ conn = pg2.connect(dbname=db_name, user=db_user, password=db_password,
                    host=db_host, port=db_port)
 
 
+
 size_types = ('length', 'waist', 'hip', 'thigh', 'rise', 'hem', 'shoulder', 'bust', 'arm_length')
 
 
@@ -174,7 +175,9 @@ def get_user_tutorial_shop_concepts(user_id):
 
 def get_entire_user_seen_items_from_db(user_id):
     db_cursor = conn.cursor()
-    query = """select product_id from likes where user_id = %s UNION DISTINCT select product_id from dislikes where user_id = %s UNION DISTINCT select product_id from pass where user_id = %s"""
+    query = """select product_id from likes where user_id = %s
+    UNION DISTINCT select product_id from dislikes where user_id = %s 
+    UNION DISTINCT select product_id from pass where user_id = %s"""
     db_cursor.execute(query, (user_id, user_id, user_id))
     items = db_cursor.fetchall()
     result = [str(item[0]) for item in items]
@@ -236,11 +239,22 @@ def get_recommended_shops_by_user_preferred_concepts_from_db(user_id):
     return recommended_shops
 
 
-def get_popular_items_from_db(clothes_type):
+def get_clothes_type_popular_items_from_db(clothes_type):
     db_cursor = conn.cursor()
     query = """select product_id from likes join products using (product_id) where type = %s 
     group by product_id order by count(product_id) desc limit 10"""
     db_cursor.execute(query, (clothes_type,))
+    result = db_cursor.fetchall()
+    popular_items = [str(r[0]) for r in result]
+    db_cursor.close()
+    return popular_items
+
+
+def get_all_type_popular_items_from_db():
+    db_cursor = conn.cursor()
+    query = """select product_id from likes join products using (product_id) 
+        group by product_id order by count(product_id) desc limit 10"""
+    db_cursor.execute(query)
     result = db_cursor.fetchall()
     popular_items = [str(r[0]) for r in result]
     db_cursor.close()
@@ -266,12 +280,24 @@ def count_user_liked_items_from_db(user_id):
     return result[0]
 
 
-def get_non_preferred_shop_items(preferred_shops, clothes_type):
+def get_clothes_type_non_preferred_items_from_db(preferred_shops, clothes_type):
     db_cursor = conn.cursor()
     preferred_shops = tuple(preferred_shops)
     query = """select product_id from products join shop using (shop_id) 
     where shop_id not in %s and type = %s order by random() limit 5"""
     db_cursor.execute(query, (preferred_shops, clothes_type))
+    result = db_cursor.fetchall()
+    non_preferred_items = [str(item[0]) for item in result]
+    db_cursor.close()
+    return non_preferred_items
+
+
+def get_all_type_non_preferred_items_from_db(preferred_shops):
+    db_cursor = conn.cursor()
+    preferred_shops = tuple(preferred_shops)
+    query = """select product_id from products join shop using (shop_id) 
+    where shop_id not in %s order by random() limit 5"""
+    db_cursor.execute(query, (preferred_shops, ))
     result = db_cursor.fetchall()
     non_preferred_items = [str(item[0]) for item in result]
     db_cursor.close()

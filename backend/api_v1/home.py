@@ -25,9 +25,9 @@ def get_clothes():
         size = request.args.get('size')
         if select_user_recommenation_flag() is True:
             if size == 'on':
-                recommendation_list = update_recommendation_list(g.user_id, type)
+                recommendation_list = get_item_recommendation(g.user_id, type, True)
             elif size == 'off':
-                recommendation_list = update_recommendation_list(g.user_id, type)
+                recommendation_list = get_item_recommendation(g.user_id, type, False)
             print(recommendation_list)
             result = get_recommended_product(recommendation_list[type])
         else:
@@ -52,9 +52,9 @@ def get_all_type_clothes_limit_num():
             all_list = {}
             for type in types:
                 if size == 'on':
-                    recommendation_list = update_recommendation_list(g.user_id, type)
+                    recommendation_list = get_item_recommendation(g.user_id, type, True)
                 elif size == 'off':
-                    recommendation_list = update_recommendation_list(g.user_id, type)
+                    recommendation_list = get_item_recommendation(g.user_id, type, False)
                 all_list.update(recommendation_list)
             result = get_recommended_product_all(all_list)
         else:
