@@ -2,7 +2,7 @@ import 'package:app/core/services/error.dart';
 import 'package:dio/dio.dart';
 
 class Api {
-  static const endpoint = 'http://test.api-stride.com:5000';
+  static const endpoint = 'https://api-stride.com';
   var client = new Dio();
   ErrorService _errorService;
   Api(this._errorService);

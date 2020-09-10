@@ -13,7 +13,7 @@ import 'api.dart';
 class AuthenticationService {
   BehaviorSubject<StrideUser> userController = BehaviorSubject<StrideUser>();
   Stream<StrideUser> get user => userController.stream;
-  FlutterSecureStorage _storage = new FlutterSecureStorage();
+  FlutterSecureStorage storage = new FlutterSecureStorage();
   bool init = false;
   Api api;
   final _firebaseAuth = FirebaseAuth.instance;
@@ -47,7 +47,7 @@ class AuthenticationService {
   }
 
   Future logout() async {
-    await _storage.delete(key: 'jwt_token');
+    await storage.delete(key: 'jwt_token');
     userController.add(null); // 이게 맞나..?
     await _firebaseAuth.signOut();
     print('?');
@@ -105,7 +105,7 @@ class AuthenticationService {
       String id = parsed['user_id'];
       String token = parsed['token'];
       // 토큰이 없을 때만 일로 오니까 !
-      await _storage.write(key: 'jwt_token', value: token);
+      await storage.write(key: 'jwt_token', value: token);
       StrideUser user = StrideUser(
           id: id,
           profile_flag: parsed['profile_flag'],
@@ -140,7 +140,7 @@ class AuthenticationService {
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
-    String token = await _storage.read(key: 'jwt_token');
+    String token = await storage.read(key: 'jwt_token');
     if (token == null) {
       init = true;
       return;
@@ -167,8 +167,8 @@ class AuthenticationService {
           hip: size['hip'],
           thigh: size['thigh']);
       //뉴토큰으로 토큰 교체해줘야함.
-      await _storage.delete(key: 'jwt_token');
-      await _storage.write(key: 'jwt_token', value: response.data['token']);
+      await storage.delete(key: 'jwt_token');
+      await storage.write(key: 'jwt_token', value: response.data['token']);
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: id, password: "SuperSecretPassword!");
@@ -181,7 +181,7 @@ class AuthenticationService {
       }
       userController.add(user);
     } else {
-      await _storage.delete(key: 'jwt_token');
+      await storage.delete(key: 'jwt_token');
       print("토큰이 없거나 만료되었습니다");
     }
     init = true;

@@ -10,16 +10,23 @@ class SwipeModel extends BaseModel {
   String type;
   int index;
   int image_index = 0;
+  bool size_flag;
 
   SwipeModel(DressRoomService _dressRoomService, SwipeService swipeService) {
     dressRoomService = _dressRoomService;
     _swipeService = swipeService;
     type = _swipeService.type;
     index = swipeService.index[type];
+    size_flag = size_flag;
     print("SwipeModel 생성!");
     print(type);
     print(index);
     //print(items[1][0].product_name);
+  }
+
+  void flagChange() {
+    _swipeService.flagChange();
+    size_flag = _swipeService.size_flag;
   }
 
   Future initCards() async {
@@ -51,11 +58,11 @@ class SwipeModel extends BaseModel {
   }
 
   Future nextItem() async {
-    setBusy(true);
+    // setBusy(true);
     await _swipeService.nextItem();
     index = _swipeService.index[type];
     image_index = 0;
-    setBusy(false);
+    // setBusy(false);
   }
 
   Future likeRequest() async {
@@ -76,13 +83,8 @@ class SwipeModel extends BaseModel {
   }
 
   void test() async {
-    print("TEST");
     setBusy(true);
-    trick = true;
-    await Future.delayed(Duration(milliseconds: 500));
-    nextItem();
-    print('?');
-    trick = false;
+    await _swipeService.initSizeCards();
     setBusy(false);
     notifyListeners();
   }

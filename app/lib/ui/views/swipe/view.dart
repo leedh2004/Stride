@@ -1,4 +1,5 @@
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
@@ -16,7 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:tutorial_coach_mark/animated_focus_light.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../base_widget.dart';
 import '../service_view.dart';
@@ -28,7 +28,7 @@ class SwipeView extends StatefulWidget {
 
 class _SwipeViewState extends State<SwipeView> {
   //TabController tabController;
-  bool enabled = true;
+  bool size_flag = false;
   String type = 'all';
   double like_opacity = 0;
   double dislike_opacity = 0;
@@ -43,7 +43,6 @@ class _SwipeViewState extends State<SwipeView> {
   @override
   void initState() {
     initTargets();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
   }
 
@@ -55,24 +54,15 @@ class _SwipeViewState extends State<SwipeView> {
   @override
   Widget build(BuildContext context) {
     var config = Provider.of<ConfigService>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if ((config.currentVersion != config.updateVersion) &&
-          !config.alreadyShow) {
-        ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 1500),
-          content: Text('Stride앱의 최신 버전이 나왔습니다!'),
-        ));
-        config.alreadyShow = true;
-      }
-    });
-
+    var _storage =
+        Provider.of<AuthenticationService>(context, listen: false).storage;
     return BaseWidget<SwipeModel>(
         model: SwipeModel(
           Provider.of<DressRoomService>(context),
           Provider.of<SwipeService>(context),
         ),
         builder: (context, model, child) {
-          if (model.trick) return FadeIn(delay: 1, child: (LoadingWidget()));
+          if (model.busy) return FadeIn(delay: 0.5, child: (LoadingWidget()));
           if (Provider.of<SwipeService>(context).init == false) {
             if (Provider.of<DressRoomService>(context).init == false) {
               Provider.of<DressRoomService>(context).getDressRoom();
@@ -83,6 +73,21 @@ class _SwipeViewState extends State<SwipeView> {
             model.initCards();
             return LoadingWidget();
           }
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
+            if ((config.currentVersion != config.updateVersion) &&
+                !config.alreadyShow) {
+              ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+                duration: Duration(milliseconds: 1500),
+                content: Text('Stride앱의 최신 버전이 나왔습니다!'),
+              ));
+              config.alreadyShow = true;
+            }
+            //이 부분 후에 수정.
+            if (await _storage.read(key: 'swipe_tutorial') == null) {
+              _afterLayout();
+              _storage.write(key: 'swipe_tutorial', value: 'true');
+            }
+          });
           return FadeIn(
             delay: 0.3,
             child: Stack(children: [
@@ -100,15 +105,16 @@ class _SwipeViewState extends State<SwipeView> {
                     key: sizeToggle,
                     scale: 1.5,
                     child: Switch(
-                      value: enabled,
+                      value: size_flag,
                       onChanged: (value) async {
                         setState(() {
-                          enabled = value;
+                          size_flag = value;
                         });
-                        if (enabled) {
+                        model.flagChange();
+                        if (size_flag) {
                           Stride.analytics
                               .logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
-                          await model.test();
+                          model.test();
                         } else {
                           Stride.analytics
                               .logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
@@ -197,39 +203,6 @@ class _SwipeViewState extends State<SwipeView> {
   void initTargets() {
     targets.add(
       TargetFocus(
-        identify: "Target 0",
-        keyTarget: buyButton,
-        color: backgroundColor,
-        contents: [
-          ContentTarget(
-              align: AlignContent.top,
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      "구매 버튼",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20.0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        "쇼핑몰로 이동할 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-              ))
-        ],
-      ),
-    );
-    targets.add(
-      TargetFocus(
         identify: "Target 1",
         keyTarget: rulerButton,
         color: backgroundColor,
@@ -264,6 +237,40 @@ class _SwipeViewState extends State<SwipeView> {
 
     targets.add(
       TargetFocus(
+        identify: "Target 0",
+        keyTarget: buyButton,
+        color: backgroundColor,
+        contents: [
+          ContentTarget(
+              align: AlignContent.top,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "구매 버튼",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "쇼핑몰로 이동할 수 있습니다.",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
         identify: "Target 2",
         keyTarget: sizeToggle,
         color: backgroundColor,
@@ -276,7 +283,7 @@ class _SwipeViewState extends State<SwipeView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "사이즈 토글",
+                      "사이즈 스위치",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -314,9 +321,8 @@ class _SwipeViewState extends State<SwipeView> {
       ..show();
   }
 
-  void _afterLayout(_) {
-    Future.delayed(Duration(milliseconds: 1000), () {
-      print('wtf');
+  void _afterLayout() {
+    Future.delayed(Duration(milliseconds: 500), () {
       showTutorial();
     });
   }
@@ -356,7 +362,6 @@ class _SwipeViewState extends State<SwipeView> {
           shape: CircleBorder(),
         ),
         RawMaterialButton(
-          key: buyButton,
           onPressed: () {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               SwipeCard item = Provider.of<SwipeService>(context)
@@ -371,6 +376,7 @@ class _SwipeViewState extends State<SwipeView> {
           },
           elevation: 2.0,
           fillColor: Colors.white,
+          key: buyButton,
           child: SvgPicture.asset(
             'images/buy.svg',
             width: 25.0,

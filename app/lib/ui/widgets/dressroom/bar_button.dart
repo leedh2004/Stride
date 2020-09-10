@@ -1,4 +1,5 @@
 import 'package:app/core/models/product.dart';
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
@@ -27,14 +28,12 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
   GlobalKey folderButton = GlobalKey();
   GlobalKey makeButton = GlobalKey();
   GlobalKey trashButton = GlobalKey();
-
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
 
   @override
   void initState() {
     initTargets();
-    WidgetsBinding.instance.addPostFrameCallback(_afterLayout);
     super.initState();
   }
 
@@ -136,6 +135,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
         ),
       );
     } else {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        var _storage =
+            Provider.of<AuthenticationService>(context, listen: false).storage;
+        if (await _storage.read(key: 'dress_tutorial') == null) {
+          _afterLayout(_);
+          _storage.write(key: 'dress_tutorial', value: 'true');
+        }
+      });
       return Container(
         padding: EdgeInsets.all(8),
         child: Stack(
@@ -256,7 +263,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "상/하의를 클릭하면 활성화됩니다.\n 상/하의를 조합하여 나만의 룩북을 만들 수 있습니다.",
+                        "상/하의를 클릭하면 활성화됩니다.",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "상/하의를 조합하여 나만의 룩북을 만들 수 있습니다.",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -322,8 +336,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
   }
 
   void _afterLayout(_) {
-    Future.delayed(Duration(milliseconds: 1000), () {
-      print('wtf');
+    Future.delayed(Duration(milliseconds: 500), () {
       showTutorial();
     });
   }

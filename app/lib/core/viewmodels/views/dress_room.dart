@@ -57,6 +57,8 @@ class DressRoomModel extends BaseModel {
   Future removeItem() async {
     await _service.removeItem(selectedIdx.toList());
     selectedIdx.clear();
+    top_cnt = 0;
+    bottom_cnt = 0;
     notifyListeners();
   }
 

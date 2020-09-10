@@ -16,11 +16,16 @@ class SwipeService {
   Map<String, List<SwipeCard>> items;
   Set<int> precached = new Set();
   bool init = false;
+  bool size_flag = false;
 
   SwipeService(Api api) {
     print("SwipeService 생성!");
     initialize();
     _api = api;
+  }
+
+  void flagChange() {
+    size_flag = !size_flag;
   }
 
   bool initialize() {
@@ -41,9 +46,11 @@ class SwipeService {
   }
 
   void nextItem() {
+    print("nextItem()");
+    print("LENGTH: ${length[type]}, INDEX: ${index[type]}");
     precached.remove(items[type][index[type]].product_id);
     index[type]++;
-    if (index[type] + 5 >= length[type]) {
+    if (index[type] + 10 >= length[type]) {
       if (index[type] + 2 >= length[type]) {
         index[type]--;
         _api.errorCreate(Error());
@@ -59,10 +66,9 @@ class SwipeService {
     }
   }
 
-  Future initCards() async {
-    initialize();
+  Future initSizeCards() async {
     try {
-      var response = await _api.client.get('${Api.endpoint}/home/all');
+      var response = await _api.client.get('${Api.endpoint}/home/all?size=on');
       var data = json.decode(response.data) as Map<String, dynamic>;
       print(data);
       for (var type in TYPE) {
@@ -77,10 +83,37 @@ class SwipeService {
         }
         //
         items[type] = temp;
-        length[type] += temp.length;
+        length[type] = temp.length;
+      }
+      //init = true;
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
+  }
+
+  Future initCards() async {
+    initialize();
+    try {
+      var response = await _api.client.get('${Api.endpoint}/home/all?size=off');
+      var data = json.decode(response.data) as Map<String, dynamic>;
+      print(data);
+      for (var type in TYPE) {
+        List<SwipeCard> temp = new List<SwipeCard>();
+        var parsed = data[type] as List<dynamic>;
+        for (var item in parsed) {
+          temp.add(SwipeCard.fromJson(item));
+        }
+        //FOR DEBUG
+        for (var item in temp) {
+          print(item.product_name);
+        }
+        //
+        items[type] = temp;
+        length[type] = temp.length;
       }
       init = true;
     } catch (e) {
+      print("???");
       _api.errorCreate(Error());
     }
   }
@@ -88,18 +121,17 @@ class SwipeService {
   // fail시 flag로 토스트 메세지 띄워주기
   // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
   Future<List<SwipeCard>> getCards() async {
+    print("getCards()!!!!!!!!!!!!");
     var temp = List<SwipeCard>();
     var response;
+    var url = '${Api.endpoint}/home?type=${type}&size=';
+    if (size_flag)
+      url += 'on';
+    else
+      url += 'off';
+
     try {
-      if (type == 'all') {
-        response = await _api.client.get(
-          '${Api.endpoint}/home/',
-        );
-      } else {
-        response = await _api.client.get(
-          '${Api.endpoint}/home?type=${type}',
-        );
-      }
+      response = await _api.client.get(url);
 
       var parsed = json.decode(response.data) as List<dynamic>;
       for (var item in parsed) {
