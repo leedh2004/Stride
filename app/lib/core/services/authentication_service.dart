@@ -15,6 +15,9 @@ class AuthenticationService {
   Stream<StrideUser> get user => userController.stream;
   FlutterSecureStorage storage = new FlutterSecureStorage();
   bool init = false;
+  bool swipe_tutorial = false;
+  bool dress_tutorial = false;
+
   Api api;
   final _firebaseAuth = FirebaseAuth.instance;
 
@@ -141,6 +144,15 @@ class AuthenticationService {
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
     String token = await storage.read(key: 'jwt_token');
+
+    if (await storage.read(key: 'swipe_tutorial') != null) {
+      swipe_tutorial = true;
+    }
+
+    if (await storage.read(key: 'dress_tutorial') != null) {
+      dress_tutorial = true;
+    }
+
     if (token == null) {
       init = true;
       return;

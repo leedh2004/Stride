@@ -108,27 +108,35 @@ class _SizeDialogState extends State<SizeDialog> {
                 color: Colors.white,
                 child: Center(
                   child: Column(children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: FlatButton(
-                        onPressed: () async {
-                          setState(() {
-                            display = false;
-                          });
-                          await Future.delayed(Duration(milliseconds: 300));
-
-                          Navigator.maybePop(context);
-                        },
-                        //elevation: 2.0,
-                        color: Color.fromRGBO(240, 240, 240, 1),
-                        child: SvgPicture.asset(
-                          'images/times.svg',
-                          width: 16.0,
-                          color: Colors.black,
-                        ),
-                        shape: CircleBorder(),
+                    Stack(alignment: Alignment.center, children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Text('(단면, cm)')),
                       ),
-                    ),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: FlatButton(
+                          onPressed: () async {
+                            setState(() {
+                              display = false;
+                            });
+                            await Future.delayed(Duration(milliseconds: 300));
+
+                            Navigator.maybePop(context);
+                          },
+                          //elevation: 2.0,
+                          color: Color.fromRGBO(240, 240, 240, 1),
+                          child: SvgPicture.asset(
+                            'images/times.svg',
+                            width: 16.0,
+                            color: Colors.black,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                      ),
+                    ]),
                     Padding(
                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: Table(
@@ -174,16 +182,13 @@ class _SizeDialogState extends State<SizeDialog> {
                                           child: ColorSizeBox(
                                               widget.keys[index]))),
                                   ...List.generate(widget.header.length, (idx) {
-                                    double ret = widget
+                                    var ret = widget
                                         .sizeMapper[widget.keys[index]]
-                                        .map[widget.mapper[widget.header[idx]]];
-                                    if (ret == 0) {
-                                      return Center(
-                                          child: Text(
-                                        '-',
-                                        style: tableCellText,
-                                      ));
-                                    }
+                                        .map[widget.mapper[widget.header[idx]]]
+                                        .toString();
+                                    if (ret == '0.0') ret = '-';
+                                    if (ret.endsWith('.0'))
+                                      ret = ret.substring(0, ret.length - 2);
                                     return (Center(
                                         child: Text(
                                       '$ret',

@@ -489,14 +489,13 @@ Future<void> main() async {
   final updatedVersion = remoteConfig.getString('version').trim();
   print(updatedVersion);
 
-  // print("VERSION");
-  // runZoned(() {
-  //   runApp(Stride());
-  // }, onError: Crashlytics.instance.recordError);
+  print("VERSION");
+  runZoned(() {
+    runApp(Provider<ConfigService>.value(
+        value: ConfigService(appleSignInAvailable, updatedVersion),
+        child: Stride()));
+  }, onError: Crashlytics.instance.recordError);
   // runApp(Stride());
-  runApp(Provider<ConfigService>.value(
-      value: ConfigService(appleSignInAvailable, updatedVersion),
-      child: Stride()));
 }
 
 class Stride extends StatelessWidget {
@@ -514,6 +513,7 @@ class Stride extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
             primarySwatch: Colors.blue,

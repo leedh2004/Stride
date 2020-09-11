@@ -163,7 +163,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                 children: [
                                   Text(
                                     '${widget.item.shop_name}',
-                                    style: shopInfoText,
+                                    style: shopInfoHighlightText,
                                   ),
                                   Text(
                                       '${widget.item.product_name} [${widget.item.type.toUpperCase()}]',
@@ -172,6 +172,7 @@ class _ProductDialogState extends State<ProductDialog> {
                                   Text('${widget.item.price}원',
                                       style: shopInfoText),
                                   UIHelper.verticalSpaceMedium,
+                                  Text('(단면, cm)'),
                                   Table(
                                     children: [
                                       TableRow(
@@ -196,6 +197,8 @@ class _ProductDialogState extends State<ProductDialog> {
                                                 Expanded(
                                                   flex: 3,
                                                   child: Wrap(
+                                                      alignment:
+                                                          WrapAlignment.center,
                                                       direction:
                                                           Axis.horizontal,
                                                       children: List.generate(
@@ -269,9 +272,14 @@ class _ProductDialogState extends State<ProductDialog> {
                                       ...List.generate(widget.header.length,
                                           (index) {
                                         var ret = widget
-                                                .sizeMapper[widget.current].map[
-                                            widget
-                                                .mapper[widget.header[index]]];
+                                            .sizeMapper[widget.current]
+                                            .map[widget
+                                                .mapper[widget.header[index]]]
+                                            .toString();
+                                        if (ret == '0.0') ret = '-';
+                                        if (ret.endsWith('.0'))
+                                          ret =
+                                              ret.substring(0, ret.length - 2);
                                         return TableRow(
                                             decoration: BoxDecoration(
                                                 border: Border(
@@ -334,6 +342,8 @@ class _ProductDialogState extends State<ProductDialog> {
   }
 }
 
+const shopInfoHighlightText = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.bold, color: backgroundColor);
 const shopInfoText = TextStyle(fontSize: 16);
 const tableHeaderSizeText =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w600);

@@ -135,12 +135,17 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
         ),
       );
     } else {
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        var _storage =
-            Provider.of<AuthenticationService>(context, listen: false).storage;
-        if (await _storage.read(key: 'dress_tutorial') == null) {
-          _afterLayout(_);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (Provider.of<AuthenticationService>(context, listen: false)
+                .dress_tutorial ==
+            false) {
+          Provider.of<AuthenticationService>(context, listen: false)
+              .dress_tutorial = true;
+          var _storage =
+              Provider.of<AuthenticationService>(context, listen: false)
+                  .storage;
           _storage.write(key: 'dress_tutorial', value: 'true');
+          _afterLayout(_);
         }
       });
       return Container(

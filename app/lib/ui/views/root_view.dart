@@ -69,7 +69,7 @@ class RootView extends StatelessWidget {
                 ),
                 UIHelper.verticalSpaceMedium,
                 Text('오류가 지속된다면, '),
-                Text('leedh2008@naver.com 으로 문의 주세요.')
+                Text('help.stride@gmail.com 으로 문의 주세요.')
               ],
             ),
           ),

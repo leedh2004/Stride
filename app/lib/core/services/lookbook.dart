@@ -17,16 +17,25 @@ class LookBookService {
 
   Future addItem(Product top, Product bottom, String name) async {
     try {
+      print(top.product_name);
+      print(bottom.product_name);
+
       final response = await _api.client.post('${Api.endpoint}/coordination/',
           data: jsonEncode({
             'top_product_id': top.product_id,
             'bottom_product_id': bottom.product_id,
             'name': name
           }));
-      int coor_id = json.decode(response.data)["coor_id"];
-      Coordinate item = new Coordinate(coor_id, name, top, bottom);
-      items.add(item);
+      if (response.statusCode == 200) {
+        int coor_id = json.decode(response.data)["coor_id"];
+        print("!");
+        Coordinate item = new Coordinate(coor_id, name, top, bottom);
+        print("!!");
+        items.add(item);
+        print("!!!");
+      }
     } catch (e) {
+      print("?????????????/");
       _api.errorCreate(Error());
     }
   }

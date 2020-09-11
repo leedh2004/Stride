@@ -50,7 +50,7 @@ class SwipeService {
     print("LENGTH: ${length[type]}, INDEX: ${index[type]}");
     precached.remove(items[type][index[type]].product_id);
     index[type]++;
-    if (index[type] + 10 >= length[type]) {
+    if (index[type] + 5 >= length[type]) {
       if (index[type] + 2 >= length[type]) {
         index[type]--;
         _api.errorCreate(Error());
@@ -159,11 +159,12 @@ class SwipeService {
     try {
       final response = await _api.client.post('${Api.endpoint}/home/like',
           data: jsonEncode({'product_id': items[type][cur].product_id}));
+      if (response.statusCode == 202) return null;
       print("Like ${response.statusCode}");
       Product item = Product.fromSwipeCard(items[type][cur].toJson());
       return item;
     } catch (e) {
-      //_api.errorCreate(Error());
+      _api.errorCreate(Error());
     }
   }
 
@@ -174,7 +175,7 @@ class SwipeService {
       final response = await _api.client.post('${Api.endpoint}/home/dislike',
           data: jsonEncode({'product_id': items[type][cur].product_id}));
     } catch (e) {
-      //_api.errorCreate(Error());
+      _api.errorCreate(Error());
     }
   }
 
@@ -185,7 +186,7 @@ class SwipeService {
       final response = await _api.client.post('${Api.endpoint}/home/pass',
           data: jsonEncode({'product_id': items[type][cur].product_id}));
     } catch (e) {
-      //_api.errorCreate(Error());
+      _api.errorCreate(Error());
     }
   }
 

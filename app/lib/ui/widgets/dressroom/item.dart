@@ -61,7 +61,7 @@ class DressRoomItemWidget extends StatelessWidget {
           Opacity(
             opacity: opacity,
             child: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomRight,
               child: IconButton(
                 iconSize: 20,
                 icon: FaIcon(

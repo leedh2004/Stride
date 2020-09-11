@@ -117,41 +117,46 @@ class _ProductTableState extends State<ProductTable> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(children: [
-                          Text(
-                            '${widget.item.shop_name}',
-                            style: shopInfoText,
-                          ),
-                          ButtonTheme(
-                            minWidth: 36,
-                            height: 20,
-                            child: FlatButton(
-                              onPressed: () {
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  Stride.analytics.logViewItem(
-                                      itemId: widget.item.product_id.toString(),
-                                      itemName: widget.item.product_name,
-                                      itemCategory: widget.item.shop_name);
-                                  Provider.of<SwipeService>(context,
-                                          listen: false)
-                                      .purchaseItem(widget.item.product_id);
-                                  return ProductWebView(widget.item.product_url,
-                                      widget.item.shop_name);
-                                }));
-                              },
-                              child: SvgPicture.asset(
-                                'images/buy.svg',
-                                width: 16,
-                                height: 16,
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${widget.item.shop_name}',
+                                style: shopInfoHighlightText,
                               ),
-                            ),
-                          )
-                        ]),
+                              ButtonTheme(
+                                minWidth: 24,
+                                height: 24,
+                                child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      Stride.analytics.logViewItem(
+                                          itemId:
+                                              widget.item.product_id.toString(),
+                                          itemName: widget.item.product_name,
+                                          itemCategory: widget.item.shop_name);
+                                      Provider.of<SwipeService>(context,
+                                              listen: false)
+                                          .purchaseItem(widget.item.product_id);
+                                      return ProductWebView(
+                                          widget.item.product_url,
+                                          widget.item.shop_name);
+                                    }));
+                                  },
+                                  child: SvgPicture.asset(
+                                    'images/buy.svg',
+                                    width: 16,
+                                    height: 16,
+                                  ),
+                                ),
+                              )
+                            ]),
                         Text(
                             '${widget.item.product_name} [${widget.item.type.toUpperCase()}]',
                             style: shopInfoText),
                         Text('${widget.item.price}원', style: shopInfoText),
+                        Text('(단면, cm)'),
                         UIHelper.verticalSpaceSmall,
                         Table(
                           children: [
@@ -232,7 +237,11 @@ class _ProductTableState extends State<ProductTable> {
                                 ]),
                             ...List.generate(widget.header.length, (index) {
                               var ret = widget.sizeMapper[widget.current]
-                                  .map[widget.mapper[widget.header[index]]];
+                                  .map[widget.mapper[widget.header[index]]]
+                                  .toString();
+                              if (ret == '0.0') ret = '-';
+                              if (ret.endsWith('.0'))
+                                ret = ret.substring(0, ret.length - 2);
                               return TableRow(
                                   decoration: BoxDecoration(
                                       border: Border(
@@ -276,6 +285,8 @@ class _ProductTableState extends State<ProductTable> {
   }
 }
 
+const shopInfoHighlightText = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.bold, color: backgroundColor);
 const shopInfoText = TextStyle(fontSize: 14);
 const tableHeaderSizeText =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w600);

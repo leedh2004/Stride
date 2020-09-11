@@ -67,7 +67,7 @@ class SwipeModel extends BaseModel {
 
   Future likeRequest() async {
     Product item = await _swipeService.likeRequest();
-    await dressRoomService.addItem(item);
+    if (item != null) dressRoomService.addItem(item);
   }
 
   void dislikeRequest() async {
@@ -85,6 +85,8 @@ class SwipeModel extends BaseModel {
   void test() async {
     setBusy(true);
     await _swipeService.initSizeCards();
+    image_index = 0;
+
     setBusy(false);
     notifyListeners();
   }

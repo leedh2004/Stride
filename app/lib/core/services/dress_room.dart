@@ -33,7 +33,7 @@ class DressRoomService {
 
   void addItem(Product item) {
     print(item.product_name);
-    items[0].add(item);
+    if (!items[0].contains(item)) items[0].add(item);
   }
 
   Future getDressRoom() async {
@@ -70,6 +70,9 @@ class DressRoomService {
       final response = await _api.client.post('${Api.endpoint}/coordination/',
           data:
               jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
+      print("wtf");
+      print("$top $bottom");
+      print(response.statusCode);
     } catch (e) {
       _api.errorCreate(Error());
     }

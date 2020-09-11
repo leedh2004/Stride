@@ -53,39 +53,41 @@ class _SwipeViewState extends State<SwipeView> {
 
   @override
   Widget build(BuildContext context) {
-    var config = Provider.of<ConfigService>(context, listen: false);
-    var _storage =
-        Provider.of<AuthenticationService>(context, listen: false).storage;
+    var configService = Provider.of<ConfigService>(context, listen: false);
+    var swipeService = Provider.of<SwipeService>(context, listen: false);
+    var dressService = Provider.of<DressRoomService>(context, listen: false);
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
+    var lookService = Provider.of<LookBookService>(context, listen: false);
+
     return BaseWidget<SwipeModel>(
-        model: SwipeModel(
-          Provider.of<DressRoomService>(context),
-          Provider.of<SwipeService>(context),
-        ),
+        model: SwipeModel(dressService, swipeService),
         builder: (context, model, child) {
-          if (model.busy) return FadeIn(delay: 0.5, child: (LoadingWidget()));
-          if (Provider.of<SwipeService>(context).init == false) {
-            if (Provider.of<DressRoomService>(context).init == false) {
-              Provider.of<DressRoomService>(context).getDressRoom();
+          if (swipeService.init == false) {
+            if (dressService.init == false) {
+              dressService.getDressRoom();
             }
-            if (Provider.of<LookBookService>(context).init == false) {
-              Provider.of<LookBookService>(context).getLookBook();
+            if (lookService.init == false) {
+              lookService.getLookBook();
             }
             model.initCards();
             return LoadingWidget();
-          }
-          WidgetsBinding.instance.addPostFrameCallback((_) async {
-            if ((config.currentVersion != config.updateVersion) &&
-                !config.alreadyShow) {
+          } else if (model.busy)
+            return FadeIn(delay: 0.5, child: (LoadingWidget()));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if ((configService.currentVersion != configService.updateVersion) &&
+                !configService.alreadyShow) {
               ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
                 duration: Duration(milliseconds: 1500),
                 content: Text('Stride앱의 최신 버전이 나왔습니다!'),
               ));
-              config.alreadyShow = true;
+              configService.alreadyShow = true;
             }
-            //이 부분 후에 수정.
-            if (await _storage.read(key: 'swipe_tutorial') == null) {
-              _afterLayout();
+            if (authService.swipe_tutorial == false) {
+              authService.swipe_tutorial = true;
+              var _storage = authService.storage;
               _storage.write(key: 'swipe_tutorial', value: 'true');
+              _afterLayout();
             }
           });
           return FadeIn(
@@ -110,6 +112,19 @@ class _SwipeViewState extends State<SwipeView> {
                         setState(() {
                           size_flag = value;
                         });
+                        if (size_flag) {
+                          ServiceView.scaffoldKey.currentState
+                              .showSnackBar(SnackBar(
+                                  duration: Duration(milliseconds: 1500),
+                                  content: Row(children: [
+                                    Icon(
+                                      Icons.check,
+                                      color: backgroundColor,
+                                    ),
+                                    UIHelper.horizontalSpaceMedium,
+                                    Text('자신의 사이즈에 맞는 옷만 봅니다'),
+                                  ])));
+                        }
                         model.flagChange();
                         if (size_flag) {
                           Stride.analytics

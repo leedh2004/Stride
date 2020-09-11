@@ -299,7 +299,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     child: FaIcon(
                       FontAwesomeIcons.times,
                       size: 100,
-                      color: Colors.lightBlueAccent,
+                      color: Colors.blue,
                     )),
               ),
             ),

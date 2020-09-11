@@ -16,8 +16,6 @@ class DressRoomSelectDialog extends StatefulWidget {
   final List<Product> top;
   final List<Product> bottom;
   final CarouselController _controller = CarouselController();
-  int top_idx = 0;
-  int bottom_idx = 0;
   DressRoomSelectDialog(this.top, this.bottom);
   @override
   _DressRoomSelectDialogState createState() => _DressRoomSelectDialogState();
@@ -26,15 +24,12 @@ class DressRoomSelectDialog extends StatefulWidget {
 class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
   String page = "default";
   TextEditingController _renameTextController = TextEditingController();
+  int top_idx = 0;
+  int bottom_idx = 0;
 
   @override
   Widget build(BuildContext context) {
     Widget showWidget;
-    var top = widget.top;
-    var bottom = widget.bottom;
-    var _controller = widget._controller;
-    int top_idx = widget.top_idx;
-    int bottom_idx = widget.bottom_idx;
     if (page == "default") {
       showWidget = SingleChildScrollView(
         child: Container(
@@ -47,8 +42,8 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 CarouselSlider.builder(
-                  carouselController: _controller,
-                  itemCount: top.length,
+                  carouselController: widget._controller,
+                  itemCount: widget.top.length,
                   options: CarouselOptions(
                       height: 280.0,
                       enlargeCenterPage: true,
@@ -58,7 +53,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                         top_idx = index;
                       }),
                   itemBuilder: (context, int itemIndex) {
-                    if (top.length == 0) return Container();
+                    if (widget.top.length == 0) return Container();
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -72,7 +67,8 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(6),
                                       child: CachedNetworkImage(
-                                        imageUrl: top[itemIndex].thumbnail_url,
+                                        imageUrl:
+                                            widget.top[itemIndex].thumbnail_url,
                                         fit: BoxFit.cover,
                                         httpHeaders: {
                                           HttpHeaders.refererHeader:
@@ -95,12 +91,13 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              top[itemIndex].product_name,
+                                              widget
+                                                  .top[itemIndex].product_name,
                                               style: subHeaderStyle,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             Text(
-                                                'Price ${top[itemIndex].price}')
+                                                'Price ${widget.top[itemIndex].price}')
                                           ],
                                         ),
                                       ),
@@ -119,11 +116,12 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                       height: 280.0,
                       enableInfiniteScroll: false,
                       onPageChanged: (index, reason) {
+                        print(index);
                         bottom_idx = index;
                       }),
-                  itemCount: bottom.length,
+                  itemCount: widget.bottom.length,
                   itemBuilder: (context, int itemIndex) {
-                    if (bottom.length == 0) return Container();
+                    if (widget.bottom.length == 0) return Container();
                     return Container(
                         width: MediaQuery.of(context).size.width,
                         margin: EdgeInsets.symmetric(horizontal: 5.0),
@@ -138,8 +136,8 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(3),
                                       child: CachedNetworkImage(
-                                        imageUrl:
-                                            bottom[itemIndex].thumbnail_url,
+                                        imageUrl: widget
+                                            .bottom[itemIndex].thumbnail_url,
                                         fit: BoxFit.cover,
                                         httpHeaders: {
                                           HttpHeaders.refererHeader:
@@ -162,12 +160,13 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              bottom[itemIndex].product_name,
+                                              widget.bottom[itemIndex]
+                                                  .product_name,
                                               style: subHeaderStyle,
                                               overflow: TextOverflow.ellipsis,
                                             ),
                                             Text(
-                                                'Price ${bottom[itemIndex].price}')
+                                                'Price ${widget.bottom[itemIndex].price}')
                                           ],
                                         ),
                                       ),
@@ -192,7 +191,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                         // Stride.analytics
                         //     .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
                         // Provider.of<LookBookService>(context, listen: false)
-                        //     .addItem(top[top_idx], bottom[bottom_idx]);
+                        //     .addItem(top[top_idx], widget.bottom[bottom_idx]);
                         // ServiceView.scaffoldKey.currentState
                         //     .showSnackBar(SnackBar(
                         //         duration: Duration(milliseconds: 1500),
@@ -276,7 +275,9 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                       Stride.analytics
                           .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
                       await Provider.of<LookBookService>(context, listen: false)
-                          .addItem(top[top_idx], bottom[bottom_idx],
+                          .addItem(
+                              widget.top[top_idx],
+                              widget.bottom[bottom_idx],
                               _renameTextController.text);
                       ServiceView.scaffoldKey.currentState
                           .showSnackBar(SnackBar(
@@ -306,7 +307,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                     Stride.analytics
                         .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
                     await Provider.of<LookBookService>(context, listen: false)
-                        .addItem(top[top_idx], bottom[bottom_idx],
+                        .addItem(widget.top[top_idx], widget.bottom[bottom_idx],
                             _renameTextController.text);
                     ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
                         duration: Duration(milliseconds: 1500),
@@ -336,7 +337,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
 }
 
 // class DressRoomSelectDialog extends StatelessWidget {
-//   final List<Product> top;
+//   final List<Product> widget.top;
 //   final List<Product> bottom;
 //   final CarouselController _controller = CarouselController();
 //   // int top_idx = 0;
