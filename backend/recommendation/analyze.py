@@ -57,8 +57,7 @@ def get_user_liked_shop_concepts(user_id):
 
 
 # returns 10 most loved items of given clothes category
-def get_clothes_type_popular_items(user_id, clothes_type):
-    user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
+def get_clothes_type_popular_items(clothes_type, user_seen_items):
     res = es.search(
         index="user_ratings",
         body={
@@ -77,11 +76,13 @@ def get_clothes_type_popular_items(user_id, clothes_type):
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             },
             "aggs": {
@@ -94,14 +95,12 @@ def get_clothes_type_popular_items(user_id, clothes_type):
             }
         }
     )
-    print(res)
     res = res['aggregations']['group_by_product']['buckets']
     popular_items = [item['key'] for item in res]
     return popular_items
 
 
-def get_all_type_popular_items(user_id):
-    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+def get_all_type_popular_items(user_seen_items):
     res = es.search(
         index="user_ratings",
         body={
@@ -115,11 +114,13 @@ def get_all_type_popular_items(user_id):
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             },
             "aggs": {
@@ -132,7 +133,6 @@ def get_all_type_popular_items(user_id):
             }
         }
     )
-    print(res)
     res = res['aggregations']['group_by_product']['buckets']
     popular_items = [item['key'] for item in res]
     return popular_items
@@ -372,8 +372,7 @@ def get_entire_products_from_shop_es(shop_id):
 
 
 # paging 추가해서 patch
-def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type):
-    user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
+def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type, user_seen_items):
     res = es.search(
         index='products',
         body={
@@ -395,11 +394,13 @@ def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type)
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             }
         }
@@ -408,8 +409,7 @@ def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type)
     return random.sample(products, 20) if len(products) > 20 else products
 
 
-def get_products_from_shop_es_all_clothes_type(user_id, shop_ids):
-    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+def get_products_from_shop_es_all_clothes_type(shop_ids, user_seen_items):
     res = es.search(
         index='products',
         body={
@@ -424,11 +424,13 @@ def get_products_from_shop_es_all_clothes_type(user_id, shop_ids):
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             }
         }
@@ -437,8 +439,7 @@ def get_products_from_shop_es_all_clothes_type(user_id, shop_ids):
     return random.sample(products, 20) if len(products) > 20 else products
 
 
-def get_size_filtered_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type):
-    user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type)
+def get_size_filtered_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type, user_seen_items):
     user_size_data = queries.get_user_size_data(user_id)
     res = es.search(
         index='products',
@@ -486,11 +487,13 @@ def get_size_filtered_products_from_shop_es_with_clothes_type(user_id, shop_ids,
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             }
         }
@@ -499,8 +502,7 @@ def get_size_filtered_products_from_shop_es_with_clothes_type(user_id, shop_ids,
     return random.sample(products, 20) if len(products) > 20 else products
 
 
-def get_size_filtered_products_from_shop_es_all_clothes_type(user_id, shop_ids):
-    user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
+def get_size_filtered_products_from_shop_es_all_clothes_type(user_id, shop_ids, user_seen_items):
     user_size_data = queries.get_user_size_data(user_id)
     res = es.search(
         index='products',
@@ -509,7 +511,13 @@ def get_size_filtered_products_from_shop_es_all_clothes_type(user_id, shop_ids):
             "size": 50,
             "query": {
                 "bool": {
-                    "filter": [{"terms": {"shop_id": shop_ids}}],
+                    "filter": [
+                        {
+                            "terms": {
+                                "shop_id": shop_ids
+                            }
+                        }
+                    ],
                     "must": [
                         {
                             "range": {
@@ -537,11 +545,13 @@ def get_size_filtered_products_from_shop_es_all_clothes_type(user_id, shop_ids):
                             }
                         }
                     ],
-                    "must_not": {
-                        "terms": {
-                            "product_id": user_seen_items
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
                         }
-                    }
+                    ]
                 }
             }
         }
@@ -642,3 +652,68 @@ def get_user_unwearable_products(user_id):
     )
     unwearable_products = [item['_source']['product_id'] for item in res['hits']['hits']]
     return unwearable_products
+
+
+def get_clothes_type_non_preferred_items_from_es(user_preferred_shops, clothes_type, user_seen_items):
+    res = es.search(
+        index='products',
+        body={
+            "size": 10,
+            "_source": ["shop_id", "product_id"],
+            "query": {
+                "bool": {
+                    "filter": [
+                        {
+                            "term": {
+                                "clothes_type": clothes_type
+                            }
+                        }
+                    ],
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
+                        },
+                        {
+                            "terms": {
+                                "shop_id": user_preferred_shops
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    )
+    non_preferred_items = [item['_source']['product_id'] for item in res['hits']['hits']]
+    non_preferred_items = random.sample(non_preferred_items, 5)
+    return non_preferred_items
+
+
+def get_all_type_non_preferred_items_from_es(user_preferred_shops, user_seen_items):
+    res = es.search(
+        index='products',
+        body={
+            "size": 10,
+            "_source": ["shop_id", "product_id"],
+            "query": {
+                "bool": {
+                    "must_not": [
+                        {
+                            "terms": {
+                                "product_id": user_seen_items
+                            }
+                        },
+                        {
+                            "terms": {
+                                "shop_id": user_preferred_shops
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    )
+    non_preferred_items = [item['_source']['product_id'] for item in res['hits']['hits']]
+    non_preferred_items = random.sample(non_preferred_items, 5)
+    return non_preferred_items

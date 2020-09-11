@@ -224,7 +224,7 @@ def get_user_liked_shop_concepts_from_db(user_id):
 def get_recommended_shops_by_user_preferred_concepts_from_db(user_id):
     user_preferred_concepts = get_user_liked_shop_concepts_from_db(user_id)
     db_cursor = conn.cursor()
-    recommended_shops = []
+    recommended_shops = set()
     query = """select shop_id from shop where %s = ANY(shop_concept)"""
     db_cursor.execute(query, (user_preferred_concepts[0],))
     best_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
@@ -232,11 +232,11 @@ def get_recommended_shops_by_user_preferred_concepts_from_db(user_id):
     second_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
     db_cursor.execute(query, (user_preferred_concepts[2],))
     third_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    recommended_shops += list(best_concept_matched_shops.intersection(second_concept_matched_shops))
-    recommended_shops += list(best_concept_matched_shops.intersection(third_concept_matched_shops))
-    recommended_shops += list(second_concept_matched_shops.intersection(third_concept_matched_shops))
+    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(second_concept_matched_shops))
+    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(third_concept_matched_shops))
+    recommended_shops = recommended_shops.union(second_concept_matched_shops.intersection(third_concept_matched_shops))
     db_cursor.close()
-    return recommended_shops
+    return list(recommended_shops)
 
 
 def get_clothes_type_popular_items_from_db(clothes_type):
@@ -283,8 +283,8 @@ def count_user_liked_items_from_db(user_id):
 def get_clothes_type_non_preferred_items_from_db(preferred_shops, clothes_type):
     db_cursor = conn.cursor()
     preferred_shops = tuple(preferred_shops)
-    query = """select product_id from products join shop using (shop_id) 
-    where shop_id not in %s and type = %s order by random() limit 5"""
+    query = """select products.product_id from products join shop using (shop_id) 
+    where shop.shop_id not in %s and type = %s order by random() limit 5"""
     db_cursor.execute(query, (preferred_shops, clothes_type))
     result = db_cursor.fetchall()
     non_preferred_items = [str(item[0]) for item in result]

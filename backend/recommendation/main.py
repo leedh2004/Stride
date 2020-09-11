@@ -1,6 +1,7 @@
 import backend.recommendation.index as index
 import backend.recommendation.queries as queries
 import time
+import backend.recommendation.analyze as analyze
 import backend.recommendation.recommendation as recommendation
 
 es = index.es
