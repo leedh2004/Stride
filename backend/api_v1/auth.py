@@ -34,9 +34,6 @@ def login():
         user_id = str(id)
         print('user_id', user_id)
         g.user_id = user_id
-        if account['has_email'] is True:
-            account['has_email'] = encode_text(account['has_email'])
-            update_user_email(id, str(account['email']))
         flag = select_user_profile_flag()
         size = select_user_size()
         token = encode_jwt_token(id)
