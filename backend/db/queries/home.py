@@ -185,7 +185,7 @@ def get_recommended_product(products):
 
 def get_recommended_product_all(products):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id IN %s"""
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s"""
         try:
             types = ['top', 'dress', 'pants', 'skirt', 'all']
             product = {
