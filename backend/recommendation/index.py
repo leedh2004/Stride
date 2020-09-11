@@ -18,10 +18,11 @@ def index_product_documents():
     for product in products_info:
         doc = create_product_document(product)
         print(doc)
-        # es.index(index='products', body=doc, id=doc['product_id'])
-        # queries.update_es_flag_products_table(int(doc['product_id']))
+        es.index(index='products', body=doc, id=doc['product_id'])
+        queries.update_es_flag_products_table(int(doc['product_id']))
 
 
+# this function indexes user_ratings into user_ratings and user_rated_items indices
 def index_user_rating_data():
     for preference in ('likes', 'pass', 'dislikes'):
         # for each user who has updates
