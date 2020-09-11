@@ -69,7 +69,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                             width: 25, height: 25),
                         onPressed: () {
                           Stride.analytics.logEvent(
-                              name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
+                              name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                           showMaterialModalBottomSheet(
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10.0),
@@ -102,7 +102,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                           width: 25, height: 25, semanticsLabel: 'Acme Logo'),
                       onPressed: () {
                         Stride.analytics
-                            .logEvent(name: "DRESS_ROOM_REMOVE_BUTTON_CLICKED");
+                            .logEvent(name: "DRESSROOM_REMOVE_BUTTON_CLICKED");
                         AwesomeDialog(
                             context: context,
                             dialogType: DialogType.ERROR,
@@ -370,7 +370,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
           onPressed: () async {
             List<Product> top = model.findSelectedTop();
             List<Product> bottom = model.findSelectedBotoom();
-            Stride.analytics.logEvent(name: "DRESS_ROOM_MAKE_BUTTON_CLICKED");
+            Stride.analytics.logEvent(name: "DRESSROOM_MAKE_BUTTON_CLICKED");
             showMaterialModalBottomSheet(
                 backgroundColor: Colors.transparent,
                 expand: false,

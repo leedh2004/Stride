@@ -70,12 +70,13 @@ class DressRoomItemWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (opacity == 1) {
-                    Stride.analytics
-                        .logEvent(name: 'DRESS_ROOM_VIEW_SIZE', parameters: {
-                      'itemId': item.product_id.toString(),
-                      'itemName': item.product_name,
-                      'itemCategory': item.shop_name
-                    });
+                    Stride.analytics.logEvent(
+                        name: 'DRESSROOM_ITEM_INFO_CLICKED',
+                        parameters: {
+                          'itemId': item.product_id.toString(),
+                          'itemName': item.product_name,
+                          'itemCategory': item.shop_name
+                        });
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
                         pageBuilder: (___, _, __) => ProductDialog(item)));
@@ -113,10 +114,13 @@ class DressRoomItemWidget extends StatelessWidget {
                     onTap: () => {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        Stride.analytics.logViewItem(
-                            itemId: item.product_id.toString(),
-                            itemName: item.product_name,
-                            itemCategory: item.shop_name);
+                        Stride.analytics.logEvent(
+                            name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                            parameters: {
+                              'itemId': item.product_id.toString(),
+                              'itemName': item.product_name,
+                              'itemCategory': item.shop_name
+                            });
                         // 이 부분 코드는 나중에 수정해야할 듯.
                         Provider.of<SwipeService>(context, listen: false)
                             .purchaseItem(item.product_id);

@@ -27,6 +27,7 @@ class LookBookItem extends StatelessWidget {
           flex: 5,
           child: InkWell(
             onTap: () {
+              Stride.analytics.logEvent(name: 'LOOKBOOK_ITEM_INFO_CLICKED');
               showMaterialModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   context: context,
@@ -141,7 +142,7 @@ class LookBookItem extends StatelessWidget {
                             btnOkOnPress: () async {
                               print(index);
                               Stride.analytics
-                                  .logEvent(name: "LOOK_BOOK_RENAME");
+                                  .logEvent(name: "LOOKBOOK_RENAME");
                               Provider.of<LookBookModel>(context, listen: false)
                                   .rename(index, _textController.text);
                             })
@@ -181,7 +182,7 @@ class LookBookItem extends StatelessWidget {
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
                               Stride.analytics
-                                  .logEvent(name: "LOOK_BOOK_REMOVE");
+                                  .logEvent(name: "LOOKBOOK_REMOVE");
                               Provider.of<LookBookModel>(context, listen: false)
                                   .removeItem(item.id);
                             })

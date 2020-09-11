@@ -56,48 +56,35 @@ class _SizeInputDialogState extends State<SizeInputDialog> {
     }
 
     Widget showWidget;
-    showWidget = Column(mainAxisSize: MainAxisSize.min, children: [
-      Padding(
-          padding: EdgeInsets.all(40),
-          child: InputThirdPage(
-            shoulderRange: _shoulderRange,
-            shoulderflag: _shoulderflag,
-            breastRange: _breastRange,
-            breastflag: _breastflag,
-            waistRange: _waistRange,
-            waistflag: _waistflag,
-            hipRange: _hipRange,
-            hipflag: _hipflag,
-            thighRange: _thighRange,
-            thighflag: _thighflag,
-          )),
-      Material(
-        color: backgroundColor,
-        child: InkWell(
-          child: Container(
+    showWidget = SingleChildScrollView(
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        Padding(
             padding: EdgeInsets.all(20),
-            alignment: Alignment.center,
-            width: double.infinity,
-            child: Text('완료', style: TextStyle(color: Colors.white)),
-          ),
-          onTap: () async {
-            print(_shoulderRange.value);
-            if (await Provider.of<TutorialService>(context, listen: false)
-                .sendSize([
-              _waistRange,
-              _hipRange,
-              _thighRange,
-              _shoulderRange,
-              _breastRange
-            ], [
-              _waistflag,
-              _hipflag,
-              _thighflag,
-              _shoulderflag,
-              _breastflag
-            ])) {
-              Provider.of<AuthenticationService>(context, listen: false)
-                  .changeUserSize([
+            child: InputThirdPage(
+              shoulderRange: _shoulderRange,
+              shoulderflag: _shoulderflag,
+              breastRange: _breastRange,
+              breastflag: _breastflag,
+              waistRange: _waistRange,
+              waistflag: _waistflag,
+              hipRange: _hipRange,
+              hipflag: _hipflag,
+              thighRange: _thighRange,
+              thighflag: _thighflag,
+            )),
+        Material(
+          color: backgroundColor,
+          child: InkWell(
+            child: Container(
+              padding: EdgeInsets.all(20),
+              alignment: Alignment.center,
+              width: double.infinity,
+              child: Text('완료', style: TextStyle(color: Colors.white)),
+            ),
+            onTap: () async {
+              print(_shoulderRange.value);
+              if (await Provider.of<TutorialService>(context, listen: false)
+                  .sendSize([
                 _waistRange,
                 _hipRange,
                 _thighRange,
@@ -109,15 +96,30 @@ class _SizeInputDialogState extends State<SizeInputDialog> {
                 _thighflag,
                 _shoulderflag,
                 _breastflag
-              ]);
-              // Provider.of<StrideUser>(context, listen: false).profile_flag =
-              //     true;
-              Navigator.pop(context);
-            }
-          },
-        ),
-      )
-    ]);
+              ])) {
+                Provider.of<AuthenticationService>(context, listen: false)
+                    .changeUserSize([
+                  _waistRange,
+                  _hipRange,
+                  _thighRange,
+                  _shoulderRange,
+                  _breastRange
+                ], [
+                  _waistflag,
+                  _hipflag,
+                  _thighflag,
+                  _shoulderflag,
+                  _breastflag
+                ]);
+                // Provider.of<StrideUser>(context, listen: false).profile_flag =
+                //     true;
+                Navigator.pop(context);
+              }
+            },
+          ),
+        )
+      ]),
+    );
     return showWidget;
   }
 }

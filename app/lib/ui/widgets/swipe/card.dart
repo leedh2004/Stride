@@ -235,6 +235,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     color: Colors.transparent,
                   ),
                   onPressed: () {
+                    Stride.analytics
+                        .logEvent(name: "SWIPE_RULER_BUTTON_CLICKED");
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
                         pageBuilder: (___, _, __) => SizeDialog(

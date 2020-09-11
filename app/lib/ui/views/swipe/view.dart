@@ -188,7 +188,7 @@ class _SwipeViewState extends State<SwipeView> {
                   onTap: () {
                     setState(() => model.changeType('${TYPE[index]}'));
                     Stride.analytics.logEvent(
-                      name: 'SWIPE_CHANGE_MENU_${TYPE[index]}',
+                      name: 'SWIPE_CLOTH_TYPE_CHANGE_${TYPE[index]}',
                     );
                   },
                   child: Padding(
@@ -307,7 +307,7 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "스위치가 켜지면 사이즈에 맞는 옷만 볼 수 있습니다.",
+                        "스위치가 켜지면 설정한 사이즈에 맞는 옷만 볼 수 있습니다.",
                         style: TextStyle(color: Colors.white),
                       ),
                     )
@@ -352,6 +352,7 @@ class _SwipeViewState extends State<SwipeView> {
           onPressed: () async {
             if (onflag) return false;
             onflag = true;
+            Stride.analytics.logEvent(name: 'SWIPE_HATE_BUTTON_CLICKED');
             model.dislikeRequest();
             setState(() {
               dislike_opacity = 1;
@@ -381,10 +382,13 @@ class _SwipeViewState extends State<SwipeView> {
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               SwipeCard item = Provider.of<SwipeService>(context)
                   .items[model.type][model.index];
-              Stride.analytics.logViewItem(
-                  itemId: item.product_id.toString(),
-                  itemName: item.product_name,
-                  itemCategory: item.shop_name);
+              Stride.analytics
+                  .logEvent(name: 'SWIPE_PURCHASE_BUTTON_CLICKED', parameters: {
+                'itemId': item.product_id.toString(),
+                'itemName': item.product_name,
+                'itemCategory': item.shop_name
+              });
+
               model.purchaseItem(item.product_id);
               return ProductWebView(item.product_url, item.shop_name);
             }));
@@ -403,6 +407,7 @@ class _SwipeViewState extends State<SwipeView> {
         RawMaterialButton(
           onPressed: () async {
             if (onflag) return false;
+            Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
             onflag = true;
             model.likeRequest();
             setState(() {

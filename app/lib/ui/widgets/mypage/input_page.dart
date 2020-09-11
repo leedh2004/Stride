@@ -35,14 +35,6 @@ class InputThirdPage extends StatefulWidget {
 }
 
 class _InputThirdPageState extends State<InputThirdPage> {
-  // 아께 30 ~ 50
-  // 가슴 30 ~ 60
-  // 허리 20 ~ 50
-  // 엉덩이 30 ~ 60
-  // 허벅지 20 ~ 40
-  // double _lowerValueFormatter = 20.0;
-  // double _upperValueFormatter = 20.0;
-  //어깨, 가슴, 허리, 힙, 밑단, 암홀, 소매길이,
   Widget mySlider(String type, FlagWrapper flag, RangeWrapper rangeWrapper,
       double maxRange, double minRange) {
     String unit = 'cm';
@@ -66,35 +58,33 @@ class _InputThirdPageState extends State<InputThirdPage> {
               });
             },
           ),
-          Expanded(
-            child: PurpleSliderTheme(
-                context,
-                RangeSlider(
-                    max: maxRange,
-                    min: minRange,
-                    values: rangeWrapper.value,
-                    onChanged: flag.value
-                        ? (RangeValues range) {
-                            setState(() => rangeWrapper.value = range);
-                          }
-                        : null)),
-          ),
+          RichText(
+              text: TextSpan(
+                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                  children: [
+                TextSpan(
+                    text: '${rangeWrapper.value.start.toInt()}',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: unit),
+                TextSpan(text: ' ~ '),
+                TextSpan(
+                    text: '${rangeWrapper.value.end.toInt()}',
+                    style: TextStyle(fontWeight: FontWeight.w700)),
+                TextSpan(text: unit),
+              ]))
         ],
       ),
-      RichText(
-          text: TextSpan(
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-              children: [
-            TextSpan(
-                text: '${rangeWrapper.value.start.toInt()}',
-                style: TextStyle(fontWeight: FontWeight.w700)),
-            TextSpan(text: unit),
-            TextSpan(text: ' ~ '),
-            TextSpan(
-                text: '${rangeWrapper.value.end.toInt()}',
-                style: TextStyle(fontWeight: FontWeight.w700)),
-            TextSpan(text: unit),
-          ]))
+      PurpleSliderTheme(
+          context,
+          RangeSlider(
+              max: maxRange,
+              min: minRange,
+              values: rangeWrapper.value,
+              onChanged: flag.value
+                  ? (RangeValues range) {
+                      setState(() => rangeWrapper.value = range);
+                    }
+                  : null)),
     ]);
   }
 

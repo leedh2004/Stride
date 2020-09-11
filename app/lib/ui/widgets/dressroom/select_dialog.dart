@@ -185,6 +185,8 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                       padding: EdgeInsets.fromLTRB(70, 12, 70, 12),
                       color: backgroundColor,
                       onPressed: () async {
+                        Stride.analytics
+                            .logEvent(name: 'DRESSROOM_SAVE_BUTTON_CLICKED');
                         setState(() {
                           page = "rename";
                         });

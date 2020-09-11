@@ -12,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
 import '../feedback_web_view.dart';
 import '../service_view.dart';
 
@@ -59,7 +60,8 @@ class MyPageView extends StatelessWidget {
                       leading: FaIcon(FontAwesomeIcons.tshirt),
                       title: Text('사이즈 수정'),
                       onTap: () {
-                        print("!!!");
+                        Stride.analytics
+                            .logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
                         showMaterialModalBottomSheet(
                           isDismissible: true,
                           expand: false,
@@ -78,6 +80,9 @@ class MyPageView extends StatelessWidget {
                       leading: FaIcon(FontAwesomeIcons.phoneSquareAlt),
                       title: Text('문의﹒건의'),
                       onTap: () {
+                        Stride.analytics
+                            .logEvent(name: 'MYPAGE_CONTACT_BUTTON_CLICKED');
+
                         ServiceView.scaffoldKey.currentState
                             .showSnackBar(SnackBar(
                           duration: Duration(milliseconds: 1500),
@@ -91,6 +96,9 @@ class MyPageView extends StatelessWidget {
                       leading: FaIcon(FontAwesomeIcons.appStoreIos),
                       title: Text('앱 설문조사'),
                       onTap: () {
+                        Stride.analytics
+                            .logEvent(name: 'MYPAGE_FEEDBACK_BUTTON_CLICKED');
+
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           // Stride.analytics.logViewItem(
@@ -110,6 +118,9 @@ class MyPageView extends StatelessWidget {
                       leading: FaIcon(FontAwesomeIcons.signOutAlt),
                       title: Text('로그아웃'),
                       onTap: () {
+                        Stride.analytics
+                            .logEvent(name: 'MYPAGE_LOGOUT_BUTTON_CLICKED');
+
                         Provider.of<SwipeService>(context, listen: false).init =
                             false;
                         Provider.of<DressRoomService>(context, listen: false)
@@ -127,6 +138,9 @@ class MyPageView extends StatelessWidget {
                       leading: FaIcon(FontAwesomeIcons.code),
                       title: Text('개인정보 처리방침'),
                       onTap: () {
+                        Stride.analytics
+                            .logEvent(name: 'MYPAGE_PRIVATE_BUTTON_CLICKED');
+
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           // Stride.analytics.logViewItem(

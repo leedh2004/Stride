@@ -47,7 +47,7 @@ class DressRoomView extends StatelessWidget {
                               onTap: () {
                                 model.changeFolder(folderKeys[index]);
                                 Stride.analytics
-                                    .logEvent(name: "DRESS_ROOM_FOLDER_CHANGE");
+                                    .logEvent(name: "DRESSROOM_FOLDER_CHANGE");
                               },
                               child: Container(
                                   margin: EdgeInsets.only(right: 10),
