@@ -32,7 +32,6 @@ def insert_user_birth_year():
     body = request.get_json()
     year = body['birth']
     try:
-        year = encode_text(year)
         insert_user_birth(year)
     except:
         return jsonify('Fail'), 500

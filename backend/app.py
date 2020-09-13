@@ -58,11 +58,14 @@ def log(response):
         user = 'unidetified'
     else:
         user = result
+    if request.path == '/admin/check':
+        return response
     if mode == 'dev':
         logger = logging.getLogger(log_stream)
         logger.addHandler(dev_cw_handler)
 
     elif 'prod' in mode:
+
         logger = logging.getLogger(log_stream + mode)
         logger.addHandler(cw_handler)
     res_data = response.get_data().decode('utf-8')
