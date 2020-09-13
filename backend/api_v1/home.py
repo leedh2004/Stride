@@ -28,7 +28,6 @@ def get_clothes():
                 recommendation_list = get_item_recommendation(g.user_id, type, True)
             elif size == 'off':
                 recommendation_list = get_item_recommendation(g.user_id, type, False)
-            print(recommendation_list)
             result = get_recommended_product(recommendation_list[type])
         else:
             check_like_cnt() ## 좋아요 몇 개 체크..
