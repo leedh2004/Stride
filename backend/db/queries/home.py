@@ -139,10 +139,11 @@ def get_clothes_category(type):
 
 def get_recommended_product(products):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s"""
+        text_product = (str(products))
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s ORDER BY position(product_id::text in %s)"""
         try:
             product = []
-            cursor.execute(query, (tuple(products), ))
+            cursor.execute(query, (tuple(products), text_product))
             result = cursor.fetchall()
             for item in result:
                 load = ProductModel()
@@ -185,7 +186,8 @@ def get_recommended_product(products):
 
 def get_recommended_product_all(products):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s"""
+        text_product = (str(products))
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s ORDER BY position(product_id::text in %s)"""
         try:
             types = ['top', 'dress', 'pants', 'skirt', 'all']
             product = {
@@ -196,7 +198,7 @@ def get_recommended_product_all(products):
                 'top': []
             }
             for type in types:
-                cursor.execute(query, (tuple(products[type]), ))
+                cursor.execute(query, (tuple(products[type]), text_product))
                 result = cursor.fetchall()
                 for item in result:
                     load = ProductModel()
