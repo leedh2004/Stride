@@ -9,11 +9,10 @@ Widget LoadingWidget() {
       child: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          FaIcon(
-            FontAwesomeIcons.fire,
-            color: Colors.white,
-            size: 48,
-          ),
+          // Image.asset(
+          //   'images/a.png',
+          //   width: 48,
+          // ),
           SleekCircularSlider(
             appearance: CircularSliderAppearance(
               spinnerMode: true,

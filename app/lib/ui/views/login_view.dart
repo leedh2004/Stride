@@ -1,8 +1,12 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
+import 'package:app/core/services/error.dart';
 import 'package:app/core/viewmodels/auth.dart';
+import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
+import 'package:app/ui/views/feedback_web_view.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';

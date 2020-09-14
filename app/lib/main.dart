@@ -456,8 +456,7 @@ import 'package:provider/provider.dart';
 
 Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized();
-  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
-  KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
+  // KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
@@ -482,7 +481,7 @@ Future<void> main() async {
       },
     );
   }
-
+  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
   await remoteConfig.fetch(expiration: const Duration(seconds: 0));
   await remoteConfig.activateFetched();
