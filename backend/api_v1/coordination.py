@@ -31,8 +31,11 @@ def create_coord():
         bottom_product_id = body['bottom_product_id']
         default_look_name = body['name']
         coor_id = insert_coordination(default_look_name, top_product_id, bottom_product_id)
-    except:
-        return jsonify("Fail"), 500
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
     return coor_id, 200
 
 

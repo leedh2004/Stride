@@ -5,6 +5,7 @@ import requests
 from config.oauthconfig import *
 from bson import ObjectId, json_util
 import sys
+import subprocess
 
 sys.path.append('../')
 sys.path.append('../../')
@@ -12,7 +13,7 @@ sys.path.append('../../../')
 from backend.authentication.auth import *
 from backend.db.queries.home import *
 from backend.db.queries.behavior import *
-
+from backend.recommendation.main import *
 home = Blueprint('home', __name__)
 
 
@@ -21,13 +22,20 @@ home = Blueprint('home', __name__)
 def get_clothes():
     try:
         type = request.args.get('type')
-        types = ['top', 'dress', 'pants', 'skirt']
-        if type is None:
-            result = get_home_clothes()
+        size = request.args.get('size')
+        if select_user_recommenation_flag() is True:
+            if size == 'on':
+                recommendation_list = get_item_recommendation(g.user_id, type, True)
+            elif size == 'off':
+                recommendation_list = get_item_recommendation(g.user_id, type, False)
+            result = get_recommended_product(recommendation_list[type])
         else:
-            if type not in types:
-                return jsonify("Fail"), 500
-            result = get_clothes_category(type)
+            check_like_cnt() ## 좋아요 몇 개 체크..
+            if size == 'on':
+                random_list = get_type_clothes_sf(type)
+            elif size == 'off':
+                random_list = get_clothes_category(type)
+            result = random_list
     except:
         return jsonify("Fail"), 500
     return result, 200
@@ -37,7 +45,23 @@ def get_clothes():
 @login_required
 def get_all_type_clothes_limit_num():
     try:
-        result = get_all_type_clothes()
+        size = request.args.get('size')
+        if select_user_recommenation_flag() is True:
+            types = ['top', 'skirt', 'pants', 'dress', 'all']
+            all_list = {}
+            for type in types:
+                if size == 'on':
+                    recommendation_list = get_item_recommendation(g.user_id, type, True)
+                elif size == 'off':
+                    recommendation_list = get_item_recommendation(g.user_id, type, False)
+                all_list.update(recommendation_list)
+            result = get_recommended_product_all(all_list)
+        else:
+            check_like_cnt()  ## 좋아요 몇 개 체크..
+            if size == 'on':
+                result = get_all_type_clothes_sf()
+            elif size == 'off':
+                result = get_all_type_clothes()
     except:
         return jsonify("Fail"), 500
     return result, 200
@@ -49,8 +73,11 @@ def like():
         body = request.get_json()
         product_id = body['product_id']
         insert_like(product_id)
-    except:
-        return jsonify("Fail"), 500
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
     return 'Success', 200
 
 
@@ -61,8 +88,11 @@ def dislike():
         body = request.get_json()
         product_id = body['product_id']
         insert_dislikes(product_id)
-    except:
-        return jsonify("Fail"), 500
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
     return 'Success', 200
 
 
@@ -73,8 +103,11 @@ def passes():
         body = request.get_json()
         product_id = body['product_id']
         insert_pass(product_id)
-    except:
-        return jsonify("Fail"), 500
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
     return 'Success', 200
 
 
@@ -85,30 +118,11 @@ def purchase():
         body = request.get_json()
         product_id = body['product_id']
         insert_purchases(product_id)
-    except:
-        return jsonify("Fail"), 500
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
     return 'Success', 200
 
 
-@home.route('/recommendation', methods=['GET'])
-@login_required
-def get_recommendation():
-    try:
-        QUERY = ''
-        GET_ALL_TYPE_QUERY = ES_URL + '/recommended_list/_search/?q=user_id:'
-        type = request.args.get('type')
-        types = ['top', 'dress', 'pants', 'skirt']
-        user_id = str(g.user_id)
-        if type is None:
-            QUERY = GET_ALL_TYPE_QUERY + user_id
-        response = requests.get(QUERY)
-        res = response.json()
-        has_hits = res['hits']['hits']
-        if not has_hits:
-            result = get_home_clothes()
-        else:
-            recommended_list = res['hits']['hits'][0]['_source']['recommended_products']
-            result = get_recommended_product(recommended_list)
-    except:
-        return jsonify('Fail'), 500
-    return result, 200

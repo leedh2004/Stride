@@ -58,18 +58,22 @@ def log(response):
         user = 'unidetified'
     else:
         user = result
+    if request.path == '/admin/check':
+        return response
     if mode == 'dev':
         logger = logging.getLogger(log_stream)
         logger.addHandler(dev_cw_handler)
 
     elif 'prod' in mode:
+
         logger = logging.getLogger(log_stream + mode)
         logger.addHandler(cw_handler)
     res_data = response.get_data().decode('utf-8')
+    req_data = request.get_data().decode('utf-8')
     if request.method in ['GET', 'DELETE']:
         log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), res_data)
     else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), res_data, str(request.get_data()))
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), res_data, req_data)
     logger.info(log_msg)
     return response
 
