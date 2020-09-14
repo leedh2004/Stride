@@ -2,12 +2,16 @@ import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/views/product_web_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 Map<String, String> pants = {
   "총장": "length",
@@ -85,10 +89,10 @@ class _ProductTableState extends State<ProductTable> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
-          color: Colors.white,
+          padding: EdgeInsets.all(4),
           child: Column(children: [
             Padding(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              padding: EdgeInsets.fromLTRB(4, 0, 4, 0),
               child:
                   Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Expanded(
@@ -113,14 +117,46 @@ class _ProductTableState extends State<ProductTable> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                '${widget.item.shop_name}',
+                                style: shopInfoHighlightText,
+                              ),
+                              ButtonTheme(
+                                minWidth: 24,
+                                height: 24,
+                                child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      Stride.analytics.logViewItem(
+                                          itemId:
+                                              widget.item.product_id.toString(),
+                                          itemName: widget.item.product_name,
+                                          itemCategory: widget.item.shop_name);
+                                      Provider.of<SwipeService>(context,
+                                              listen: false)
+                                          .purchaseItem(widget.item.product_id);
+                                      return ProductWebView(
+                                          widget.item.product_url,
+                                          widget.item.shop_name);
+                                    }));
+                                  },
+                                  child: SvgPicture.asset(
+                                    'images/buy.svg',
+                                    width: 16,
+                                    height: 16,
+                                  ),
+                                ),
+                              )
+                            ]),
                         Text(
-                          '${widget.item.shop_name}',
-                          style: shopInfoText,
-                        ),
-                        Text('${widget.item.product_name}',
+                            '${widget.item.product_name} [${widget.item.type.toUpperCase()}]',
                             style: shopInfoText),
-                        UIHelper.verticalSpaceSmall,
                         Text('${widget.item.price}원', style: shopInfoText),
+                        Text('(단면, cm)'),
                         UIHelper.verticalSpaceSmall,
                         Table(
                           children: [
@@ -144,6 +180,7 @@ class _ProductTableState extends State<ProductTable> {
                                       Expanded(
                                         flex: 3,
                                         child: Wrap(
+                                            alignment: WrapAlignment.center,
                                             direction: Axis.horizontal,
                                             children: List.generate(
                                                 widget.keys.length, (index) {
@@ -186,7 +223,8 @@ class _ProductTableState extends State<ProductTable> {
                                                         child: Center(
                                                             child: Text(
                                                           '${ret.toUpperCase()}',
-                                                          style: sizeCellText,
+                                                          style:
+                                                              sizeCellWhiteText,
                                                         )),
                                                       )),
                                                 );
@@ -199,7 +237,11 @@ class _ProductTableState extends State<ProductTable> {
                                 ]),
                             ...List.generate(widget.header.length, (index) {
                               var ret = widget.sizeMapper[widget.current]
-                                  .map[widget.mapper[widget.header[index]]];
+                                  .map[widget.mapper[widget.header[index]]]
+                                  .toString();
+                              if (ret == '0.0') ret = '-';
+                              if (ret.endsWith('.0'))
+                                ret = ret.substring(0, ret.length - 2);
                               return TableRow(
                                   decoration: BoxDecoration(
                                       border: Border(
@@ -243,6 +285,8 @@ class _ProductTableState extends State<ProductTable> {
   }
 }
 
+const shopInfoHighlightText = TextStyle(
+    fontSize: 16, fontWeight: FontWeight.bold, color: backgroundColor);
 const shopInfoText = TextStyle(fontSize: 14);
 const tableHeaderSizeText =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w600);

@@ -24,6 +24,7 @@ class StrideUser {
           //birth_year: user.birth_year,
           profile_flag: user.profile_flag,
           shoulder: user.shoulder,
+          waist: user.waist,
           bust: user.bust,
           hip: user.hip,
           thigh: user.thigh,

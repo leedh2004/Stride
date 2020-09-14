@@ -16,11 +16,16 @@ class SwipeService {
   Map<String, List<SwipeCard>> items;
   Set<int> precached = new Set();
   bool init = false;
+  bool size_flag = false;
 
   SwipeService(Api api) {
     print("SwipeService 생성!");
     initialize();
     _api = api;
+  }
+
+  void flagChange() {
+    size_flag = !size_flag;
   }
 
   bool initialize() {
@@ -41,20 +46,29 @@ class SwipeService {
   }
 
   void nextItem() {
+    print("nextItem()");
+    print("LENGTH: ${length[type]}, INDEX: ${index[type]}");
     precached.remove(items[type][index[type]].product_id);
     index[type]++;
     if (index[type] + 5 >= length[type]) {
+      if (index[type] + 2 >= length[type]) {
+        index[type]--;
+        _api.errorCreate(Error());
+      }
       items[type] = items[type].sublist(index[type]);
       index[type] = 0;
       length[type] = items[type].length;
-      getCards();
+      try {
+        getCards();
+      } catch (e) {
+        index[type]--;
+      }
     }
   }
 
-  Future initCards() async {
-    initialize();
-    var response = await _api.client.get('${Api.endpoint}/home/all');
-    if (response.statusCode == 200) {
+  Future initSizeCards() async {
+    try {
+      var response = await _api.client.get('${Api.endpoint}/home/all?size=on');
       var data = json.decode(response.data) as Map<String, dynamic>;
       print(data);
       for (var type in TYPE) {
@@ -69,32 +83,56 @@ class SwipeService {
         }
         //
         items[type] = temp;
-        length[type] += temp.length;
+        length[type] = temp.length;
       }
-      print("HERE");
-      print(type);
-      init = true;
-    } else {
-      print(response.statusCode);
+      //init = true;
+    } catch (e) {
+      _api.errorCreate(Error());
     }
   }
 
-  Future<List<SwipeCard>> getCards() async {
-    var temp = List<SwipeCard>();
-    // fail시 flag로 토스트 메세지 띄워주기
-    // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
-    var response;
-    if (type == 'all') {
-      response = await _api.client.get(
-        '${Api.endpoint}/home/',
-      );
-    } else {
-      response = await _api.client.get(
-        '${Api.endpoint}/home?type=${type}',
-      );
+  Future initCards() async {
+    initialize();
+    try {
+      var response = await _api.client.get('${Api.endpoint}/home/all?size=off');
+      var data = json.decode(response.data) as Map<String, dynamic>;
+      print(data);
+      for (var type in TYPE) {
+        List<SwipeCard> temp = new List<SwipeCard>();
+        var parsed = data[type] as List<dynamic>;
+        for (var item in parsed) {
+          temp.add(SwipeCard.fromJson(item));
+        }
+        //FOR DEBUG
+        for (var item in temp) {
+          print(item.product_name);
+        }
+        //
+        items[type] = temp;
+        length[type] = temp.length;
+      }
+      init = true;
+    } catch (e) {
+      print("???");
+      _api.errorCreate(Error());
     }
+  }
 
-    if (response.statusCode == 200) {
+  // fail시 flag로 토스트 메세지 띄워주기
+  // time 302, 응답이 느리다, 잠시 후 다시 시도하는 재시도 버튼을 넣는게 바람직한 UI
+  Future<List<SwipeCard>> getCards() async {
+    print("getCards()!!!!!!!!!!!!");
+    var temp = List<SwipeCard>();
+    var response;
+    var url = '${Api.endpoint}/home?type=${type}&size=';
+    if (size_flag)
+      url += 'on';
+    else
+      url += 'off';
+
+    try {
+      response = await _api.client.get(url);
+
       var parsed = json.decode(response.data) as List<dynamic>;
       for (var item in parsed) {
         temp.add(SwipeCard.fromJson(item));
@@ -108,44 +146,56 @@ class SwipeService {
       // }
       items[type] = [...items[type], ...temp];
       length[type] = items[type].length;
-    } else {
-      print("Network Error getAllSwipeCard() ${response.statusCode}");
+      return temp;
+    } catch (e) {
+      _api.errorCreate(Error());
+      throw ("some arbitrary error");
     }
-    return temp;
   }
 
   Future<Product> likeRequest() async {
     print("LIKE!!");
     int cur = index[type];
-    print(type);
-    print(cur);
-    final response = await _api.client.post('${Api.endpoint}/home/like',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Like ${response.statusCode}");
-    Product item = Product.fromSwipeCard(items[type][cur].toJson());
-    return item;
-    //print(item.product_name);
-    //await _dressRoomService.addItem(item);
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/like',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+      if (response.statusCode == 202) return null;
+      print("Like ${response.statusCode}");
+      Product item = Product.fromSwipeCard(items[type][cur].toJson());
+      return item;
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
   }
 
   Future dislikeRequest() async {
     print("DISLIKE!!");
     int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/dislike',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Dislike ${response.statusCode}");
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/dislike',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
   }
 
   Future passRequest() async {
     print("PASS!!");
     int cur = index[type];
-    final response = await _api.client.post('${Api.endpoint}/home/pass',
-        data: jsonEncode({'product_id': items[type][cur].product_id}));
-    print("Pass ${response.statusCode}");
+    try {
+      final response = await _api.client.post('${Api.endpoint}/home/pass',
+          data: jsonEncode({'product_id': items[type][cur].product_id}));
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
   }
 
   Future purchaseItem(int id) async {
-    await _api.client.post('${Api.endpoint}/home/purchase',
-        data: jsonEncode({'product_id': id}));
+    try {
+      await _api.client.post('${Api.endpoint}/home/purchase',
+          data: jsonEncode({'product_id': id}));
+    } catch (e) {
+      // _api.errorCreate(Error());
+    }
   }
 }

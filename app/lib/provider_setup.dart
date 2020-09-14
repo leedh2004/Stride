@@ -1,5 +1,6 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/error.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:provider/provider.dart';
@@ -17,12 +18,15 @@ List<SingleChildWidget> providers = [
 
 // 독립적인 Provider
 List<SingleChildWidget> independentServices = [
-  Provider.value(value: Api()),
-  // Provider.value(value: AppleSignInAvailable())
+  //Provider.value(value: Api()),
+  Provider.value(value: ErrorService()),
 ];
 
 // 다른 Provider의 값에 의존하는 Provider
 List<SingleChildWidget> dependentServices = [
+  ProxyProvider<ErrorService, Api>(
+    update: (context, errorService, api) => Api(errorService),
+  ),
   ProxyProvider<Api, AuthenticationService>(
     update: (context, api, authenticatonService) => AuthenticationService(api),
   ),
@@ -46,16 +50,8 @@ List<SingleChildWidget> uiConsumableProviders = [
     create: (context) =>
         Provider.of<AuthenticationService>(context, listen: false).user,
   ),
-  // StreamProvider<List<Product>>(
-  //   create: (context) =>
-  //       Provider.of<DressRoomService>(context, listen: false).items,
-  // ),
-  // StreamProvider<List<List<SwipeCard>>>(
-  //   create: (context) =>
-  //       Provider.of<SwipeService>(context, listen: false).items,
-  // ),
-  // StreamProvider<List<Coordinate>>(
-  //   create: (context) =>
-  //       Provider.of<LookBookService>(context, listen: false).items,
-  // )
+  StreamProvider<Error>(
+    create: (context) =>
+        Provider.of<ErrorService>(context, listen: false).error,
+  )
 ];

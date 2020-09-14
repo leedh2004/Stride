@@ -48,9 +48,14 @@ class TutorialService {
         'waist': waistRange
       }
     };
-    var response = await _api.client
-        .post('${Api.endpoint}/user/size', data: jsonEncode(send));
-    if (response.statusCode == 200) return true;
+    try {
+      var response = await _api.client
+          .post('${Api.endpoint}/user/size', data: jsonEncode(send));
+      return true;
+    } catch (e) {
+      _api.errorCreate(Error());
+      return false;
+    }
     return false;
   }
 }

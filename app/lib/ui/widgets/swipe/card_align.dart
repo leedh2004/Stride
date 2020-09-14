@@ -4,7 +4,9 @@ import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/ui/views/swipe/view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -135,7 +137,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                           style: whiteShadowStyle,
                         ),
                         Text(
-                          widget.item.price + '원',
+                          '${widget.item.price}원 [${widget.item.type.toUpperCase()}]',
                           style: whiteSmallShadowStyle,
                         )
                       ]),
@@ -146,9 +148,10 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
                   child: IconButton(
-                    icon: FaIcon(
-                      FontAwesomeIcons.rulerVertical,
-                      size: 35,
+                    // key: SwipeView.rulerButton,
+                    icon: SvgPicture.asset(
+                      'images/ruler.svg',
+                      width: 50,
                       color: Colors.white,
                     ),
                     onPressed: () {

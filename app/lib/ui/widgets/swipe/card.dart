@@ -17,8 +17,11 @@ List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
-  SwipeCardSection(BuildContext context, SwipeModel _model) {
+  GlobalKey rulerButton;
+  SwipeCardSection(
+      BuildContext context, SwipeModel _model, GlobalKey _rulerButton) {
     model = _model;
+    rulerButton = _rulerButton;
     double standard = 0.6;
     if (MediaQuery.of(context).size.height > 800) standard = 0.65;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
@@ -49,7 +52,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   void initState() {
     super.initState();
     _controller =
-        AnimationController(duration: Duration(milliseconds: 400), vsync: this);
+        AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     _controller.addListener(() => setState(() {}));
     _controller.addStatusListener((AnimationStatus status) {
       if (status == AnimationStatus.completed) {
@@ -225,12 +228,15 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               child: Padding(
                 padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
                 child: IconButton(
+                  key: widget.rulerButton,
                   icon: FaIcon(
                     FontAwesomeIcons.rulerVertical,
                     size: 50,
                     color: Colors.transparent,
                   ),
                   onPressed: () {
+                    Stride.analytics
+                        .logEvent(name: "SWIPE_RULER_BUTTON_CLICKED");
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
                         pageBuilder: (___, _, __) => SizeDialog(
@@ -295,7 +301,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     child: FaIcon(
                       FontAwesomeIcons.times,
                       size: 100,
-                      color: Colors.lightBlueAccent,
+                      color: Colors.blue,
                     )),
               ),
             ),
@@ -321,10 +327,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    child: FaIcon(
-                      FontAwesomeIcons.chevronCircleUp,
-                      size: 100,
-                      color: Colors.white,
+                    child: Image.asset(
+                      'images/up-arrow.png',
+                      width: 100,
                     )),
               ),
             ),

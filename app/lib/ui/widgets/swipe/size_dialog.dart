@@ -1,9 +1,12 @@
+import 'package:animated_widgets/animated_widgets.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Map<String, String> pants = {
@@ -36,7 +39,7 @@ Map<String, String> top = {
   "소매길이": "arm_length"
 };
 
-class SizeDialog extends StatelessWidget {
+class SizeDialog extends StatefulWidget {
   SwipeCard item;
   ProductSize product_size;
   List<String> keys;
@@ -62,143 +65,335 @@ class SizeDialog extends StatelessWidget {
       sizeMapper[key] = product_size.size[key];
     }
   }
+  @override
+  _SizeDialogState createState() => _SizeDialogState();
+}
 
+class _SizeDialogState extends State<SizeDialog> {
+  bool display = true;
   @override
   Widget build(BuildContext context) {
     Stride.analytics.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
-      'itemId': item.product_id.toString(),
-      'itemName': item.product_name,
-      'itemCategory': item.shop_name
+      'itemId': widget.item.product_id.toString(),
+      'itemName': widget.item.product_name,
+      'itemCategory': widget.item.shop_name
     });
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: SizedBox.expand(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(
-                child: InkWell(
-              enableFeedback: false,
-              canRequestFocus: false,
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                color: Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            )),
-            Container(
-              color: Colors.white,
-              child: Center(
-                child: Column(children: [
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      elevation: 2.0,
-                      fillColor: Color.fromRGBO(240, 240, 240, 1),
-                      child: FaIcon(
-                        FontAwesomeIcons.times,
-                        size: 16.0,
-                        color: Colors.black,
+      body: OpacityAnimatedWidget.tween(
+        opacityEnabled: 1,
+        opacityDisabled: 0,
+        duration: Duration(milliseconds: 300),
+        enabled: display,
+        child: SizedBox.expand(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Expanded(
+                  child: InkWell(
+                enableFeedback: false,
+                canRequestFocus: false,
+                onTap: () async {
+                  setState(() {
+                    display = false;
+                  });
+                  await Future.delayed(Duration(milliseconds: 300));
+                  Navigator.maybePop(context);
+                },
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              )),
+              Container(
+                color: Colors.white,
+                child: Center(
+                  child: Column(children: [
+                    Stack(alignment: Alignment.center, children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                            child: Text('(단면, cm)')),
                       ),
-                      shape: CircleBorder(),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                    child: Table(
-                      defaultVerticalAlignment:
-                          TableCellVerticalAlignment.middle,
-                      //defaultColumnWidth: FractionColumnWidth(0.12),
-                      children: [
-                        TableRow(
-                            decoration: BoxDecoration(
-                              color: Color.fromRGBO(240, 240, 240, 1),
-                            ),
-                            children: [
-                              Container(
-                                height: 60,
-                                child: Center(
-                                  child: Text(
-                                    'SIZE',
-                                    style: tableHeaderSizeText,
-                                  ),
-                                ),
-                              ),
-                              ...List.generate(header.length, (index) {
-                                return (Center(
-                                  child: Text(
-                                    '${header[index]}',
-                                    style: tableHeaderText,
-                                  ),
-                                ));
-                              })
-                            ]),
-                        ...List.generate(keys.length, (index) {
-                          return (TableRow(
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: FlatButton(
+                          onPressed: () async {
+                            setState(() {
+                              display = false;
+                            });
+                            await Future.delayed(Duration(milliseconds: 300));
+
+                            Navigator.maybePop(context);
+                          },
+                          //elevation: 2.0,
+                          color: Color.fromRGBO(240, 240, 240, 1),
+                          child: SvgPicture.asset(
+                            'images/times.svg',
+                            width: 16.0,
+                            color: Colors.black,
+                          ),
+                          shape: CircleBorder(),
+                        ),
+                      ),
+                    ]),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Table(
+                        defaultVerticalAlignment:
+                            TableCellVerticalAlignment.middle,
+                        //defaultColumnWidth: FractionColumnWidth(0.12),
+                        children: [
+                          TableRow(
                               decoration: BoxDecoration(
-                                  border: Border(
-                                      bottom: BorderSide(
-                                          color:
-                                              Theme.of(context).dividerColor))),
+                                color: Color.fromRGBO(240, 240, 240, 1),
+                              ),
                               children: [
                                 Container(
-                                    height: 40,
-                                    child: Padding(
-                                        padding: EdgeInsets.all(4),
-                                        child: ColorSizeBox(keys[index]))),
-                                ...List.generate(header.length, (idx) {
-                                  double ret = sizeMapper[keys[index]]
-                                      .map[mapper[header[idx]]];
-                                  if (ret == 0) {
-                                    return Center(
-                                        child: Text(
-                                      '-',
-                                      style: tableCellText,
-                                    ));
-                                  }
+                                  height: 60,
+                                  child: Center(
+                                    child: Text(
+                                      'SIZE',
+                                      style: tableHeaderSizeText,
+                                    ),
+                                  ),
+                                ),
+                                ...List.generate(widget.header.length, (index) {
                                   return (Center(
-                                      child: Text(
-                                    '$ret',
-                                    style: tableCellText,
-                                  )));
+                                    child: Text(
+                                      '${widget.header[index]}',
+                                      style: tableHeaderText,
+                                    ),
+                                  ));
                                 })
-                              ]));
-                        }),
-                      ],
+                              ]),
+                          ...List.generate(widget.keys.length, (index) {
+                            return (TableRow(
+                                decoration: BoxDecoration(
+                                    border: Border(
+                                        bottom: BorderSide(
+                                            color: Theme.of(context)
+                                                .dividerColor))),
+                                children: [
+                                  Container(
+                                      height: 40,
+                                      child: Padding(
+                                          padding: EdgeInsets.all(4),
+                                          child: ColorSizeBox(
+                                              widget.keys[index]))),
+                                  ...List.generate(widget.header.length, (idx) {
+                                    var ret = widget
+                                        .sizeMapper[widget.keys[index]]
+                                        .map[widget.mapper[widget.header[idx]]]
+                                        .toString();
+                                    if (ret == '0.0') ret = '-';
+                                    if (ret.endsWith('.0'))
+                                      ret = ret.substring(0, ret.length - 2);
+                                    return (Center(
+                                        child: Text(
+                                      '$ret',
+                                      style: tableCellText,
+                                    )));
+                                  })
+                                ]));
+                          }),
+                        ],
+                      ),
                     ),
-                  ),
-                ]),
+                  ]),
+                ),
               ),
-            ),
-            Expanded(
-                child: InkWell(
-              enableFeedback: false,
-              canRequestFocus: false,
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: Container(
-                color: Color.fromRGBO(0, 0, 0, 0.4),
-              ),
-            )),
-          ],
+              Expanded(
+                  child: InkWell(
+                enableFeedback: false,
+                canRequestFocus: false,
+                onTap: () async {
+                  setState(() {
+                    display = false;
+                  });
+                  await Future.delayed(Duration(milliseconds: 300));
+
+                  Navigator.maybePop(context);
+                },
+                child: Container(
+                  color: Color.fromRGBO(0, 0, 0, 0.4),
+                ),
+              )),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
+// class SizeDialog extends StatelessWidget {
+//   SwipeCard widget.item;
+//   ProductSize product_size;
+//   List<String> keys;
+//   Map<String, String> mapper;
+//   List<String> header;
+//   Map<String, Size> sizeMapper = new Map();
+
+//   SizeDialog(SwipeCard _item) {
+//     item = _item;
+//     product_size = _item.product_size;
+//     keys = product_size.size.keys.toList();
+//     if (item.type == 'top')
+//       mapper = top;
+//     else if (item.type == 'pants')
+//       mapper = pants;
+//     else if (item.type == 'skirt')
+//       mapper = skirt;
+//     else if (item.type == 'dress') mapper = dress;
+//     header = mapper.keys.toList();
+//     for (var h in header) print(h);
+//     print(keys);
+//     for (String key in keys) {
+//       sizeMapper[key] = product_size.size[key];
+//     }
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     Stride.analytics.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
+//       'itemId': item.product_id.toString(),
+//       'itemName': item.product_name,
+//       'itemCategory': item.shop_name
+//     });
+//     return Scaffold(
+//       backgroundColor: Colors.transparent,
+//       body: OpacityAnimatedWidget.tween(
+//         opacityEnabled: 1,
+//         opacityDisabled: 0,
+//         enabled: true,
+//         child: SizedBox.expand(
+//           child: Column(
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               Expanded(
+//                   child: InkWell(
+//                 enableFeedback: false,
+//                 canRequestFocus: false,
+//                 onTap: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: Container(
+//                   color: Color.fromRGBO(0, 0, 0, 0.4),
+//                 ),
+//               )),
+//               Container(
+//                 color: Colors.white,
+//                 child: Center(
+//                   child: Column(children: [
+//                     Align(
+//                       alignment: Alignment.centerRight,
+//                       child: FlatButton(
+//                         onPressed: () {
+//                           Navigator.pop(context);
+//                         },
+//                         //elevation: 2.0,
+//                         color: Color.fromRGBO(240, 240, 240, 1),
+//                         child: SvgPicture.asset(
+//                           'images/times.svg',
+//                           width: 16.0,
+//                           color: Colors.black,
+//                         ),
+//                         shape: CircleBorder(),
+//                       ),
+//                     ),
+//                     Padding(
+//                       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+//                       child: Table(
+//                         defaultVerticalAlignment:
+//                             TableCellVerticalAlignment.middle,
+//                         //defaultColumnWidth: FractionColumnWidth(0.12),
+//                         children: [
+//                           TableRow(
+//                               decoration: BoxDecoration(
+//                                 color: Color.fromRGBO(240, 240, 240, 1),
+//                               ),
+//                               children: [
+//                                 Container(
+//                                   height: 60,
+//                                   child: Center(
+//                                     child: Text(
+//                                       'SIZE',
+//                                       style: tableHeaderSizeText,
+//                                     ),
+//                                   ),
+//                                 ),
+//                                 ...List.generate(header.length, (index) {
+//                                   return (Center(
+//                                     child: Text(
+//                                       '${header[index]}',
+//                                       style: tableHeaderText,
+//                                     ),
+//                                   ));
+//                                 })
+//                               ]),
+//                           ...List.generate(keys.length, (index) {
+//                             return (TableRow(
+//                                 decoration: BoxDecoration(
+//                                     border: Border(
+//                                         bottom: BorderSide(
+//                                             color: Theme.of(context)
+//                                                 .dividerColor))),
+//                                 children: [
+//                                   Container(
+//                                       height: 40,
+//                                       child: Padding(
+//                                           padding: EdgeInsets.all(4),
+//                                           child: ColorSizeBox(keys[index]))),
+//                                   ...List.generate(header.length, (idx) {
+//                                     double ret = sizeMapper[keys[index]]
+//                                         .map[mapper[header[idx]]];
+//                                     if (ret == 0) {
+//                                       return Center(
+//                                           child: Text(
+//                                         '-',
+//                                         style: tableCellText,
+//                                       ));
+//                                     }
+//                                     return (Center(
+//                                         child: Text(
+//                                       '$ret',
+//                                       style: tableCellText,
+//                                     )));
+//                                   })
+//                                 ]));
+//                           }),
+//                         ],
+//                       ),
+//                     ),
+//                   ]),
+//                 ),
+//               ),
+//               Expanded(
+//                   child: InkWell(
+//                 enableFeedback: false,
+//                 canRequestFocus: false,
+//                 onTap: () {
+//                   Navigator.pop(context);
+//                 },
+//                 child: Container(
+//                   color: Color.fromRGBO(0, 0, 0, 0.4),
+//                 ),
+//               )),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 Widget ColorSizeBox(String size) {
   if (size == 'free') {
     return Container(
-        color: backgroundColor,
+        color: semiPurple,
         height: 40,
-        child:
-            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
   } else if (size == 'xs') {
     return Container(
         color: semiPurple,
@@ -211,9 +406,10 @@ Widget ColorSizeBox(String size) {
         child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
   } else if (size == 'm') {
     return Container(
-        color: semiPurple,
+        color: backgroundColor,
         height: 40,
-        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+        child:
+            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
   } else if (size == 'l') {
     return Container(
         color: semiBlack,

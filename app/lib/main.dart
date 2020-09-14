@@ -438,7 +438,6 @@
 
 import 'dart:async';
 import 'dart:io';
-
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/provider_setup.dart';
@@ -455,12 +454,9 @@ import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 
-import 'core/services/apple_sign_in.dart';
-
 Future<void> main() async {
   // WidgetsFlutterBinding.ensureInitialized();
-  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
-  KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
+  // KakaoContext.javascriptClientId = "89c24b397212dabdb28a3ebcbdcc86af";
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
@@ -485,21 +481,20 @@ Future<void> main() async {
       },
     );
   }
-
+  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
   final RemoteConfig remoteConfig = await RemoteConfig.instance;
   await remoteConfig.fetch(expiration: const Duration(seconds: 0));
   await remoteConfig.activateFetched();
   final updatedVersion = remoteConfig.getString('version').trim();
   print(updatedVersion);
 
-  // print("VERSION");
-  // runZoned(() {
-  //   runApp(Stride());
-  // }, onError: Crashlytics.instance.recordError);
+  print("VERSION");
+  runZoned(() {
+    runApp(Provider<ConfigService>.value(
+        value: ConfigService(appleSignInAvailable, updatedVersion),
+        child: Stride()));
+  }, onError: Crashlytics.instance.recordError);
   // runApp(Stride());
-  runApp(Provider<ConfigService>.value(
-      value: ConfigService(appleSignInAvailable, updatedVersion),
-      child: Stride()));
 }
 
 class Stride extends StatelessWidget {
@@ -517,6 +512,7 @@ class Stride extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
             primarySwatch: Colors.blue,

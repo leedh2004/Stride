@@ -21,13 +21,13 @@ class ProductWebView extends StatelessWidget {
             Navigator.pop(context);
           },
         ),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(Icons.share),
-              onPressed: () {
-                print("공유하기 클릭");
-              })
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //       icon: Icon(Icons.share),
+        //       onPressed: () {
+        //         print("공유하기 클릭");
+        //       })
+        // ],
       ),
       body: SafeArea(
         child: Center(

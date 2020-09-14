@@ -8,6 +8,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -60,7 +61,7 @@ class DressRoomItemWidget extends StatelessWidget {
           Opacity(
             opacity: opacity,
             child: Align(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomRight,
               child: IconButton(
                 iconSize: 20,
                 icon: FaIcon(
@@ -69,12 +70,13 @@ class DressRoomItemWidget extends StatelessWidget {
                 ),
                 onPressed: () {
                   if (opacity == 1) {
-                    Stride.analytics
-                        .logEvent(name: 'DRESS_ROOM_VIEW_SIZE', parameters: {
-                      'itemId': item.product_id.toString(),
-                      'itemName': item.product_name,
-                      'itemCategory': item.shop_name
-                    });
+                    Stride.analytics.logEvent(
+                        name: 'DRESSROOM_ITEM_INFO_CLICKED',
+                        parameters: {
+                          'itemId': item.product_id.toString(),
+                          'itemName': item.product_name,
+                          'itemCategory': item.shop_name
+                        });
                     Navigator.of(context).push(PageRouteBuilder(
                         opaque: false,
                         pageBuilder: (___, _, __) => ProductDialog(item)));
@@ -112,20 +114,23 @@ class DressRoomItemWidget extends StatelessWidget {
                     onTap: () => {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
-                        Stride.analytics.logViewItem(
-                            itemId: item.product_id.toString(),
-                            itemName: item.product_name,
-                            itemCategory: item.shop_name);
+                        Stride.analytics.logEvent(
+                            name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                            parameters: {
+                              'itemId': item.product_id.toString(),
+                              'itemName': item.product_name,
+                              'itemCategory': item.shop_name
+                            });
                         // 이 부분 코드는 나중에 수정해야할 듯.
                         Provider.of<SwipeService>(context, listen: false)
                             .purchaseItem(item.product_id);
                         return ProductWebView(item.product_url, item.shop_name);
                       }))
                     },
-                    child: FaIcon(
-                      FontAwesomeIcons.store,
+                    child: SvgPicture.asset(
+                      'images/buy.svg',
                       color: backgroundColor,
-                      size: 16,
+                      width: 16,
                     ),
                   ),
                 ),
