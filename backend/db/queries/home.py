@@ -139,13 +139,20 @@ def get_clothes_category(type):
 
 def get_recommended_product(products):
     with db_connect() as (service_conn, cursor):
-        text_product = (str(products))
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s ORDER BY position(product_id::text in %s)"""
+        if len(products) >= 6:
+            non_preferred_item = products[-5:]
+            products = products[:-5]
+        else:
+            return 'Empty'
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s"""
         try:
             product = []
-            cursor.execute(query, (tuple(products), text_product))
+            cursor.execute(query, (tuple(products), ))
             result = cursor.fetchall()
+            cursor.execute(query, (tuple(non_preferred_item),))
+            result += cursor.fetchall()
             for item in result:
+                print(item[0])
                 load = ProductModel()
                 load.fetch_data(item)
                 product.append(load.__dict__)
@@ -186,8 +193,7 @@ def get_recommended_product(products):
 
 def get_recommended_product_all(products):
     with db_connect() as (service_conn, cursor):
-        text_product = (str(products))
-        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND product_id IN %s ORDER BY position(product_id::text in %s)"""
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND p.product_id IN %s"""
         try:
             types = ['top', 'dress', 'pants', 'skirt', 'all']
             product = {
@@ -198,12 +204,20 @@ def get_recommended_product_all(products):
                 'top': []
             }
             for type in types:
-                cursor.execute(query, (tuple(products[type]), text_product))
+                if len(products[type]) >= 6:
+                    non_preferred_item = products[type][-5:]
+                    preferred_item = products[type][:-5]
+                else:
+                    return 'Empty'
+                cursor.execute(query, (tuple(preferred_item),))
                 result = cursor.fetchall()
+                cursor.execute(query, (tuple(non_preferred_item), ))
+                result += cursor.fetchall()
                 for item in result:
                     load = ProductModel()
                     load.fetch_data(item)
                     product[type].append(load.__dict__)
+
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as Ex:
             print(Ex)
