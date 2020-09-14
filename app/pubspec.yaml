@@ -63,6 +63,7 @@ dependencies:
   flutter_svg: ^0.18.1
   animated_widgets: ^1.0.6
   flutter_launcher_icons: ^0.7.5
+  loading: ^1.0.2
 
 flutter_icons:
   android: true
@@ -118,6 +119,8 @@ flutter:
     - images/like.svg
     - images/icon.png
     - images/a.png
+    - images/loading.gif
+    - images/loading_white.gif
 
 
 

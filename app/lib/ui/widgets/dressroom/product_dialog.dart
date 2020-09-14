@@ -79,12 +79,6 @@ class _ProductDialogState extends State<ProductDialog> {
   bool display = true;
   @override
   Widget build(BuildContext context) {
-    Stride.analytics.logEvent(name: "DRESS_ROOM_SHOW_SIZE", parameters: {
-      'itemId': widget.item.product_id.toString(),
-      'itemName': widget.item.product_name,
-      'itemCategory': widget.item.shop_name
-    });
-
     return OpacityAnimatedWidget.tween(
       opacityEnabled: 1,
       opacityDisabled: 0,

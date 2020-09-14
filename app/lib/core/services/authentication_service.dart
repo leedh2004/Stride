@@ -63,7 +63,7 @@ class AuthenticationService {
     userController.add(testuser);
   }
 
-  Future<bool> loginWithApple({List<Scope> scopes = const []}) async {
+  Future<String> loginWithApple({List<Scope> scopes = const []}) async {
     final result = await AppleSignIn.performRequests(
         [AppleIdRequest(requestedScopes: scopes)]);
     // 2. check the result
@@ -79,7 +79,8 @@ class AuthenticationService {
         final authResult = await _firebaseAuth.signInWithCredential(credential);
         String email = authResult.user.email;
         await _firebaseAuth.signOut();
-        return login(email, "apple");
+        return email;
+      // return login(email, "apple");
 
       case AuthorizationStatus.error:
         print(result.error.toString());

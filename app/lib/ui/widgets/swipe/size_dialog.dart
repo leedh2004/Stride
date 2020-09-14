@@ -4,10 +4,8 @@ import 'package:app/core/models/size.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Map<String, String> pants = {
   "총장": "length",

@@ -120,8 +120,6 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                             btnCancelColor: gray,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
-                              Stride.analytics
-                                  .logEvent(name: "DRESS_ROOM_REMOVE_ITEM");
                               Provider.of<DressRoomModel>(context,
                                       listen: false)
                                   .removeItem();
@@ -165,17 +163,9 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                     color: Color.fromRGBO(245, 242, 253, 1),
                     child: SvgPicture.asset('images/folder.svg',
                         width: 25, height: 25),
-                    // alignment: Alignment.centerRight,
-
-                    // icon: FaIcon(FontAwesomeIcons.solidFolder),
                     onPressed: () {
-                      // var folder =
-                      //     Provider.of<DressRoomService>(context, listen: false)
-                      //         .folder;
-                      // var folderIds = folder.keys.toList();
-                      // var folderNames = folder.values.toList();
                       Stride.analytics
-                          .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
+                          .logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                       showMaterialModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context,

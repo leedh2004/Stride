@@ -1,12 +1,9 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
-import 'package:app/core/services/error.dart';
-import 'package:app/core/viewmodels/auth.dart';
-import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/core/viewmodels/authentication.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
-import 'package:app/ui/views/feedback_web_view.dart';
+import 'package:app/ui/widgets/loading.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -19,11 +16,12 @@ import 'package:webview_flutter/webview_flutter.dart';
 import '../../main.dart';
 
 class LoginView extends StatelessWidget {
-  Future<void> _signInWithApple(BuildContext context) async {
+  Future<void> _signInWithApple(
+      BuildContext context, AuthenticationModel model) async {
     try {
-      final authService =
-          Provider.of<AuthenticationService>(context, listen: false);
-      await authService.loginWithApple(scopes: [Scope.email, Scope.fullName]);
+      // final authService =
+      //     Provider.of<AuthenticationService>(context, listen: false);
+      await model.loginWithApple(scopes: [Scope.email, Scope.fullName]);
       // print('uid: ${user.uid}');
     } catch (e) {
       // TODO: Show alert here
@@ -31,7 +29,8 @@ class LoginView extends StatelessWidget {
     }
   }
 
-  Future<void> _signInWithKakao(BuildContext context) async {
+  Future<void> _signInWithKakao(
+      BuildContext context, AuthenticationModel model) async {
     final installed = await isKakaoTalkInstalled();
     final authCode = installed
         ? await AuthCodeClient.instance.requestWithTalk()
@@ -39,8 +38,7 @@ class LoginView extends StatelessWidget {
     // AccessTokenResponse token = await AuthApiClient.instance.issueAccessToken(authCode);
     AccessTokenResponse token =
         await AuthApi.instance.issueAccessToken(authCode);
-    Provider.of<AuthenticationService>(context, listen: false)
-        .login(token.accessToken, "kakao");
+    model.login(token.accessToken, "kakao");
   }
 
   @override
@@ -74,7 +72,7 @@ class LoginView extends StatelessWidget {
                             width: 300,
                             child: RaisedButton(
                               padding: EdgeInsets.all(0),
-                              onPressed: () => _signInWithKakao(context),
+                              onPressed: () => _signInWithKakao(context, model),
                               child: Image.asset('images/kakao_login.png'),
                             ),
                           ),
@@ -89,7 +87,8 @@ class LoginView extends StatelessWidget {
                               child: AppleSignInButton(
                                 style: ButtonStyle.black, // style as needed
                                 type: ButtonType.signIn, // style as needed
-                                onPressed: () => _signInWithApple(context),
+                                onPressed: () =>
+                                    _signInWithApple(context, model),
                               ),
                             ),
                           ),
@@ -98,6 +97,7 @@ class LoginView extends StatelessWidget {
                       ],
                     ),
                   ),
+                if (model.busy) WhiteLoadingWidget()
               ]),
             );
           } else {
