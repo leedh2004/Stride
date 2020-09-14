@@ -372,7 +372,7 @@ def get_entire_products_from_shop_es(shop_id):
 
 
 # paging 추가해서 patch
-def get_products_from_shop_es_with_clothes_type(user_id, shop_ids, clothes_type, user_seen_items):
+def get_products_from_shop_es_with_clothes_type(shop_ids, clothes_type, user_seen_items):
     res = es.search(
         index='products',
         body={
@@ -658,7 +658,7 @@ def get_clothes_type_non_preferred_items_from_es(user_preferred_shops, clothes_t
     res = es.search(
         index='products',
         body={
-            "size": 10,
+            "size": 50,
             "_source": ["shop_id", "product_id"],
             "query": {
                 "bool": {
@@ -694,7 +694,7 @@ def get_all_type_non_preferred_items_from_es(user_preferred_shops, user_seen_ite
     res = es.search(
         index='products',
         body={
-            "size": 10,
+            "size": 50,
             "_source": ["shop_id", "product_id"],
             "query": {
                 "bool": {
