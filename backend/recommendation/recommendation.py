@@ -78,7 +78,7 @@ def clothes_type_collaborative_filtering_by_likes(user_id, size_filtering, cloth
                         "field": "product_id",
                         "exclude": user_excluded_list,
                         "min_doc_count": 2,
-                        "size": 30
+                        "size": 20
                     }
                 }
             }
@@ -86,9 +86,10 @@ def clothes_type_collaborative_filtering_by_likes(user_id, size_filtering, cloth
     )
     res = res['aggregations']['cf_recommendation']['buckets']
     recommendation_list[clothes_type] = [result_item['key'] for result_item in res]
+    print(recommendation_list[clothes_type])
     # insert non_preferred_items if collaborative filtering is available
     if recommendation_list[clothes_type]:
-        non_preferred_items = analyze.get_clothes_type_non_preferred_items_from_es(user_preferred_shops, clothes_type, user_excluded_list)
+        non_preferred_items = queries.get_clothes_type_non_preferred_items_from_db(user_preferred_shops, clothes_type)
         append_if_not_exists(recommendation_list[clothes_type], non_preferred_items)
     return recommendation_list
 
@@ -115,7 +116,7 @@ def all_type_collaborative_filtering_by_likes(user_id, size_filtering, user_seen
                         "field": "product_id",
                         "exclude": user_excluded_list,
                         "min_doc_count": 2,
-                        "size": 30
+                        "size": 20
                     }
                 }
             }
@@ -123,8 +124,9 @@ def all_type_collaborative_filtering_by_likes(user_id, size_filtering, user_seen
     )
     res = res['aggregations']['cf_recommendation']['buckets']
     recommendation_list['all'] = [result_item['key'] for result_item in res]
+    print(recommendation_list['all'])
     # insert non_preferred_items if collaborative filtering is available
     if recommendation_list['all']:
-        non_preferred_items = analyze.get_clothes_type_non_preferred_items_from_es(user_preferred_shops, user_excluded_list)
+        non_preferred_items = queries.get_all_type_non_preferred_items_from_db(user_preferred_shops)
         append_if_not_exists(recommendation_list['all'], non_preferred_items)
     return recommendation_list
