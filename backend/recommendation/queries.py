@@ -9,44 +9,49 @@ conn = pg2.connect(dbname=db_name, user=db_user, password=db_password,
                    host=db_host, port=db_port)
 
 
-
 size_types = ('length', 'waist', 'hip', 'thigh', 'rise', 'hem', 'shoulder', 'bust', 'arm_length')
 
 
-def get_like_items():
+def get_like_items_documents():
     db_cursor = conn.cursor()
     db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM likes
+        SELECT likes.user_id, shop.shop_id, products.product_id, products.type, shop.shop_concept
+        FROM likes join products using (product_id) join shop using (shop_id)
         WHERE likes.es_flag = false;
     """)
     like_items = db_cursor.fetchall()
+    docs = [{'user_id': item[0], 'shop_id': str(item[1]), 'product_id': str(item[2]), 'clothes_type': item[3], 'shop_concept': item[4],
+             'rating': 'like', 'preference_score': 0.0} for item in like_items]
     db_cursor.close()
-    return like_items
+    return docs
 
 
-def get_pass_items():
+def get_pass_items_documents():
     db_cursor = conn.cursor()
     db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM pass
+        SELECT pass.user_id, shop.shop_id, products.product_id, products.type, shop.shop_concept
+        FROM pass join products using (product_id) join shop using (shop_id)
         WHERE pass.es_flag = false;
     """)
     pass_items = db_cursor.fetchall()
+    docs = [{'user_id': item[0], 'shop_id': str(item[1]), 'product_id': str(item[2]), 'clothes_type': item[3],
+             'shop_concept': item[4], 'rating': 'pass', 'preference_score': 0.0} for item in pass_items]
     db_cursor.close()
-    return pass_items
+    return docs
 
 
-def get_dislike_items():
+def get_dislike_items_documents():
     db_cursor = conn.cursor()
     db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM dislikes
+        SELECT dislikes.user_id, shop.shop_id, products.product_id, products.type, shop.shop_concept
+        FROM dislikes join products using (product_id) join shop using (shop_id)
         WHERE dislikes.es_flag = false;
     """)
     dislike_items = db_cursor.fetchall()
+    docs = [{'user_id': item[0], 'shop_id': str(item[1]), 'product_id': str(item[2]), 'clothes_type': item[3],
+             'shop_concept': item[4], 'rating': 'dislike', 'preference_score': 0.0} for item in dislike_items]
     db_cursor.close()
-    return dislike_items
+    return docs
 
 
 def get_shop_concepts_from_shop_id(shop_id):
@@ -93,19 +98,19 @@ def update_es_flag_products_table(product_id):
     db_cursor.execute("""
         UPDATE products
         SET es_flag = true
-        WHERE products.product_id = %d""" % (product_id,))
+        WHERE products.product_id in %s """ % (product_id,))
     db_cursor.close()
     conn.commit()
 
 
-def update_es_flag_rating_tables(preference, product_id):
+def update_es_flag_rating_tables(preference, product_ids):
     db_cursor = conn.cursor()
     if preference == 'likes':
-        db_cursor.execute("""UPDATE likes SET es_flag = True WHERE likes.product_id = %d""" % (product_id,))
+        db_cursor.execute("""UPDATE likes SET es_flag = True WHERE likes.product_id in %s""" % (product_ids,))
     elif preference == 'pass':
-        db_cursor.execute("""UPDATE pass SET es_flag = True WHERE pass.product_id = %d""" % (product_id,))
+        db_cursor.execute("""UPDATE pass SET es_flag = True WHERE pass.product_id in %s""" % (product_ids,))
     elif preference == 'dislikes':
-        db_cursor.execute("""UPDATE dislikes SET es_flag = True WHERE dislikes.product_id = %d""" % (product_id,))
+        db_cursor.execute("""UPDATE dislikes SET es_flag = True WHERE dislikes.product_id in %s""" % (product_ids,))
     db_cursor.close()
     conn.commit()
 
