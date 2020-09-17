@@ -331,6 +331,7 @@ def get_shop_concept_of_product(product_id):
     return [result_item['key'] for result_item in res['aggregations']['shop_concepts']['buckets']]
 
 
+# queries로 다시 바꾸기;;
 # returns shop id and clothes type
 def get_product_extra_info(product_id):
     res = es.search(

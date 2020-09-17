@@ -1,8 +1,7 @@
-import backend.recommendation.index as index
 import backend.recommendation.queries as queries
 import backend.recommendation.recommendation as recommendation
 
-es = index.es
+es = recommendation.es
 
 clothes_types = ('all', 'top', 'skirt', 'pants', 'dress')
 
@@ -16,7 +15,7 @@ def get_single_type_item_recommendation(user_id, clothes_category, size_filter, 
     user_seen_items = queries.get_clothes_type_items_shown_to_user_from_db(user_id, clothes_category)
     if exclude_list:
         user_seen_items += exclude_list
-    if queries.count_user_liked_items_from_db(user_id) < 100:
+    if queries.count_user_liked_items_from_db(user_id) < 50:
         return recommendation.recommend_by_shop_concepts_and_item_popularity_with_clothes_type(user_id, size_filter, clothes_category, user_seen_items)
     else:
         recommendation_list = recommendation.clothes_type_collaborative_filtering_by_likes(user_id, size_filter, clothes_category, user_seen_items)
@@ -30,7 +29,7 @@ def get_single_type_item_recommendation(user_id, clothes_category, size_filter, 
 # returns 25 items of 'all' type
 def get_all_type_item_recommendation(user_id, size_filter):
     user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)
-    if queries.count_user_liked_items_from_db(user_id) < 100:
+    if queries.count_user_liked_items_from_db(user_id) < 50:
         return recommendation.recommend_by_shop_concepts_and_item_popularity_all_clothes_type(user_id, size_filter, user_seen_items)
     else:
         recommendation_list = recommendation.all_type_collaborative_filtering_by_likes(user_id, size_filter, user_seen_items)
