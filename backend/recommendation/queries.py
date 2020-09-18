@@ -307,3 +307,13 @@ def get_all_type_non_preferred_items_from_db(preferred_shops):
     non_preferred_items = [str(item[0]) for item in result]
     db_cursor.close()
     return non_preferred_items
+
+
+def get_invalid_products_in_es():
+    db_cursor = conn.cursor()
+    query = """ select product_id from products where active_flag = false and es_flag = true"""
+    db_cursor.execute(query)
+    result = db_cursor.fetchall()
+    invalid_products = [str(item[0]) for item in result]
+    db_cursor.close()
+    return  invalid_products
