@@ -181,3 +181,16 @@ def get_user_rated_items(user_id, preference, clothes_type):
     elif preference == 'dislikes':
         user_dislike_items = [str(item[0]) for item in queries.get_dislike_items_of_user(user_id, clothes_type)]
         return {'user_id': user_id, 'product_id': user_dislike_items, 'rating': 'dislike', 'clothes_type': clothes_type}
+
+
+# this function removes from es invalid items whose active_flag turned false in db
+# this function should be called after indexing products to get sync with db
+def remove_invalid_items():
+    invalid_product_ids = queries.get_invalid_products_in_es()
+    es.delete_by_query(index='products', body={
+        "query": {
+            "terms": {
+                "product_id": invalid_product_ids
+            }
+        }
+    })

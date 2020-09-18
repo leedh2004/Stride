@@ -718,3 +718,4 @@ def get_all_type_non_preferred_items_from_es(user_preferred_shops, user_seen_ite
     non_preferred_items = [item['_source']['product_id'] for item in res['hits']['hits']]
     non_preferred_items = random.sample(non_preferred_items, 5)
     return non_preferred_items
+
