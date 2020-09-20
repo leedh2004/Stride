@@ -3,7 +3,6 @@ from flask import Flask, g, request
 from gevent.pywsgi import WSGIServer
 import logging
 from logbeam import CloudWatchLogsHandler
-import os
 from datetime import datetime
 import sys
 sys.path.append('../')
@@ -20,7 +19,8 @@ from backend.authentication.naver import naver
 from backend.authentication.auth import *
 from flask_cors import CORS
 
-dt = str(datetime.now()).split(" ")[0]
+dt = datetime.now()
+
 LOG_FORMAT = "[%(asctime)-10s] - %(message)s"
 logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
 
@@ -39,13 +39,12 @@ app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(auth, url_prefix='/auth')
 log_stream = 'api-log'
 
-server_handler = CloudWatchLogsHandler(
-    log_group_name='stride',
-    log_stream_name=str(os.getpid()) + "/" + dt,
-    buffer_duration=10000,
-    batch_count=10,
-    batch_size=1048576
-)
+dev_cw_handler = CloudWatchLogsHandler(
+        log_group_name='dev_stride',
+        log_stream_name=log_stream,
+        buffer_duration=10000,
+        batch_count=10,
+        batch_size=1048576)
 
 def log_parse(path, qs, res_data):
     res_all = {
@@ -74,6 +73,7 @@ def log_parse(path, qs, res_data):
     else:
         return False
 
+
 @app.route('/admin/check')
 def hello_world():
     return 'Server ON', 200
@@ -94,7 +94,7 @@ def log(response):
         return response
 
     logger = logging.getLogger(log_stream)
-    logger.addHandler(server_handler)
+    logger.addHandler(dev_cw_handler)
     res_data = response.get_data().decode('utf-8')
     req_data = request.get_data().decode('utf-8')
     parsed_log = log_parse(request.path, request.query_string, res_data)
@@ -109,6 +109,10 @@ def log(response):
 
 
 if __name__ == '__main__':
-    print("Server on 5000 Port, MODE = PRODUCTION")
-    http_server = WSGIServer(('', 5000), app)
-    http_server.serve_forever()
+    print("Server on 5000 Port, MODE IN DEV")
+    app.run(host='0.0.0.0', port=5000)
+
+
+
+
+
