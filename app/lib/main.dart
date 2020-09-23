@@ -67,6 +67,7 @@ class Stride extends StatelessWidget {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
     return MultiProvider(
       providers: providers,
       child: MaterialApp(

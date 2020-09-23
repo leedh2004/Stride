@@ -1,4 +1,5 @@
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/views/recommend/view.dart';
 import 'package:app/ui/views/swipe/view.dart';
 import 'package:app/ui/widgets/radius_container.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -42,7 +43,8 @@ class _ServiceViewState extends State<ServiceView>
             children: [
               SwipeView(),
               DressRoomView(),
-              LookBookView(),
+              RecommendView(),
+              //LookBookView(),
               MyPageView(),
             ]),
         appBar: PreferredSize(

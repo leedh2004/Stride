@@ -31,9 +31,7 @@ class _TutorialViewState extends State<TutorialView> {
 
   @override
   Widget build(BuildContext context) {
-    Text pass;
-    Text upText;
-    Text downText;
+    Text pass, upText, downText;
     Image image;
     if (cnt == 0) {
       upText = Text('10개 이상의 아이템을 평가해주세요 :)', style: TutorialSubHeaderStyle);
@@ -149,6 +147,7 @@ class _TutorialViewState extends State<TutorialView> {
                   showMaterialModalBottomSheet(
                       isDismissible: false,
                       expand: false,
+                      enableDrag: false,
                       context: context,
                       builder: (context, scrollController) =>
                           InputInfoDialog());

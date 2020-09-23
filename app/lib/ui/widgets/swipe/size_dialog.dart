@@ -76,152 +76,225 @@ class _SizeDialogState extends State<SizeDialog> {
       'itemName': widget.item.product_name,
       'itemCategory': widget.item.shop_name
     });
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      body: OpacityAnimatedWidget.tween(
-        opacityEnabled: 1,
-        opacityDisabled: 0,
-        duration: Duration(milliseconds: 300),
-        enabled: display,
-        child: SizedBox.expand(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                  child: InkWell(
-                enableFeedback: false,
-                canRequestFocus: false,
-                onTap: () async {
-                  setState(() {
-                    display = false;
-                  });
-                  await Future.delayed(Duration(milliseconds: 300));
-                  Navigator.maybePop(context);
-                },
-                child: Container(
-                  color: Color.fromRGBO(0, 0, 0, 0.4),
-                ),
-              )),
-              Container(
-                color: Colors.white,
-                child: Center(
-                  child: Column(children: [
-                    Stack(alignment: Alignment.center, children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                            padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                            child: Text('(단면, cm)')),
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: FlatButton(
-                          onPressed: () async {
-                            setState(() {
-                              display = false;
-                            });
-                            await Future.delayed(Duration(milliseconds: 300));
-
-                            Navigator.maybePop(context);
-                          },
-                          //elevation: 2.0,
-                          color: Color.fromRGBO(240, 240, 240, 1),
-                          child: SvgPicture.asset(
-                            'images/times.svg',
-                            width: 16.0,
-                            color: Colors.black,
+    return Container(
+      color: Colors.white,
+      child: Center(
+        child: Column(children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+                padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: Text('(단면, cm)')),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            child: Table(
+              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+              //defaultColumnWidth: FractionColumnWidth(0.12),
+              children: [
+                TableRow(
+                    decoration: BoxDecoration(
+                      color: Color.fromRGBO(240, 240, 240, 1),
+                    ),
+                    children: [
+                      Container(
+                        height: 60,
+                        child: Center(
+                          child: Text(
+                            'SIZE',
+                            style: tableHeaderSizeText,
                           ),
-                          shape: CircleBorder(),
                         ),
                       ),
+                      ...List.generate(widget.header.length, (index) {
+                        return (Center(
+                          child: Text(
+                            '${widget.header[index]}',
+                            style: tableHeaderText,
+                          ),
+                        ));
+                      })
                     ]),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-                      child: Table(
-                        defaultVerticalAlignment:
-                            TableCellVerticalAlignment.middle,
-                        //defaultColumnWidth: FractionColumnWidth(0.12),
-                        children: [
-                          TableRow(
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(240, 240, 240, 1),
-                              ),
-                              children: [
-                                Container(
-                                  height: 60,
-                                  child: Center(
-                                    child: Text(
-                                      'SIZE',
-                                      style: tableHeaderSizeText,
-                                    ),
-                                  ),
-                                ),
-                                ...List.generate(widget.header.length, (index) {
-                                  return (Center(
-                                    child: Text(
-                                      '${widget.header[index]}',
-                                      style: tableHeaderText,
-                                    ),
-                                  ));
-                                })
-                              ]),
-                          ...List.generate(widget.keys.length, (index) {
-                            return (TableRow(
-                                decoration: BoxDecoration(
-                                    border: Border(
-                                        bottom: BorderSide(
-                                            color: Theme.of(context)
-                                                .dividerColor))),
-                                children: [
-                                  Container(
-                                      height: 40,
-                                      child: Padding(
-                                          padding: EdgeInsets.all(4),
-                                          child: ColorSizeBox(
-                                              widget.keys[index]))),
-                                  ...List.generate(widget.header.length, (idx) {
-                                    var ret = widget
-                                        .sizeMapper[widget.keys[index]]
-                                        .map[widget.mapper[widget.header[idx]]]
-                                        .toString();
-                                    if (ret == '0.0') ret = '-';
-                                    if (ret.endsWith('.0'))
-                                      ret = ret.substring(0, ret.length - 2);
-                                    return (Center(
-                                        child: Text(
-                                      '$ret',
-                                      style: tableCellText,
-                                    )));
-                                  })
-                                ]));
-                          }),
-                        ],
-                      ),
-                    ),
-                  ]),
-                ),
-              ),
-              Expanded(
-                  child: InkWell(
-                enableFeedback: false,
-                canRequestFocus: false,
-                onTap: () async {
-                  setState(() {
-                    display = false;
-                  });
-                  await Future.delayed(Duration(milliseconds: 300));
-
-                  Navigator.maybePop(context);
-                },
-                child: Container(
-                  color: Color.fromRGBO(0, 0, 0, 0.4),
-                ),
-              )),
-            ],
+                ...List.generate(widget.keys.length, (index) {
+                  return (TableRow(
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(
+                                  color: Theme.of(context).dividerColor))),
+                      children: [
+                        Container(
+                            height: 40,
+                            child: Padding(
+                                padding: EdgeInsets.all(4),
+                                child: ColorSizeBox(widget.keys[index]))),
+                        ...List.generate(widget.header.length, (idx) {
+                          var ret = widget.sizeMapper[widget.keys[index]]
+                              .map[widget.mapper[widget.header[idx]]]
+                              .toString();
+                          if (ret == '0.0') ret = '-';
+                          if (ret.endsWith('.0'))
+                            ret = ret.substring(0, ret.length - 2);
+                          return (Center(
+                              child: Text(
+                            '$ret',
+                            style: tableCellText,
+                          )));
+                        })
+                      ]));
+                }),
+              ],
+            ),
           ),
-        ),
+        ]),
       ),
     );
+
+    // return Scaffold(
+    //   backgroundColor: Colors.transparent,
+    //   body: OpacityAnimatedWidget.tween(
+    //     opacityEnabled: 1,
+    //     opacityDisabled: 0,
+    //     duration: Duration(milliseconds: 300),
+    //     enabled: display,
+    //     child: SizedBox.expand(
+    //       child: Column(
+    //         mainAxisSize: MainAxisSize.min,
+    //         children: [
+    //           Expanded(
+    //               child: InkWell(
+    //             enableFeedback: false,
+    //             canRequestFocus: false,
+    //             onTap: () async {
+    //               setState(() {
+    //                 display = false;
+    //               });
+    //               await Future.delayed(Duration(milliseconds: 300));
+    //               Navigator.maybePop(context);
+    //             },
+    //             child: Container(
+    //               color: Color.fromRGBO(0, 0, 0, 0.4),
+    //             ),
+    //           )),
+    //           Container(
+    //             color: Colors.white,
+    //             child: Center(
+    //               child: Column(children: [
+    //                 Stack(alignment: Alignment.center, children: [
+    //                   Align(
+    //                     alignment: Alignment.centerLeft,
+    //                     child: Padding(
+    //                         padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
+    //                         child: Text('(단면, cm)')),
+    //                   ),
+    //                   Align(
+    //                     alignment: Alignment.centerRight,
+    //                     child: FlatButton(
+    //                       onPressed: () async {
+    //                         setState(() {
+    //                           display = false;
+    //                         });
+    //                         await Future.delayed(Duration(milliseconds: 300));
+
+    //                         Navigator.maybePop(context);
+    //                       },
+    //                       //elevation: 2.0,
+    //                       color: Color.fromRGBO(240, 240, 240, 1),
+    //                       child: SvgPicture.asset(
+    //                         'images/times.svg',
+    //                         width: 16.0,
+    //                         color: Colors.black,
+    //                       ),
+    //                       shape: CircleBorder(),
+    //                     ),
+    //                   ),
+    //                 ]),
+    //                 Padding(
+    //                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+    //                   child: Table(
+    //                     defaultVerticalAlignment:
+    //                         TableCellVerticalAlignment.middle,
+    //                     //defaultColumnWidth: FractionColumnWidth(0.12),
+    //                     children: [
+    //                       TableRow(
+    //                           decoration: BoxDecoration(
+    //                             color: Color.fromRGBO(240, 240, 240, 1),
+    //                           ),
+    //                           children: [
+    //                             Container(
+    //                               height: 60,
+    //                               child: Center(
+    //                                 child: Text(
+    //                                   'SIZE',
+    //                                   style: tableHeaderSizeText,
+    //                                 ),
+    //                               ),
+    //                             ),
+    //                             ...List.generate(widget.header.length, (index) {
+    //                               return (Center(
+    //                                 child: Text(
+    //                                   '${widget.header[index]}',
+    //                                   style: tableHeaderText,
+    //                                 ),
+    //                               ));
+    //                             })
+    //                           ]),
+    //                       ...List.generate(widget.keys.length, (index) {
+    //                         return (TableRow(
+    //                             decoration: BoxDecoration(
+    //                                 border: Border(
+    //                                     bottom: BorderSide(
+    //                                         color: Theme.of(context)
+    //                                             .dividerColor))),
+    //                             children: [
+    //                               Container(
+    //                                   height: 40,
+    //                                   child: Padding(
+    //                                       padding: EdgeInsets.all(4),
+    //                                       child: ColorSizeBox(
+    //                                           widget.keys[index]))),
+    //                               ...List.generate(widget.header.length, (idx) {
+    //                                 var ret = widget
+    //                                     .sizeMapper[widget.keys[index]]
+    //                                     .map[widget.mapper[widget.header[idx]]]
+    //                                     .toString();
+    //                                 if (ret == '0.0') ret = '-';
+    //                                 if (ret.endsWith('.0'))
+    //                                   ret = ret.substring(0, ret.length - 2);
+    //                                 return (Center(
+    //                                     child: Text(
+    //                                   '$ret',
+    //                                   style: tableCellText,
+    //                                 )));
+    //                               })
+    //                             ]));
+    //                       }),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ]),
+    //             ),
+    //           ),
+    //           Expanded(
+    //               child: InkWell(
+    //             enableFeedback: false,
+    //             canRequestFocus: false,
+    //             onTap: () async {
+    //               setState(() {
+    //                 display = false;
+    //               });
+    //               await Future.delayed(Duration(milliseconds: 300));
+
+    //               Navigator.maybePop(context);
+    //             },
+    //             child: Container(
+    //               color: Color.fromRGBO(0, 0, 0, 0.4),
+    //             ),
+    //           )),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }
 

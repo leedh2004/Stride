@@ -68,6 +68,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
       }
       precached.add(widget.item.product_id);
     }
+
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: Card(
@@ -81,9 +82,11 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
             children: <Widget>[
               SizedBox.expand(
                   child: AspectRatio(
-                aspectRatio: 11 / 16,
-                child: widget.images[widget.index],
-              )),
+                      aspectRatio: 11 / 16,
+                      child: Hero(
+                        tag: widget.item.image_urls[widget.index],
+                        child: widget.images[widget.index],
+                      ))),
               Align(
                 alignment: Alignment.topLeft,
                 child: Row(

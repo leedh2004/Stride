@@ -37,7 +37,6 @@ class LookBookView extends StatelessWidget {
                       ),
                       padding: EdgeInsets.all(5),
                       itemBuilder: (context, index) {
-                        print("$index 전달");
                         return LookBookItem(
                             item: model.service.items[index], index: index);
                       },

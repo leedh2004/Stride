@@ -100,6 +100,7 @@ class AuthenticationService {
   }
 
   Future<bool> login(String accessToken, String channel) async {
+    print("!!");
     try {
       final response = await api.client.post('${Api.endpoint}/auth/token',
           data: jsonEncode(
@@ -145,7 +146,6 @@ class AuthenticationService {
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
     String token = await storage.read(key: 'jwt_token');
-
     if (await storage.read(key: 'swipe_tutorial') != null) {
       swipe_tutorial = true;
     }
@@ -158,14 +158,19 @@ class AuthenticationService {
       init = true;
       return;
     }
+
     api.client.options.headers = {
       "Content-Type": "application/json",
       "Accept": "application/json",
       'Authorization': "Bearer ${token}",
     };
+
+    print("??");
     final response = await api.client.get(
       '${Api.endpoint}/login/token',
     );
+    print("??");
+
     if (response.statusCode == 200) {
       print(response.data);
       var parsed = response.data as Map<String, dynamic>;
