@@ -34,9 +34,6 @@ class LookBookItem extends StatelessWidget {
                   builder: (context, scrollController) {
                     return LookBookDialog(item);
                   });
-              // Navigator.of(context).push(PageRouteBuilder(
-              //     opaque: false,
-              //     pageBuilder: (___, _, __) => LookBookDialog(item)));
             },
             child: Row(
               children: <Widget>[

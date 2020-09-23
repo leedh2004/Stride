@@ -12,11 +12,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Stride"
         android:icon="@mipmap/ic_launcher"
-        
         android:usesCleartextTraffic="true">
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="caa6c865e94aa692c781ac217de8f393" />
 
         <activity
             android:name=".MainActivity"

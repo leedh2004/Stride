@@ -22,8 +22,8 @@ class SwipeCardSection extends StatefulWidget {
       BuildContext context, SwipeModel _model, GlobalKey _rulerButton) {
     model = _model;
     rulerButton = _rulerButton;
-    double standard = 0.6;
-    if (MediaQuery.of(context).size.height > 800) standard = 0.65;
+    double standard = 0.7;
+    if (MediaQuery.of(context).size.height > 800) standard = 0.75;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
         MediaQuery.of(context).size.height * (standard + 0.05));
     cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
@@ -39,6 +39,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
+  Animation _animation;
+
   int index = 0;
   bool move_flag = false;
 
@@ -51,6 +53,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   @override
   void initState() {
     super.initState();
+    frontCardAlign = cardsAlign[0];
     _controller =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     _controller.addListener(() => setState(() {}));
@@ -66,7 +69,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         }
       }
     });
-    frontCardAlign = cardsAlign[0];
   }
 
   void changeCardsOrder() {
@@ -102,117 +104,120 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 height: cardsSize[0].height,
                 child: Container(
                   margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                  child: GestureDetector(
-                    onTapUp: (details) {
-                      double standard = MediaQuery.of(context).size.width / 2;
-                      if (standard < details.globalPosition.dx) {
-                        widget.model.nextImage();
-                      } else {
-                        widget.model.prevImage();
-                      }
-                    },
-                    // While dragging the first card
-                    onPanUpdate: (DragUpdateDetails details) {
-                      List<double> opacity = [0, 0, 0];
+                  child: Transform(
+                    alignment: FractionalOffset.center,
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.002)
+                      ..rotateX(pi * CardsAnimation.test(_controller).value),
+                    child: GestureDetector(
+                      onTapUp: (details) {
+                        double standard = MediaQuery.of(context).size.width / 2;
+                        if (standard < details.globalPosition.dx) {
+                          widget.model.nextImage();
+                        } else {
+                          widget.model.prevImage();
+                        }
+                        // animateCards();
+                      },
+                      onPanUpdate: (DragUpdateDetails details) {
+                        List<double> opacity = [0, 0, 0];
 
-                      if (frontCardAlign.x > START_RIGHT) {
-                        opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
-                        if (opacity[LIKE] >= MAX_OPACITY)
-                          opacity[LIKE] = MAX_OPACITY;
-                      } else if (frontCardAlign.x < START_LEFT) {
-                        opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
-                        if (opacity[HATE] >= MAX_OPACITY)
-                          opacity[HATE] = MAX_OPACITY;
-                      } else if (frontCardAlign.y < START_UP) {
-                        opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
-                        if (opacity[PASS] >= MAX_OPACITY)
-                          opacity[PASS] = MAX_OPACITY;
-                      }
-                      // Rendering View
-                      setState(() {
-                        // Set Opacity
-                        _opacity[LIKE] = opacity[LIKE];
-                        _opacity[HATE] = opacity[HATE];
-                        _opacity[PASS] = opacity[PASS];
-                        // Drag Card SPEED
-                        frontCardAlign = Alignment(
-                            frontCardAlign.x +
-                                X_SPEED *
-                                    details.delta.dx /
-                                    MediaQuery.of(context).size.width,
-                            frontCardAlign.y +
-                                Y_SPEED *
-                                    details.delta.dy /
-                                    MediaQuery.of(context).size.height);
-                        frontCardRot = frontCardAlign.x;
-                      });
-                    },
-                    // When releasing the first card
-                    onPanEnd: (_) {
-                      // If the front card was swiped far enough to count as swiped
-                      String type =
-                          Provider.of<SwipeService>(context, listen: false)
-                              .type;
-                      int index =
-                          Provider.of<SwipeService>(context, listen: false)
-                              .index[type];
-                      SwipeCard item =
-                          Provider.of<SwipeService>(context, listen: false)
-                              .items[type][index];
-                      setState(() {
-                        _opacity[HATE] = 0.0;
-                        _opacity[LIKE] = 0.0;
-                        _opacity[PASS] = 0.0;
-                      });
-                      // Send result reqeust to server
-                      if (frontCardAlign.x > STANDARD_RIGHT) {
-                        move_flag = true;
-                        Stride.analytics.logEvent(name: 'LIKE', parameters: {
-                          'itemId': item.product_id.toString(),
-                          'itemName': item.product_name,
-                          'itemCategory': item.shop_name
+                        if (frontCardAlign.x > START_RIGHT) {
+                          opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
+                          if (opacity[LIKE] >= MAX_OPACITY)
+                            opacity[LIKE] = MAX_OPACITY;
+                        } else if (frontCardAlign.x < START_LEFT) {
+                          opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
+                          if (opacity[HATE] >= MAX_OPACITY)
+                            opacity[HATE] = MAX_OPACITY;
+                        } else if (frontCardAlign.y < START_UP) {
+                          opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
+                          if (opacity[PASS] >= MAX_OPACITY)
+                            opacity[PASS] = MAX_OPACITY;
+                        }
+                        // Rendering View
+                        setState(() {
+                          // Set Opacity
+                          _opacity[LIKE] = opacity[LIKE];
+                          _opacity[HATE] = opacity[HATE];
+                          _opacity[PASS] = opacity[PASS];
+                          // Drag Card SPEED
+                          frontCardAlign = Alignment(
+                              frontCardAlign.x +
+                                  X_SPEED *
+                                      details.delta.dx /
+                                      MediaQuery.of(context).size.width,
+                              frontCardAlign.y +
+                                  Y_SPEED *
+                                      details.delta.dy /
+                                      MediaQuery.of(context).size.height);
+                          frontCardRot = frontCardAlign.x;
                         });
-                        widget.model.likeRequest();
-                        animateCards();
-                      } else if (frontCardAlign.x < STANDARD_LEFT) {
-                        move_flag = true;
-                        Stride.analytics.logEvent(name: 'DISLIKE', parameters: {
-                          'itemId': item.product_id.toString(),
-                          'itemName': item.product_name,
-                          'itemCategory': item.shop_name
+                      },
+                      // When releasing the first card
+                      onPanEnd: (_) {
+                        // If the front card was swiped far enough to count as swiped
+                        String type =
+                            Provider.of<SwipeService>(context, listen: false)
+                                .type;
+                        int index =
+                            Provider.of<SwipeService>(context, listen: false)
+                                .index[type];
+                        SwipeCard item =
+                            Provider.of<SwipeService>(context, listen: false)
+                                .items[type][index];
+                        setState(() {
+                          _opacity[HATE] = 0.0;
+                          _opacity[LIKE] = 0.0;
+                          _opacity[PASS] = 0.0;
                         });
-                        widget.model.dislikeRequest();
-                        animateCards();
-                      } else if (frontCardAlign.y < STANDARD_UP) {
-                        move_flag = true;
-                        widget.model.passRequest();
-                        Stride.analytics.logEvent(name: 'PASS', parameters: {
-                          'itemId': item.product_id.toString(),
-                          'itemName': item.product_name,
-                          'itemCategory': item.shop_name
-                        });
-                        animateCards();
-                      } else {
-                        // Return to the initial rotation and alignment
-                        move_flag = false;
-                        animateCards();
-                        // setState(() {
-                        //   frontCardAlign = defaultFrontCardAlign;
-                        //   frontCardRot = 0.0;
-                        // });
-                      }
-                    },
+                        // Send result reqeust to server
+                        if (frontCardAlign.x > STANDARD_RIGHT) {
+                          move_flag = true;
+                          Stride.analytics.logEvent(name: 'LIKE', parameters: {
+                            'itemId': item.product_id.toString(),
+                            'itemName': item.product_name,
+                            'itemCategory': item.shop_name
+                          });
+                          widget.model.likeRequest();
+                          animateCards();
+                        } else if (frontCardAlign.x < STANDARD_LEFT) {
+                          move_flag = true;
+                          Stride.analytics
+                              .logEvent(name: 'DISLIKE', parameters: {
+                            'itemId': item.product_id.toString(),
+                            'itemName': item.product_name,
+                            'itemCategory': item.shop_name
+                          });
+                          widget.model.dislikeRequest();
+                          animateCards();
+                        } else if (frontCardAlign.y < STANDARD_UP) {
+                          move_flag = true;
+                          widget.model.passRequest();
+                          Stride.analytics.logEvent(name: 'PASS', parameters: {
+                            'itemId': item.product_id.toString(),
+                            'itemName': item.product_name,
+                            'itemCategory': item.shop_name
+                          });
+                          animateCards();
+                        } else {
+                          // Return to the initial rotation and alignment
+                          move_flag = false;
+                          animateCards();
+                        }
+                      },
+                    ),
                   ),
                 )),
           )
         else
           Container(),
-        rulerWidget(),
+        rulerWidget(widget.model),
       ],
     );
   }
 
-  Widget rulerWidget() {
+  Widget rulerWidget(SwipeModel model) {
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -235,14 +240,53 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     color: Colors.transparent,
                   ),
                   onPressed: () {
-                    Stride.analytics
-                        .logEvent(name: "SWIPE_RULER_BUTTON_CLICKED");
-                    Navigator.of(context).push(PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (___, _, __) => SizeDialog(
-                            Provider.of<SwipeService>(context)
-                                    .items[widget.model.type]
-                                [(widget.model.index)])));
+                    SwipeCard item =
+                        Provider.of<SwipeService>(context, listen: false)
+                            .items[widget.model.type][(widget.model.index)];
+                    String url = item.image_urls[model.image_index];
+                    Navigator.push(context, MaterialPageRoute<void>(
+                        builder: (BuildContext context) {
+                      return Scaffold(
+                        body: SingleChildScrollView(
+                          child: Column(children: [
+                            Container(
+                              child: Stack(children: [
+                                Hero(tag: url, child: Image.network(url)),
+                                Positioned.fill(
+                                  child: Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: IconButton(
+                                      iconSize: 44,
+                                      color: Colors.white,
+                                      icon: Icon(
+                                        Icons.cancel,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    ),
+                                  ),
+                                )
+                              ]),
+                            ),
+                            Text(item.shop_name),
+                            Text(item.product_name),
+                            Text(item.price),
+                            Text('사이즈 정보'),
+                            SizeDialog(item)
+                          ]),
+                        ),
+                      );
+                    }));
+
+                    // Stride.analytics
+                    //     .logEvent(name: "SWIPE_RULER_BUTTON_CLICKED");
+                    // Navigator.of(context).push(PageRouteBuilder(
+                    //     opaque: false,
+                    //     pageBuilder: (___, _, __) => SizeDialog(
+                    //         Provider.of<SwipeService>(context)
+                    //                 .items[widget.model.type]
+                    //             [(widget.model.index)])));
                   },
                 ),
               ),
@@ -390,6 +434,12 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 }
 
 class CardsAnimation {
+  static Animation test(parent) {
+    print('!!!!!!!');
+    return Tween(begin: 0, end: 1).animate(CurvedAnimation(
+        parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
+  }
+
   static Animation<Alignment> backCardAlignmentAnim(
       AnimationController parent) {
     return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[1]).animate(

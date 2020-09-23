@@ -190,22 +190,6 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                         setState(() {
                           page = "rename";
                         });
-                        // Stride.analytics
-                        //     .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
-                        // Provider.of<LookBookService>(context, listen: false)
-                        //     .addItem(top[top_idx], widget.bottom[bottom_idx]);
-                        // ServiceView.scaffoldKey.currentState
-                        //     .showSnackBar(SnackBar(
-                        //         duration: Duration(milliseconds: 1500),
-                        //         content: Row(children: [
-                        //           Icon(
-                        //             Icons.check,
-                        //             color: backgroundColor,
-                        //           ),
-                        //           UIHelper.horizontalSpaceMedium,
-                        //           Text('룩북에 저장되었습니다.'),
-                        //         ])));
-                        // Navigator.pop(context);
                       },
                       child: Container(
                         child: Text(
@@ -275,7 +259,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
                       Stride.analytics
-                          .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
+                          .logEvent(name: "DRESSROOM_MAKE_COORDINATE");
                       await Provider.of<LookBookService>(context, listen: false)
                           .addItem(
                               widget.top[top_idx],
@@ -307,7 +291,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                 RaisedButton(
                   onPressed: () async {
                     Stride.analytics
-                        .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
+                        .logEvent(name: "DRESSROOM_MAKE_COORDINATE");
                     await Provider.of<LookBookService>(context, listen: false)
                         .addItem(widget.top[top_idx], widget.bottom[bottom_idx],
                             _renameTextController.text);
@@ -337,17 +321,3 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
     return showWidget;
   }
 }
-
-// class DressRoomSelectDialog extends StatelessWidget {
-//   final List<Product> widget.top;
-//   final List<Product> bottom;
-//   final CarouselController _controller = CarouselController();
-//   // int top_idx = 0;
-//   // int bottom_idx = 0;
-//   DressRoomSelectDialog(this.top, this.bottom);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }
