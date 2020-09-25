@@ -156,7 +156,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                   X_SPEED *
                                       details.delta.dx /
                                       MediaQuery.of(context).size.width,
-                              frontCardAlign.y +
+                              frontCardAlign.y -
                                   Y_SPEED *
                                       details.delta.dy /
                                       MediaQuery.of(context).size.height);
