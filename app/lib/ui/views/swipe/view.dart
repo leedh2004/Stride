@@ -315,7 +315,12 @@ class _SwipeViewState extends State<SwipeView> {
                   UIHelper.verticalSpaceSmall,
                 ]),
               ),
-              SwipeCardSection(context, model, rulerButton),
+              SwipeCardSection(
+                  context,
+                  model,
+                  rulerButton,
+                  () => onTapDislikeButton(model),
+                  () => onTapLikeButton(model)),
               AnimatedOpacity(
                 duration: Duration(milliseconds: 300),
                 opacity: dislike_opacity,

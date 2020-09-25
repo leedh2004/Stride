@@ -5,9 +5,12 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/views/swipe/info.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -18,8 +21,13 @@ List<Size> cardsSize = List(3);
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
   GlobalKey rulerButton;
+  Function onTapDislikeButton, onTapLikeButton;
   SwipeCardSection(
-      BuildContext context, SwipeModel _model, GlobalKey _rulerButton) {
+      BuildContext context,
+      SwipeModel _model,
+      GlobalKey _rulerButton,
+      Function _onTapDislikeButton,
+      Function _onTapLikeButton) {
     model = _model;
     rulerButton = _rulerButton;
     double standard = 0.7;
@@ -30,6 +38,8 @@ class SwipeCardSection extends StatefulWidget {
         MediaQuery.of(context).size.height * standard);
     cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
         MediaQuery.of(context).size.height * standard);
+    onTapDislikeButton = _onTapDislikeButton;
+    onTapLikeButton = _onTapLikeButton;
   }
   @override
   _SwipeCardSectionState createState() => _SwipeCardSectionState();
@@ -40,7 +50,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
   Animation _animation;
-
   int index = 0;
   bool move_flag = false;
 
@@ -212,12 +221,14 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           )
         else
           Container(),
-        rulerWidget(widget.model),
+        rulerWidget(
+            widget.model, widget.onTapDislikeButton, widget.onTapLikeButton),
       ],
     );
   }
 
-  Widget rulerWidget(SwipeModel model) {
+  Widget rulerWidget(
+      SwipeModel model, Function onTapDislikeButton, Function onTapLikeButton) {
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -239,54 +250,17 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     size: 50,
                     color: Colors.transparent,
                   ),
-                  onPressed: () {
-                    SwipeCard item =
-                        Provider.of<SwipeService>(context, listen: false)
-                            .items[widget.model.type][(widget.model.index)];
-                    String url = item.image_urls[model.image_index];
-                    Navigator.push(context, MaterialPageRoute<void>(
-                        builder: (BuildContext context) {
-                      return Scaffold(
-                        body: SingleChildScrollView(
-                          child: Column(children: [
-                            Container(
-                              child: Stack(children: [
-                                Hero(tag: url, child: Image.network(url)),
-                                Positioned.fill(
-                                  child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: IconButton(
-                                      iconSize: 44,
-                                      color: Colors.white,
-                                      icon: Icon(
-                                        Icons.cancel,
-                                      ),
-                                      onPressed: () {
-                                        Navigator.pop(context);
-                                      },
-                                    ),
-                                  ),
-                                )
-                              ]),
-                            ),
-                            Text(item.shop_name),
-                            Text(item.product_name),
-                            Text(item.price),
-                            Text('사이즈 정보'),
-                            SizeDialog(item)
-                          ]),
-                        ),
-                      );
+                  onPressed: () async {
+                    final result = await Navigator.push(context,
+                        MaterialPageRoute<String>(
+                            builder: (BuildContext context) {
+                      return DetailInfo(model);
                     }));
-
-                    // Stride.analytics
-                    //     .logEvent(name: "SWIPE_RULER_BUTTON_CLICKED");
-                    // Navigator.of(context).push(PageRouteBuilder(
-                    //     opaque: false,
-                    //     pageBuilder: (___, _, __) => SizeDialog(
-                    //         Provider.of<SwipeService>(context)
-                    //                 .items[widget.model.type]
-                    //             [(widget.model.index)])));
+                    if (await result == 'like') {
+                      onTapLikeButton();
+                    } else if (await result == 'dislike') {
+                      onTapDislikeButton();
+                    }
                   },
                 ),
               ),

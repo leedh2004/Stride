@@ -5,13 +5,14 @@ import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
+import 'package:app/ui/widgets/filter/color.dart';
 import 'package:app/ui/widgets/filter/concept.dart';
 import 'package:app/ui/widgets/filter/price.dart';
 import 'package:app/ui/widgets/filter/size.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-List<String> MENU = ['옷 종류', '컨셉', '가격', '색상', '신상품', '사이즈'];
+List<String> MENU = ['옷 종류', '컨셉', '가격', '색상', '사이즈'];
 
 Widget clothTypeBar(SwipeModel model, BuildContext context) {
   return Container(
@@ -36,6 +37,7 @@ Widget clothTypeBar(SwipeModel model, BuildContext context) {
                             heightFactor: 0.7,
                             child: Stack(children: [
                               DefaultTabController(
+                                initialIndex: index,
                                 length: 5,
                                 child: Scaffold(
                                   appBar: AppBar(
@@ -75,7 +77,7 @@ Widget clothTypeBar(SwipeModel model, BuildContext context) {
                                       ClothTypeFilter(),
                                       ConceptFilter(),
                                       PriceFilter(),
-                                      Icon(Icons.directions_transit),
+                                      ColorFilter(),
                                       Padding(
                                           padding: EdgeInsets.only(bottom: 66),
                                           child: SizeFilter(user))

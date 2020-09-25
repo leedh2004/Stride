@@ -46,10 +46,10 @@ dependencies:
 
   kakao_flutter_sdk: ^0.4.2
   dio: ^3.0.10
-  json_annotation: ^3.0.1
-  package_info: ^0.4.1
-  platform: ^2.2.1
-  shared_preferences: ^0.5.8
+  # json_annotation: ^3.0.1
+  # package_info: ^0.4.1
+  # platform: ^2.2.1
+  # shared_preferences: ^0.5.8
   
   flutter_secure_storage: ^3.3.3
   sleek_circular_slider: ^1.1.0
