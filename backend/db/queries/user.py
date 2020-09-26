@@ -3,6 +3,7 @@ from flask import g
 import json
 from bson import json_util
 from backend.db.model.user import *
+from backend.db.model.evaluation import EvaluationModel
 from math import *
 
 def insert_user(user_id):
@@ -177,6 +178,25 @@ def select_user_recommenation_flag():
                 return True
             else:
                 return False
+        except:
+            service_conn.rollback()
+            raise
+
+
+def get_history_list(page):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM evaluation e JOIN products p ON e.product_id = p.product_id JOIN shop s ON p.shop_id = s.shop_id WHERE user_id = %s 
+        ORDER BY e.created_at DESC OFFSET %s LIMIT 20"""
+        page_num = (int(page) - 1) * 20
+        try:
+            cursor.execute(query, (g.user_id, page_num))
+            result = cursor.fetchall()
+            product = []
+            for item in result:
+                load = EvaluationModel()
+                load.fetch_data(item)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:
             service_conn.rollback()
             raise
