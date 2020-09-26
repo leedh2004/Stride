@@ -50,3 +50,12 @@ def survey():
     except:
         return jsonify("Fail"), 500
 
+
+@user.route('/history/<page>', methods=['GET'])
+@login_required
+def get_history(page):
+    try:
+        result = get_history_list(page)
+        return result, 200
+    except:
+        return jsonify("Fail"), 500
