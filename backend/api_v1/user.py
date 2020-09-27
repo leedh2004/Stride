@@ -67,7 +67,6 @@ def modify_history():
     try:
         body = request.get_json()
         product_id = body['product_id']
-        print(product_id)
         result = modify_history_one(product_id)
         if result is True:
             return jsonify("Success"), 200
@@ -78,3 +77,11 @@ def modify_history():
 
 
 
+@user.route('history/count', methods=['GET'])
+@login_required
+def get_history_cnt():
+    try:
+        result = get_like_dislike_cnt()
+        return result, 200
+    except:
+        return jsonify("Fail"), 500

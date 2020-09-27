@@ -214,3 +214,19 @@ def modify_history_one(product_id):
             print(Ex)
             service_conn.rollback()
             return False
+
+
+def get_like_dislike_cnt():
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT count(likes) filter ( where likes = True ) as likes, count(likes) filter ( where likes = False ) as dislikes FROM evaluation WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (g.user_id, ))
+            fetch_result = cursor.fetchone()
+            result = {
+                "like": fetch_result[0],
+                "dislike": fetch_result[1]
+            }
+            return json.dumps(result, default=json_util.default, ensure_ascii=False)
+        except Exception as Ex:
+            print(Ex)
+            raise
