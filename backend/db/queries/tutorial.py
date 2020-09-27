@@ -1,6 +1,7 @@
 from backend.db.init import *
 from backend.db.model.tutorial import *
 from backend.module.concept import Concept
+from backend.module.db import DBMapping
 from flask import g
 import json
 from bson import json_util
@@ -11,11 +12,11 @@ def get_random_list():
         try:
             cursor.execute(query)
             result = cursor.fetchall()
-            colnames = [desc[0] for desc in cursor.description]
+            colnames = DBMapping.mapping_column(cursor)
             product = []
             for item in result:
-                load = TutorialModel(colnames)
-                load.fetch_data(item)
+                load = TutorialModel()
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as Ex:
