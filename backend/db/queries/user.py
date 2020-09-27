@@ -200,3 +200,17 @@ def get_history_list(page):
         except:
             service_conn.rollback()
             raise
+
+
+
+def modify_history_one(product_id):
+    with db_connect() as (service_conn, cursor):
+        query = """UPDATE evaluation SET likes = NOT likes WHERE user_id = %s AND product_id = %s"""
+        try:
+            cursor.execute(query, (g.user_id, product_id))
+            service_conn.commit()
+            return True
+        except Exception as Ex:
+            print(Ex)
+            service_conn.rollback()
+            return False

@@ -59,3 +59,22 @@ def get_history(page):
         return result, 200
     except:
         return jsonify("Fail"), 500
+
+
+@user.route('/history', methods=['PUT'])
+@login_required
+def modify_history():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        print(product_id)
+        result = modify_history_one(product_id)
+        if result is True:
+            return jsonify("Success"), 200
+        else:
+            return jsonify("Fail"), 500
+    except:
+        return jsonify("Fail"), 500
+
+
+
