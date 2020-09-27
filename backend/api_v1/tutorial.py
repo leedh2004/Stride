@@ -20,3 +20,15 @@ def get_tutorial_list():
         return result, 200
     except:
         return jsonify("Fail"), 500
+
+
+@tutorial.route('/', methods=['POST'])
+@login_required
+def submit_tutorial_result():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        if extract_and_update_concept(product_id) is True:
+            return jsonify("Success"), 200
+    except:
+        return jsonify("Fail"), 500
