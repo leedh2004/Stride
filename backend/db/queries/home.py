@@ -32,14 +32,15 @@ def get_all_type_clothes():
                 'top': []
             }
             for type in types:
-                if type is 'all':
+                if type == 'all':
                     cursor.execute(all_query)
                 else:
                     cursor.execute(query, (type, ))
                 result = cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -70,14 +71,15 @@ def get_all_type_clothes_sf():
                 'top': []
             }
             for type in types:
-                if type is 'all':
+                if type == 'all':
                     cursor.execute(all_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust']))
                 else:
                     cursor.execute(type_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], type))
                 result = cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -104,9 +106,10 @@ def get_type_clothes_sf(type):
                 cursor.execute(type_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], type))
             result = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -126,9 +129,10 @@ def get_clothes_category(type):
                 cursor.execute(query, (type,))
             result = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -151,10 +155,10 @@ def get_recommended_product(products):
             result = cursor.fetchall()
             cursor.execute(query, (tuple(non_preferred_item),))
             result += cursor.fetchall()
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
-                print(item[0])
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -213,9 +217,10 @@ def get_recommended_product_all(products):
                 result = cursor.fetchall()
                 cursor.execute(query, (tuple(non_preferred_item), ))
                 result += cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
 
             return json.dumps(product, default=json_util.default, ensure_ascii=False)

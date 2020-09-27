@@ -6,10 +6,10 @@ from backend.module.size import *
 
 
 class CoordinationModel:
-    def fetch_data(self, item):
-        self.coor_id = item[0]
-        self.user_id = item[1]
-        self.coor_name = item[2]
-        self.product_top_id = item[3]
-        self.product_bottom_id = item[4]
+    def fetch_data(self, item, column):
+        self.coor_id = item[column['coor_id']]
+        self.user_id = item[column['user_id']]
+        self.coor_name = item[column['coor_name']]
+        self.product_top_id = item[column['product_top_id']]
+        self.product_bottom_id = item[column['product_bottom_id']]
 

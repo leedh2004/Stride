@@ -5,8 +5,8 @@ sys.path.append('../../../')
 
 
 class DressfolderModel:
-    def fetch_data(self, item):
-        self.folder_id = item[0]
-        self.user_id = item[1]
-        self.folder_name = item[2]
+    def fetch_data(self, item, column):
+        self.folder_id = item[column['folder_id']]
+        self.user_id = item[column['user_id']]
+        self.folder_name = item[column['folder_name']]
 

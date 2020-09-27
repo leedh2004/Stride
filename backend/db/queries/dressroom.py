@@ -4,6 +4,7 @@ from backend.db.init import *
 from bson import json_util
 from backend.db.model.product import *
 from backend.db.model.dressfolder import *
+from backend.module.db import DBMapping
 import json
 
 
@@ -41,9 +42,10 @@ def get_dressroom():
                 else:
                     cursor.execute(query, (g.user_id, folder_id))
                 product_result = cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in product_result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     del load.__dict__['image_url']
                     product[folder_name].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
@@ -65,8 +67,9 @@ def create_dressroom_folder(product_id, name):
                 for product in product_id:
                     cursor.execute(update_query, (item[0], g.user_id, product))
                     service_conn.commit()
+            colnames = DBMapping.mapping_column(cursor)
             load = DressfolderModel()
-            load.fetch_data(item)
+            load.fetch_data(item, colnames)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
             print(ex)

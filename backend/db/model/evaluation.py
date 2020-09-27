@@ -26,30 +26,30 @@ class EvaluationModel:
             'bust': self.bust
         }
 
-    def fetch_data(self, item):
-        self.product_id = item[1]
-        self.likes = item[2]
-        self.likes_time = str(item[3]).split(" ")[0]
-        self.product_url = item[9]
-        self.product_name = item[10]
-        self.price = item[11]
-        self.thumbnail_url = item[12]
-        self.image_url = item[13]
-        self.type = item[14]
-        self.shop_name = item[34]
-        list_size_parse(self.length, item[15])
-        list_size_parse(self.waist, item[16])
-        list_size_parse(self.hip, item[17])
-        list_size_parse(self.thigh, item[18])
-        list_size_parse(self.rise, item[19])
-        list_size_parse(self.hem, item[20])
-        list_size_parse(self.shoulder, item[21])
-        list_size_parse(self.bust, item[22])
+    def fetch_data(self, item, column):
+        self.product_id = item[column['product_id']]
+        self.likes = item[column['likes']]
+        self.likes_time = str(item[column['created_at']]).split(" ")[0]
+        self.product_url = item[column['product_url']]
+        self.product_name = item[column['product_name']]
+        self.price = item[column['price']]
+        self.thumbnail_url = item[column['thumbnail_url']]
+        self.image_url = item[column['image_url']]
+        self.type = item[column['type']]
+        self.shop_name = item[column['shop_kor']]
+        SizeParser.list_size_parse(self.length, item[column['length']])
+        SizeParser.list_size_parse(self.waist, item[column['waist']])
+        SizeParser.list_size_parse(self.hip, item[column['hip']])
+        SizeParser.list_size_parse(self.thigh, item[column['thigh']])
+        SizeParser.list_size_parse(self.rise, item[column['rise']])
+        SizeParser.list_size_parse(self.hem, item[column['hem']])
+        SizeParser.list_size_parse(self.shoulder, item[column['shoulder']])
+        SizeParser.list_size_parse(self.bust, item[column['bust']])
         self.size_matcher()
         self.limit_images(4)
 
     def size_matcher(self):
-        self.size = size_matcher(self.size)
+        self.size = SizeParser.size_matcher(self.size)
         del self.thigh, self.waist, self.length, self.bust, self.shoulder, self.hem, self.rise, self.hip
 
 

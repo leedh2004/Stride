@@ -1,3 +1,5 @@
+from math import *
+
 class DBMapping:
 
     @staticmethod
@@ -5,3 +7,4 @@ class DBMapping:
         colname = [desc[0] for desc in cursor.description]
         colname = {string: i for i, string in enumerate(colname)}
         return colname
+
