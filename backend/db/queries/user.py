@@ -4,6 +4,7 @@ import json
 from bson import json_util
 from backend.db.model.user import *
 from backend.db.model.evaluation import EvaluationModel
+from backend.module.db import DBMapping
 from math import *
 
 def insert_user(user_id):
@@ -143,9 +144,10 @@ def select_user_size():
         query = """SELECT waist, hip, thigh, shoulder, bust FROM users WHERE user_id = %s"""
         try:
             cursor.execute(query, (g.user_id, ))
+            colnames = DBMapping.mapping_column(cursor)
             item = cursor.fetchone()
             load = UserSizeModel()
-            load.origin_fetch_data(item)
+            load.origin_fetch_data(item, colnames)
 
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except:
@@ -192,9 +194,10 @@ def get_history_list(page):
             cursor.execute(query, (g.user_id, page_num))
             result = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
                 load = EvaluationModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:

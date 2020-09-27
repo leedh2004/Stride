@@ -4,6 +4,7 @@ from bson import json_util
 from backend.db.init import *
 from backend.db.model.coordination import *
 from backend.db.model.product import *
+from backend.module.db import DBMapping
 
 
 def insert_coordination(coor_name, top_product_id, bottom_product_id):
@@ -41,17 +42,19 @@ def get_coodination():
             cursor.execute(query, (g.user_id, ))
             coordination = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in coordination:
                 print(item)
                 load = {}
                 coor = CoordinationModel()
-                coor.fetch_data(item)
+                coor.fetch_data(item, colnames)
                 load.update(coor.__dict__)
                 # Top
                 cursor.execute(product_query, (coor.product_top_id, ))
+                product_colname = DBMapping.mapping_column(cursor)
                 product_top = cursor.fetchone()
                 product_top_ins = ProductModel()
-                product_top_ins.fetch_data(product_top)
+                product_top_ins.fetch_data(product_top, product_colname)
                 print(product_top_ins.__dict__)
                 for k in product_top_ins.__dict__:
                     new_key = "top_" + k
@@ -60,7 +63,7 @@ def get_coodination():
                 cursor.execute(product_query, (coor.product_bottom_id,))
                 product_bottom = cursor.fetchone()
                 product_bottom_ins = ProductModel()
-                product_bottom_ins.fetch_data(product_bottom)
+                product_bottom_ins.fetch_data(product_bottom, product_colname)
                 for k in product_bottom_ins.__dict__:
                     new_key = "bottom_" + k
                     load[new_key] = product_bottom_ins.__dict__[k]
