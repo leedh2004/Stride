@@ -231,7 +231,7 @@ def get_recommended_product_all(products):
 
 def check_like_cnt():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT count(*) FROM likes WHERE user_id = %s"""
+        query = """SELECT count(*) FROM evaluation WHERE user_id = %s AND likes is True"""
         update_query = """UPDATE users SET recommendation_flag = True WHERE user_id = %s"""
         try:
             cursor.execute(query, (g.user_id, ))
