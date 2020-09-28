@@ -21,6 +21,8 @@ def user_login():
         decoded_token = decode_jwt_token(token)
     except jwt.DecodeError:
         return jsonify("Decode Fail"), 403
+    except jwt.ExpiredSignature:
+        return jsonify("Signature has expired"), 500
     user_id = decoded_token['user_id']
     result = select_user(user_id)
     if result is None:
@@ -29,13 +31,7 @@ def user_login():
     time = datetime.utcnow() - timedelta(days=3)
     exp = datetime.fromtimestamp(exp)
     compare = exp - time
-    if int(compare.days) < 3:
-        new_token = encode_jwt_token(user_id)
-        g.user_id = user_id
-        flag = select_user_profile_flag()
-        size = select_user_size()
-        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
-    elif int(compare.days) < 0:
+    if int(compare.days) < 0:
         return jsonify("Fail"), 403
     else:
         new_token = encode_jwt_token(user_id)
@@ -43,4 +39,6 @@ def user_login():
         g.user_id = user_id
         result = select_user_profile_flag()
         size = select_user_size()
-        return jsonify({"token": new_token, "user_id": user_id, "profile_flag": result, "size": size}), 200
+        likes = get_like_dislike_cnt()
+        return jsonify({"token": new_token, "user_id": user_id,
+                        "profile_flag": result, "size": size, "likes": likes}), 200
