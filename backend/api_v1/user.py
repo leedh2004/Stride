@@ -7,7 +7,6 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.db.queries.user import *
-from backend.authentication.encrypt import *
 from backend.authentication.auth import *
 
 user = Blueprint('user', __name__)
