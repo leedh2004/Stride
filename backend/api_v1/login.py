@@ -37,8 +37,18 @@ def user_login():
         new_token = encode_jwt_token(user_id)
         update_login_timestamp(user_id)
         g.user_id = user_id
-        result = select_user_profile_flag()
-        size = select_user_size()
-        likes = get_like_dislike_cnt()
-        return jsonify({"token": new_token, "user_id": user_id,
-                        "profile_flag": result, "size": size, "likes": likes}), 200
+        # result = select_user_profile_flag()
+        # size = select_user_size()
+        # likes = get_like_dislike_cnt()
+        # name = select_user_name(user_id)
+        # # return jsonify({"token": new_token, "user_id": user_id,
+        # #                 "profile_flag": result, "size": size, "likes": likes, "name": name}), 200
+        result = {
+            "new_token": encode_jwt_token(user_id),
+            "user_id": user_id,
+            "profile_flag": select_user_profile_flag(),
+            "size": select_user_size(),
+            "likes": get_like_dislike_cnt(),
+            "name": select_user_name(user_id)
+        }
+        return jsonify(result), 200
