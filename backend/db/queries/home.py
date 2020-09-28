@@ -242,3 +242,17 @@ def check_like_cnt():
         except Exception as ex:
             print(ex)
             pass
+
+
+def get_mock_product_list():
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True ORDER BY random() LIMIT 20"""
+        cursor.execute(query)
+        result = cursor.fetchall()
+        product = []
+        colnames = DBMapping.mapping_column(cursor)
+        for item in result:
+            load = ProductModel()
+            load.fetch_data(item, colnames)
+            product.append(load.__dict__)
+        return json.dumps(product, default=json_util.default, ensure_ascii=False)
