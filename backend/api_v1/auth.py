@@ -26,13 +26,15 @@ def login():
         headers.update({"Authorization": "Bearer " + str(access_token)})
         response = requests.request("POST", url, headers=headers)
         response_json = response.json()
+        print('response', response_json)
         user_id = response_json.get('id')
-        profile = response_json.get('profile')
+        profile = response_json.get('properties')
         id = str(user_id) + "@kakao.com"
         insert_user(id)
+        print(profile)
         if profile['nickname'] is not None:
             name = profile['nickname']
-            upsert_user_name(DBEncryption.encode_text(name))
+            upsert_user_name(DBEncryption.encode_text(name), id)
         else:
             name = None
         user_id = str(id)
@@ -55,9 +57,4 @@ def login():
         token = encode_jwt_token(user_id)
         likes = get_like_dislike_cnt()
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size, "likes": likes}), 200
-
-
-print(DBEncryption.encode_text("이신육"))
-
-
 

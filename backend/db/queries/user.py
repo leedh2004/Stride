@@ -236,11 +236,11 @@ def get_like_dislike_cnt():
             raise
 
 
-def upsert_user_name(encrypted_name):
+def upsert_user_name(encrypted_name, user_id):
     with db_connect() as (service_conn, cursor):
         query = """UPDATE users SET name = %s WHERE user_id = %s"""
         try:
-            cursor.execute(query, (encrypted_name, g.user_id))
+            cursor.execute(query, (encrypted_name, user_id))
             service_conn.commit()
             return True
         except Exception as Ex:
