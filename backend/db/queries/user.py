@@ -5,6 +5,7 @@ from bson import json_util
 from backend.db.model.user import *
 from backend.db.model.evaluation import EvaluationModel
 from backend.module.db import DBMapping
+from backend.module.db import DBEncryption
 from math import *
 
 def insert_user(user_id):
@@ -233,3 +234,29 @@ def get_like_dislike_cnt():
         except Exception as Ex:
             print(Ex)
             raise
+
+
+def upsert_user_name(encrypted_name):
+    with db_connect() as (service_conn, cursor):
+        query = """UPDATE users SET name = %s WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (encrypted_name, g.user_id))
+            service_conn.commit()
+            return True
+        except Exception as Ex:
+            print(Ex)
+            service_conn.rollback()
+            return False
+
+
+def select_user_name(user_id):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT name FROM users WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (user_id,))
+            fetch_result = cursor.fetchone()[0]
+            result = DBEncryption.decode_text(fetch_result)
+            return json.dumps(result, default=json_util.default, ensure_ascii=False)
+        except Exception as Ex:
+            result = None
+            return result
