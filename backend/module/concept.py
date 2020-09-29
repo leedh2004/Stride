@@ -13,3 +13,19 @@ class Concept:
         for item in result:
             res.append(item[0])
         return res[:3]
+
+
+    @staticmethod
+    def concept_format(concept):
+        concepts = {
+            'daily': '데일리',
+            'vintage': '빈티지',
+            'street': '스트릿',
+            'romantic':'로맨틱',
+            'simple': '심플',
+            'chic': '시크',
+            'unique': '유니크',
+            'basic': '베이직',
+            'sexy': '섹시'
+        }
+        return concepts.get(concept.lower())
