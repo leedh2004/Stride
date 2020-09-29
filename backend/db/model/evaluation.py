@@ -48,6 +48,18 @@ class EvaluationModel:
         self.size_matcher()
         self.limit_images(4)
 
+    def fetch_brief_data(self, item, column):
+        self.product_id = item[column['product_id']]
+        self.likes = item[column['likes']]
+
+    def get_brief_data(self):
+        brief_data = {
+            'product_id': self.product_id,
+            'likes': self.likes
+        }
+        return brief_data
+
+
     def size_matcher(self):
         self.size = SizeParser.size_matcher(self.size)
         del self.thigh, self.waist, self.length, self.bust, self.shoulder, self.hem, self.rise, self.hip

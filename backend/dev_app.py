@@ -63,19 +63,22 @@ def log_parse(path, qs, res_data):
         'total': 0,
         'product_id': []
     }
-    if path == '/home/all':
-        res_json = json.loads(res_data)
-        for key in res_json.keys():
-            for item in res_json[key]:
-                res_all[key].append(item['product_id'])
-        return res_all
-    elif 'size' in str(qs):
-        res_json = json.loads(res_data)
-        for data in res_json:
-            res['product_id'].append(data['product_id'])
-        res['total'] = len(res['product_id'])
-        return res
-    else:
+    try:
+        if path == '/home/all':
+            res_json = json.loads(res_data)
+            for key in res_json.keys():
+                for item in res_json[key]:
+                    res_all[key].append(item['product_id'])
+            return res_all
+        elif 'size' in str(qs):
+            res_json = json.loads(res_data)
+            for data in res_json:
+                res['product_id'].append(data['product_id'])
+            res['total'] = len(res['product_id'])
+            return res
+        else:
+            return False
+    except:
         return False
 
 
