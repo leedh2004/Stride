@@ -117,12 +117,12 @@ def get_user_size_data(user_id):
     db_cursor = conn.cursor()
     user_size_dict = {}
     db_cursor.execute(
-        f"""
+        """
         SELECT length::float4[], waist::float4[], hip::float4[] as hip, thigh::float4[] as thigh, 
                 rise::float4[], hem::float4[], shoulder::float4[], bust::float4[], arm_length::float4[]
         FROM users
-        WHERE user_id = '{user_id}'
-        """
+        WHERE user_id = %s
+        """, (user_id,)
     )
     user_size_data = db_cursor.fetchone()
     for size_type_index in range(len(size_types)):
@@ -133,8 +133,7 @@ def get_user_size_data(user_id):
 
 def get_user_shop_concepts(user_id):
     db_cursor = conn.cursor()
-    db_cursor.execute(f"""
-        SELECT shop_concept FROM users WHERE user_id = '{user_id}'""")
+    db_cursor.execute("""SELECT shop_concept FROM users WHERE user_id = %s""", (user_id,))
     shop_concepts = db_cursor.fetchone()[0]
     db_cursor.close()
     return shop_concepts
@@ -142,26 +141,24 @@ def get_user_shop_concepts(user_id):
 
 def get_entire_user_seen_items_from_db(user_id):
     db_cursor = conn.cursor()
-    query = """select product_id from likes where user_id = %s
-    UNION DISTINCT select product_id from dislikes where user_id = %s 
-    UNION DISTINCT select product_id from pass where user_id = %s"""
-    db_cursor.execute(query, (user_id, user_id, user_id))
-    items = db_cursor.fetchall()
-    result = [str(item[0]) for item in items]
+    query = """select array(select evaluation.product_id::varchar(255)
+        from evaluation join products using (product_id) 
+        where user_id = %s)"""
+    db_cursor.execute(query, (user_id, ))
+    items = db_cursor.fetchone()[0]
     db_cursor.close()
-    return result
+    return items
 
 
 def get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type):
     db_cursor = conn.cursor()
-    query = """select products.product_id from products where type = %s and product_id in 
-    (select product_id from likes where user_id = %s UNION DISTINCT select product_id from dislikes where user_id = %s 
-    UNION DISTINCT select product_id from pass where user_id = %s)"""
-    db_cursor.execute(query, (clothes_type, user_id, user_id, user_id))
-    items = db_cursor.fetchall()
-    result = [str(item[0]) for item in items]
+    query = """select array(select evaluation.product_id::varchar(255)
+        from evaluation join products using (product_id) 
+        where user_id = %s and products.type = %s)"""
+    db_cursor.execute(query, (user_id, clothes_type))
+    items = db_cursor.fetchone()[0]
     db_cursor.close()
-    return result
+    return items
 
 
 def get_user_liked_shop_concepts_from_db(user_id):
@@ -188,44 +185,43 @@ def get_user_liked_shop_concepts_from_db(user_id):
     return preferred_shop_concepts
 
 
-def get_recommended_shops_by_user_preferred_concepts_from_db(user_id):
-    user_preferred_concepts = get_user_liked_shop_concepts_from_db(user_id)
+def get_user_preferred_concept_shops_from_db(user_id):
+    user_concepts = get_user_shop_concepts(user_id)
     db_cursor = conn.cursor()
-    recommended_shops = set()
-    query = """select shop_id from shop where %s = ANY(shop_concept)"""
-    db_cursor.execute(query, (user_preferred_concepts[0],))
-    best_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    db_cursor.execute(query, (user_preferred_concepts[1],))
-    second_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    db_cursor.execute(query, (user_preferred_concepts[2],))
-    third_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(second_concept_matched_shops))
-    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(third_concept_matched_shops))
-    recommended_shops = recommended_shops.union(second_concept_matched_shops.intersection(third_concept_matched_shops))
+    query = """
+    SELECT ARRAY(
+    SELECT s.shop_id
+    FROM shop s, LATERAL (
+        SELECT count(*) AS ct
+        FROM   unnest(s.shop_concept) sc
+        WHERE  sc = ANY(%s)
+    ) x
+    ORDER  BY x.ct DESC);
+    """
+    db_cursor.execute(query, (user_concepts,))
+    res = db_cursor.fetchone()[0]
     db_cursor.close()
-    return list(recommended_shops)
+    return res
 
 
 def get_clothes_type_popular_items_from_db(clothes_type):
     db_cursor = conn.cursor()
-    query = """select product_id from likes join products using (product_id) where type = %s 
-    group by product_id order by count(product_id) desc limit 10"""
+    query = """select ARRAY(select product_id::varchar(255) from likes join products using (product_id) where type = %s 
+    group by product_id order by count(product_id) desc limit 10)"""
     db_cursor.execute(query, (clothes_type,))
-    result = db_cursor.fetchall()
-    popular_items = [str(r[0]) for r in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return popular_items
+    return result
 
 
 def get_all_type_popular_items_from_db():
     db_cursor = conn.cursor()
-    query = """select product_id from likes join products using (product_id) 
-        group by product_id order by count(product_id) desc limit 10"""
+    query = """select ARRAY(select product_id::varchar(255) from likes join products using (product_id) 
+        group by product_id order by count(product_id) desc limit 10)"""
     db_cursor.execute(query)
-    result = db_cursor.fetchall()
-    popular_items = [str(r[0]) for r in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return popular_items
+    return result
 
 
 def get_entire_user_ids_from_db():
@@ -246,38 +242,33 @@ def count_user_liked_items_from_db(user_id):
     return result[0]
 
 
-def get_clothes_type_non_preferred_items_from_db(preferred_shops, clothes_type):
+def get_clothes_type_non_preferred_items_from_db(non_pref_shops, clothes_type):
     db_cursor = conn.cursor()
-    preferred_shops = tuple(preferred_shops)
-    query = """select products.product_id from products join shop using (shop_id) 
-    where shop.shop_id not in %s and type = %s order by random() limit 5"""
-    db_cursor.execute(query, (preferred_shops, clothes_type))
-    result = db_cursor.fetchall()
-    non_preferred_items = [str(item[0]) for item in result]
+    query = """select ARRAY(select products.product_id::varchar(255) from products join shop using (shop_id) 
+    where shop.shop_id in %s and type = %s order by random() limit 5)"""
+    db_cursor.execute(query, (tuple(non_pref_shops), clothes_type))
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return non_preferred_items
+    return result
 
 
-def get_all_type_non_preferred_items_from_db(preferred_shops):
+def get_all_type_non_preferred_items_from_db(non_pref_shops):
     db_cursor = conn.cursor()
-    preferred_shops = tuple(preferred_shops)
-    query = """select product_id from products join shop using (shop_id) 
-    where shop_id not in %s order by random() limit 5"""
-    db_cursor.execute(query, (preferred_shops, ))
-    result = db_cursor.fetchall()
-    non_preferred_items = [str(item[0]) for item in result]
+    query = """select ARRAY (select product_id::varchar(255) from products join shop using (shop_id) 
+    where shop_id in %s order by random() limit 5)"""
+    db_cursor.execute(query, (tuple(non_pref_shops), ))
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return non_preferred_items
+    return result
 
 
 def get_invalid_products_in_es():
     db_cursor = conn.cursor()
-    query = """ select product_id from products where active_flag = false and es_flag = true"""
+    query = """select array(select product_id::varchar(255) from products where active_flag = false and es_flag = true)"""
     db_cursor.execute(query)
-    result = db_cursor.fetchall()
-    invalid_products = [str(item[0]) for item in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return  invalid_products
+    return result
 
 
 def update_user_concepts(user_id, concepts):

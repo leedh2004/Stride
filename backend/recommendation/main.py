@@ -26,6 +26,7 @@ def get_single_type_item_recommendation(user_id, clothes_category, size_filter, 
             return recommendation_list
 
 
+# DO NOT CALL THIS FUNCTION DIRECTLY
 # returns 25 items of 'all' type
 def get_all_type_item_recommendation(user_id, size_filter):
     user_seen_items = queries.get_entire_user_seen_items_from_db(user_id)

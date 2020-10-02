@@ -169,7 +169,7 @@ def get_user_liked_items(user_id):
 # TODO: replace with Scroll
 def get_user_liked_items_from_cf_index(user_id):
     res = es.search(
-        index='user_rated_items',
+        index='user_like_items',
         body={
             "size": 1000,
             "query": {
@@ -178,11 +178,6 @@ def get_user_liked_items_from_cf_index(user_id):
                         {
                             "term": {
                                 "user_id": user_id
-                            }
-                        },
-                        {
-                            "term": {
-                                "rating": "like"
                             }
                         }
                     ]
@@ -198,7 +193,6 @@ def get_entire_items_shown_to_user(user_id):
         index='user_ratings',
         body={
             "_source": "product_id",
-            "size": 10000,
             "query": {
                 "bool": {
                     "filter": [
@@ -249,7 +243,6 @@ def get_clothes_type_items_shown_to_user(user_id, clothes_type):
         index='user_ratings',
         body={
             "_source": "product_id",
-            "size": 10000,
             "query": {
                 "bool": {
                     "filter": [
