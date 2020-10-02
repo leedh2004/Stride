@@ -46,7 +46,6 @@ def get_dressroom():
                 for item in product_result:
                     load = ProductModel()
                     load.fetch_data(item, colnames)
-                    del load.__dict__['image_url']
                     product[folder_name].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except:
