@@ -3,7 +3,7 @@ import backend.recommendation.recommendation as recommendation
 
 es = recommendation.es
 
-clothes_types = ('all', 'top', 'skirt', 'pants', 'dress')
+clothes_types = ('all', 'outer', 'top', 'skirt', 'pants', 'dress')
 
 
 # size_category should be given as 'top', 'skirt', 'pants', 'dress' or 'all'
@@ -50,10 +50,9 @@ def get_entire_types_item_recommendation(user_id, size_filter):
     return recommendation_list
 
 
-def index_recommendation_result(user_id, recommendation_list, size_filtering):
-    index_name = 'recommendation_list_size_filtered' if size_filtering else 'recommendation_list'
-    for clothes_type in recommendation_list:
-        doc = {'user_id': user_id, 'recommended_products': recommendation_list[clothes_type],
-               'clothes_type': clothes_type}
-        print('indexing:', doc)
-        es.index(index=index_name, body=doc, id=doc['user_id'] + doc['clothes_type'])
+# this function should be executed periodically to update user preferrering shop concepts
+def update_user_preferred_shop_concepts():
+    users = queries.get_entire_user_ids_from_db()
+    for user in users:
+        concepts = queries.get_user_liked_shop_concepts_from_db(user)[:3]
+        queries.update_user_concepts(user, concepts)
