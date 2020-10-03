@@ -12,4 +12,4 @@ class CoordinationModel:
         self.coor_name = item[column['coor_name']]
         self.product_top_id = item[column['product_top_id']]
         self.product_bottom_id = item[column['product_bottom_id']]
-
+        self.folder_id = item[column['folder_id']]
