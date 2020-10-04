@@ -30,6 +30,7 @@ def update_coor_name(update_name, coor_id):
         try:
             cursor.execute(query, (update_name, coor_id))
             service_conn.commit()
+            return True
         except:
             service_conn.rollback()
             raise
@@ -80,6 +81,17 @@ def delete_coordination(coor_id):
         try:
             cursor.execute(query, (coor_id,))
             service_conn.commit()
+        except:
+            service_conn.rollback()
+            raise
+
+def delete_arr_coor(coor_id):
+    with db_connect() as (service_conn, cursor):
+        query = """DELETE FROM coordination WHERE coor_id IN %s"""
+        try:
+            cursor.execute(query, (tuple(coor_id), ))
+            service_conn.commit()
+            return True
         except:
             service_conn.rollback()
             raise
