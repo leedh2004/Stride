@@ -324,27 +324,6 @@ def get_shop_concept_of_product(product_id):
     return [result_item['key'] for result_item in res['aggregations']['shop_concepts']['buckets']]
 
 
-# queries로 다시 바꾸기;;
-# returns shop id and clothes type
-def get_product_extra_info(product_id):
-    res = es.search(
-        index='products',
-        body={
-            "_source": ["shop_id", "clothes_type"],
-            "query": {
-                "bool": {
-                    "filter": {
-                        "term": {
-                            "product_id": product_id
-                        }
-                    }
-                }
-            }
-        }
-    )
-    return res['hits']['hits'][0]['_source'] if res['hits']['hits'] else None
-
-
 def get_entire_products_from_shop_es(shop_id):
     res = es.search(
         index='products',
@@ -712,3 +691,100 @@ def get_all_type_non_preferred_items_from_es(user_preferred_shops, user_seen_ite
     non_preferred_items = random.sample(non_preferred_items, 5)
     return non_preferred_items
 
+
+# def product_filtering_with_size_filter_on(user_id, colors, price, concepts, clothes_type, user_seen_items):
+#
+#     if 'all' in clothes_type:
+#         clothes_type = []
+#     res = es.search(
+#         index='products',
+#         body={
+#             "size": 50,
+#             "query": {
+#                 "bool": {
+#                     "filter": [
+#                         {
+#                             "terms": {
+#                                 "colors": colors
+#                             }
+#                         },
+#                         {
+#                             "terms": {
+#                                 "shop_concept": concepts
+#                             }
+#                         },
+#                         {
+#                             "terms": {
+#                                 "clothes_type": clothes_type
+#                             }
+#                         }
+#                     ],
+#                     "must": [
+#                         {
+#                             "range": {
+#                                 "price": {
+#                                     "gte": min(price),
+#                                     "lte": max(price)
+#                                 }
+#                             }
+#                         },
+#
+#                     ],
+#                     "must_not": [
+#                         {
+#                             "terms": {
+#                                 "product_id": user_seen_items
+#                             }
+#                         }
+#                     ]
+#                 }
+#             }
+#         }
+#     )
+#     print(res)
+#
+#
+# def product_filtering_with_size_filter_off(colors, price, concepts, clothes_type, user_seen_items):
+#     terms_colors = {"terms": {"color": colors}}
+#     terms_shop_concept = {"terms": {"color": concepts}}
+#     terms_clothes_type = {"terms": {"clothes_type": clothes_type}}
+#     range_price = {"range": {"price": {"gte": price[0], "lte": price[1]}}}
+#     filter_conditions = []
+#     if colors:
+#         filter_conditions.append(terms_colors)
+#     if concepts:
+#         filter_conditions.append(terms_shop_concept)
+#     if clothes_type and 'all' not in clothes_type:
+#         filter_conditions.append(terms_clothes_type)
+#     must_conditions = []
+#     if price:
+#         must_conditions.append(range_price)
+#     if size_on:
+#         range_size = [{"range": {"max_waist": {"gte": min(user_size_data['waist'])}},
+#                        {"range": {"max_hip": {"gte": min(user_size_data['hip'])}}},
+#                       {"range": {"max_thigh": {"gte": min(user_size_data['thigh'])}}},
+#                       {"range": {"max_shoulder": {"gte": min(user_size_data['shoulder'])}}},
+#                       {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
+#         must_conditions.append(range_size)
+#     res = es.search(
+#         index='products',
+#         body={
+#             "size": 50,
+#             "query": {
+#                 "bool": {
+#                     "filter": filter_conditions,
+#                     "must": [
+#
+#                     ],
+#                     "must_not": [
+#                         {
+#                             "terms": {
+#                                 "product_id": user_seen_items
+#                             }
+#                         }
+#                     ]
+#                 }
+#             }
+#         }
+#     )
+#     print(res)
