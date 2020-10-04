@@ -106,15 +106,14 @@ def create_coordination_folder(coor_id, name):
             cursor.execute(query, (g.user_id, name))
             service_conn.commit()
             cursor.execute(select_query, (g.user_id, name))
+            colnames = DBMapping.mapping_column(cursor)
             item = cursor.fetchone()
             if coor_id != -1:
-                print(coor_id)
-                cursor.execute(update_query, (item[0], g.user_id, (tuple(coor_id, ))))
+                cursor.execute(update_query, (item[0], g.user_id, tuple(coor_id)))
                 service_conn.commit()
-            load = {
-                'folder_id': item[0]
-            }
-            return json.dumps(load, default=json_util.default, ensure_ascii=False)
+            load = CoordinationfolderModel()
+            load.fetch_data(item, colnames)
+            return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
             print(ex)
             service_conn.rollback()
