@@ -8,7 +8,7 @@ es = es_connection
 user_ratings_mapping = \
     {
         "settings": {
-            "number_of_shards": 2,
+            "number_of_shards": 1,
             "number_of_replicas": 1
         },
         "mappings": {
@@ -26,7 +26,7 @@ user_ratings_mapping = \
 products_mapping = \
     {
         "settings": {
-            "number_of_shards": 2,
+            "number_of_shards": 1,
             "number_of_replicas": 1
         },
         "mappings": {
@@ -62,7 +62,7 @@ products_mapping = \
 user_like_items_mapping = \
     {
         "settings": {
-            "number_of_shards": 2,
+            "number_of_shards": 1,
             "number_of_replicas": 1
         },
         "mappings": {
