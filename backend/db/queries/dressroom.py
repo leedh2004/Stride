@@ -61,12 +61,12 @@ def create_dressroom_folder(product_id, name):
             cursor.execute(query, (g.user_id, name))
             service_conn.commit()
             cursor.execute(select_query, (g.user_id, name))
+            colnames = DBMapping.mapping_column(cursor)
             item = cursor.fetchone()
             if product_id != -1:
                 for product in product_id:
                     cursor.execute(update_query, (item[0], g.user_id, product))
                     service_conn.commit()
-            colnames = DBMapping.mapping_column(cursor)
             load = DressfolderModel()
             load.fetch_data(item, colnames)
             return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
