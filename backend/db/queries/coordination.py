@@ -30,6 +30,7 @@ def update_coor_name(update_name, coor_id):
         try:
             cursor.execute(query, (update_name, coor_id))
             service_conn.commit()
+            return True
         except:
             service_conn.rollback()
             raise
@@ -84,6 +85,17 @@ def delete_coordination(coor_id):
             service_conn.rollback()
             raise
 
+def delete_arr_coor(coor_id):
+    with db_connect() as (service_conn, cursor):
+        query = """DELETE FROM coordination WHERE coor_id IN %s"""
+        try:
+            cursor.execute(query, (tuple(coor_id), ))
+            service_conn.commit()
+            return True
+        except:
+            service_conn.rollback()
+            raise
+
 
 def create_coordination_folder(coor_id, name):
     with db_connect() as (service_conn, cursor):
@@ -96,17 +108,17 @@ def create_coordination_folder(coor_id, name):
             cursor.execute(select_query, (g.user_id, name))
             item = cursor.fetchone()
             if coor_id != -1:
-                cursor.execute(update_query, (item[0], g.user_id, tuple(coor_id)))
+                print(coor_id)
+                cursor.execute(update_query, (item[0], g.user_id, (tuple(coor_id, ))))
                 service_conn.commit()
-            colnames = DBMapping.mapping_column(cursor)
-            load = CoordinationfolderModel()
-            load.fetch_data(item, colnames)
-            return json.dumps(load.__dict__, default=json_util.default, ensure_ascii=False)
+            load = {
+                'folder_id': item[0]
+            }
+            return json.dumps(load, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
             print(ex)
             service_conn.rollback()
             raise
-            pass
 
 
 

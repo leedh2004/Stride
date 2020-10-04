@@ -60,17 +60,25 @@ def delete_coord():
     return 'Success', 200
 
 
+
+
 @v2_coordination.route('/', methods=['PUT'])
 @login_required
 def modify_coor_name():
     try:
         body = request.get_json()
+        print(body)
         coor_id = body['coor_id']
-        update_name = body['update_name']
-        update_coor_name(update_name, coor_id)
+        if body.get('update_name'):
+            update_name = body['update_name']
+            if update_coor_name(update_name, coor_id) is True:
+                return 'Success', 200
+        else:
+            if delete_arr_coor(coor_id) is True:
+                return 'Success', 200
     except:
         return jsonify("Fail"), 500
-    return 'Success', 200
+
 
 
 @v2_coordination.route('/folder', methods=['POST'])
