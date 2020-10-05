@@ -73,7 +73,7 @@ def update_user_preferred_shop_concepts():
         queries.update_user_concepts(user, concepts)
 
 
-def filter_product(user_id: str, colors: list, size_on: bool, price: list, concepts: list, clothes_type: list, exclude_list:list) -> list:
+def filter_product(user_id: str, colors: list, size_on: bool, price: list, concepts: list, clothes_type: list, exclude_list: list) -> list:
     user_prefer_concepts = queries.get_user_shop_concepts(user_id)
     user_seen_items = queries.get_entire_user_seen_items_from_db(user_id) + exclude_list
     filter_conditions = []
@@ -125,7 +125,7 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
     )
     print(res)
     result_product_ids = [item['_source']['product_id'] for item in res['hits']['hits']]
-    result_product_ids = random.sample(result_product_ids, 20)
+    result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
     return result_product_ids
 
 
