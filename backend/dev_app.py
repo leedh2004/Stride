@@ -18,6 +18,7 @@ from backend.api_v1.tutorial import tutorial
 from backend.api_v2.home import v2_home
 from backend.api_v2.recommenation import v2_recommendation
 from backend.api_v2.coordination import v2_coordination
+from backend.api_v2.dressroom import v2_dressroom
 from backend.authentication.kakao import kakao
 from backend.authentication.naver import naver
 from backend.authentication.auth import *
@@ -46,6 +47,7 @@ app.register_blueprint(tutorial, url_prefix='/tutorial')
 app.register_blueprint(v2_home, url_prefix='/v2/home')
 app.register_blueprint(v2_recommendation, url_prefix='/v2/recommendation')
 app.register_blueprint(v2_coordination, url_prefix='/v2/coordination')
+app.register_blueprint(v2_dressroom, url_prefix='/v2/dressroom')
 log_stream = 'api-log'
 
 dev_cw_handler = CloudWatchLogsHandler(

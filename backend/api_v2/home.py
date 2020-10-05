@@ -38,3 +38,62 @@ def get_clothes():
     except:
         return jsonify("Fail"), 500
 
+@v2_home.route('/like', methods=['POST'])
+@login_required
+def like():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        if v2_insert_like(product_id) is True:
+            return 'Success', 200
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
+
+
+
+@v2_home.route('/dislike', methods=['POST'])
+@login_required
+def dislike():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_dislikes(product_id)
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
+    return 'Success', 200
+
+
+@v2_home.route('/pass', methods=['POST'])
+@login_required
+def passes():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_pass(product_id)
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
+    return 'Success', 200
+
+
+@v2_home.route('/purchase', methods=['POST'])
+@login_required
+def purchase():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        insert_purchases(product_id)
+    except Exception as ex:
+        if "duplicate" in str(ex):
+            return jsonify("Duplicate"), 202
+        else:
+            return jsonify("Fail"), 500
+    return 'Success', 200
