@@ -10,6 +10,25 @@ class QuerystringParser:
     def qs_parser(qs):
         for i in qs:
             if "all" == i:
-                return 'all'
+                return []
         return qs
 
+
+    @staticmethod
+    def qs_bool(qs):
+        if qs == "on":
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def int_list(qs):
+        return list(map(int, qs))
+
+
+    @staticmethod
+    def empty_list(qs):
+        if qs == ['']:
+            return []
+        else:
+            return qs
