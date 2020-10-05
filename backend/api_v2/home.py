@@ -32,7 +32,8 @@ def get_clothes():
         color = QuerystringParser.qs_parser(args.get('color').split(','))
         size = args.get('size')
         price = args.get('price').split(',')
-
+        exception = args.get('exception').split(',')
+        print(exception)
         mock_result = get_mock_product_list()
         return mock_result, 200
     except:
