@@ -121,3 +121,19 @@ def modify_folder_name(new_name, folder_id):
             service_conn.rollback()
             raise
         return
+
+
+def insert_dress(product_id):
+    with db_connect() as (service_conn, cursor):
+        query = """
+        INSERT INTO dressroom(user_id, product_id) VALUES (%s, %s)
+        ON CONFLICT (user_id, product_id) DO UPDATE SET created_at = CURRENT_TIMESTAMP
+        """
+        try:
+            cursor.execute(query, (g.user_id, product_id))
+            service_conn.commit()
+            return True
+        except Exception as Ex:
+            print(Ex)
+            service_conn.rollback()
+            raise

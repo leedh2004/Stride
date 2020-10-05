@@ -19,6 +19,20 @@ def insert_like(product_id):
             service_conn.rollback()
             raise
 
+def v2_insert_like(product_id):
+    with db_connect() as (service_conn, cursor):
+        query = """
+        INSERT INTO evaluation(user_id, product_id, likes) VALUES (%s, %s, TRUE) 
+        ON CONFLICT (user_id, product_id) DO UPDATE SET likes= TRUE
+        """
+        try:
+            cursor.execute(query, (g.user_id, product_id, ))
+            service_conn.commit()
+            return True
+        except Exception as ex:
+            print(ex)
+            service_conn.rollback()
+            raise
 
 def insert_dislikes(product_id):
     with db_connect() as (service_conn, cursor):
