@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 List<String> MENU = ['옷 종류', '컨셉', '가격', '색상', '사이즈'];
 
-Widget clothTypeBar(SwipeModel model, BuildContext context) {
+Widget FilterBar(SwipeModel model, BuildContext context) {
   return Container(
     height: 30,
     margin: EdgeInsets.fromLTRB(20, 10, 0, 0),
@@ -74,13 +74,13 @@ Widget clothTypeBar(SwipeModel model, BuildContext context) {
                                           ])),
                                   body: TabBarView(
                                     children: [
-                                      ClothTypeFilter(),
-                                      ConceptFilter(),
-                                      PriceFilter(),
-                                      ColorFilter(),
+                                      ClothTypeFilter(model),
+                                      ConceptFilter(model),
+                                      PriceFilter(model),
+                                      ColorFilter(model),
                                       Padding(
                                           padding: EdgeInsets.only(bottom: 66),
-                                          child: SizeFilter(user))
+                                          child: SizeFilter(model))
                                     ],
                                   ),
                                 ),
@@ -97,6 +97,7 @@ Widget clothTypeBar(SwipeModel model, BuildContext context) {
                                           EdgeInsets.fromLTRB(50, 5, 50, 5),
                                       color: Colors.black,
                                       onPressed: () {
+                                        model.setFilter();
                                         Navigator.pop(context);
                                       },
                                       child: Text(

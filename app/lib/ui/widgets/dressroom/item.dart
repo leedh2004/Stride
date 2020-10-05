@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
@@ -14,7 +15,7 @@ import 'package:provider/provider.dart';
 
 class DressRoomItemWidget extends StatelessWidget {
   final int index;
-  final Product item;
+  final RecentItem item;
   final double opacity;
   DressRoomItemWidget(this.item, this.opacity, this.index);
 

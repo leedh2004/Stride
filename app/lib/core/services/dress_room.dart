@@ -1,13 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'api.dart';
 
 class DressRoomService {
-  //BehaviorSubject<List<Product>> _itemsController = BehaviorSubject();
-  //Stream<List<Product>> get items => _itemsController.stream;
+  //BehaviorSubject<List<RecentItem>> _itemsController = BehaviorSubject();
+  //Stream<List<RecentItem>> get items => _itemsController.stream;
   List<int> folder_id;
-  Map<int, List<Product>> items = new Map();
+  Map<int, List<RecentItem>> items = new Map();
   Map<int, String> folder = new Map(); // folder_id, folder_name
   Api _api;
   int current_folder = 0;
@@ -31,7 +32,7 @@ class DressRoomService {
         items[current_folder][index].type == 'skirt');
   }
 
-  void addItem(Product item) {
+  void addItem(RecentItem item) {
     print(item.product_name);
     if (!items[0].contains(item)) items[0].add(item);
   }
@@ -41,26 +42,26 @@ class DressRoomService {
     items = new Map();
     folder = new Map();
     current_folder = 0;
-
     try {
       var response = await _api.client.get(
         '${Api.endpoint}/dressroom/',
       );
-      if (response.statusCode == 500) {
-        _api.errorCreate(Error());
-      }
+      print(response.statusCode);
       var parsed = json.decode(response.data) as Map<String, dynamic>;
+      print(parsed);
       for (var info in parsed['info']) {
         folder[info['folder_id']] = info['folder_name'];
-        var temp = List<Product>();
+        print(info['folder_name']);
+        var temp = List<RecentItem>();
         for (var item in parsed[folder[info['folder_id']]]) {
-          temp.add(Product.fromJson(item));
+          temp.add(RecentItem.fromJson(item));
         }
         items[info['folder_id']] = temp;
       }
       init = true;
       return;
     } catch (e) {
+      print(e.toString());
       _api.errorCreate(Error());
     }
   }
@@ -79,8 +80,8 @@ class DressRoomService {
     return;
   }
 
-  List<Product> findSelectedTop(List<int> selectedIdx) {
-    List<Product> ret = new List();
+  List<RecentItem> findSelectedTop(List<int> selectedIdx) {
+    List<RecentItem> ret = new List();
     for (int i = 0; i < selectedIdx.length; i++) {
       int idx = selectedIdx[i];
       if (items[current_folder][idx].type == 'top')
@@ -89,8 +90,8 @@ class DressRoomService {
     return ret;
   }
 
-  List<Product> findSelectedBottom(List<int> selectedIdx) {
-    List<Product> ret = new List();
+  List<RecentItem> findSelectedBottom(List<int> selectedIdx) {
+    List<RecentItem> ret = new List();
     for (int i = 0; i < selectedIdx.length; i++) {
       int idx = selectedIdx[i];
       if (items[current_folder][idx].type == 'skirt' ||
@@ -108,7 +109,7 @@ class DressRoomService {
       final response = await _api.client.put('${Api.endpoint}/dressroom/',
           data: jsonEncode({'product_id': removeIds}));
       int cnt = 0;
-      var temp = new List<Product>();
+      var temp = new List<RecentItem>();
       selectedIdx.sort();
       for (int i = 0; i < items[current_folder].length; i++) {
         if (i == selectedIdx[cnt]) {
@@ -128,7 +129,7 @@ class DressRoomService {
 
   Future createFolder(String folderName, List<int> selectedIdx) async {
     List<int> selectedIds = new List();
-    List<Product> selectedProduct = new List();
+    List<RecentItem> selectedProduct = new List();
     for (var idx in selectedIdx) {
       selectedIds.add(items[current_folder][idx].product_id);
       selectedProduct.add(items[current_folder][idx]);
@@ -185,7 +186,7 @@ class DressRoomService {
 
   Future moveFolder(int toId, List<int> selectedIdx) async {
     List<int> selectedIds = new List();
-    List<Product> selectedProduct = new List();
+    List<RecentItem> selectedProduct = new List();
     for (var idx in selectedIdx) {
       selectedIds.add(items[current_folder][idx].product_id);
       selectedProduct.add(items[current_folder][idx]);

@@ -1,14 +1,15 @@
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/ui/shared/text_styles.dart';
 
 class Coordinate {
   int id;
   String name;
-  Product top = new Product();
-  Product bottom = new Product();
+  RecentItem top = new RecentItem();
+  RecentItem bottom = new RecentItem();
 
-  Coordinate(int _id, String _name, Product _top, Product _bottom) {
+  Coordinate(int _id, String _name, RecentItem _top, RecentItem _bottom) {
     id = _id;
     name = _name;
     top = _top;

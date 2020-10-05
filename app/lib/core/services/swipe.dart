@@ -6,113 +6,148 @@ import 'api.dart';
 
 const List<String> TYPE = ['all', 'top', 'skirt', 'pants', 'dress'];
 
+class Filter {
+  Set<String> types = new Set();
+  Set<String> concepts = new Set();
+  Set<String> colors = new Set();
+  int start_price = 1;
+  int end_price = 200000;
+  bool size_toggle = false;
+
+  Filter() {
+    types.add('all');
+    concepts.add('all');
+    colors.add('red');
+    colors.add('blue');
+    colors.add('green');
+  }
+
+  Filter.from(Filter _filter) {
+    types = Set.from(_filter.types);
+    concepts = Set.from(_filter.concepts);
+    colors = Set.from(_filter.colors);
+    start_price = _filter.start_price;
+    end_price = _filter.end_price;
+    size_toggle = _filter.size_toggle;
+  }
+
+  void setTypes(List<String> type) {
+    types.clear();
+    types.addAll(type);
+  }
+
+  void setConcepts(List<String> type) {
+    concepts.clear();
+    concepts.addAll(type);
+  }
+
+  void setColors(List<String> color) {
+    colors.clear();
+    colors.addAll(color);
+  }
+
+  void setPrice(int start, int end) {
+    start_price = start;
+    end_price = end;
+  }
+
+  void setSize(bool value) {
+    size_toggle = value;
+  }
+
+  String getFilterQuery() {
+    String sizeflag = this.size_toggle ? 'on' : 'off';
+    String types = this
+        .types
+        .toList()
+        .toString()
+        .replaceFirst('[', '')
+        .replaceFirst(']', '');
+    String colors = this
+        .colors
+        .toList()
+        .toString()
+        .replaceFirst('[', '')
+        .replaceFirst(']', '');
+    String concepts = this
+        .concepts
+        .toList()
+        .toString()
+        .replaceFirst('[', '')
+        .replaceFirst(']', '');
+    print(types);
+    print(colors);
+    return 'price=${start_price},${end_price}&size=${sizeflag}&type=${types}&color=${colors}&concept=${concepts}';
+  }
+}
+
 class SwipeService {
-  // BehaviorSubject<List<List<SwipeCard>>> _itemsController = BehaviorSubject();
-  // Stream<List<List<SwipeCard>>> get items => _itemsController.stream;
+  int index = 0;
+  int length = 0;
+  List<SwipeCard> items;
   Api _api;
-  String type;
-  Map<String, int> index;
-  Map<String, int> length;
-  Map<String, List<SwipeCard>> items;
   Set<int> precached = new Set();
   bool init = false;
-  bool size_flag = false;
+  Filter filter = new Filter();
 
   SwipeService(Api api) {
     print("SwipeService 생성!");
-    initialize();
+    // initialize();
     _api = api;
   }
-
-  void flagChange() {
-    size_flag = !size_flag;
+  void setFilter(Filter _filter) {
+    filter = Filter.from(_filter);
   }
 
-  bool initialize() {
-    index = new Map();
-    length = new Map();
-    items = new Map();
-    for (var type in TYPE) {
-      index[type] = 0;
-      length[type] = 0;
-      items[type] = [];
-    }
-    type = 'all';
+  void changeSizeFlag(bool value) {
+    filter.setSize(value);
   }
 
-  void changeType(String _type) {
-    type = _type;
-    print(type);
+  void changeType(List<String> type) {
+    filter.setTypes(type);
   }
 
   void nextItem() {
     print("nextItem()");
-    print("LENGTH: ${length[type]}, INDEX: ${index[type]}");
-    precached.remove(items[type][index[type]].product_id);
-    index[type]++;
-    if (index[type] + 5 >= length[type]) {
-      if (index[type] + 2 >= length[type]) {
-        index[type]--;
+    print("LENGTH: ${length}, INDEX: ${index}");
+    precached.remove(items[index].product_id);
+    index++;
+    if (index + 5 >= length) {
+      if (index + 2 >= length) {
+        index--;
         _api.errorCreate(Error());
       }
-      items[type] = items[type].sublist(index[type]);
-      index[type] = 0;
-      length[type] = items[type].length;
+      items = items.sublist(index);
+      index = 0;
+      length = items.length;
       try {
         getCards();
       } catch (e) {
-        index[type]--;
+        index--;
       }
-    }
-  }
-
-  Future initSizeCards() async {
-    try {
-      var response = await _api.client.get('${Api.endpoint}/home/all?size=on');
-      var data = json.decode(response.data) as Map<String, dynamic>;
-      print(data);
-      for (var type in TYPE) {
-        List<SwipeCard> temp = new List<SwipeCard>();
-        var parsed = data[type] as List<dynamic>;
-        for (var item in parsed) {
-          temp.add(SwipeCard.fromJson(item));
-        }
-        //FOR DEBUG
-        for (var item in temp) {
-          print(item.product_name);
-        }
-        //
-        items[type] = temp;
-        length[type] = temp.length;
-      }
-      //init = true;
-    } catch (e) {
-      _api.errorCreate(Error());
     }
   }
 
   Future initCards() async {
-    initialize();
+    // initialize();
+    var temp = List<SwipeCard>();
     try {
-      var response = await _api.client.get('${Api.endpoint}/home/all?size=off');
-      var data = json.decode(response.data) as Map<String, dynamic>;
-      print(data);
-      for (var type in TYPE) {
-        List<SwipeCard> temp = new List<SwipeCard>();
-        var parsed = data[type] as List<dynamic>;
-        for (var item in parsed) {
-          temp.add(SwipeCard.fromJson(item));
-        }
-        //FOR DEBUG
-        for (var item in temp) {
-          print(item.product_name);
-        }
-        //
-        items[type] = temp;
-        length[type] = temp.length;
+      print("INIT CARDS!");
+      String query = filter.getFilterQuery();
+      var response =
+          await _api.client.get('${Api.endpoint}/v2/home?$query&exception=');
+      var data = json.decode(response.data) as List<dynamic>;
+      for (var item in data) {
+        temp.add(SwipeCard.fromJson(item));
       }
+      for (var item in temp) {
+        print(item.product_name);
+      }
+      items = temp;
+      length = temp.length;
       init = true;
     } catch (e) {
+      print(e);
       print("???");
       _api.errorCreate(Error());
     }
@@ -123,29 +158,16 @@ class SwipeService {
   Future<List<SwipeCard>> getCards() async {
     print("getCards()!!!!!!!!!!!!");
     var temp = List<SwipeCard>();
-    var response;
-    var url = '${Api.endpoint}/home?type=${type}&size=';
-    if (size_flag)
-      url += 'on';
-    else
-      url += 'off';
-
     try {
-      response = await _api.client.get(url);
-
-      var parsed = json.decode(response.data) as List<dynamic>;
-      for (var item in parsed) {
+      String query = filter.getFilterQuery();
+      var response =
+          await _api.client.get('${Api.endpoint}/v2/home?$query&exception=');
+      var data = json.decode(response.data) as List<dynamic>;
+      for (var item in data) {
         temp.add(SwipeCard.fromJson(item));
       }
-      print("getCards ${index[type]}");
-      //FOR DEBUG
-      print("SUBLIST");
-      // List<SwipeCard> test = items[type].sublist(index[type]);
-      // for (var item in test) {
-      //   print(item.product_name);
-      // }
-      items[type] = [...items[type], ...temp];
-      length[type] = items[type].length;
+      items = [...items, ...temp];
+      length = items.length;
       return temp;
     } catch (e) {
       _api.errorCreate(Error());
@@ -155,13 +177,12 @@ class SwipeService {
 
   Future<Product> likeRequest() async {
     print("LIKE!!");
-    int cur = index[type];
     try {
       final response = await _api.client.post('${Api.endpoint}/home/like',
-          data: jsonEncode({'product_id': items[type][cur].product_id}));
+          data: jsonEncode({'product_id': items[index].product_id}));
       if (response.statusCode == 202) return null;
       print("Like ${response.statusCode}");
-      Product item = Product.fromSwipeCard(items[type][cur].toJson());
+      Product item = Product.fromSwipeCard(items[index].toJson());
       return item;
     } catch (e) {
       _api.errorCreate(Error());
@@ -170,21 +191,9 @@ class SwipeService {
 
   Future dislikeRequest() async {
     print("DISLIKE!!");
-    int cur = index[type];
     try {
       final response = await _api.client.post('${Api.endpoint}/home/dislike',
-          data: jsonEncode({'product_id': items[type][cur].product_id}));
-    } catch (e) {
-      _api.errorCreate(Error());
-    }
-  }
-
-  Future passRequest() async {
-    print("PASS!!");
-    int cur = index[type];
-    try {
-      final response = await _api.client.post('${Api.endpoint}/home/pass',
-          data: jsonEncode({'product_id': items[type][cur].product_id}));
+          data: jsonEncode({'product_id': items[index].product_id}));
     } catch (e) {
       _api.errorCreate(Error());
     }
@@ -195,7 +204,7 @@ class SwipeService {
       await _api.client.post('${Api.endpoint}/home/purchase',
           data: jsonEncode({'product_id': id}));
     } catch (e) {
-      // _api.errorCreate(Error());
+      _api.errorCreate(Error());
     }
   }
 }

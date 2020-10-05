@@ -23,6 +23,8 @@ class RootView extends StatelessWidget {
           } else {
             Stride.analytics.setUserId(user.id);
             if (user.profile_flag) {
+              // showWidget = TutorialView();
+
               showWidget = ServiceView();
             } else {
               showWidget = TutorialView();

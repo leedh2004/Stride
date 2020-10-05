@@ -1,3 +1,4 @@
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class NoItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
+        // color: backgroundColor,
         child: Align(
           alignment: Alignment.center + Alignment(0, -0.25),
           child: Column(

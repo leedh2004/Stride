@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -13,8 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class DressRoomSelectDialog extends StatefulWidget {
-  final List<Product> top;
-  final List<Product> bottom;
+  final List<RecentItem> top;
+  final List<RecentItem> bottom;
   final CarouselController _controller = CarouselController();
   DressRoomSelectDialog(this.top, this.bottom);
   @override

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -43,7 +44,7 @@ Map<String, String> top = {
 };
 
 class ProductDialog extends StatefulWidget {
-  Product item;
+  RecentItem item;
   ProductSize product_size;
   List<String> keys;
   Map<String, String> mapper;
@@ -51,7 +52,7 @@ class ProductDialog extends StatefulWidget {
   Map<String, Size> sizeMapper = new Map();
   String current;
 
-  ProductDialog(Product _item) {
+  ProductDialog(RecentItem _item) {
     item = _item;
     product_size = _item.product_size;
     keys = product_size.size.keys.toList();

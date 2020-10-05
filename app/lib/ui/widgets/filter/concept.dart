@@ -1,37 +1,51 @@
+import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:flutter/material.dart';
 
 class ConceptFilter extends StatefulWidget {
+  SwipeModel model;
+  ConceptFilter(this.model);
   @override
   _ConceptFilterState createState() => _ConceptFilterState();
 }
 
 class _ConceptFilterState extends State<ConceptFilter> {
-  BoolWrapper all = BoolWrapper(true);
-  BoolWrapper basic = BoolWrapper(false);
-  BoolWrapper daily = BoolWrapper(false);
-  BoolWrapper simple = BoolWrapper(false);
-  BoolWrapper sik = BoolWrapper(false);
-  BoolWrapper street = BoolWrapper(false);
-  BoolWrapper romantic = BoolWrapper(false);
-  BoolWrapper unique = BoolWrapper(false);
-  BoolWrapper sexy = BoolWrapper(false);
-  BoolWrapper vintage = BoolWrapper(false);
+  BoolWrapper all;
+  BoolWrapper basic;
+  BoolWrapper daily;
+  BoolWrapper simple;
+  BoolWrapper sik;
+  BoolWrapper street;
+  BoolWrapper romantic;
+  BoolWrapper unique;
+  BoolWrapper sexy;
+  BoolWrapper vintage;
 
   Widget unSelectedWidget(String title, BoolWrapper type) {
     return Expanded(
       child: InkWell(
         onTap: () {
-          setState(() {
-            if (identical(type, all)) {
-              basic.value = daily.value = simple.value = sik.value =
-                  street.value = romantic.value =
-                      unique.value = sexy.value = vintage.value = false;
-            } else if (all.value == true) {
-              all.value = false;
-            }
-            type.value = true;
-          });
+          if (identical(type, all)) {
+            basic.value = daily.value = simple.value = sik.value =
+                street.value = romantic.value =
+                    unique.value = sexy.value = vintage.value = false;
+          } else if (all.value == true) {
+            all.value = false;
+          }
+          type.value = true;
+          List<String> concepts = new List();
+          all.value ? concepts.add('all') : null;
+          basic.value ? concepts.add('basic') : null;
+          daily.value ? concepts.add('daily') : null;
+          simple.value ? concepts.add('simple') : null;
+          sik.value ? concepts.add('sik') : null;
+          street.value ? concepts.add('street') : null;
+          romantic.value ? concepts.add('romantic') : null;
+          unique.value ? concepts.add('unique') : null;
+          sexy.value ? concepts.add('sexy') : null;
+          vintage.value ? concepts.add('vintage') : null;
+          widget.model.setConcepts(concepts);
+          setState(() {});
         },
         child: Container(
           margin: EdgeInsets.all(8),
@@ -54,18 +68,29 @@ class _ConceptFilterState extends State<ConceptFilter> {
     return Expanded(
       child: InkWell(
         onTap: () {
-          setState(() {
-            type.value = false;
-            if (!(basic.value ||
-                daily.value ||
-                simple.value ||
-                sik.value ||
-                street.value ||
-                romantic.value ||
-                unique.value ||
-                vintage.value ||
-                sexy.value)) all.value = true;
-          });
+          type.value = false;
+          if (!(basic.value ||
+              daily.value ||
+              simple.value ||
+              sik.value ||
+              street.value ||
+              romantic.value ||
+              unique.value ||
+              vintage.value ||
+              sexy.value)) all.value = true;
+          List<String> concepts = new List();
+          all.value ? concepts.add('all') : null;
+          basic.value ? concepts.add('basic') : null;
+          daily.value ? concepts.add('daily') : null;
+          simple.value ? concepts.add('simple') : null;
+          sik.value ? concepts.add('sik') : null;
+          street.value ? concepts.add('street') : null;
+          romantic.value ? concepts.add('romantic') : null;
+          unique.value ? concepts.add('unique') : null;
+          sexy.value ? concepts.add('sexy') : null;
+          vintage.value ? concepts.add('vintage') : null;
+          widget.model.setConcepts(concepts);
+          setState(() {});
         },
         child: Container(
           margin: EdgeInsets.all(8),
@@ -85,6 +110,16 @@ class _ConceptFilterState extends State<ConceptFilter> {
 
   @override
   Widget build(BuildContext context) {
+    all = BoolWrapper(widget.model.filter.concepts.contains('all'));
+    basic = BoolWrapper(widget.model.filter.concepts.contains('basic'));
+    daily = BoolWrapper(widget.model.filter.concepts.contains('daily'));
+    simple = BoolWrapper(widget.model.filter.concepts.contains('simple'));
+    sik = BoolWrapper(widget.model.filter.concepts.contains('sik'));
+    street = BoolWrapper(widget.model.filter.concepts.contains('street'));
+    romantic = BoolWrapper(widget.model.filter.concepts.contains('romantic'));
+    unique = BoolWrapper(widget.model.filter.concepts.contains('unique'));
+    sexy = BoolWrapper(widget.model.filter.concepts.contains('sexy'));
+    vintage = BoolWrapper(widget.model.filter.concepts.contains('vintage'));
     Map<String, BoolWrapper> types = {
       '자동': all,
       '베이직': basic,

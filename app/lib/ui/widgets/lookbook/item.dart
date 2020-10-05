@@ -17,7 +17,8 @@ import 'package:provider/provider.dart';
 class LookBookItem extends StatelessWidget {
   final Coordinate item;
   final int index;
-  LookBookItem({this.item, this.index});
+  final double opacity;
+  LookBookItem({this.item, this.index, this.opacity});
 
   @override
   Widget build(BuildContext context) {
@@ -25,25 +26,16 @@ class LookBookItem extends StatelessWidget {
       children: <Widget>[
         Expanded(
           flex: 5,
-          child: InkWell(
-            onTap: () {
-              Stride.analytics.logEvent(name: 'LOOKBOOK_ITEM_INFO_CLICKED');
-              showMaterialModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  context: context,
-                  builder: (context, scrollController) {
-                    return LookBookDialog(item);
-                  });
-            },
-            child: Row(
+          child: Stack(children: [
+            Row(
               children: <Widget>[
                 Expanded(
                     child: Container(
                   height: 200,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(8),
-                        topLeft: Radius.circular(8)),
+                        bottomLeft: Radius.circular(3),
+                        topLeft: Radius.circular(3)),
                     child: CachedNetworkImage(
                       imageUrl: item.top.thumbnail_url,
                       fit: BoxFit.cover,
@@ -58,8 +50,8 @@ class LookBookItem extends StatelessWidget {
                   height: 200,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(8),
-                        topRight: Radius.circular(8)),
+                        bottomRight: Radius.circular(3),
+                        topRight: Radius.circular(3)),
                     child: CachedNetworkImage(
                       imageUrl: item.bottom.thumbnail_url,
                       fit: BoxFit.cover,
@@ -71,7 +63,65 @@ class LookBookItem extends StatelessWidget {
                 )),
               ],
             ),
-          ),
+            InkWell(
+              onTap: () {
+                Provider.of<LookBookModel>(context, listen: false)
+                    .selectItem(index);
+              },
+              child: Opacity(
+                opacity: opacity,
+                child: Container(
+                  height: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(3)),
+                    color: Color.fromRGBO(0, 0, 0, 0.4),
+                  ),
+                ),
+              ),
+            ),
+            Opacity(
+              opacity: opacity,
+              child: Container(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 10),
+                    child: IconButton(
+                      iconSize: 25,
+                      icon: FaIcon(
+                        FontAwesomeIcons.search,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        if (opacity == 1) {
+                          Stride.analytics.logEvent(
+                              name: 'LOOKBOOK_ITEM_INFO_CLICKED',
+                              parameters: {
+                                'itemId': item.id.toString(),
+                              });
+                          showMaterialModalBottomSheet(
+                              backgroundColor: Colors.transparent,
+                              context: context,
+                              builder: (context, scrollController) {
+                                return LookBookDialog(item);
+                              });
+                          Stride.analytics
+                              .logEvent(name: 'LOOKBOOK_ITEM_INFO_CLICKED');
+
+                          // Navigator.of(context).push(PageRouteBuilder(
+                          //     opaque: false,
+                          //     pageBuilder: (___, _, __) => ProductDialog(item)));
+                        } else {
+                          Provider.of<LookBookModel>(context, listen: false)
+                              .selectItem(index);
+                        }
+                      },
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ]),
         ),
         Expanded(
           child: Container(
@@ -142,46 +192,6 @@ class LookBookItem extends StatelessWidget {
                                   .logEvent(name: "LOOKBOOK_RENAME");
                               Provider.of<LookBookModel>(context, listen: false)
                                   .rename(index, _textController.text);
-                            })
-                          ..show();
-                      },
-                    ),
-                  ),
-                ),
-                Expanded(
-                  child: ButtonTheme(
-                    minWidth: 25,
-                    height: 25,
-                    child: FlatButton(
-                      padding: EdgeInsets.all(4),
-                      child: SvgPicture.asset(
-                        'images/trash.svg',
-                        color: Colors.black54,
-                        width: 20,
-                        height: 20,
-                      ),
-                      onPressed: () {
-                        AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.ERROR,
-                            customHeader: FaIcon(
-                              FontAwesomeIcons.ban,
-                              color: backgroundColor,
-                              size: 56,
-                            ),
-                            animType: AnimType.BOTTOMSLIDE,
-                            title: '삭제',
-                            desc: '선택된 아이템을 룩북에서 삭제하겠습니까?',
-                            btnOkColor: backgroundColor,
-                            btnCancelColor: gray,
-                            btnOkText: '삭제',
-                            btnCancelText: '취소',
-                            btnCancelOnPress: () {},
-                            btnOkOnPress: () {
-                              Stride.analytics
-                                  .logEvent(name: "LOOKBOOK_REMOVE");
-                              Provider.of<LookBookModel>(context, listen: false)
-                                  .removeItem(item.id);
                             })
                           ..show();
                       },

@@ -58,7 +58,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
   Alignment frontCardAlign;
 
   double frontCardRot = 0.0;
-  List<double> _opacity = [0, 0, 0];
+  List<double> _opacity = [0, 0];
 
   @override
   void initState() {
@@ -106,7 +106,6 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
         middleCard(context),
         frontCard(context, widget.model),
         nopeTextWidget(),
-        passTextWidget(),
         likeTextWidget(),
         if (_controller.status != AnimationStatus.forward)
           Align(
@@ -137,17 +136,12 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                         opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
                         if (opacity[HATE] >= MAX_OPACITY)
                           opacity[HATE] = MAX_OPACITY;
-                      } else if (frontCardAlign.y < START_UP / 2) {
-                        opacity[PASS] = -(frontCardAlign.y / OPACITY_SPEED);
-                        if (opacity[PASS] >= MAX_OPACITY)
-                          opacity[PASS] = MAX_OPACITY;
                       }
                       // Rendering View
                       setState(() {
                         // Set Opacity
                         _opacity[LIKE] = opacity[LIKE];
                         _opacity[HATE] = opacity[HATE];
-                        _opacity[PASS] = opacity[PASS];
                         // Drag Card SPEED
                         frontCardAlign = Alignment(
                             frontCardAlign.x +
@@ -164,19 +158,18 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                     // When releasing the first card
                     onPanEnd: (_) {
                       // If the front card was swiped far enough to count as swiped
-                      String type =
-                          Provider.of<SwipeService>(context, listen: false)
-                              .type;
+                      // String type =
+                      //     Provider.of<SwipeService>(context, listen: false)
+                      //         .type;
                       int index =
                           Provider.of<SwipeService>(context, listen: false)
-                              .index[type];
+                              .index;
                       SwipeCard item =
                           Provider.of<SwipeService>(context, listen: false)
-                              .items[type][index];
+                              .items[index];
                       setState(() {
                         _opacity[HATE] = 0.0;
                         _opacity[LIKE] = 0.0;
-                        _opacity[PASS] = 0.0;
                       });
                       // Send result reqeust to server
                       if (frontCardAlign.x > STANDARD_RIGHT) {
@@ -196,15 +189,6 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                           'itemCategory': item.shop_name
                         });
                         widget.model.dislikeRequest();
-                        animateCards();
-                      } else if (frontCardAlign.y < STANDARD_UP / 2) {
-                        move_flag = true;
-                        widget.model.passRequest();
-                        Stride.analytics.logEvent(name: 'PASS', parameters: {
-                          'itemId': item.product_id.toString(),
-                          'itemName': item.product_name,
-                          'itemCategory': item.shop_name
-                        });
                         animateCards();
                       } else {
                         // Return to the initial rotation and alignment
@@ -252,8 +236,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                         opaque: false,
                         pageBuilder: (___, _, __) => SizeDialog(
                             Provider.of<SwipeService>(context)
-                                    .items[widget.model.type]
-                                [(widget.model.index)])));
+                                .items[(widget.model.index)])));
                   },
                 ),
               ),
@@ -320,38 +303,9 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
         ));
   }
 
-  Widget passTextWidget() {
-    return Align(
-        alignment: _controller.status == AnimationStatus.forward
-            ? CardsAnimation.frontCardDisappearAlignmentAnim(
-                    _controller, frontCardAlign)
-                .value
-            : frontCardAlign,
-        child: Transform.rotate(
-          angle: (pi / 180.0) * frontCardRot,
-          child: SizedBox.fromSize(
-            size: cardsSize[0],
-            child: Opacity(
-              opacity: _opacity[PASS],
-              child: Container(
-                padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                alignment: Alignment.center,
-                child: Container(
-                    padding: EdgeInsets.all(3),
-                    child: FaIcon(
-                      FontAwesomeIcons.chevronCircleUp,
-                      size: 100,
-                      color: Colors.white,
-                    )),
-              ),
-            ),
-          ),
-        ));
-  }
-
   Widget backCard(BuildContext context) {
-    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index) + 2];
+    SwipeCard item =
+        Provider.of<SwipeService>(context).items[(widget.model.index) + 2];
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
@@ -366,8 +320,8 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
-    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index) + 1];
+    SwipeCard item =
+        Provider.of<SwipeService>(context).items[(widget.model.index) + 1];
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
@@ -383,8 +337,8 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
 
   Widget frontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
-    SwipeCard item = Provider.of<SwipeService>(context).items[widget.model.type]
-        [(widget.model.index)];
+    SwipeCard item =
+        Provider.of<SwipeService>(context).items[(widget.model.index)];
 
     return Align(
         alignment: _controller.status == AnimationStatus.forward
@@ -430,21 +384,21 @@ class CardsAnimation {
 
   static Animation<Alignment> frontCardDisappearAlignmentAnim(
       AnimationController parent, Alignment beginAlign) {
-    if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
-      if (beginAlign.y > STANDARD_UP / 2) {
-        return AlignmentTween(begin: beginAlign, end: align).animate(
-            CurvedAnimation(
-                parent: parent,
-                curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
-      }
-      return AlignmentTween(
-              begin: beginAlign,
-              end: Alignment(
-                  0.0, beginAlign.y - 20) // Has swiped to the left or right?
-              )
-          .animate(CurvedAnimation(
-              parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
-    }
+    // if (beginAlign.x < STANDARD_RIGHT && beginAlign.x > STANDARD_LEFT) {
+    //   if (beginAlign.y > STANDARD_UP / 2) {
+    //     return AlignmentTween(begin: beginAlign, end: align).animate(
+    //         CurvedAnimation(
+    //             parent: parent,
+    //             curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+    //   }
+    //   return AlignmentTween(
+    //           begin: beginAlign,
+    //           end: Alignment(
+    //               0.0, beginAlign.y - 20) // Has swiped to the left or right?
+    //           )
+    //       .animate(CurvedAnimation(
+    //           parent: parent, curve: Interval(0.0, 0.5, curve: Curves.easeIn)));
+    // }
     return AlignmentTween(
             begin: beginAlign,
             end: Alignment(

@@ -1,10 +1,8 @@
-import 'package:app/core/models/product.dart';
-import 'package:app/core/models/swipeCard.dart';
-import 'package:app/core/services/dress_room.dart';
-import 'package:app/core/services/swipe.dart';
+import 'package:app/core/viewmodels/views/recommend.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
-import 'package:app/ui/widgets/dressroom/item.dart';
-import 'package:app/ui/widgets/recommend/item.dart';
+import 'package:app/ui/views/base_widget.dart';
+import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/recommend/item_row.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,60 +10,109 @@ import 'package:provider/provider.dart';
 class RecommendView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    List<Product> items =
-        Provider.of<DressRoomService>(context).items[0].sublist(0, 20);
-    print(items);
-
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(8),
-      child: Column(
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('이도현님이 평가한 아이템'),
-              IntrinsicHeight(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+    return BaseWidget<RecommendationModel>(
+        model: RecommendationModel(Provider.of(context), Provider.of(context)),
+        builder: (context, model, child) {
+          if (model.init == false) {
+            model.initialize();
+            return LoadingWidget();
+          }
+          return SingleChildScrollView(
+            padding: EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      child: Column(
-                        children: [Text('좋아요'), Text('252')],
-                      ),
+                    Text(
+                      '이도현님이 평가한 아이템',
+                      style: HeaderStyle,
                     ),
-                    UIHelper.horizontalSpaceMedium,
-                    VerticalDivider(
-                      color: Colors.black,
-                      width: 1,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                '좋아요',
+                                style: NormalStyle,
+                              ),
+                              Text(
+                                '${model.authService.master.like}',
+                                style: NumberStyle,
+                              )
+                            ],
+                          ),
+                        ),
+                        UIHelper.horizontalSpaceMedium,
+                        Container(
+                          height: 25,
+                          child: VerticalDivider(
+                            color: Colors.black26,
+                            width: 1,
+                            thickness: 3,
+                          ),
+                        ),
+                        UIHelper.horizontalSpaceMedium,
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                '콜렉션',
+                                style: NormalStyle,
+                              ),
+                              Text(
+                                '88',
+                                style: NumberStyle,
+                              )
+                            ],
+                          ),
+                        ),
+                        UIHelper.horizontalSpaceMedium,
+                        Container(
+                          height: 25,
+                          child: VerticalDivider(
+                            color: Colors.black26,
+                            width: 1,
+                            thickness: 3,
+                          ),
+                        ),
+                        UIHelper.horizontalSpaceMedium,
+                        Container(
+                          child: Column(
+                            children: [
+                              Text(
+                                '싫어요',
+                                style: NormalStyle,
+                              ),
+                              Text(
+                                '${model.authService.master.dislike}',
+                                style: NumberStyle,
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    UIHelper.horizontalSpaceMedium,
-                    Container(
-                      child: Column(
-                        children: [Text('콜렉션'), Text('88')],
-                      ),
-                    ),
-                    UIHelper.horizontalSpaceMedium,
-                    VerticalDivider(
-                      color: Colors.black,
-                      width: 1,
-                    ),
-                    UIHelper.horizontalSpaceMedium,
-                    Container(
-                      child: Column(
-                        children: [Text('싫어요'), Text('1234')],
-                      ),
-                    ),
+                    UIHelper.verticalSpaceMedium,
+                    ItemRow('추천 아이템', model.collectionService.recommendItems),
+                    ItemRow('${model.collectionService.conceptA} 컨셉의 아이템',
+                        model.collectionService.conceptItemA),
+                    ItemRow('${model.collectionService.conceptB} 컨셉의 아이템',
+                        model.collectionService.conceptItemB),
+                    ItemRow('금주의 신상', model.collectionService.newArriveItems),
                   ],
-                ),
-              ),
-              UIHelper.verticalSpaceSmall,
-              ItemRow('최근에 평가한 아이템', items),
-              ItemRow('스트릿 컨셉의 아이템', items),
-              ItemRow('금주의 신상', items),
-            ],
-          )
-        ],
-      ),
-    );
+                )
+              ],
+            ),
+          );
+        });
   }
 }
+
+const NumberStyle = TextStyle(
+    color: backgroundColor, fontSize: 20, fontWeight: FontWeight.w700);
+const NormalStyle = TextStyle(color: Colors.black54, fontSize: 16);
+const HeaderStyle =
+    TextStyle(color: Colors.black54, fontSize: 18, fontWeight: FontWeight.w700);

@@ -1,5 +1,7 @@
 class StrideUser {
   String id;
+  int like;
+  int dislike;
   //int birth_year;
   //bool hasSize;
   bool profile_flag;
@@ -16,7 +18,9 @@ class StrideUser {
       this.bust,
       this.waist,
       this.hip,
-      this.thigh});
+      this.thigh,
+      this.like,
+      this.dislike});
 
   StrideUser.clone(StrideUser user)
       : this(

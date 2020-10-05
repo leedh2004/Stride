@@ -1,15 +1,19 @@
+import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:flutter/material.dart';
 
 class PriceFilter extends StatefulWidget {
+  SwipeModel model;
+  PriceFilter(this.model);
   @override
   _PriceFilterState createState() => _PriceFilterState();
 }
 
 class _PriceFilterState extends State<PriceFilter> {
-  RangeValues _values = RangeValues(1, 200000);
-
   @override
   Widget build(BuildContext context) {
+    RangeValues _values = RangeValues(
+        widget.model.filter.start_price.toDouble(),
+        widget.model.filter.end_price.toDouble());
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -36,9 +40,14 @@ class _PriceFilterState extends State<PriceFilter> {
               inactiveColor: Colors.black26,
               activeColor: Colors.black,
               values: _values,
+              onChangeEnd: (values) {
+                widget.model.setPrice(values.start.toInt(), values.end.toInt());
+              },
               onChanged: (values) {
                 setState(() {
-                  _values = values;
+                  widget.model
+                      .setPrice(values.start.toInt(), values.end.toInt());
+                  // _values = values;
                 });
               }),
         )

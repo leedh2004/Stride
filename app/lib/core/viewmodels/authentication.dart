@@ -19,6 +19,7 @@ class AuthenticationModel extends BaseModel {
 
   Future<String> loginWithApple({List<Scope> scopes = const []}) async {
     String email = await authService.loginWithApple(scopes: scopes);
+    print(email);
     return login(email, "apple");
   }
 }

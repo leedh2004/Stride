@@ -2,6 +2,7 @@ import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget buttonRow(SwipeModel model, Function onTapDislikeButton,
     Function onTapPurchaseButton, Function onTapLikeButton, var buyButton) {
@@ -28,11 +29,16 @@ Widget buttonRow(SwipeModel model, Function onTapDislikeButton,
         elevation: 2.0,
         fillColor: Colors.white,
         key: buyButton,
-        child: SvgPicture.asset(
-          'images/buy.svg',
-          width: 25.0,
+        child: FaIcon(
+          FontAwesomeIcons.thLarge,
           color: backgroundColor,
+          size: 25,
         ),
+        // child: SvgPicture.asset(
+        //   'images/buy.svg',
+        //   width: 25.0,
+        //   color: backgroundColor,
+        // ),
         padding: EdgeInsets.all(10.0),
         shape: CircleBorder(),
       ),

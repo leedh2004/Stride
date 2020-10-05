@@ -1,13 +1,37 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/models/tutorial.dart';
+import 'package:app/core/models/tutorial_box.dart';
 import 'api.dart';
 
 class TutorialService {
   Api _api;
+  bool init = false;
+  List<TutorialBox> items;
 
   TutorialService(Api api) {
     _api = api;
+  }
+
+  Future<List<TutorialBox>> getItem() async {
+    var response = await _api.client.get('${Api.endpoint}/tutorial');
+    List<TutorialBox> ret = new List();
+    if (response.statusCode == 200) {
+      print(response.data);
+      var parsed = json.decode(response.data) as List<dynamic>;
+      for (var item in parsed) {
+        ret.add(TutorialBox(item['product_id'], item['thumbnail_url']));
+      }
+      items = ret;
+      init = true;
+      return ret;
+    }
+  }
+
+  Future sendItems(List<int> ids) async {
+    var response = await _api.client.post('${Api.endpoint}/tutorial',
+        data: jsonEncode({'product_id': ids}));
+    print(response.statusCode);
   }
 
   Future<bool> sendBirth(int birth) async {
@@ -56,6 +80,5 @@ class TutorialService {
       _api.errorCreate(Error());
       return false;
     }
-    return false;
   }
 }

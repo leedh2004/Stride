@@ -1,8 +1,6 @@
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
-import 'package:app/core/services/dress_room.dart';
-import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
@@ -11,7 +9,7 @@ import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
-import 'package:app/ui/widgets/swipe/cloth_type_bar.dart';
+import 'package:app/ui/widgets/swipe/filter_bar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -62,8 +60,7 @@ class _SwipeViewState extends State<SwipeView> {
 
   onTapPurchaseButton(SwipeModel model) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      SwipeCard item =
-          Provider.of<SwipeService>(context).items[model.type][model.index];
+      SwipeCard item = Provider.of<SwipeService>(context).items[model.index];
       Stride.analytics
           .logEvent(name: 'SWIPE_PURCHASE_BUTTON_CLICKED', parameters: {
         'itemId': item.product_id.toString(),
@@ -92,30 +89,30 @@ class _SwipeViewState extends State<SwipeView> {
     onflag = false;
   }
 
-  onTapSizeButton(SwipeModel model, value) async {
-    setState(() {
-      size_flag = value;
-    });
-    if (size_flag) {
-      ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-          duration: Duration(milliseconds: 1500),
-          content: Row(children: [
-            Icon(
-              Icons.check,
-              color: backgroundColor,
-            ),
-            UIHelper.horizontalSpaceMedium,
-            Text('자신의 사이즈에 맞는 옷만 봅니다'),
-          ])));
-    }
-    model.flagChange();
-    if (size_flag) {
-      Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
-      model.test();
-    } else {
-      Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
-    }
-  }
+  // onTapSizeButton(SwipeModel model, value) async {
+  //   setState(() {
+  //     size_flag = value;
+  //   });
+  //   if (size_flag) {
+  //     ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+  //         duration: Duration(milliseconds: 1500),
+  //         content: Row(children: [
+  //           Icon(
+  //             Icons.check,
+  //             color: backgroundColor,
+  //           ),
+  //           UIHelper.horizontalSpaceMedium,
+  //           Text('자신의 사이즈에 맞는 옷만 봅니다'),
+  //         ])));
+  //   }
+  //   // model.flagChange();
+  //   if (size_flag) {
+  //     Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
+  //     model.test();
+  //   } else {
+  //     Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
+  //   }
+  // }
 
   void showTutorial() {
     tutorialCoachMark = TutorialCoachMark(context,
@@ -248,21 +245,21 @@ class _SwipeViewState extends State<SwipeView> {
   Widget build(BuildContext context) {
     var configService = Provider.of<ConfigService>(context, listen: false);
     var swipeService = Provider.of<SwipeService>(context, listen: false);
-    var dressService = Provider.of<DressRoomService>(context, listen: false);
+    // var dressService = Provider.of<DressRoomService>(context, listen: false);
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
-    var lookService = Provider.of<LookBookService>(context, listen: false);
+    // var lookService = Provider.of<LookBookService>(context, listen: false);
 
     return BaseWidget<SwipeModel>(
-        model: SwipeModel(dressService, swipeService),
+        model: SwipeModel(swipeService, authService),
         builder: (context, model, child) {
           if (swipeService.init == false) {
-            if (dressService.init == false) {
-              dressService.getDressRoom();
-            }
-            if (lookService.init == false) {
-              lookService.getLookBook();
-            }
+            // if (dressService.init == false) {
+            //   dressService.getDressRoom();
+            // }
+            // if (lookService.init == false) {
+            //   lookService.getLookBook();
+            // }
             model.initCards();
             return LoadingWidget();
           } else if (model.busy)
@@ -290,7 +287,7 @@ class _SwipeViewState extends State<SwipeView> {
             child: Stack(children: [
               Align(
                 alignment: Alignment.topCenter,
-                child: clothTypeBar(model, context),
+                child: FilterBar(model, context),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -303,15 +300,6 @@ class _SwipeViewState extends State<SwipeView> {
                       () => onTapLikeButton(model),
                       buyButton),
                   UIHelper.verticalSpaceSmall,
-                  // Transform.scale(
-                  //   key: sizeToggle,
-                  //   scale: 1.5,
-                  //   child: Switch(
-                  //     value: size_flag,
-                  //     onChanged: (value) => onTapSizeButton(model, value),
-                  //     activeColor: backgroundColor,
-                  //   ),
-                  // ),
                   UIHelper.verticalSpaceSmall,
                 ]),
               ),
@@ -321,32 +309,36 @@ class _SwipeViewState extends State<SwipeView> {
                   rulerButton,
                   () => onTapDislikeButton(model),
                   () => onTapLikeButton(model)),
-              AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity: dislike_opacity,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      padding: EdgeInsets.all(3),
-                      child: FaIcon(
-                        FontAwesomeIcons.times,
-                        size: 100,
-                        color: blueColor,
-                      )),
+              IgnorePointer(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: dislike_opacity,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        padding: EdgeInsets.all(3),
+                        child: FaIcon(
+                          FontAwesomeIcons.times,
+                          size: 100,
+                          color: blueColor,
+                        )),
+                  ),
                 ),
               ),
-              AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity: like_opacity,
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                      padding: EdgeInsets.all(3),
-                      child: FaIcon(
-                        FontAwesomeIcons.solidHeart,
-                        size: 100,
-                        color: pinkColor,
-                      )),
+              IgnorePointer(
+                child: AnimatedOpacity(
+                  duration: Duration(milliseconds: 300),
+                  opacity: like_opacity,
+                  child: Align(
+                    alignment: Alignment.center,
+                    child: Container(
+                        padding: EdgeInsets.all(3),
+                        child: FaIcon(
+                          FontAwesomeIcons.solidHeart,
+                          size: 100,
+                          color: pinkColor,
+                        )),
+                  ),
                 ),
               ),
             ]),

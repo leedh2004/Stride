@@ -31,54 +31,58 @@ class DressRoomView extends StatelessWidget {
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
-              showWidget = Column(children: <Widget>[
-                Container(
-                  margin: EdgeInsets.fromLTRB(15, 15, 0, 0),
-                  height: 30,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: List.generate(folderNames.length, (index) {
-                      var folderName = folderNames[index];
-                      if (folderName == 'default') folderName = '♥';
-                      return FolderTextButton(
-                          model,
-                          folderName,
-                          folderKeys[index],
-                          folderKeys[index] != model.current_folder);
-                    }),
-                  ),
-                ),
-                if (items.length > 0)
-                  Expanded(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: GridView.builder(
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          childAspectRatio: 0.6,
-                          mainAxisSpacing: 10.0,
-                          crossAxisSpacing: 8.0,
-                        ),
-                        padding: EdgeInsets.all(8),
-                        itemBuilder: (context, index) {
-                          double opacity = 0;
-                          if (model.selectedIdx.contains(index)) opacity = 1;
-                          return DressRoomItemWidget(
-                              items[index], opacity, index);
-                        },
-                        itemCount: items.length,
-                      ),
+              showWidget = Expanded(
+                child: Column(children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.fromLTRB(15, 5, 0, 0),
+                    height: 30,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: List.generate(folderNames.length, (index) {
+                        var folderName = folderNames[index];
+                        if (folderName == 'default') folderName = '♥';
+                        return FolderTextButton(
+                            model,
+                            folderName,
+                            folderKeys[index],
+                            folderKeys[index] != model.current_folder);
+                      }),
                     ),
                   ),
-                if (items.length == 0) NoItemView(),
-                DressRoomButtonBar(model)
-              ]);
+                  if (items.length > 0)
+                    Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 0.6,
+                            mainAxisSpacing: 10.0,
+                            crossAxisSpacing: 8.0,
+                          ),
+                          padding: EdgeInsets.all(8),
+                          itemBuilder: (context, index) {
+                            double opacity = 0;
+                            if (model.selectedIdx.contains(index)) opacity = 1;
+                            return DressRoomItemWidget(
+                                items[index], opacity, index);
+                          },
+                          itemCount: items.length,
+                        ),
+                      ),
+                    ),
+                  if (items.length == 0) NoItemView(),
+                  DressRoomButtonBar(model)
+                ]),
+              );
             }
-            return AnimatedSwitcher(
-              duration: Duration(milliseconds: 500),
-              child: showWidget,
-            );
+            return showWidget;
+            // return AnimatedSwitcher(
+            //   duration: Duration(milliseconds: 500),
+            //   child: showWidget,
+            // );
           }
         });
   }

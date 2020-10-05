@@ -1,4 +1,5 @@
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
@@ -358,8 +359,8 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
           padding: EdgeInsets.fromLTRB(70, 12, 70, 12),
           color: backgroundColor,
           onPressed: () async {
-            List<Product> top = model.findSelectedTop();
-            List<Product> bottom = model.findSelectedBotoom();
+            List<RecentItem> top = model.findSelectedTop();
+            List<RecentItem> bottom = model.findSelectedBotoom();
             Stride.analytics.logEvent(name: "DRESSROOM_MAKE_BUTTON_CLICKED");
             showMaterialModalBottomSheet(
                 backgroundColor: Colors.transparent,

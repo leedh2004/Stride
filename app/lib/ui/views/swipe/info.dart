@@ -9,24 +9,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
+final Map<String, String> typeConverter = {
+  'top': '상의',
+  'pants': '하의',
+  'dress': '드레스',
+  'skirt': '치마',
+};
+
 class DetailInfo extends StatelessWidget {
   SwipeModel model;
   DetailInfo(this.model);
-  Map<String, String> typeConverter = {
-    'top': '상의',
-    'pants': '하의',
-    'dress': '드레스',
-    'skirt': '치마',
-  };
+  ScrollController controller;
 
   @override
   Widget build(BuildContext context) {
-    SwipeCard item = Provider.of<SwipeService>(context, listen: false)
-        .items[model.type][(model.index)];
+    SwipeCard item =
+        Provider.of<SwipeService>(context, listen: false).items[(model.index)];
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
+          physics: ClampingScrollPhysics(),
           child: BaseWidget<SwipeModel>(
               model: model,
               builder: (context, model, child) {

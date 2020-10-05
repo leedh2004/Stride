@@ -14,6 +14,16 @@ class AuthenticationService {
   BehaviorSubject<StrideUser> userController = BehaviorSubject<StrideUser>();
   Stream<StrideUser> get user => userController.stream;
   FlutterSecureStorage storage = new FlutterSecureStorage();
+  StrideUser master;
+
+  void addLike() {
+    master.like++;
+  }
+
+  void addDislike() {
+    master.dislike++;
+  }
+
   bool init = false;
   bool swipe_tutorial = false;
   bool dress_tutorial = false;
@@ -106,19 +116,25 @@ class AuthenticationService {
           data: jsonEncode(
               {'access_token': accessToken, 'channel': '${channel}'}));
       var parsed = response.data as Map<String, dynamic>;
+      print(parsed);
       var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
       String id = parsed['user_id'];
       String token = parsed['token'];
       // 토큰이 없을 때만 일로 오니까 !
+      var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
       await storage.write(key: 'jwt_token', value: token);
       StrideUser user = StrideUser(
           id: id,
+          like: likes['like'],
+          dislike: likes['dislike'],
           profile_flag: parsed['profile_flag'],
           shoulder: size['shoulder'],
           bust: size['bust'],
           waist: size['waist'],
           hip: size['hip'],
           thigh: size['thigh']);
+      master = user;
+
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: id, password: "SuperSecretPassword!");
@@ -149,38 +165,36 @@ class AuthenticationService {
     if (await storage.read(key: 'swipe_tutorial') != null) {
       swipe_tutorial = true;
     }
-
     if (await storage.read(key: 'dress_tutorial') != null) {
       dress_tutorial = true;
     }
-
     if (token == null) {
       init = true;
       return;
     }
-
     api.client.options.headers = {
       "Content-Type": "application/json",
       "Accept": "application/json",
       'Authorization': "Bearer ${token}",
     };
-
-    print("??");
     final response = await api.client.get(
       '${Api.endpoint}/login/token',
     );
-    print("??");
-
+    print('checkToken()');
     if (response.statusCode == 200) {
       print(response.data);
       var parsed = response.data as Map<String, dynamic>;
       var id = parsed['user_id'];
       var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
+      var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
+
       StrideUser user = StrideUser(
           id: id,
           profile_flag: parsed['profile_flag'],
           shoulder: size['shoulder'],
           bust: size['bust'],
+          like: likes['like'],
+          dislike: likes['dislike'],
           waist: size['waist'],
           hip: size['hip'],
           thigh: size['thigh']);
@@ -197,6 +211,7 @@ class AuthenticationService {
           print('Wrong password provided for that user.');
         }
       }
+      master = user;
       userController.add(user);
     } else {
       await storage.delete(key: 'jwt_token');

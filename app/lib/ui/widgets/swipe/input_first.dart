@@ -41,28 +41,6 @@ class _InputFirstPageState extends State<InputFirstPage> {
           '나에게 맞는 상품들을 추천해드려요',
           style: TextStyle(fontSize: 12.0),
         ),
-        Padding(
-          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-          child: SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              activeTrackColor: Colors.black12,
-              inactiveTrackColor: Colors.black12,
-              trackHeight: 3.0,
-              thumbColor: backgroundColor,
-              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 18.0),
-              overlayColor: Colors.purple.withAlpha(40),
-              overlayShape: RoundSliderOverlayShape(overlayRadius: 24.0),
-            ),
-            child: Slider(
-              onChanged: (value) => setState(() {
-                widget.callback(value);
-              }),
-              value: widget._age,
-              max: 40,
-              min: 13,
-            ),
-          ),
-        ),
         widget._age.toInt() == 13
             ? RichText(
                 text: TextSpan(
@@ -87,16 +65,39 @@ class _InputFirstPageState extends State<InputFirstPage> {
                       ]))
                 : RichText(
                     text: TextSpan(
-                        style: new TextStyle(
-                          fontSize: 14.0,
-                          color: Colors.black,
-                        ),
-                        children: [
-                        TextSpan(
-                            text: '${widget._age.toInt()}',
-                            style: inputPurpleStyle),
-                        TextSpan(text: ' 세')
-                      ])),
+                    style: new TextStyle(
+                      fontSize: 14.0,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(
+                          text: '${widget._age.toInt()}',
+                          style: inputPurpleStyle),
+                      TextSpan(text: ' 세')
+                    ],
+                  )),
+        Padding(
+          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+          child: SliderTheme(
+            data: SliderTheme.of(context).copyWith(
+              activeTrackColor: Colors.black12,
+              inactiveTrackColor: Colors.black12,
+              trackHeight: 3.0,
+              thumbColor: backgroundColor,
+              thumbShape: RoundSliderThumbShape(enabledThumbRadius: 18.0),
+              overlayColor: Colors.purple.withAlpha(40),
+              overlayShape: RoundSliderOverlayShape(overlayRadius: 24.0),
+            ),
+            child: Slider(
+              onChanged: (value) => setState(() {
+                widget.callback(value);
+              }),
+              value: widget._age,
+              max: 40,
+              min: 13,
+            ),
+          ),
+        ),
       ],
     );
   }

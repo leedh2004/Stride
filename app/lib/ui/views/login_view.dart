@@ -7,7 +7,7 @@ import 'package:app/ui/widgets/loading.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +32,7 @@ class LoginView extends StatelessWidget {
     final authCode = installed
         ? await AuthCodeClient.instance.requestWithTalk()
         : await AuthCodeClient.instance.request();
+    print(authCode);
     AccessTokenResponse token =
         await AuthApi.instance.issueAccessToken(authCode);
     model.login(token.accessToken, "kakao");

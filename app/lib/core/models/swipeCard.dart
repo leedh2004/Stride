@@ -41,6 +41,18 @@ class SwipeCard {
     shop_name = json['shop_name'];
   }
 
+  SwipeCard.fromRecentItemJson(Map<String, dynamic> json) {
+    product_id = json['product_id'];
+    thumbnail_url = json['thumbnail_url'];
+    price = json['price'];
+    product_name = json['product_name'];
+    product_url = json['product_url'];
+    image_urls = json['image_url'];
+    type = json['type'];
+    product_size = json['size'];
+    shop_name = json['shop_name'];
+  }
+
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['product_id'] = this.product_id;

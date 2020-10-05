@@ -2,9 +2,7 @@ import 'dart:io';
 
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
-import 'package:app/ui/views/swipe/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -151,11 +149,19 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
                   child: IconButton(
-                    // key: SwipeView.rulerButton,
-                    icon: SvgPicture.asset(
-                      'images/ruler.svg',
+                    icon: Container(
                       width: 50,
-                      color: Colors.white,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.info,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     onPressed: () {
                       print("wtf");

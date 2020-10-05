@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
@@ -13,7 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class RecommendItemWidget extends StatelessWidget {
-  final Product item;
+  final RecentItem item;
   RecommendItemWidget(this.item);
 
   @override
