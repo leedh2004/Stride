@@ -58,18 +58,21 @@ def get_page_dressroom(folder_id, order):
         get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET %s LIMIT 20"""
         page = int(order) * 20
         product = []
-        if folder_id == 0:
-            cursor.execute(get_default_query, (g.user_id, page))
-        else:
-            cursor.execute(query, (g.user_id, folder_id, page))
-        product_result = cursor.fetchall()
-        colnames = DBMapping.mapping_column(cursor)
-        for item in product_result:
-            load = ProductModel()
-            load.fetch_data(item, colnames)
-            product.append(load.__dict__)
-        return json.dumps(product, default=json_util.default, ensure_ascii=False)
-
+        try:
+            if folder_id == 0:
+                cursor.execute(get_default_query, (g.user_id, page))
+            else:
+                cursor.execute(query, (g.user_id, folder_id, page))
+            product_result = cursor.fetchall()
+            colnames = DBMapping.mapping_column(cursor)
+            for item in product_result:
+                load = ProductModel()
+                load.fetch_data(item, colnames)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except Exception as Ex:
+            print(Ex)
+            raise
 
 def create_dressroom_folder(product_id, name):
     with db_connect() as (service_conn, cursor):

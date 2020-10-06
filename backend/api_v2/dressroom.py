@@ -24,11 +24,15 @@ def get_dress():
 @v2_dressroom.route('/folder', methods=['GET'])
 @login_required
 def get_dress_by_folder():
-    args = request.args
-    folder_id = int(args.get('folder_id'))
-    order = int(args.get('order'))
-    result = get_page_dressroom(folder_id, order)
-    return result, 200
+    try:
+        args = request.args
+        folder_id = int(args.get('folder_id'))
+        order = int(args.get('order'))
+        result = get_page_dressroom(folder_id, order)
+        return result, 200
+    except Exception as Ex:
+        print(Ex)
+        return jsonify('Fail'), 500
 
 @v2_dressroom.route('/', methods=['PUT'])
 @login_required
