@@ -34,9 +34,12 @@ class EvaluationModel:
         self.product_name = item[column['product_name']]
         self.price = item[column['price']]
         self.thumbnail_url = item[column['thumbnail_url']]
+        self.compressed_thumbnail_url = item[column['compressed_thumbnail']]
         self.image_url = item[column['image_url']]
         self.type = item[column['type']]
         self.shop_name = item[column['shop_kor']]
+        self.origin_color = item[column['origin_color']]
+        self.clustered_color = item[column['clustered_color']]
         SizeParser.list_size_parse(self.length, item[column['length']])
         SizeParser.list_size_parse(self.waist, item[column['waist']])
         SizeParser.list_size_parse(self.hip, item[column['hip']])
