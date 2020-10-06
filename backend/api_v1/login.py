@@ -44,7 +44,7 @@ def user_login():
         # # return jsonify({"token": new_token, "user_id": user_id,
         # #                 "profile_flag": result, "size": size, "likes": likes, "name": name}), 200
         result = {
-            "new_token": encode_jwt_token(user_id),
+            "token": encode_jwt_token(user_id),
             "user_id": user_id,
             "profile_flag": select_user_profile_flag(),
             "size": select_user_size(),
