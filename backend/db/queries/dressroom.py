@@ -22,9 +22,9 @@ def delete_dressroom(product_id):
 
 def get_dressroom():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at ASC"""
+        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET 0 LIMIT 20"""
         get_folder_query = """SELECT folder_id, folder_name FROM dressfolder WHERE user_id = %s ORDER BY created_at ASC"""
-        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at ASC"""
+        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET 0 LIMIT 20"""
         try:
             product = {}
             product['info'] = []
@@ -51,6 +51,28 @@ def get_dressroom():
         except:
             pass
 
+
+def get_page_dressroom(folder_id, order):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET %s LIMIT 20"""
+        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET %s LIMIT 20"""
+        page = int(order) * 20
+        product = []
+        try:
+            if folder_id == 0:
+                cursor.execute(get_default_query, (g.user_id, page))
+            else:
+                cursor.execute(query, (g.user_id, folder_id, page))
+            product_result = cursor.fetchall()
+            colnames = DBMapping.mapping_column(cursor)
+            for item in product_result:
+                load = ProductModel()
+                load.fetch_data(item, colnames)
+                product.append(load.__dict__)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except Exception as Ex:
+            print(Ex)
+            raise
 
 def create_dressroom_folder(product_id, name):
     with db_connect() as (service_conn, cursor):
@@ -96,12 +118,12 @@ def move_dressroom_folder(folder_id, product_id):
 
 def delete_dressroom_folder(folder_id):
     with db_connect() as (service_conn, cursor):
-        delete_dress_query = """DELETE FROM dressroom WHERE folder_id = %s::int"""
-        delete_folder_query = """DELETE FROM dressfolder WHERE folder_id = %s::int"""
+        delete_dress_query = """DELETE FROM dressroom WHERE folder_id = %s::int AND user_id = %s::varchar"""
+        delete_folder_query = """DELETE FROM dressfolder WHERE folder_id = %s::int AND user_id = %s::varchar"""
         try:
-            cursor.execute(delete_dress_query, (folder_id,))
+            cursor.execute(delete_dress_query, (folder_id, g.user_id))
             service_conn.commit()
-            cursor.execute(delete_folder_query, (folder_id,))
+            cursor.execute(delete_folder_query, (folder_id, g.user_id))
             service_conn.commit()
         except Exception as ex:
             print(ex)

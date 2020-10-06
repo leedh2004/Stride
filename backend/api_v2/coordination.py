@@ -132,3 +132,11 @@ def delete_coor_folder():
         return jsonify('Fail'), 500
 
 
+@v2_coordination.route('/folder', methods=['GET'])
+@login_required
+def get_coor_by_folder():
+    args = request.args
+    folder_id = int(args.get('folder_id'))
+    order = int(args.get('order'))
+    result = get_page_coordination(folder_id, order)
+    return result, 200

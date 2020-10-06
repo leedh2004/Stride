@@ -32,3 +32,13 @@ class QuerystringParser:
             return []
         else:
             return qs
+
+
+class Filter:
+
+    @staticmethod
+    def over_price(p):
+        if int(p) >= 60000:
+            return 300000
+        else:
+            return int(p)

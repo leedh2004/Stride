@@ -169,10 +169,10 @@ def delete_coordination_folder(folder_id):
 
 def get_coodination_with_folder():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id is NULL ORDER BY created_at ASC"""
-        folder_query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id = %s ORDER BY created_at ASC"""
+        query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id is NULL ORDER BY created_at DESC OFFSET 0 LIMIT 20"""
+        folder_query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id = %s ORDER BY created_at DESC OFFSET 0 LIMIT 20"""
         product_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id = %s"""
-        get_folder_query = """SELECT folder_id, folder_name FROM coordinationfolder WHERE user_id = %s ORDER BY created_at ASC"""
+        get_folder_query = """SELECT folder_id, folder_name FROM coordinationfolder WHERE user_id = %s ORDER BY created_at DESC"""
         try:
             products = {}
             products['info'] = []
@@ -219,4 +219,49 @@ def get_coodination_with_folder():
                     products[folder_name].append(load)
             return json.dumps(products, default=json_util.default, ensure_ascii=False)
         except:
-            pass
+            raise
+
+
+def get_page_coordination(folder_id, order):
+    with db_connect() as (service_conn, cursor):
+        query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id is NULL ORDER BY created_at DESC OFFSET %s LIMIT 20"""
+        folder_query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id = %s ORDER BY created_at DESC OFFSET %s LIMIT 20"""
+        product_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id = %s"""
+        page = order * 20
+        try:
+            if folder_id == 0:
+                cursor.execute(query, (g.user_id, page))
+            else:
+                cursor.execute(folder_query, (g.user_id, folder_id, page))
+            coordination = cursor.fetchall()
+            product = []
+            colnames = DBMapping.mapping_column(cursor)
+            for item in coordination:
+                print(item)
+                load = {}
+                coor = CoordinationModel()
+                coor.fetch_data(item, colnames)
+                load.update(coor.__dict__)
+                # Top
+                cursor.execute(product_query, (coor.product_top_id,))
+                product_colname = DBMapping.mapping_column(cursor)
+                product_top = cursor.fetchone()
+                product_top_ins = ProductModel()
+                product_top_ins.fetch_data(product_top, product_colname)
+                print(product_top_ins.__dict__)
+                for k in product_top_ins.__dict__:
+                    new_key = "top_" + k
+                    load[new_key] = product_top_ins.__dict__[k]
+                # Bottom
+                cursor.execute(product_query, (coor.product_bottom_id,))
+                product_bottom = cursor.fetchone()
+                product_bottom_ins = ProductModel()
+                product_bottom_ins.fetch_data(product_bottom, product_colname)
+                for k in product_bottom_ins.__dict__:
+                    new_key = "bottom_" + k
+                    load[new_key] = product_bottom_ins.__dict__[k]
+                product.append(load)
+            return json.dumps(product, default=json_util.default, ensure_ascii=False)
+        except Exception as Ex:
+            print(Ex)
+            raise
