@@ -13,6 +13,7 @@ sys.path.append('../../../')
 from backend.authentication.auth import *
 from backend.db.queries.home import *
 from backend.module.qsparser import QuerystringParser
+from backend.module.qsparser import Filter
 from backend.db.queries.behavior import *
 from backend.recommendation.main import *
 v2_home = Blueprint('/v2/home', __name__)
@@ -29,6 +30,7 @@ def get_clothes():
         color = QuerystringParser.qs_parser(args.get('color').split(','))
         size = QuerystringParser.qs_bool(args.get('size'))
         price = QuerystringParser.int_list(QuerystringParser.empty_list(args.get('price').split(',')))
+        price[1] = Filter.over_price(price[1])
         exception = QuerystringParser.empty_list(args.get('exception').split(','))
         result = filter_product(g.user_id, color, size, price, concept, type, exception)
         if not result:
