@@ -27,7 +27,6 @@ v2_recommendation = Blueprint('/v2/recommendation', __name__)
 @login_required
 def get_recommended_list():
     try:
-        print('get recommend list')
         mock_result = get_recommended_multi_mock_list()
         return mock_result, 200
     except:

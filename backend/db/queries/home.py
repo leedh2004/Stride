@@ -280,7 +280,6 @@ def get_mock_product_list():
             load_product_id = load.__dict__['product_id']
             if product_eval.get(load_product_id) is not None:
                 load.__dict__['likes'] = product_eval.get(load_product_id)
-                print('not null', load_product_id)
             else:
                 load.__dict__['likes'] = None
             product.append(load.__dict__)
@@ -316,7 +315,6 @@ def get_product_list(recommend_list):
             load_product_id = load.__dict__['product_id']
             if product_eval.get(load_product_id) is not None:
                 load.__dict__['likes'] = product_eval.get(load_product_id)
-                print('not null', load_product_id)
             else:
                 load.__dict__['likes'] = None
             product.append(load.__dict__)

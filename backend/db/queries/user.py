@@ -160,7 +160,6 @@ def insert_survey(cmt):
     with db_connect() as (service_conn, cursor):
         query = """INSERT INTO survey(user_id, comment) VALUES(%s, %s)"""
         try:
-            print(g.user_id, cmt)
             cursor.execute(query, (g.user_id, cmt))
             service_conn.commit()
         except Exception as Ex:

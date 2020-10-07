@@ -46,7 +46,6 @@ def get_coodination():
             product = []
             colnames = DBMapping.mapping_column(cursor)
             for item in coordination:
-                print(item)
                 load = {}
                 coor = CoordinationModel()
                 coor.fetch_data(item, colnames)
@@ -57,7 +56,6 @@ def get_coodination():
                 product_top = cursor.fetchone()
                 product_top_ins = ProductModel()
                 product_top_ins.fetch_data(product_top, product_colname)
-                print(product_top_ins.__dict__)
                 for k in product_top_ins.__dict__:
                     new_key = "top_" + k
                     load[new_key] = product_top_ins.__dict__[k]
@@ -125,7 +123,6 @@ def update_coor_folder_name(new_name, folder_id):
     with db_connect() as (service_conn, cursor):
         modify_name_query = """UPDATE coordinationfolder SET folder_name = %s WHERE folder_id = %s"""
         try:
-            print(new_name, folder_id)
             cursor.execute(modify_name_query, (new_name, folder_id))
             service_conn.commit()
             return True
@@ -193,7 +190,6 @@ def get_coodination_with_folder():
                 product = []
                 colnames = DBMapping.mapping_column(cursor)
                 for item in coordination:
-                    print(item)
                     load = {}
                     coor = CoordinationModel()
                     coor.fetch_data(item, colnames)
@@ -204,7 +200,6 @@ def get_coodination_with_folder():
                     product_top = cursor.fetchone()
                     product_top_ins = ProductModel()
                     product_top_ins.fetch_data(product_top, product_colname)
-                    print(product_top_ins.__dict__)
                     for k in product_top_ins.__dict__:
                         new_key = "top_" + k
                         load[new_key] = product_top_ins.__dict__[k]
@@ -237,7 +232,6 @@ def get_page_coordination(folder_id, order):
             product = []
             colnames = DBMapping.mapping_column(cursor)
             for item in coordination:
-                print(item)
                 load = {}
                 coor = CoordinationModel()
                 coor.fetch_data(item, colnames)
@@ -248,7 +242,6 @@ def get_page_coordination(folder_id, order):
                 product_top = cursor.fetchone()
                 product_top_ins = ProductModel()
                 product_top_ins.fetch_data(product_top, product_colname)
-                print(product_top_ins.__dict__)
                 for k in product_top_ins.__dict__:
                     new_key = "top_" + k
                     load[new_key] = product_top_ins.__dict__[k]
