@@ -21,9 +21,7 @@ from backend.authentication.naver import naver
 from backend.authentication.auth import *
 from flask_cors import CORS
 
-dt = str(datetime.now()).split(" ")[0]
-LOG_FORMAT = "[%(asctime)-10s] - %(message)s"
-logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+dt = datetime.now()
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -41,40 +39,42 @@ app.register_blueprint(auth, url_prefix='/auth')
 app.register_blueprint(tutorial, url_prefix='/tutorial')
 log_stream = 'api-log'
 
-server_handler = CloudWatchLogsHandler(
-    log_group_name='stride',
-    log_stream_name=str(os.getpid()) + "/" + dt,
-    buffer_duration=10000,
-    batch_count=10,
-    batch_size=1048576
-)
 
-def log_parse(path, qs, res_data):
-    res_all = {
-        'top': [],
-        'all': [],
-        'skirt': [],
-        'dress': [],
-        'pants': []
-    }
-    res = {
-        'total': 0,
-        'product_id': []
-    }
-    if path == '/home/all':
-        res_json = json.loads(res_data)
-        for key in res_json.keys():
-            for item in res_json[key]:
-                res_all[key].append(item['product_id'])
-        return res_all
-    elif 'size' in str(qs):
-        res_json = json.loads(res_data)
-        for data in res_json:
-            res['product_id'].append(data['product_id'])
-        res['total'] = len(res['product_id'])
-        return res
-    else:
-        return False
+logger = logging.getLogger("name")
+logger.setLevel(logging.INFO)
+stream_handler = logging.StreamHandler()
+file_handler = logging.FileHandler(filename="/var/log/messages2")
+stream_handler.setLevel(logging.INFO)
+file_handler.setLevel(logging.DEBUG)
+logger.addHandler(file_handler)
+logger.addHandler(stream_handler)
+
+# def log_parse(path, qs, res_data):
+#     res_all = {
+#         'top': [],
+#         'all': [],
+#         'skirt': [],
+#         'dress': [],
+#         'pants': []
+#     }
+#     res = {
+#         'total': 0,
+#         'product_id': []
+#     }
+#     if path == '/home/all':
+#         res_json = json.loads(res_data)
+#         for key in res_json.keys():
+#             for item in res_json[key]:
+#                 res_all[key].append(item['product_id'])
+#         return res_all
+#     elif 'size' in str(qs):
+#         res_json = json.loads(res_data)
+#         for data in res_json:
+#             res['product_id'].append(data['product_id'])
+#         res['total'] = len(res['product_id'])
+#         return res
+#     else:
+#         return False
 
 @app.route('/admin/check')
 def hello_world():
@@ -86,29 +86,21 @@ def error_test():
 
 @app.after_request
 def log(response):
-    user = ''
-    result = authentication()
-    if result is False:
-        user = 'unidentified'
-    else:
-        user = result
+    auth = authentication()
+    # health check
     if request.path == '/admin/check':
         return response
-
-    logger = logging.getLogger(log_stream)
-    logger.addHandler(server_handler)
-    res_data = response.get_data().decode('utf-8')
-    req_data = request.get_data().decode('utf-8')
-    parsed_log = log_parse(request.path, request.query_string, res_data)
-    if parsed_log != False:
-        res_data = parsed_log
-    if request.method in ['GET', 'DELETE']:
-        log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), res_data)
+    if auth is False:
+        user = 'unidentified'
     else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), res_data, req_data)
+        user = g.user_id
+    if request.method in ['GET', 'DELETE']:
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data))
+    else:
+        log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data), str(request.data))
+    # print(log_msg)
     logger.info(log_msg)
     return response
-
 
 if __name__ == '__main__':
     print("Server on 5000 Port, MODE = PRODUCTION")
