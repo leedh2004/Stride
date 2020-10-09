@@ -224,9 +224,9 @@ def get_all_type_popular_items_from_db():
     return result
 
 
-def get_entire_user_ids_from_db():
+def get_update_user_ids_from_db():
     db_cursor = conn.cursor()
-    query = """select array(select user_id from users)"""
+    query = """select array(select user_id from users where last_login_at >= now() - INTERVAL '1 DAY');"""
     db_cursor.execute(query)
     result = db_cursor.fetchone()[0]
     db_cursor.close()

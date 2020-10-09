@@ -1,5 +1,8 @@
+import sys
+sys.path.append('../')
+sys.path.append('../../')
+sys.path.append('../../../')
 import backend.recommendation.queries as queries
-import backend.recommendation.analyze as analyze
 import backend.recommendation.recommendation as recommendation
 import random
 
@@ -67,9 +70,11 @@ def get_entire_types_item_recommendation(user_id, size_filter):
 
 # this function should be executed periodically to update user preferring shop concepts
 def update_user_preferred_shop_concepts():
-    users = queries.get_entire_user_ids_from_db()
+    users = queries.get_update_user_ids_from_db()
+    print("updating shop concepts of users:", users)
     for user in users:
         concepts = queries.get_user_liked_shop_concepts_from_db(user)[:3]
+        print("user and preferred concepts:", user, concepts)
         queries.update_user_concepts(user, concepts)
 
 
@@ -123,14 +128,15 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
             }
         }
     )
-    print(res)
+    print(res['hits']['hits'])
     result_product_ids = [item['_source']['product_id'] for item in res['hits']['hits']]
     result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
     return result_product_ids
 
 
-# def concept_recommendation(user_id):
-#     shop_concepts = queries.get_user_shop_concepts(user_id)
-#     if 'basic' in shop_concepts:
-#         shop_concepts.remove('basic')
-#     recommended_items = {shop_concepts[0]: [], shop_concepts[1]: []}
+def personalized_recommendation(user_id):
+    # get best items
+    # choose with user concepts
+    user_prefer_concepts = queries.get_user_liked_shop_concepts_from_db(user_id)
+    # no need to exclude items that user has already seen!
+    # just add some randomness to the list, shuffle
