@@ -23,24 +23,34 @@ class RecommendationService {
       final response =
           await _api.client.get('${Api.endpoint}/v2/recommendation');
       if (response.statusCode == 200) {
+        print("!!!!!!!!!200zz");
         print(response);
         var parsed = json.decode(response.data) as Map<String, dynamic>;
+        List<RecentItem> temp = new List();
         for (var item in parsed['recommend']) {
-          recommendItems.add(RecentItem.fromJson(item));
+          temp.add(RecentItem.fromJson(item));
         }
+        recommendItems = temp;
+        temp = [];
         for (var item in parsed['new_arrive']) {
-          newArriveItems.add(RecentItem.fromJson(item));
+          temp.add(RecentItem.fromJson(item));
         }
+        newArriveItems = temp;
+        temp = [];
         var double_parsed = parsed['concept1'] as Map<String, dynamic>;
         conceptA = double_parsed['concept_name'];
         for (var item in double_parsed['product']) {
-          conceptItemA.add(RecentItem.fromJson(item));
+          temp.add(RecentItem.fromJson(item));
         }
+        conceptItemA = temp;
+        temp = [];
         double_parsed = parsed['concept2'] as Map<String, dynamic>;
         conceptB = double_parsed['concept_name'];
         for (var item in double_parsed['product']) {
-          conceptItemB.add(RecentItem.fromJson(item));
+          temp.add(RecentItem.fromJson(item));
         }
+        conceptItemB = temp;
+        temp = [];
         init = true;
       }
     } catch (e) {

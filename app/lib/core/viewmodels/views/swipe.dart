@@ -1,4 +1,5 @@
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
@@ -8,21 +9,36 @@ class SwipeModel extends BaseModel {
   // DressRoomService dressRoomService;
   AuthenticationService _authenticationService;
   SwipeService _swipeService;
+  DressRoomService _dressRoomService;
   bool trick = false;
   int image_index = 0, index;
   Filter filter;
 
-  SwipeModel(
-      SwipeService swipeService, AuthenticationService authenticationService) {
+  SwipeModel(SwipeService swipeService, DressRoomService dressRoomService,
+      AuthenticationService authenticationService) {
     _authenticationService = authenticationService;
     _swipeService = swipeService;
-    index = swipeService.index;
-    filter = Filter.from(swipeService.filter);
+    _dressRoomService = dressRoomService;
+    index = _swipeService.index;
+    filter = Filter.from(_swipeService.filter);
     print("SwipeModel 생성!");
   }
 
   Future initCards() async {
     await _swipeService.initCards();
+    notifyListeners();
+  }
+
+  bool isNotChangedFilter(int index) {
+    return _swipeService.isNotchangedFilter(index);
+  }
+
+  bool allNotChangedFilter() {
+    return filter.allNotchangedFilter();
+  }
+
+  void setInitFilter() {
+    filter.setTypes(['all']);
     notifyListeners();
   }
 
@@ -46,8 +62,12 @@ class SwipeModel extends BaseModel {
     filter.setSize(value);
   }
 
-  void setFilter() {
-    _swipeService.setFilter(filter);
+  void setFilter() async {
+    setBusy(true);
+    await _swipeService.setFilter(filter);
+    image_index = 0;
+    index = _swipeService.index;
+    setBusy(false);
   }
 
   bool nextImage() {
@@ -95,6 +115,10 @@ class SwipeModel extends BaseModel {
     image_index = 0;
 
     setBusy(false);
-    notifyListeners();
+    // notifyListeners();
+  }
+
+  void addItem(RecentItem item) async {
+    _dressRoomService.addItem(item);
   }
 }

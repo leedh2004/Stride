@@ -129,33 +129,35 @@ class _TutorialViewState extends State<TutorialView> {
       // );
       // image = Image.asset('images/ruler.png');
     }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (!size) {
+        showMaterialModalBottomSheet(
+            isDismissible: false,
+            expand: false,
+            enableDrag: false,
+            context: context,
+            builder: (context, scrollController) => InputInfoDialog());
+        size = true;
+      }
+    });
+
+    TutorialService service =
+        Provider.of<TutorialService>(context, listen: false);
 
     return Scaffold(
-        body: Column(children: [
+        body: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
       upperTextBar(context, upText, cnt),
       UIHelper.verticalSpaceSmall,
       BaseWidget<TutorialModel>(
           model: TutorialModel(
-            Provider.of<TutorialService>(context),
+            service,
           ),
           builder: (context, model, child) {
-            if (Provider.of<TutorialService>(context, listen: false).init ==
-                false) {
+            if (service.init == false) {
               model.getItem();
-              return LoadingWidget();
+              return Container(child: LoadingWidget());
             }
-            if (model.busy) return LoadingWidget();
-            WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-              if (!size) {
-                showMaterialModalBottomSheet(
-                    isDismissible: false,
-                    expand: false,
-                    enableDrag: false,
-                    context: context,
-                    builder: (context, scrollController) => InputInfoDialog());
-                size = true;
-              }
-            });
+
             return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

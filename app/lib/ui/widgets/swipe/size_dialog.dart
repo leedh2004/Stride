@@ -1,5 +1,6 @@
 import 'package:animated_widgets/animated_widgets.dart';
 import 'package:app/core/models/product_size.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
@@ -38,14 +39,14 @@ Map<String, String> top = {
 };
 
 class SizeDialog extends StatefulWidget {
-  SwipeCard item;
+  RecentItem item;
   ProductSize product_size;
   List<String> keys;
   Map<String, String> mapper;
   List<String> header;
   Map<String, Size> sizeMapper = new Map();
 
-  SizeDialog(SwipeCard _item) {
+  SizeDialog(RecentItem _item) {
     item = _item;
     product_size = _item.product_size;
     keys = product_size.size.keys.toList();
@@ -82,68 +83,66 @@ class _SizeDialogState extends State<SizeDialog> {
         child: Column(children: [
           Align(
             alignment: Alignment.centerLeft,
-            child: Padding(
-                padding: EdgeInsets.fromLTRB(8, 0, 0, 0),
-                child: Text('(단면, cm)')),
+            child: Text(
+              '사이즈 정보 (단면, cm)',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
-          Padding(
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-            child: Table(
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              //defaultColumnWidth: FractionColumnWidth(0.12),
-              children: [
-                TableRow(
-                    decoration: BoxDecoration(
-                      color: Color.fromRGBO(240, 240, 240, 1),
-                    ),
-                    children: [
-                      Container(
-                        height: 60,
-                        child: Center(
-                          child: Text(
-                            'SIZE',
-                            style: tableHeaderSizeText,
-                          ),
+          Table(
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            //defaultColumnWidth: FractionColumnWidth(0.12),
+            children: [
+              TableRow(
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(240, 240, 240, 1),
+                  ),
+                  children: [
+                    Container(
+                      height: 40,
+                      child: Center(
+                        child: Text(
+                          'SIZE',
+                          style: tableHeaderSizeText,
                         ),
                       ),
-                      ...List.generate(widget.header.length, (index) {
+                    ),
+                    ...List.generate(widget.header.length, (index) {
+                      return (Center(
+                        child: Text(
+                          '${widget.header[index]}',
+                          style: tableHeaderText,
+                        ),
+                      ));
+                    })
+                  ]),
+              ...List.generate(widget.keys.length, (index) {
+                return (TableRow(
+                    decoration: BoxDecoration(
+                        border: Border(
+                            bottom: BorderSide(
+                                color: Theme.of(context).dividerColor))),
+                    children: [
+                      Container(
+                          height: 40,
+                          child: Padding(
+                              padding: EdgeInsets.all(0),
+                              child: ColorSizeBox(widget.keys[index]))),
+                      ...List.generate(widget.header.length, (idx) {
+                        var ret = widget.sizeMapper[widget.keys[index]]
+                            .map[widget.mapper[widget.header[idx]]]
+                            .toString();
+                        if (ret == '0.0') ret = '-';
+                        if (ret.endsWith('.0'))
+                          ret = ret.substring(0, ret.length - 2);
                         return (Center(
-                          child: Text(
-                            '${widget.header[index]}',
-                            style: tableHeaderText,
-                          ),
-                        ));
+                            child: Text(
+                          '$ret',
+                          style: tableCellText,
+                        )));
                       })
-                    ]),
-                ...List.generate(widget.keys.length, (index) {
-                  return (TableRow(
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(
-                                  color: Theme.of(context).dividerColor))),
-                      children: [
-                        Container(
-                            height: 40,
-                            child: Padding(
-                                padding: EdgeInsets.all(4),
-                                child: ColorSizeBox(widget.keys[index]))),
-                        ...List.generate(widget.header.length, (idx) {
-                          var ret = widget.sizeMapper[widget.keys[index]]
-                              .map[widget.mapper[widget.header[idx]]]
-                              .toString();
-                          if (ret == '0.0') ret = '-';
-                          if (ret.endsWith('.0'))
-                            ret = ret.substring(0, ret.length - 2);
-                          return (Center(
-                              child: Text(
-                            '$ret',
-                            style: tableCellText,
-                          )));
-                        })
-                      ]));
-                }),
-              ],
-            ),
+                    ]));
+              }),
+            ],
           ),
         ]),
       ),
@@ -299,14 +298,14 @@ class _SizeDialogState extends State<SizeDialog> {
 }
 
 // class SizeDialog extends StatelessWidget {
-//   SwipeCard widget.item;
+//   RecentItem widget.item;
 //   ProductSize product_size;
 //   List<String> keys;
 //   Map<String, String> mapper;
 //   List<String> header;
 //   Map<String, Size> sizeMapper = new Map();
 
-//   SizeDialog(SwipeCard _item) {
+//   SizeDialog(RecentItem _item) {
 //     item = _item;
 //     product_size = _item.product_size;
 //     keys = product_size.size.keys.toList();

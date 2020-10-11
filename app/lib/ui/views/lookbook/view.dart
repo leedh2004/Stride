@@ -1,6 +1,5 @@
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/viewmodels/views/look_book.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/dressroom/folder_text_button.dart';
@@ -54,28 +53,26 @@ class LookBookView extends StatelessWidget {
                   child: Padding(
                     padding: EdgeInsets.all(16),
                     child: items.length > 0
-                        ? Expanded(
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                childAspectRatio: 0.7,
-                                mainAxisSpacing: 16.0,
-                                crossAxisSpacing: 16.0,
-                              ),
-                              padding: EdgeInsets.all(5),
-                              itemBuilder: (context, index) {
-                                double opacity = 0;
-                                if (model.selectedIdx.contains(index))
-                                  opacity = 1;
-                                return LookBookItem(
-                                    item: items[index],
-                                    opacity: opacity,
-                                    index: index);
-                              },
-                              itemCount: items.length,
+                        ? GridView.builder(
+                            shrinkWrap: true,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 0.7,
+                              mainAxisSpacing: 16.0,
+                              crossAxisSpacing: 16.0,
                             ),
+                            padding: EdgeInsets.all(5),
+                            itemBuilder: (context, index) {
+                              double opacity = 0;
+                              if (model.selectedIdx.contains(index))
+                                opacity = 1;
+                              return LookBookItem(
+                                  item: items[index],
+                                  opacity: opacity,
+                                  index: index);
+                            },
+                            itemCount: items.length,
                           )
                         : Container(
                             child: Align(

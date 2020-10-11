@@ -17,9 +17,19 @@ import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)..maxConnectionsPerHost = 5;
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
+  // await FlutterStatusbarColor.setStatusBarColor(Colors.black);
+  HttpOverrides.global = MyHttpOverrides();
+
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
@@ -76,12 +86,13 @@ class Stride extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
-            fontFamily: 'NotoSansKR',
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            //for modal..
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent),
+          fontFamily: 'NotoSansKR',
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          //for modal..
+          // highlightColor: Colors.transparent,
+          // splashColor: Colors.transparent
+        ),
         initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [observer],

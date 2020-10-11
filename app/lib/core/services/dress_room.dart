@@ -33,8 +33,10 @@ class DressRoomService {
   }
 
   void addItem(RecentItem item) {
-    print(item.product_name);
-    if (!items[0].contains(item)) items[0].add(item);
+    if (!items[0].contains(item))
+      items[0] = [item, ...items[0]];
+    else
+      print("!!");
   }
 
   Future getDressRoom() async {

@@ -122,16 +122,16 @@ class _ClothTypeFilterState extends State<ClothTypeFilter> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              '옷 종류',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black26),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.all(16),
+          //   child: Text(
+          //     '옷 종류',
+          //     style: TextStyle(
+          //         fontSize: 18,
+          //         fontWeight: FontWeight.w600,
+          //         color: Colors.black26),
+          //   ),
+          // ),
           Row(
               children: List.generate(
                   keys.sublist(0, 3).length,

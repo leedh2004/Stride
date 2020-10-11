@@ -16,13 +16,14 @@ class RecommendationModel extends BaseModel {
     print("RecommendationModel 생성!");
     collectionService = _service;
     authService = _authService;
-    init = _service.init;
+    init = false;
   }
 
   Future initialize() async {
+    setBusy(true);
     await collectionService.initalize();
-    init = collectionService.init;
-    notifyListeners();
+    init = true;
+    setBusy(false);
   }
 
   @override

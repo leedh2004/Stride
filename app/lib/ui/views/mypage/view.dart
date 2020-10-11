@@ -2,6 +2,7 @@ import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/private_web_view.dart';
 import 'package:app/ui/widgets/mypage/input_dialog.dart';
@@ -74,10 +75,10 @@ class MyPageView extends StatelessWidget {
             child: Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.fromLTRB(50, 16, 16, 16),
                   child: Text(
                     '마이페이지',
-                    style: headerStyle,
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                   ),
                 )
               ],
@@ -87,23 +88,22 @@ class MyPageView extends StatelessWidget {
             child: Container(
               child: ListView(
                 children: [
-                  myPageListTile(FaIcon(FontAwesomeIcons.tshirt), '사이즈 수정',
-                      () => onTapSizeButton(context)),
+                  myPageListTile('사이즈 수정', () => onTapSizeButton(context),
+                      backgroundColor),
                   Divider(),
-                  myPageListTile(FaIcon(FontAwesomeIcons.search), '최근에 본 상품',
-                      () => onTapRecent(context)),
+                  myPageListTile(
+                      '최근에 본 상품', () => onTapRecent(context), backgroundColor),
                   Divider(),
-                  myPageListTile(FaIcon(FontAwesomeIcons.phoneSquareAlt),
-                      '문의﹒건의', () => onTapHelp(context)),
+                  myPageListTile(
+                      '문의﹒건의', () => onTapHelp(context), gradientStart),
                   Divider(),
-                  myPageListTile(FaIcon(FontAwesomeIcons.appStoreIos), '앱 설문조사',
-                      () => onTapFeedBack(context)),
+                  myPageListTile(
+                      '앱 설문조사', () => onTapFeedBack(context), gradientStart),
                   Divider(),
-                  myPageListTile(FaIcon(FontAwesomeIcons.signOutAlt), '로그아웃',
-                      () => onTapLogout(context)),
+                  myPageListTile('로그아웃', () => onTapLogout(context), blueColor),
                   Divider(),
-                  myPageListTile(FaIcon(FontAwesomeIcons.code), '개인정보 처리방침',
-                      () => onTapPrivateInfo(context))
+                  myPageListTile(
+                      '개인정보 처리방침', () => onTapPrivateInfo(context), blueColor)
                 ],
               ),
             ),

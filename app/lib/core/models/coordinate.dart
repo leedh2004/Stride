@@ -26,9 +26,17 @@ class Coordinate {
     top.price = priceText(json['top_price']);
     top.product_name = json['top_product_name'];
     top.product_url = json['top_product_url'];
+    top.image_urls = json['top_image_url'];
+    top.origin_color = json['top_origin_color'];
+    top.clustered_color = json['top_clustered_color'];
+    top.likes = json['top_likes'];
+    top.image_urls = [top.thumbnail_url, ...top.image_urls];
+    top.length = top.image_urls.length;
+
     top.type = json['top_type'];
     top.shop_name = json['top_shop_name'];
     top.product_size = ProductSize.fromJson(json['top_size']);
+    top.compressed_thumbnail_url = json['top_compressed_thumbnail_url'];
 
     bottom.thumbnail_url = json['bottom_thumbnail_url'];
     bottom.product_name = json['bottom_product_name'];
@@ -38,5 +46,13 @@ class Coordinate {
     bottom.product_url = json['bottom_product_url'];
     bottom.shop_name = json['bottom_shop_name'];
     bottom.product_size = ProductSize.fromJson(json['bottom_size']);
+    bottom.compressed_thumbnail_url = json['bottom_compressed_thumbnail_url'];
+
+    bottom.image_urls = json['bottom_image_url'];
+    bottom.origin_color = json['bottom_origin_color'];
+    bottom.clustered_color = json['bottom_clustered_color'];
+    bottom.likes = json['bottom_likes'];
+    bottom.image_urls = [bottom.thumbnail_url, ...bottom.image_urls];
+    bottom.length = bottom.image_urls.length;
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:app/core/constants/app_constants.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -164,7 +165,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
                       int index =
                           Provider.of<SwipeService>(context, listen: false)
                               .index;
-                      SwipeCard item =
+                      RecentItem item =
                           Provider.of<SwipeService>(context, listen: false)
                               .items[index];
                       setState(() {
@@ -304,7 +305,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
   }
 
   Widget backCard(BuildContext context) {
-    SwipeCard item =
+    RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index) + 2];
 
     return Align(
@@ -320,7 +321,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
-    SwipeCard item =
+    RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index) + 1];
 
     return Align(
@@ -337,7 +338,7 @@ class _TutorialSwipeCardSectionState extends State<TutorialSwipeCardSection>
 
   Widget frontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
-    SwipeCard item =
+    RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index)];
 
     return Align(

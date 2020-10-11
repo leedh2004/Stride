@@ -13,7 +13,7 @@ class TutorialService {
     _api = api;
   }
 
-  Future<List<TutorialBox>> getItem() async {
+  Future getItem() async {
     var response = await _api.client.get('${Api.endpoint}/tutorial');
     List<TutorialBox> ret = new List();
     if (response.statusCode == 200) {
@@ -24,7 +24,6 @@ class TutorialService {
       }
       items = ret;
       init = true;
-      return ret;
     }
   }
 

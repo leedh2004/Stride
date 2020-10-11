@@ -34,65 +34,113 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                               .userController
                               .value;
                           return FractionallySizedBox(
-                            heightFactor: 0.7,
+                            heightFactor: 0.55,
                             child: Stack(children: [
                               DefaultTabController(
                                 initialIndex: index,
                                 length: 5,
                                 child: Scaffold(
-                                  appBar: AppBar(
-                                      automaticallyImplyLeading: false,
-                                      backgroundColor: Colors.white,
-                                      elevation: 0,
-                                      title: Text('필터',
-                                          style:
-                                              TextStyle(color: Colors.black)),
-                                      bottom: TabBar(
-                                          labelColor: Colors.black,
-                                          unselectedLabelColor: Colors.black38,
-                                          indicatorColor: Colors.black,
-                                          tabs: [
-                                            Tab(
-                                              child: Text(
-                                                '옷 종류',
+                                  backgroundColor: Colors.white,
+                                  appBar: PreferredSize(
+                                    preferredSize: Size.fromHeight(60),
+                                    child: AppBar(
+                                        automaticallyImplyLeading: false,
+                                        backgroundColor: Colors.white,
+                                        elevation: 0,
+                                        // title: Text('필터',
+                                        //     style:
+                                        //         TextStyle(color: Colors.black)),
+                                        bottom: TabBar(
+                                            labelColor: Colors.black,
+                                            unselectedLabelColor:
+                                                Colors.black38,
+                                            indicatorColor: Colors.black,
+                                            tabs: [
+                                              Tab(
+                                                child: Text(
+                                                  '옷 종류',
+                                                ),
                                               ),
-                                            ),
-                                            Tab(
-                                              child: Text(
-                                                '컨셉',
+                                              Tab(
+                                                child: Text(
+                                                  '컨셉',
+                                                ),
                                               ),
-                                            ),
-                                            Tab(
-                                              child: Text('가격'),
-                                            ),
-                                            Tab(
-                                              child: Text('색상'),
-                                            ),
-                                            Tab(
-                                              child: Text('사이즈'),
-                                            )
-                                          ])),
+                                              Tab(
+                                                child: Text('가격'),
+                                              ),
+                                              Tab(
+                                                child: Text('색상'),
+                                              ),
+                                              Tab(
+                                                child: Text('사이즈'),
+                                              )
+                                            ])),
+                                  ),
                                   body: TabBarView(
                                     children: [
-                                      ClothTypeFilter(model),
-                                      ConceptFilter(model),
-                                      PriceFilter(model),
-                                      ColorFilter(model),
                                       Padding(
                                           padding: EdgeInsets.only(bottom: 66),
-                                          child: SizeFilter(model))
+                                          child: Center(
+                                              child: ClothTypeFilter(model))),
+                                      Padding(
+                                          padding: EdgeInsets.only(bottom: 66),
+                                          child: Center(
+                                              child: ConceptFilter(model))),
+                                      Padding(
+                                          padding: EdgeInsets.only(bottom: 66),
+                                          child: PriceFilter(model)),
+                                      Padding(
+                                          padding: EdgeInsets.only(bottom: 66),
+                                          child: Center(
+                                              child: ColorFilter(model))),
+                                      Padding(
+                                          padding: EdgeInsets.only(bottom: 66),
+                                          child:
+                                              Center(child: SizeFilter(model)))
                                     ],
                                   ),
                                 ),
                               ),
                               Align(
+                                alignment: Alignment.topCenter,
+                                child: Padding(
+                                  padding: EdgeInsets.all(8),
+                                  child: Container(
+                                    width: 50,
+                                    height: 3,
+                                    decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                        borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                ),
+                              ),
+                              // Align(
+                              //   alignment: Alignment.bottomLeft,
+                              //   child: Padding(
+                              //     padding: EdgeInsets.fromLTRB(16, 0, 0, 16),
+                              //     child: FlatButton(
+                              //         padding:
+                              //             EdgeInsets.fromLTRB(10, 5, 10, 5),
+                              //         onPressed: () {
+                              //           model.setInitFilter();
+                              //         },
+                              //         child: Text(
+                              //           '전체 초기화',
+                              //           style: TextStyle(
+                              //               color: Colors.black54,
+                              //               fontSize: 14),
+                              //         )),
+                              //   ),
+                              // ),
+                              Align(
                                 alignment: Alignment.bottomRight,
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 14),
+                                  padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
                                   child: FlatButton(
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
-                                              BorderRadius.circular(5)),
+                                              BorderRadius.circular(15)),
                                       padding:
                                           EdgeInsets.fromLTRB(50, 5, 50, 5),
                                       color: Colors.black,
@@ -118,39 +166,18 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                       constraints: BoxConstraints(minWidth: 50),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.black12)),
+                          border: model.isNotChangedFilter(index)
+                              ? Border.all(color: Colors.black12)
+                              : Border.all(color: Colors.black)),
                       child: Center(
                           child: Container(
-                        child: Text(
-                          MENU[index],
-                          style: TextStyle(color: Colors.black38),
-                        ),
+                        child: Text(MENU[index],
+                            style: model.isNotChangedFilter(index)
+                                ? TextStyle(color: Colors.black38)
+                                : TextStyle(color: Colors.black)),
                       ))));
-              // return InkWell(
-              //   onTap: () {
-              //     model.changeType(TYPE[index]);
-              //     Stride.analytics.logEvent(
-              //       name: 'SWIPE_CLOTH_TYPE_CHANGE_${TYPE[index]}',
-              //     );
-              //   },
-              //   child: Padding(
-              //     padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-              //     child: Text(
-              //       '${TYPE[index][0].toUpperCase() + TYPE[index].substring(1)}',
-              //       style: model.type == TYPE[index]
-              //           ? subHeaderMainColorStyle
-              //           : subHeaderStyle,
-              //     ),
-              //   ),
-              // );
             })),
       ),
-      // Container(
-      //     margin: EdgeInsets.only(left: 10),
-      //     child: Text(
-      //       '>',
-      //       style: subHeaderStyle,
-      //     ))
     ]),
   );
 }

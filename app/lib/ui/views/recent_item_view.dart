@@ -5,6 +5,7 @@ import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/swipe/info.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -84,9 +85,10 @@ class _RecentItemViewState extends State<RecentItemView> {
                           },
                           child: Container(
                             child: Hero(
-                              tag: item.image_urls[0],
-                              child: Image.network(
-                                item.thumbnail_url,
+                              tag: item.product_id,
+                              // tag: item.image_urls[0],
+                              child: CachedNetworkImage(
+                                imageUrl: item.compressed_thumbnail_url,
                                 fit: BoxFit.cover,
                               ),
                             ),

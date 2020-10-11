@@ -12,12 +12,11 @@ class TutorialModel extends BaseModel {
     service = _service;
   }
 
-  Future<List<TutorialBox>> getItem() async {
-    setBusy(true);
-    List<TutorialBox> ret = await service.getItem();
+  Future getItem() async {
+    // setBusy(true);
+    await service.getItem();
     notifyListeners();
-    setBusy(false);
-    return ret;
+    // setBusy(false);
   }
 
   void addItem(int id) async {

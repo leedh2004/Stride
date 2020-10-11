@@ -1,7 +1,5 @@
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';

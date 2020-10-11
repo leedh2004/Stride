@@ -4,6 +4,7 @@ import 'package:app/ui/shared/text_styles.dart';
 class RecentItem {
   int product_id;
   String thumbnail_url;
+  String compressed_thumbnail_url;
   String price;
   String product_name;
   String product_url;
@@ -11,6 +12,8 @@ class RecentItem {
   int length;
   bool likes;
   String likes_time;
+  List<dynamic> origin_color;
+  List<dynamic> clustered_color;
 
   //int selected = 0;
   List<dynamic> image_urls;
@@ -29,10 +32,14 @@ class RecentItem {
   RecentItem.fromJson(Map<String, dynamic> json) {
     product_id = json['product_id'];
     thumbnail_url = json['thumbnail_url'];
+    compressed_thumbnail_url = json['compressed_thumbnail_url'];
     price = priceText(json['price']);
     product_name = json['product_name'];
     product_url = json['product_url'];
     image_urls = json['image_url'];
+    origin_color = json['origin_color'];
+    clustered_color = json['clustered_color'];
+    print(origin_color);
     likes = json['likes'];
     likes_time = json['likes_time'];
     image_urls = [thumbnail_url, ...image_urls];

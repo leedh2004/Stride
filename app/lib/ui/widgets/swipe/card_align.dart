@@ -1,19 +1,21 @@
 import 'dart:io';
 
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
+import 'package:app/ui/views/swipe/info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SwipeCardAlignment extends StatefulWidget {
-  SwipeCard item;
+  RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
 
-  SwipeCardAlignment(SwipeCard _item, int _index) {
+  SwipeCardAlignment(RecentItem _item, int _index) {
     // print("NEW");
     item = _item;
     index = _index;
@@ -82,7 +84,8 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                   child: AspectRatio(
                       aspectRatio: 11 / 16,
                       child: Hero(
-                        tag: widget.item.image_urls[widget.index],
+                        tag: widget.item.product_id,
+                        // tag: widget.item.image_urls[widget.index],
                         child: widget.images[widget.index],
                       ))),
               Align(
@@ -114,7 +117,9 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
               ),
               Container(
                 alignment: Alignment.bottomLeft,
+                height: 200,
                 decoration: BoxDecoration(
+                  color: Colors.red,
                   gradient: LinearGradient(colors: [
                     Colors.transparent,
                     Colors.black12,
@@ -138,9 +143,11 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                           style: whiteShadowStyle,
                         ),
                         Text(
-                          '${widget.item.price}원 [${widget.item.type.toUpperCase()}]',
+                          '${typeConverter[widget.item.type]} ${widget.item.price}원',
                           style: whiteSmallShadowStyle,
                         )
+                        // style: TextStyle(
+                        //     fontSize: 40, fontFamily: 'NotoSansKR'))
                       ]),
                 ),
               ),
@@ -169,6 +176,31 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                   ),
                 ),
               ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 70, 20),
+                  child: IconButton(
+                    icon: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.shoppingCart,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      print("wtf");
+                    },
+                  ),
+                ),
+              ),
             ],
           )),
     );
@@ -176,11 +208,11 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
 }
 
 // class SwipeCardAlignment extends StatelessWidget {
-//   SwipeCard item;
+//   RecentItem item;
 //   int index;
 //   List<dynamic> images = new List<dynamic>();
 
-//   SwipeCardAlignment(SwipeCard _item, int _index) {
+//   SwipeCardAlignment(RecentItem _item, int _index) {
 //     item = _item;
 //     index = _index;
 //     if (index >= item.length) {

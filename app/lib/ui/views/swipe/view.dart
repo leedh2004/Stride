@@ -1,6 +1,8 @@
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
@@ -58,19 +60,40 @@ class _SwipeViewState extends State<SwipeView> {
     onflag = false;
   }
 
-  onTapPurchaseButton(SwipeModel model) {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      SwipeCard item = Provider.of<SwipeService>(context).items[model.index];
-      Stride.analytics
-          .logEvent(name: 'SWIPE_PURCHASE_BUTTON_CLICKED', parameters: {
-        'itemId': item.product_id.toString(),
-        'itemName': item.product_name,
-        'itemCategory': item.shop_name
-      });
+  onTapCollectButton(SwipeModel model) async {
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   SwipeCard item = Provider.of<SwipeService>(context).items[model.index];
+    //   Stride.analytics
+    //       .logEvent(name: 'SWIPE_PURCHASE_BUTTON_CLICKED', parameters: {
+    //     'itemId': item.product_id.toString(),
+    //     'itemName': item.product_name,
+    //     'itemCategory': item.shop_name
+    //   });
 
-      model.purchaseItem(item.product_id);
-      return ProductWebView(item.product_url, item.shop_name);
-    }));
+    //   model.purchaseItem(item.product_id);
+    //   return ProductWebView(item.product_url, item.shop_name);
+    // }));
+    RecentItem item =
+        Provider.of<SwipeService>(context, listen: false).items[model.index];
+    model.addItem(item);
+    ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+      duration: Duration(milliseconds: 1500),
+      content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+    ));
+
+    if (onflag) return false;
+    Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
+    onflag = true;
+    model.likeRequest();
+    setState(() {
+      like_opacity = 1;
+    });
+    await Future.delayed(Duration(milliseconds: 300));
+    setState(() {
+      like_opacity = 0;
+    });
+    model.nextItem();
+    onflag = false;
   }
 
   onTapLikeButton(SwipeModel model) async {
@@ -245,18 +268,18 @@ class _SwipeViewState extends State<SwipeView> {
   Widget build(BuildContext context) {
     var configService = Provider.of<ConfigService>(context, listen: false);
     var swipeService = Provider.of<SwipeService>(context, listen: false);
-    // var dressService = Provider.of<DressRoomService>(context, listen: false);
+    var dressService = Provider.of<DressRoomService>(context, listen: false);
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
     // var lookService = Provider.of<LookBookService>(context, listen: false);
 
     return BaseWidget<SwipeModel>(
-        model: SwipeModel(swipeService, authService),
+        model: SwipeModel(swipeService, dressService, authService),
         builder: (context, model, child) {
           if (swipeService.init == false) {
-            // if (dressService.init == false) {
-            //   dressService.getDressRoom();
-            // }
+            if (dressService.init == false) {
+              dressService.getDressRoom();
+            }
             // if (lookService.init == false) {
             //   lookService.getLookBook();
             // }
@@ -296,7 +319,7 @@ class _SwipeViewState extends State<SwipeView> {
                   buttonRow(
                       model,
                       () => onTapDislikeButton(model),
-                      () => onTapPurchaseButton(model),
+                      () => onTapCollectButton(model),
                       () => onTapLikeButton(model),
                       buyButton),
                   UIHelper.verticalSpaceSmall,
@@ -308,7 +331,8 @@ class _SwipeViewState extends State<SwipeView> {
                   model,
                   rulerButton,
                   () => onTapDislikeButton(model),
-                  () => onTapLikeButton(model)),
+                  () => onTapLikeButton(model),
+                  () => onTapCollectButton(model)),
               IgnorePointer(
                 child: AnimatedOpacity(
                   duration: Duration(milliseconds: 300),

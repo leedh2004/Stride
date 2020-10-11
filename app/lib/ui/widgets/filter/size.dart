@@ -32,10 +32,16 @@ class _SizeFilterState extends State<SizeFilter> {
                   widget.model.setSize(value);
                   setState(() {});
                 }),
-            Text('사이즈에 맞는 옷만 보기')
+            Text(
+              '사이즈에 맞는 옷만 보기',
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            )
           ],
         ),
-        Text('사이즈는 마이페이지에서 변경 가능합니다.')
+        Text(
+          '사이즈는 마이페이지에서 변경 가능합니다.',
+          style: TextStyle(color: Colors.black45),
+        )
       ],
     );
   }

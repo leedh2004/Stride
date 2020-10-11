@@ -40,7 +40,7 @@ class LookBookService {
         print("!");
         Coordinate item = new Coordinate(coor_id, name, top, bottom);
         print("!!");
-        // items.add(item);
+        items[0] = [item, ...items[0]];
         print("!!!");
       }
     } catch (e) {
@@ -76,9 +76,12 @@ class LookBookService {
 
   Future rename(int index, String name) async {
     try {
-      // final response = await _api.client.put('${Api.endpoint}/coordination/',
-      //     data: jsonEncode({'coor_id': items[index].id, 'update_name': name}));
-      // items[index].name = name;
+      final response = await _api.client.put('${Api.endpoint}/coordination/',
+          data: jsonEncode({
+            'coor_id': items[current_folder][index].id,
+            'update_name': name
+          }));
+      items[current_folder][index].name = name;
     } catch (e) {
       _api.errorCreate(Error());
     }

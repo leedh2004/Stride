@@ -30,6 +30,7 @@ const whiteStyle = TextStyle(color: Colors.white);
 const whiteShadowStyle = TextStyle(
   color: Colors.white,
   fontSize: 25,
+  fontFamily: 'NotoSansKR',
   shadows: <Shadow>[
     Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
   ],

@@ -135,19 +135,20 @@ class _ConceptFilterState extends State<ConceptFilter> {
     List<String> keys = types.keys.toList();
     List<BoolWrapper> values = types.values.toList();
     return Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(
-              '컨셉',
-              style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black26),
-            ),
-          ),
+          // Padding(
+          //   padding: EdgeInsets.all(16),
+          //   child: Text(
+          //     '컨셉',
+          //     style: TextStyle(
+          //         fontSize: 18,
+          //         fontWeight: FontWeight.w600,
+          //         color: Colors.black26),
+          //   ),
+          // ),
           Row(
             children: [
               all.value

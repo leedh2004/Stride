@@ -16,36 +16,58 @@ class _CollectionViewState extends State<CollectionView> {
     return Container(
       child: Column(
         children: [
-          SizedBox(
-            height: 8,
-          ),
+          // SizedBox(
+          //   height: 8,
+          // ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    page = 0;
-                  });
-                },
-                child: Text('드레스룸',
-                    style: page == 0 ? currentStyle : notCurrentStyle),
-              ),
-              Container(
-                height: 20,
-                child: VerticalDivider(
-                  color: Colors.black26,
-                  thickness: 3,
+              Expanded(
+                flex: 4,
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        page = 0;
+                      });
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+                      child: Text('콜렉션',
+                          style: page == 0 ? currentStyle : notCurrentStyle),
+                    ),
+                  ),
                 ),
               ),
-              InkWell(
-                onTap: () {
-                  setState(() {
-                    page = 1;
-                  });
-                },
-                child: Text('룩북',
-                    style: page == 1 ? currentStyle : notCurrentStyle),
+              Expanded(
+                child: Center(
+                  child: Container(
+                    height: 20,
+                    child: VerticalDivider(
+                      color: Colors.black26,
+                      thickness: 3,
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        page = 1;
+                      });
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+                      child: Text('룩북',
+                          style: page == 1 ? currentStyle : notCurrentStyle),
+                    ),
+                  ),
+                ),
               )
             ],
           ),
@@ -56,7 +78,7 @@ class _CollectionViewState extends State<CollectionView> {
   }
 }
 
-const currentStyle = TextStyle(
-    color: backgroundColor, fontSize: 20, fontWeight: FontWeight.w700);
+const currentStyle =
+    TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.w700);
 const notCurrentStyle =
-    TextStyle(color: Colors.black54, fontSize: 18, fontWeight: FontWeight.w700);
+    TextStyle(color: Colors.black26, fontSize: 18, fontWeight: FontWeight.w700);

@@ -17,26 +17,32 @@ class _PriceFilterState extends State<PriceFilter> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Padding(
-          padding: EdgeInsets.all(16),
-          child: Text(
-            '가격대',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: Colors.black26),
-          ),
-        ),
-        Text(
-          '${_values.start.toInt()} ~ ${_values.end.toInt()}원',
-          style: TextStyle(fontWeight: FontWeight.w700),
-        ),
+        // Padding(
+        //   padding: EdgeInsets.all(16),
+        //   child: Text(
+        //     '가격대',
+        //     style: TextStyle(
+        //         fontSize: 18,
+        //         fontWeight: FontWeight.w600,
+        //         color: Colors.black26),
+        //   ),
+        // ),
+        _values.end.toInt() == 60000
+            ? Text(
+                '${_values.start.toInt()} ~ ${_values.end.toInt()}원 +',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              )
+            : Text(
+                '${_values.start.toInt()} ~ ${_values.end.toInt()}원',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+              ),
+
         Padding(
           padding: EdgeInsets.all(16),
           child: RangeSlider(
               min: 1,
-              max: 200000,
-              divisions: 200,
+              max: 60000,
+              divisions: 60,
               inactiveColor: Colors.black26,
               activeColor: Colors.black,
               values: _values,
