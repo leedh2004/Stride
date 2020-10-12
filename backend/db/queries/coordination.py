@@ -166,8 +166,8 @@ def delete_coordination_folder(folder_id):
 
 def get_coodination_with_folder():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id is NULL ORDER BY created_at DESC OFFSET 0 LIMIT 18"""
-        folder_query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id = %s ORDER BY created_at DESC OFFSET 0 LIMIT 18"""
+        query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id is NULL ORDER BY created_at DESC"""
+        folder_query = """SELECT * FROM coordination WHERE user_id = %s AND folder_id = %s ORDER BY created_at DESC"""
         product_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND product_id = %s"""
         get_folder_query = """SELECT folder_id, folder_name FROM coordinationfolder WHERE user_id = %s ORDER BY created_at DESC"""
         try:
