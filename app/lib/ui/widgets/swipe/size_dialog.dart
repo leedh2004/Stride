@@ -38,6 +38,13 @@ Map<String, String> top = {
   "소매길이": "arm_length"
 };
 
+Map<String, String> outer = {
+  "총장": "length",
+  "어깨": "shoulder",
+  "가슴": "bust",
+  "소매길이": "arm_length"
+};
+
 class SizeDialog extends StatefulWidget {
   RecentItem item;
   ProductSize product_size;
@@ -56,7 +63,9 @@ class SizeDialog extends StatefulWidget {
       mapper = pants;
     else if (item.type == 'skirt')
       mapper = skirt;
-    else if (item.type == 'dress') mapper = dress;
+    else if (item.type == 'dress')
+      mapper = dress;
+    else if (item.type == 'outer') mapper = outer;
     header = mapper.keys.toList();
     for (var h in header) print(h);
     print(keys);

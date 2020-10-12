@@ -33,6 +33,8 @@ class DetailInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     RecentItem item =
         Provider.of<SwipeService>(context, listen: false).items[(model.index)];
+    print("!!!Sx");
+    print(item.type);
 
     for (int i = 0; i < item.image_urls.length; i++) {
       images.add(Image.network(

@@ -9,6 +9,7 @@ import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
+import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -111,7 +112,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 ? rightfrontCard(context, widget.model)
                 : frontCard(context, widget.model),
         nopeTextWidget(),
-        // passTextWidget(),
         likeTextWidget(),
         _controller.status != AnimationStatus.forward
             ? Align(
@@ -312,47 +312,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         ));
   }
 
-  // Widget infoWidget(
-  //     SwipeModel model, Function onTapDislikeButton, Function onTapLikeButton) {
-  //   return Align(
-  //       alignment: frontCardAlign,
-  //       child: SizedBox.fromSize(
-  //         size: cardsSize[0],
-  //         child: Align(
-  //           alignment: Alignment.bottomRight,
-  //           child: Padding(
-  //             padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
-  //             child: IconButton(
-  //               key: widget.rulerButton,
-  //               icon: Container(
-  //                 width: 50,
-  //                 height: 50,
-  //                 decoration: BoxDecoration(
-  //                     color: Colors.red,
-  //                     borderRadius: BorderRadius.circular(25)),
-  //                 child: Center(
-  //                   child: FaIcon(FontAwesomeIcons.info,
-  //                       size: 15, color: Colors.transparent),
-  //                 ),
-  //               ),
-  //               onPressed: () async {
-  //                 final result = await Navigator.push(context,
-  //                     MaterialPageRoute<String>(
-  //                         builder: (BuildContext context) {
-  //                   return DetailInfo(model);
-  //                 }));
-  //                 if (await result == 'like') {
-  //                   onTapLikeButton();
-  //                 } else if (await result == 'dislike') {
-  //                   onTapDislikeButton();
-  //                 }
-  //               },
-  //             ),
-  //           ),
-  //         ),
-  //       ));
-  // }
-
   Widget likeTextWidget() {
     return Align(
         alignment: _controller.status == AnimationStatus.forward
@@ -412,6 +371,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget backCard(BuildContext context) {
+    if (Provider.of<SwipeService>(context).items.length <=
+        widget.model.index + 2) {
+      return Container();
+    }
+
     RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index) + 2];
 
@@ -428,6 +392,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget middleCard(BuildContext context) {
+    if (Provider.of<SwipeService>(context).items.length <=
+        widget.model.index + 1) {
+      return Container();
+    }
+
     RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index) + 1];
 
@@ -445,6 +414,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget frontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
+
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return NoSwipeView();
+    }
+
     RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index)];
 

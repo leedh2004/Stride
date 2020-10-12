@@ -94,7 +94,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                               });
                             },
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+                              padding: EdgeInsets.all(12),
                               child: Text('상의',
                                   style: page == 0
                                       ? currentStyle
@@ -125,7 +125,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                               });
                             },
                             child: Padding(
-                              padding: EdgeInsets.fromLTRB(12, 8, 12, 0),
+                              padding: EdgeInsets.all(12),
                               child: Text('하의',
                                   style: page == 1
                                       ? currentStyle

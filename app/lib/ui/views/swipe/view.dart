@@ -280,9 +280,6 @@ class _SwipeViewState extends State<SwipeView> {
             if (dressService.init == false) {
               dressService.getDressRoom();
             }
-            // if (lookService.init == false) {
-            //   lookService.getLookBook();
-            // }
             model.initCards();
             return LoadingWidget();
           } else if (model.busy)

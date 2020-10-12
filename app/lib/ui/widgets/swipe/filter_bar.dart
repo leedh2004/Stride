@@ -34,7 +34,7 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                               .userController
                               .value;
                           return FractionallySizedBox(
-                            heightFactor: 0.55,
+                            heightFactor: 0.65,
                             child: Stack(children: [
                               DefaultTabController(
                                 initialIndex: index,

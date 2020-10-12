@@ -175,16 +175,21 @@ class SwipeService {
       var response =
           await _api.client.get('${Api.endpoint}/v2/home?$query&exception=');
       print("END INIT CARDS");
-      print(response.data);
-      var data = json.decode(response.data) as List<dynamic>;
-      for (var item in data) {
-        temp.add(RecentItem.fromJson(item));
+      if (response.data.isNotEmpty) {
+        var data = json.decode(response.data) as List<dynamic>;
+        for (var item in data) {
+          temp.add(RecentItem.fromJson(item));
+        }
+        for (var item in temp) {
+          print(item.product_name);
+        }
+        items = temp;
+        length = temp.length;
+      } else {
+        items = [];
+        index = 0;
+        length = 0;
       }
-      for (var item in temp) {
-        print(item.product_name);
-      }
-      items = temp;
-      length = temp.length;
       init = true;
     } catch (e) {
       print(e);
@@ -199,15 +204,25 @@ class SwipeService {
     print("getCards()!!!!!!!!!!!!");
     var temp = List<RecentItem>();
     try {
-      String query = filter.getFilterQuery();
-      var response =
-          await _api.client.get('${Api.endpoint}/v2/home?$query&exception=');
-      var data = json.decode(response.data) as List<dynamic>;
-      for (var item in data) {
-        temp.add(RecentItem.fromJson(item));
+      String exception = "";
+      for (var item in items) {
+        exception += '${item.product_id},';
       }
-      items = [...items, ...temp];
-      length = items.length;
+      if (exception.length > 0)
+        exception = exception.substring(0, exception.length - 1);
+      print(exception);
+      String query = filter.getFilterQuery();
+      var response = await _api.client
+          .get('${Api.endpoint}/v2/home?$query&exception=$exception');
+
+      if (response.data.isNotEmpty) {
+        var data = json.decode(response.data) as List<dynamic>;
+        for (var item in data) {
+          temp.add(RecentItem.fromJson(item));
+        }
+        items = [...items, ...temp];
+        length = items.length;
+      }
       return temp;
     } catch (e) {
       _api.errorCreate(Error());
