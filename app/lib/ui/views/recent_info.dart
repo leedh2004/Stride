@@ -47,6 +47,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
   @override
   Widget build(BuildContext context) {
     likes = widget.item.likes;
+    print(likes);
     if (likes == null) haveResult = false;
     List<dynamic> images = new List<dynamic>();
     for (int i = 0; i < widget.item.image_urls.length; i++) {
@@ -190,16 +191,17 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  haveResult && likes
+                                  !haveResult || likes
                                       ? RawMaterialButton(
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
-                                            widget.model.likeRequest(
+                                            widget.model.dislikeRequest(
                                                 widget.item.product_id);
                                             setState(() {
-                                              likes = false;
                                               widget.item.likes = false;
+                                              haveResult = true;
+                                              likes = false;
                                             });
                                           },
                                           elevation: 2.0,
@@ -268,11 +270,12 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
-                                            widget.model.dislikeRequest(
+                                            widget.model.likeRequest(
                                                 widget.item.product_id);
                                             setState(() {
-                                              likes = true;
                                               widget.item.likes = true;
+                                              haveResult = true;
+                                              likes = true;
                                             });
                                           },
                                           elevation: 2.0,

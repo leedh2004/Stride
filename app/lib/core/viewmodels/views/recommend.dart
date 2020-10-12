@@ -23,6 +23,7 @@ class RecommendationModel extends BaseModel {
     setBusy(true);
     await collectionService.initalize();
     init = true;
+    // notifyListeners();
     setBusy(false);
   }
 

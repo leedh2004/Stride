@@ -2,6 +2,7 @@ class StrideUser {
   String id;
   int like;
   int dislike;
+  String name;
   //int birth_year;
   //bool hasSize;
   bool profile_flag;
@@ -18,6 +19,7 @@ class StrideUser {
       this.bust,
       this.waist,
       this.hip,
+      this.name,
       this.thigh,
       this.like,
       this.dislike});

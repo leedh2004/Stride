@@ -313,6 +313,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget likeTextWidget() {
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return Container();
+    }
+
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -342,6 +346,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   Widget nopeTextWidget() {
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return Container();
+    }
+
     return Align(
         alignment: _controller.status == AnimationStatus.forward
             ? CardsAnimation.frontCardDisappearAlignmentAnim(
@@ -438,6 +446,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget leftfrontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
+
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return NoSwipeView();
+    }
+
     RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index)];
     return TweenAnimationBuilder<double>(
@@ -471,6 +484,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget rightfrontCard(BuildContext context, SwipeModel model) {
     //int idx = Provider.of<SwipeService>(context).curIdx;
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return NoSwipeView();
+    }
+
     RecentItem item =
         Provider.of<SwipeService>(context).items[(widget.model.index)];
     return TweenAnimationBuilder<double>(

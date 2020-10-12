@@ -6,7 +6,7 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class SwipeModel extends BaseModel {
-  // DressRoomService dressRoomService;
+  DressRoomService dressRoomService;
   AuthenticationService _authenticationService;
   SwipeService _swipeService;
   DressRoomService _dressRoomService;

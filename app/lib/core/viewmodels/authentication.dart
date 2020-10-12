@@ -11,15 +11,19 @@ class AuthenticationModel extends BaseModel {
     notifyListeners();
   }
 
-  Future login(String accessToken, String channel) async {
+  Future login(String accessToken, String channel, String name) async {
     setBusy(true);
-    await authService.login(accessToken, channel);
+    await authService.login(accessToken, channel, name);
     setBusy(false);
   }
 
   Future<String> loginWithApple({List<Scope> scopes = const []}) async {
-    String email = await authService.loginWithApple(scopes: scopes);
-    print(email);
-    return login(email, "apple");
+    List<String> ret = await authService.loginWithApple(scopes: scopes);
+    print(ret[1]);
+    if (ret[1] == 'nullnull') {
+      ret[1] = null;
+      print("!!@@");
+    }
+    return login(ret[0], "apple", ret[1]);
   }
 }

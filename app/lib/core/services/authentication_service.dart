@@ -73,13 +73,16 @@ class AuthenticationService {
     userController.add(testuser);
   }
 
-  Future<String> loginWithApple({List<Scope> scopes = const []}) async {
+  Future<List<String>> loginWithApple({List<Scope> scopes = const []}) async {
     final result = await AppleSignIn.performRequests(
         [AppleIdRequest(requestedScopes: scopes)]);
     // 2. check the result
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
+        print('!!!!!!!!NAME@@@@@@@@@');
+        // print(
+        // '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}');
         final oAuthProvider = OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
@@ -87,9 +90,13 @@ class AuthenticationService {
               String.fromCharCodes(appleIdCredential.authorizationCode),
         );
         final authResult = await _firebaseAuth.signInWithCredential(credential);
+        print(authResult);
         String email = authResult.user.email;
         await _firebaseAuth.signOut();
-        return email;
+        return [
+          email,
+          '${appleIdCredential.fullName.familyName}${appleIdCredential.fullName.givenName}'
+        ];
       // return login(email, "apple");
 
       case AuthorizationStatus.error:
@@ -109,18 +116,23 @@ class AuthenticationService {
     return null;
   }
 
-  Future<bool> login(String accessToken, String channel) async {
+  Future<bool> login(String accessToken, String channel, String name) async {
     print("!!");
     try {
       final response = await api.client.post('${Api.endpoint}/auth/token',
-          data: jsonEncode(
-              {'access_token': accessToken, 'channel': '${channel}'}));
+          data: jsonEncode({
+            'access_token': accessToken,
+            'channel': '${channel}',
+            'name': name
+          }));
       var parsed = response.data as Map<String, dynamic>;
       print(parsed);
       var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
       String id = parsed['user_id'];
       String token = parsed['token'];
       // 토큰이 없을 때만 일로 오니까 !
+      print(parsed['name']);
+      print("???!!!!!!!!!!ZXCZC");
       var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
       await storage.write(key: 'jwt_token', value: token);
       StrideUser user = StrideUser(
@@ -128,6 +140,7 @@ class AuthenticationService {
           like: likes['like'],
           dislike: likes['dislike'],
           profile_flag: parsed['profile_flag'],
+          name: parsed['name'],
           shoulder: size['shoulder'],
           bust: size['bust'],
           waist: size['waist'],
@@ -182,15 +195,16 @@ class AuthenticationService {
     );
     print('checkToken()');
     if (response.statusCode == 200) {
+      await storage.delete(key: 'jwt_token');
       print(response.data);
       var parsed = response.data as Map<String, dynamic>;
       var id = parsed['user_id'];
       var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
       var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
-
       StrideUser user = StrideUser(
           id: id,
           profile_flag: parsed['profile_flag'],
+          name: jsonDecode(parsed['name']),
           shoulder: size['shoulder'],
           bust: size['bust'],
           like: likes['like'],
@@ -199,7 +213,6 @@ class AuthenticationService {
           hip: size['hip'],
           thigh: size['thigh']);
       //뉴토큰으로 토큰 교체해줘야함.
-      await storage.delete(key: 'jwt_token');
       await storage.write(key: 'jwt_token', value: response.data['token']);
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(

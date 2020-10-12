@@ -35,7 +35,7 @@ class LoginView extends StatelessWidget {
     print(authCode);
     AccessTokenResponse token =
         await AuthApi.instance.issueAccessToken(authCode);
-    model.login(token.accessToken, "kakao");
+    model.login(token.accessToken, "kakao", null);
   }
 
   @override

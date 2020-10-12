@@ -39,8 +39,11 @@ class RecentItem {
     image_urls = json['image_url'];
     origin_color = json['origin_color'];
     clustered_color = json['clustered_color'];
-    print(origin_color);
     likes = json['likes'];
+    if (likes == null) {
+      print("!!!!!!LIKES!!!");
+      print(product_name);
+    }
     likes_time = json['likes_time'];
     image_urls = [thumbnail_url, ...image_urls];
     length = image_urls.length;

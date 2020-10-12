@@ -14,13 +14,15 @@ class RecommendView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseWidget<RecommendationModel>(
-        model: RecommendationModel(Provider.of(context), Provider.of(context)),
+        model: RecommendationModel(Provider.of(context, listen: false),
+            Provider.of(context, listen: false)),
         builder: (context, model, child) {
           if (model.busy) {
             return LoadingWidget();
           }
           if (model.init == false) {
             model.initialize();
+            return LoadingWidget();
           }
           return BaseWidget<RecentItemModel>(
               model: RecentItemModel(Provider.of(context, listen: false)),
@@ -36,7 +38,7 @@ class RecommendView extends StatelessWidget {
                           children: [
                             UIHelper.verticalSpaceSmall,
                             Text(
-                              '이도현 님이 평가한 아이템',
+                              '${model.authService.master.name}님이 평가한 아이템',
                               style: HeaderStyle,
                             ),
                             UIHelper.verticalSpaceMedium,
@@ -60,14 +62,14 @@ class RecommendView extends StatelessWidget {
                                   ),
                                 ),
                                 UIHelper.horizontalSpaceSmall,
-                                Container(
-                                  height: 25,
-                                  child: VerticalDivider(
-                                    color: Colors.black26,
-                                    width: 1,
-                                    thickness: 3,
-                                  ),
-                                ),
+                                // Container(
+                                //   height: 25,
+                                //   child: VerticalDivider(
+                                //     color: Colors.black26,
+                                //     width: 1,
+                                //     thickness: 3,
+                                //   ),
+                                // ),
                                 UIHelper.horizontalSpaceSmall,
                                 Container(
                                   child: Column(
@@ -75,7 +77,7 @@ class RecommendView extends StatelessWidget {
                                       FaIcon(
                                         FontAwesomeIcons.times,
                                         color: blueColor,
-                                        size: 50,
+                                        size: 55,
                                       ),
                                       UIHelper.verticalSpaceSmall,
                                       Text(

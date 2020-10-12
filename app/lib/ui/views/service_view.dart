@@ -22,6 +22,9 @@ class _ServiceViewState extends State<ServiceView>
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 4);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -35,12 +38,13 @@ class _ServiceViewState extends State<ServiceView>
     return Scaffold(
         key: ServiceView.scaffoldKey,
         body: TabBarView(
+            key: Key('test'),
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
               SwipeView(),
-              RecommendView(),
               CollectionView(),
+              RecommendView(),
               //LookBookView(),
               MyPageView(),
             ]),

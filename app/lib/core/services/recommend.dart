@@ -19,6 +19,8 @@ class RecommendationService {
   }
 
   Future initalize() async {
+    print(
+        "INIT!!!!!!!!!!!!!!!!!!!@##############@!#!@#################!@#!@#!@#!@#");
     try {
       final response =
           await _api.client.get('${Api.endpoint}/v2/recommendation');
