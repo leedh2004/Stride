@@ -18,8 +18,8 @@ def get_recommended_multi_mock_list():
         get_user_concept = """SELECT ARRAY(SELECT unnest(shop_concept) FROM users WHERE user_id = %s EXCEPT SELECT unnest(ARRAY['basic']))"""
         select_product_by_concept = """
         SELECT * FROM products p JOIN shop s ON p.shop_id = s.shop_id
-        WHERE s.shop_id IN (SELECT shop_id FROM shop s WHERE %s = ANY(s.shop_concept))
-        ORDER BY random() LIMIT 20;
+        WHERE s.shop_id IN (SELECT shop_id FROM shop s WHERE 'basic' = ANY(s.shop_concept)) AND p.product_id NOT IN (SELECT product_id FROM evaluation WHERE likes is FALSE AND user_id = %s)
+        ORDER BY random() LIMIT 20
         """
         select_new_arrived = """SELECT * FROM products WHERE product_id IN(SELECT product_id FROM products ORDER BY created_at desc limit 1000) ORDER BY random() LIMIT 20"""
         cursor.execute(get_user_concept, (g.user_id, ))
@@ -47,9 +47,9 @@ def get_recommended_multi_mock_list():
             elif type == 'new_arrive':
                 cursor.execute(select_new_arrived)
             elif type == 'concept1':
-                cursor.execute(select_product_by_concept, (concept_1, ))
+                cursor.execute(select_product_by_concept, (concept_1, g.user_id))
             elif type == 'concept2':
-                cursor.execute(select_product_by_concept, (concept_2, ))
+                cursor.execute(select_product_by_concept, (concept_2, g.user_id))
             result = cursor.fetchall()
             # ES MOCK product_id
             colnames = DBMapping.mapping_column(cursor)
