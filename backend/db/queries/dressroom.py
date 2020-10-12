@@ -22,9 +22,9 @@ def delete_dressroom(product_id):
 
 def get_dressroom():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET 0 LIMIT 20"""
+        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET 0 LIMIT 18"""
         get_folder_query = """SELECT folder_id, folder_name FROM dressfolder WHERE user_id = %s ORDER BY created_at ASC"""
-        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET 0 LIMIT 20"""
+        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET 0 LIMIT 18"""
         try:
             product = {}
             product['info'] = []
@@ -54,9 +54,9 @@ def get_dressroom():
 
 def get_page_dressroom(folder_id, order):
     with db_connect() as (service_conn, cursor):
-        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET %s LIMIT 20"""
-        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET %s LIMIT 20"""
-        page = int(order) * 20
+        query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET %s LIMIT 18"""
+        get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET %s LIMIT 18"""
+        page = int(order) * 18
         product = []
         try:
             if folder_id == 0:
