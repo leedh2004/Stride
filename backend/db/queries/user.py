@@ -188,8 +188,8 @@ def select_user_recommenation_flag():
 def get_history_list(page):
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM evaluation e JOIN products p ON e.product_id = p.product_id JOIN shop s ON p.shop_id = s.shop_id WHERE user_id = %s 
-        ORDER BY e.created_at DESC OFFSET %s LIMIT 20"""
-        page_num = (int(page) - 1) * 20
+        ORDER BY e.created_at DESC OFFSET %s LIMIT 18"""
+        page_num = (int(page) - 1) * 18
         try:
             cursor.execute(query, (g.user_id, page_num))
             result = cursor.fetchall()
