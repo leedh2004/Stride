@@ -65,20 +65,25 @@ def error_test():
 
 @app.after_request
 def log(response):
-    auth = authentication()
-    # health check
-    if request.path == '/admin/check':
+    try:
+        auth = authentication()
+        # health check
+        if request.path == '/admin/check':
+            return response
+        if auth is False:
+            user = 'unidentified'
+        else:
+            user = g.user_id
+        if request.method in ['GET', 'DELETE']:
+            log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(response.status), str(request),  str(response.data))
+        else:
+            log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(response.status), str(request), str(response.data), str(request.data))
+        logger.info(log_msg)
         return response
-    if auth is False:
-        user = 'unidentified'
-    else:
-        user = g.user_id
-    if request.method in ['GET', 'DELETE']:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(response.status), str(request),  str(response.data))
-    else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(response.status), str(request), str(response.data), str(request.data))
-    logger.info(log_msg)
-    return response
+    except Exception as Ex:
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(Ex), str(request), str(response.data))
+        logger.info(log_msg)
+        return response
 
 
 if __name__ == '__main__':
