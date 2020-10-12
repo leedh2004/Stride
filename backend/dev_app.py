@@ -74,9 +74,9 @@ def log(response):
     else:
         user = g.user_id
     if request.method in ['GET', 'DELETE']:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data))
+        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(response.status), str(request),  str(response.data))
     else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data), str(request.data))
+        log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(response.status), str(request), str(response.data), str(request.data))
     logger.info(log_msg)
     return response
 
