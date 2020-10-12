@@ -52,11 +52,11 @@ def get_dressroom():
             pass
 
 
-def get_page_dressroom(folder_id, order):
+def get_page_dressroom(folder_id, order, idx):
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id = %s ORDER BY d.created_at DESC OFFSET %s LIMIT 18"""
         get_default_query = """SELECT * FROM products p, shop s, dressroom d WHERE p.shop_id = s.shop_id AND p.product_id = d.product_id AND user_id = %s AND d.folder_id is NULL ORDER BY d.created_at DESC OFFSET %s LIMIT 18"""
-        page = int(order) * 18
+        page = int(order) * 18 + idx
         product = []
         try:
             if folder_id == 0:
