@@ -2,7 +2,7 @@
 from flask import Flask, g, request
 from gevent.pywsgi import WSGIServer
 import logging
-# from logbeam import CloudWatchLogsHandler
+import logging.config
 from datetime import datetime
 import sys
 sys.path.append('../')
@@ -26,14 +26,6 @@ from flask_cors import CORS
 
 dt = datetime.now()
 
-logger = logging.getLogger("name")
-logger.setLevel(logging.INFO)
-stream_handler = logging.StreamHandler()
-file_handler = logging.FileHandler(filename="/var/log/messages2")
-stream_handler.setLevel(logging.INFO)
-file_handler.setLevel(logging.DEBUG)
-logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -54,6 +46,13 @@ app.register_blueprint(v2_home, url_prefix='/v2/home')
 app.register_blueprint(v2_recommendation, url_prefix='/v2/recommendation')
 app.register_blueprint(v2_coordination, url_prefix='/v2/coordination')
 app.register_blueprint(v2_dressroom, url_prefix='/v2/dressroom')
+
+
+with open("logging.json", "rt") as file:
+    config = json.load(file)
+logging.config.dictConfig(config)
+logger = logging.getLogger()
+
 
 @app.route('/admin/check')
 def hello_world():
@@ -78,7 +77,6 @@ def log(response):
         log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data))
     else:
         log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(request), str(response.status), str(response.data), str(request.data))
-    # print(log_msg)
     logger.info(log_msg)
     return response
 

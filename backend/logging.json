@@ -1,0 +1,25 @@
+{
+    "version": 1,
+    "formatters": {
+          "basic": {
+              "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+          }
+      },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "level": "INFO",
+            "stream": "ext://sys.stdout"
+        },
+
+        "file_handler": {
+            "class": "logging.FileHandler",
+            "level": "INFO",
+            "filename": "messages"
+        }
+    },
+    "root": {
+        "level": "INFO",
+        "handlers": ["console", "file_handler"]
+    }
+}
