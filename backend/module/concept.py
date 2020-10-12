@@ -29,3 +29,21 @@ class Concept:
             'sexy': '섹시'
         }
         return concepts.get(concept.lower())
+
+    @staticmethod
+    def concept_mapping_loop(concept):
+        result = []
+        concepts = {
+            'daily': '데일리',
+            'vintage': '빈티지',
+            'street': '스트릿',
+            'romantic': '로맨틱',
+            'simple': '심플',
+            'chic': '시크',
+            'unique': '유니크',
+            'basic': '베이직',
+            'sexy': '섹시'
+        }
+        for c in concept:
+            result.append(concepts.get(c))
+        return result

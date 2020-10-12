@@ -3,7 +3,7 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.module.size import SizeParser
-
+from backend.module.concept import Concept
 
 class ProductModel:
     def __init__(self):
@@ -38,6 +38,7 @@ class ProductModel:
         self.image_url = item[column['image_url']]
         self.type = item[column['type']]
         self.shop_name = item[column['shop_kor']]
+        self.shop_concept = Concept.concept_mapping_loop(item[column['shop_concept']])
         self.origin_color = item[column['origin_color']]
         self.clustered_color = item[column['clustered_color']]
         SizeParser.list_size_parse(self.length, item[column['length']])

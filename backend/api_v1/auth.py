@@ -49,6 +49,11 @@ def login():
     elif channel == 'apple':
         user_id = access_token
         user_id = str(user_id).split('@')[0] + '@apple.com'
+        name = body['name']
+        if name is not None:
+            name = json.dumps(name)
+            upsert_user_name(DBEncryption.encode_text(name), user_id)
+        name = select_user_name(user_id)
         insert_user(user_id)
         update_login_timestamp(user_id)
         g.user_id = user_id
@@ -56,5 +61,6 @@ def login():
         size = select_user_size()
         token = encode_jwt_token(user_id)
         likes = get_like_dislike_cnt()
-        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size, "likes": likes}), 200
+        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
+                        "size": size, "likes": likes, "name": name}), 200
 
