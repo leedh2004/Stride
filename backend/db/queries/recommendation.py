@@ -47,9 +47,9 @@ def get_recommended_multi_mock_list():
             elif type == 'new_arrive':
                 cursor.execute(select_new_arrived)
             elif type == 'concept1':
-                cursor.execute(select_product_by_concept, (concept_1, ))
+                cursor.execute(select_product_by_concept, (concept_1, g.user_id))
             elif type == 'concept2':
-                cursor.execute(select_product_by_concept, (concept_2, ))
+                cursor.execute(select_product_by_concept, (concept_2, g.user_id))
             result = cursor.fetchall()
             # ES MOCK product_id
             colnames = DBMapping.mapping_column(cursor)
