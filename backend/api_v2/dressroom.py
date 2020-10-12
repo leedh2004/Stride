@@ -28,7 +28,8 @@ def get_dress_by_folder():
         args = request.args
         folder_id = int(args.get('folder_id'))
         order = int(args.get('order'))
-        result = get_page_dressroom(folder_id, order)
+        idx = int(args.get('idx'))
+        result = get_page_dressroom(folder_id, order, idx)
         return result, 200
     except Exception as Ex:
         print(Ex)
