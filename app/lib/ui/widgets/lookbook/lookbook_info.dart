@@ -209,7 +209,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                                   height: 50,
                                   child: RaisedButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.maybePop(context);
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -293,7 +293,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                                   RawMaterialButton(
                                     constraints: BoxConstraints(minWidth: 60),
                                     onPressed: () {
-                                      Navigator.pop(context, "collect");
+                                      Navigator.maybePop(context, "collect");
                                     },
                                     elevation: 2.0,
                                     fillColor: Colors.white,

@@ -8,6 +8,7 @@ import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -75,7 +76,7 @@ class DressRoomItemWidget extends StatelessWidget {
                   FontAwesomeIcons.search,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (opacity == 1) {
                     Stride.analytics.logEvent(
                         name: 'DRESSROOM_ITEM_INFO_CLICKED',
@@ -89,6 +90,17 @@ class DressRoomItemWidget extends StatelessWidget {
                             builder: (BuildContext context) {
                       return RecentDetailInfo(item, model);
                     }));
+
+                    if (await result == 'collect') {
+                      //                           RecentItem item =
+                      //     Provider.of<SwipeService>(context, listen: false).items[model.index];
+                      // model.addItem(item);
+                      ServiceView.scaffoldKey.currentState
+                          .showSnackBar(SnackBar(
+                        duration: Duration(milliseconds: 1500),
+                        content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+                      ));
+                    }
                     // Navigator.of(context).push(PageRouteBuilder(
                     //     opaque: false,
                     //     pageBuilder: (___, _, __) => ProductDialog(item)));

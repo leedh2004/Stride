@@ -277,7 +277,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                 UIHelper.horizontalSpaceMedium,
                                 Text('룩북에 저장되었습니다.'),
                               ])));
-                      Navigator.pop(context);
+                      Navigator.maybePop(context);
                     },
                     decoration: InputDecoration.collapsed(hintText: "새로운 이름"),
                   ),
@@ -306,7 +306,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                           UIHelper.horizontalSpaceMedium,
                           Text('룩북에 저장되었습니다.'),
                         ])));
-                    Navigator.pop(context);
+                    Navigator.maybePop(context);
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
                   color: backgroundColor,

@@ -34,7 +34,25 @@ class RecentItemService {
     }
   }
 
+  Future revertAndLikeRequest(int id) async {
+    try {
+      final response = await _api.client
+          .put('${Api.endpoint}/user/history', data: {'product_id': id});
+      if (response.statusCode == 200) {
+        print(response);
+      }
+    } catch (e) {
+      _api.errorCreate(Error());
+    }
+  }
+
   Future likeRequest(int id) async {
+    final response = await _api.client.post('${Api.endpoint}/home/like',
+        data: jsonEncode({'product_id': id}));
+    print(response.statusCode);
+  }
+
+  Future revertAndDislikeRequest(int id) async {
     try {
       final response = await _api.client
           .put('${Api.endpoint}/user/history', data: {'product_id': id});
@@ -47,14 +65,7 @@ class RecentItemService {
   }
 
   Future dislikeRequest(int id) async {
-    try {
-      final response = await _api.client
-          .put('${Api.endpoint}/user/history', data: {'product_id': id});
-      if (response.statusCode == 200) {
-        print(response);
-      }
-    } catch (e) {
-      _api.errorCreate(Error());
-    }
+    final response = await _api.client.post('${Api.endpoint}/home/dislike',
+        data: jsonEncode({'product_id': id}));
   }
 }

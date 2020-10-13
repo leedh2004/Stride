@@ -1,9 +1,11 @@
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/recent_item.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recent_info.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +29,9 @@ class _RecentItemViewState extends State<RecentItemView> {
     if (_scrollController.offset + 10 >=
             _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      items += await RecentItemModel(recentService).addItem(pageCount);
+      items += await RecentItemModel(
+              recentService, Provider.of(context, listen: false))
+          .addItem(pageCount);
       recentService.addItem(pageCount);
       setState(() {
         print("comes to bottom $isLoading");
@@ -64,7 +68,8 @@ class _RecentItemViewState extends State<RecentItemView> {
         body: Container(
           padding: EdgeInsets.only(top: 5),
           child: BaseWidget<RecentItemModel>(
-              model: RecentItemModel(Provider.of(context, listen: false)),
+              model: RecentItemModel(Provider.of(context, listen: false),
+                  Provider.of(context, listen: false)),
               builder: (context, model, child) {
                 return GridView.count(
                     controller: _scrollController,
@@ -76,12 +81,23 @@ class _RecentItemViewState extends State<RecentItemView> {
                     children: items.map((item) {
                       print(item.likes_time);
                       return InkWell(
-                          onTap: () {
+                          onTap: () async {
                             final result = Navigator.push(context,
                                 MaterialPageRoute<String>(
                                     builder: (BuildContext context) {
                               return RecentDetailInfo(item, model);
                             }));
+
+                            if (await result == 'collect') {
+                              //                           RecentItem item =
+                              //     Provider.of<SwipeService>(context, listen: false).items[model.index];
+                              // model.addItem(item);
+                              ServiceView.scaffoldKey.currentState
+                                  .showSnackBar(SnackBar(
+                                duration: Duration(milliseconds: 1500),
+                                content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+                              ));
+                            }
                           },
                           child: Container(
                             child: Hero(

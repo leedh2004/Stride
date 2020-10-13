@@ -355,7 +355,7 @@ class _SizeDialogState extends State<SizeDialog> {
 //                 enableFeedback: false,
 //                 canRequestFocus: false,
 //                 onTap: () {
-//                   Navigator.pop(context);
+//                   Navigator.maybePop(context);
 //                 },
 //                 child: Container(
 //                   color: Color.fromRGBO(0, 0, 0, 0.4),
@@ -369,7 +369,7 @@ class _SizeDialogState extends State<SizeDialog> {
 //                       alignment: Alignment.centerRight,
 //                       child: FlatButton(
 //                         onPressed: () {
-//                           Navigator.pop(context);
+//                           Navigator.maybePop(context);
 //                         },
 //                         //elevation: 2.0,
 //                         color: Color.fromRGBO(240, 240, 240, 1),
@@ -453,7 +453,7 @@ class _SizeDialogState extends State<SizeDialog> {
 //                 enableFeedback: false,
 //                 canRequestFocus: false,
 //                 onTap: () {
-//                   Navigator.pop(context);
+//                   Navigator.maybePop(context);
 //                 },
 //                 child: Container(
 //                   color: Color.fromRGBO(0, 0, 0, 0.4),

@@ -145,7 +145,7 @@ class DetailInfo extends StatelessWidget {
                                         height: 50,
                                         child: RaisedButton(
                                             onPressed: () {
-                                              Navigator.pop(context);
+                                              Navigator.maybePop(context);
                                             },
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
@@ -190,7 +190,8 @@ class DetailInfo extends StatelessWidget {
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
-                                            Navigator.pop(context, "dislike");
+                                            Navigator.maybePop(
+                                                context, "dislike");
                                           },
                                           elevation: 2.0,
                                           fillColor: Colors.white,
@@ -208,7 +209,8 @@ class DetailInfo extends StatelessWidget {
                                         ),
                                         RawMaterialButton(
                                           onPressed: () {
-                                            Navigator.pop(context, "collect");
+                                            Navigator.maybePop(
+                                                context, "collect");
                                           },
                                           elevation: 2.0,
                                           fillColor: Colors.white,
@@ -229,7 +231,7 @@ class DetailInfo extends StatelessWidget {
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
-                                            Navigator.pop(context, "like");
+                                            Navigator.maybePop(context, "like");
                                           },
                                           elevation: 2.0,
                                           fillColor: Colors.white,

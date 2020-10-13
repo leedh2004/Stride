@@ -25,7 +25,8 @@ class RecommendView extends StatelessWidget {
             return LoadingWidget();
           }
           return BaseWidget<RecentItemModel>(
-              model: RecentItemModel(Provider.of(context, listen: false)),
+              model: RecentItemModel(Provider.of(context, listen: false),
+                  Provider.of(context, listen: false)),
               builder: (context, recentmodel, child) {
                 return FadeIn(
                   delay: 0.5,

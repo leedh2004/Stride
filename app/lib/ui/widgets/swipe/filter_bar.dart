@@ -146,7 +146,7 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                                       color: Colors.black,
                                       onPressed: () {
                                         model.setFilter();
-                                        Navigator.pop(context);
+                                        Navigator.maybePop(context);
                                       },
                                       child: Text(
                                         '적용하기',

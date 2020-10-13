@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
+import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -154,7 +155,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                   height: 50,
                                   child: RaisedButton(
                                       onPressed: () {
-                                        Navigator.pop(context);
+                                        Navigator.maybePop(context);
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -191,7 +192,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
-                                  !haveResult || likes
+                                  !haveResult
                                       ? RawMaterialButton(
                                           constraints:
                                               BoxConstraints(minWidth: 60),
@@ -218,28 +219,59 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                           padding: EdgeInsets.all(10.0),
                                           shape: CircleBorder(),
                                         )
-                                      : RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {},
-                                          elevation: 2.0,
-                                          fillColor:
-                                              Color.fromRGBO(72, 116, 213, 1),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Colors.white,
+                                      : likes
+                                          ? RawMaterialButton(
+                                              constraints:
+                                                  BoxConstraints(minWidth: 60),
+                                              onPressed: () {
+                                                widget.model
+                                                    .revertAndDislikeRequest(
+                                                        widget.item.product_id);
+                                                setState(() {
+                                                  widget.item.likes = false;
+                                                  likes = false;
+                                                });
+                                              },
+                                              elevation: 2.0,
+                                              fillColor: Colors.white,
+                                              child: Padding(
+                                                padding: EdgeInsets.all(0),
+                                                child: SvgPicture.asset(
+                                                  'images/times.svg',
+                                                  width: 25.0,
+                                                  color: Color.fromRGBO(
+                                                      72, 116, 213, 1),
+                                                ),
+                                              ),
+                                              padding: EdgeInsets.all(10.0),
+                                              shape: CircleBorder(),
+                                            )
+                                          : RawMaterialButton(
+                                              constraints:
+                                                  BoxConstraints(minWidth: 60),
+                                              onPressed: () {},
+                                              elevation: 2.0,
+                                              fillColor: Color.fromRGBO(
+                                                  72, 116, 213, 1),
+                                              child: Padding(
+                                                padding: EdgeInsets.all(0),
+                                                child: SvgPicture.asset(
+                                                    'images/times.svg',
+                                                    width: 25.0,
+                                                    color: Colors.white),
+                                              ),
+                                              padding: EdgeInsets.all(10.0),
+                                              shape: CircleBorder(),
                                             ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
                                   RawMaterialButton(
                                     constraints: BoxConstraints(minWidth: 60),
                                     onPressed: () {
-                                      Navigator.pop(context, "collect");
+                                      widget.model
+                                          .likeRequest(widget.item.product_id);
+                                      Provider.of<DressRoomService>(context,
+                                              listen: false)
+                                          .addItem(widget.item);
+                                      Navigator.maybePop(context, "collect");
                                     },
                                     elevation: 2.0,
                                     fillColor: Colors.white,
@@ -251,22 +283,8 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     padding: EdgeInsets.all(10.0),
                                     shape: CircleBorder(),
                                   ),
-                                  haveResult && likes
+                                  !haveResult
                                       ? RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {},
-                                          elevation: 2.0,
-                                          fillColor: pinkColor,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: Colors.white,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        )
-                                      : RawMaterialButton(
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
@@ -287,7 +305,44 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                           ),
                                           padding: EdgeInsets.all(10.0),
                                           shape: CircleBorder(),
-                                        ),
+                                        )
+                                      : !likes
+                                          ? RawMaterialButton(
+                                              constraints:
+                                                  BoxConstraints(minWidth: 60),
+                                              onPressed: () {
+                                                widget.model
+                                                    .revertAndLikeRequest(
+                                                        widget.item.product_id);
+                                                setState(() {
+                                                  widget.item.likes = true;
+                                                  likes = true;
+                                                });
+                                              },
+                                              elevation: 2.0,
+                                              fillColor: Colors.white,
+                                              child: SvgPicture.asset(
+                                                'images/like.svg',
+                                                width: 25.0,
+                                                color: pinkColor,
+                                              ),
+                                              padding: EdgeInsets.all(10.0),
+                                              shape: CircleBorder(),
+                                            )
+                                          : RawMaterialButton(
+                                              constraints:
+                                                  BoxConstraints(minWidth: 60),
+                                              onPressed: () {},
+                                              elevation: 2.0,
+                                              fillColor: pinkColor,
+                                              child: SvgPicture.asset(
+                                                'images/like.svg',
+                                                width: 25.0,
+                                                color: Colors.white,
+                                              ),
+                                              padding: EdgeInsets.all(10.0),
+                                              shape: CircleBorder(),
+                                            ),
                                 ],
                               )),
                         )

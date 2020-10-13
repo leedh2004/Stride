@@ -21,7 +21,8 @@ class _LookBookDialogState extends State<LookBookDialog> {
   @override
   Widget build(BuildContext context) {
     return BaseWidget<RecentItemModel>(
-        model: RecentItemModel(Provider.of(context, listen: false)),
+        model: RecentItemModel(Provider.of(context, listen: false),
+            Provider.of(context, listen: false)),
         builder: (context, model, child) {
           return LookBookInfo(widget.item, model);
         });

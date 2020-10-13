@@ -16,6 +16,14 @@ class AuthenticationService {
   FlutterSecureStorage storage = new FlutterSecureStorage();
   StrideUser master;
 
+  void minusLike() {
+    master.like--;
+  }
+
+  void minusDislike() {
+    master.dislike--;
+  }
+
   void addLike() {
     master.like++;
   }

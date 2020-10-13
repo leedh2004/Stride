@@ -140,7 +140,7 @@ class LoginView extends StatelessWidget {
 //                 // print(info);
 //                 Provider.of<AuthenticationService>(context, listen: false)
 //                     .login(info[0], info[1] + '@' + info[2]);
-//                 Navigator.pop(context);
+//                 Navigator.maybePop(context);
 //               })
 //         ].toSet(),
 //         initialUrl:
@@ -174,7 +174,7 @@ class LoginView extends StatelessWidget {
 //                     .login(info[0], info[1] + '@' + info[2]);
 //                 print(info[1]); // id
 //                 print(info[2]); // channel
-//                 Navigator.pop(context);
+//                 Navigator.maybePop(context);
 //               })
 //         ].toSet(),
 //         initialUrl:

@@ -26,11 +26,4 @@ class RecommendationModel extends BaseModel {
     // notifyListeners();
     setBusy(false);
   }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    print("I am dispose");
-    super.dispose();
-  }
 }

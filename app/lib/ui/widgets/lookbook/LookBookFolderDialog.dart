@@ -58,7 +58,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                     ),
                     //icon: FaIcon(FontAwesomeIcons.folderPlus),
                     onPressed: () {
-                      Navigator.pop(context);
+                      Navigator.maybePop(context);
                     })),
             Align(
                 alignment: Alignment.center,
@@ -96,7 +96,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                 onTap: () {
                   if (widget.model.selectedIdx.isNotEmpty) {
                     widget.model.moveFolder(folderIds[index]);
-                    Navigator.pop(context);
+                    Navigator.maybePop(context);
                   }
                 },
                 leading: index != 0
@@ -248,7 +248,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                       setState(() {
                         page = "default";
                       });
-                      //Navigator.pop(context);
+                      //Navigator.maybePop(context);
                     },
                     decoration:
                         InputDecoration.collapsed(hintText: "폴더명을 입력해주세요"),
@@ -271,7 +271,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                     setState(() {
                       page = "default";
                     });
-                    //Navigator.pop(context);
+                    //Navigator.maybePop(context);
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
                   color: buttonColor,

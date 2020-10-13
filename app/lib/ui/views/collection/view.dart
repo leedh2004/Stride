@@ -40,17 +40,17 @@ class _CollectionViewState extends State<CollectionView> {
                   ),
                 ),
               ),
-              Expanded(
-                child: Center(
-                  child: Container(
-                    height: 20,
-                    child: VerticalDivider(
-                      color: Colors.black26,
-                      thickness: 3,
-                    ),
-                  ),
-                ),
-              ),
+              // Expanded(
+              //   child: Center(
+              //     child: Container(
+              //       height: 20,
+              //       child: VerticalDivider(
+              //         color: Colors.black26,
+              //         thickness: 3,
+              //       ),
+              //     ),
+              //   ),
+              // ),
               Expanded(
                 flex: 4,
                 child: Align(

@@ -278,6 +278,7 @@ class _SwipeViewState extends State<SwipeView> {
         builder: (context, model, child) {
           if (swipeService.init == false) {
             if (dressService.init == false) {
+              print("GETDRESSROOM!!!!!!!!!!!!!!!!!!!!!!!!!!");
               dressService.getDressRoom();
             }
             model.initCards();

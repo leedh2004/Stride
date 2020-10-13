@@ -193,7 +193,7 @@ class _InputInfoDialogState extends State<InputInfoDialog> {
                   ]);
                   // Provider.of<StrideUser>(context, listen: false).profile_flag =
                   //     true;
-                  Navigator.pop(context);
+                  Navigator.maybePop(context);
                 }
               },
             ),

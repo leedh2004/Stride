@@ -14,6 +14,7 @@ class RecentItem {
   String likes_time;
   List<dynamic> origin_color;
   List<dynamic> clustered_color;
+  List<dynamic> shop_concept;
 
   //int selected = 0;
   List<dynamic> image_urls;
@@ -39,11 +40,8 @@ class RecentItem {
     image_urls = json['image_url'];
     origin_color = json['origin_color'];
     clustered_color = json['clustered_color'];
+    shop_concept = json['shop_concept'];
     likes = json['likes'];
-    if (likes == null) {
-      print("!!!!!!LIKES!!!");
-      print(product_name);
-    }
     likes_time = json['likes_time'];
     image_urls = [thumbnail_url, ...image_urls];
     length = image_urls.length;

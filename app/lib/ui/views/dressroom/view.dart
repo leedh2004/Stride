@@ -53,6 +53,7 @@ class DressRoomView extends StatelessWidget {
                   if (items.length > 0)
                     BaseWidget<RecentItemModel>(
                         model: RecentItemModel(
+                            Provider.of(context, listen: false),
                             Provider.of(context, listen: false)),
                         builder: (context, recentmodel, child) {
                           return Expanded(

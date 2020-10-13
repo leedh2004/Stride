@@ -46,7 +46,7 @@ class DressRoomService {
     current_folder = 0;
     try {
       var response = await _api.client.get(
-        '${Api.endpoint}/dressroom/',
+        '${Api.endpoint}/v2/dressroom/',
       );
       print(response.statusCode);
       var parsed = json.decode(response.data) as Map<String, dynamic>;
@@ -59,6 +59,11 @@ class DressRoomService {
           temp.add(RecentItem.fromJson(item));
         }
         items[info['folder_id']] = temp;
+        for (var item in items[info['folder_id']]) {
+          print('-------');
+          print(item.likes);
+          print('-------');
+        }
       }
       init = true;
       return;
@@ -68,12 +73,36 @@ class DressRoomService {
     }
   }
 
+  // Future getDressRoomPage(int pageCount) async {
+  //   // folder_id = new List();
+  //   // items = new Map();
+  //   // folder = new Map();
+  //   // current_folder = 0;
+  //   print("GETDRESSROOMPAGE");
+  //   try {
+  //     var response = await _api.client.get(
+  //       '${Api.endpoint}/v2/dressroom/folder?order=$pageCount&folder_id=$current_folder&idx=0',
+  //     );
+  //     print(response.data);
+  //     var temp = List<RecentItem>();
+  //     var parsed = json.decode(response.data) as List<dynamic>;
+  //     for (var item in parsed) {
+  //       temp.add(RecentItem.fromJson(item));
+  //     }
+  //     items[current_folder] = [...items[current_folder], ...temp];
+  //     return;
+  //   } catch (e) {
+  //     print(e.toString());
+  //     _api.errorCreate(Error());
+  //   }
+  // }
+
   Future makeCoordinate(int top, int bottom) async {
     try {
       final response = await _api.client.post('${Api.endpoint}/coordination/',
           data:
               jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
-      print("wtf");
+      // print("wtf");
       print("$top $bottom");
       print(response.statusCode);
     } catch (e) {
