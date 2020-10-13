@@ -15,7 +15,7 @@
         "file_handler": {
             "class": "logging.FileHandler",
             "level": "INFO",
-            "filename": "messages"
+            "filename": "/var/log/messages"
         }
     },
     "root": {
