@@ -51,7 +51,7 @@ def login():
         user_id = str(user_id).split('@')[0] + '@apple.com'
         name = body['name']
         if name is not None:
-            name = json.dumps(name)
+            name = json.dumps(name, default=json_util.default, ensure_ascii=False)
             upsert_user_name(DBEncryption.encode_text(name), user_id)
         name = select_user_name(user_id)
         insert_user(user_id)
