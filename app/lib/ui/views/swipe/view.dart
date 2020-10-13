@@ -32,8 +32,8 @@ class _SwipeViewState extends State<SwipeView> {
   String type = 'all';
   double like_opacity = 0, dislike_opacity = 0;
   bool onflag = false;
-  GlobalKey buyButton = GlobalKey(),
-      sizeToggle = GlobalKey(),
+  GlobalKey collectionButton = GlobalKey(),
+      buyButton2 = GlobalKey(),
       rulerButton = GlobalKey();
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
@@ -163,42 +163,8 @@ class _SwipeViewState extends State<SwipeView> {
   void initTargets() {
     targets.add(
       TargetFocus(
-        identify: "Target 1",
-        keyTarget: rulerButton,
-        color: backgroundColor,
-        contents: [
-          ContentTarget(
-              align: AlignContent.top,
-              child: Container(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Text(
-                      "줄자 버튼",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          fontSize: 20.0),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
-                      child: Text(
-                        "상품의 사이즈를 확인할 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-              ))
-        ],
-      ),
-    );
-
-    targets.add(
-      TargetFocus(
-        identify: "Target 0",
-        keyTarget: buyButton,
+        identify: "Target 2",
+        keyTarget: buyButton2,
         color: backgroundColor,
         contents: [
           ContentTarget(
@@ -218,7 +184,7 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "쇼핑몰로 이동할 수 있습니다.",
+                        "상품을 구매할 수 있습니다",
                         style: TextStyle(color: Colors.white),
                       ),
                     )
@@ -231,8 +197,42 @@ class _SwipeViewState extends State<SwipeView> {
 
     targets.add(
       TargetFocus(
-        identify: "Target 2",
-        keyTarget: sizeToggle,
+        identify: "Target 1",
+        keyTarget: rulerButton,
+        color: backgroundColor,
+        contents: [
+          ContentTarget(
+              align: AlignContent.top,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Text(
+                      "자세히 보기 버튼",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          fontSize: 20.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 10.0),
+                      child: Text(
+                        "상품의 사이즈, 색상, 컨셉 등을 빠르게 확인할 수 있습니다",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "Target 0",
+        keyTarget: collectionButton,
         color: backgroundColor,
         contents: [
           ContentTarget(
@@ -243,7 +243,7 @@ class _SwipeViewState extends State<SwipeView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "사이즈 스위치",
+                      "콜렉션 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
@@ -252,7 +252,7 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "스위치가 켜지면 설정한 사이즈에 맞는 옷만 볼 수 있습니다.",
+                        "마음에 드는 상품을 저장할 수 있습니다",
                         style: TextStyle(color: Colors.white),
                       ),
                     )
@@ -319,7 +319,7 @@ class _SwipeViewState extends State<SwipeView> {
                       () => onTapDislikeButton(model),
                       () => onTapCollectButton(model),
                       () => onTapLikeButton(model),
-                      buyButton),
+                      collectionButton),
                   UIHelper.verticalSpaceSmall,
                   UIHelper.verticalSpaceSmall,
                 ]),
@@ -328,6 +328,7 @@ class _SwipeViewState extends State<SwipeView> {
                   context,
                   model,
                   rulerButton,
+                  buyButton2,
                   () => onTapDislikeButton(model),
                   () => onTapLikeButton(model),
                   () => onTapCollectButton(model)),

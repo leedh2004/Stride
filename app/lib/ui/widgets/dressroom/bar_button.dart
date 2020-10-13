@@ -224,7 +224,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "폴더로 드레스룸을 편하게 관리할 수 있습니다.",
+                        "폴더로 나만의 옷들을 편하게 관리할 수 있습니다.",
                         style: TextStyle(color: Colors.white),
                       ),
                     )

@@ -88,7 +88,7 @@ class DressRoomItemWidget extends StatelessWidget {
                     final result = Navigator.push(context,
                         MaterialPageRoute<String>(
                             builder: (BuildContext context) {
-                      return RecentDetailInfo(item, model);
+                      return RecentDetailInfo(item, model, false);
                     }));
 
                     if (await result == 'collect') {

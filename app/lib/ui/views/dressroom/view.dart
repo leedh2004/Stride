@@ -32,9 +32,11 @@ class DressRoomView extends StatelessWidget {
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
-              showWidget = Expanded(
+              showWidget = Container(
+                color: Colors.white,
                 child: Column(children: <Widget>[
                   Container(
+                    color: Colors.white,
                     margin: EdgeInsets.fromLTRB(15, 5, 0, 0),
                     height: 30,
                     child: ListView(

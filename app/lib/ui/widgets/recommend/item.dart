@@ -36,7 +36,7 @@ class RecommendItemWidget extends StatelessWidget {
           });
           final result = Navigator.push(context,
               MaterialPageRoute<String>(builder: (BuildContext context) {
-            return RecentDetailInfo(item, model);
+            return RecentDetailInfo(item, model, true);
           }));
 
           if (await result == 'collect') {

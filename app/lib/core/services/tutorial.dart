@@ -20,7 +20,8 @@ class TutorialService {
       print(response.data);
       var parsed = json.decode(response.data) as List<dynamic>;
       for (var item in parsed) {
-        ret.add(TutorialBox(item['product_id'], item['thumbnail_url']));
+        ret.add(
+            TutorialBox(item['product_id'], item['compressed_thumbnail_url']));
       }
       items = ret;
       init = true;

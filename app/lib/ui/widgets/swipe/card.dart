@@ -21,17 +21,19 @@ List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
-  GlobalKey rulerButton;
+  GlobalKey rulerButton, buyButton;
   Function onTapDislikeButton, onTapLikeButton, onTapCollectionButton;
   SwipeCardSection(
       BuildContext context,
       SwipeModel _model,
       GlobalKey _rulerButton,
+      GlobalKey _buyButton,
       Function _onTapDislikeButton,
       Function _onTapLikeButton,
       Function _onTapCollectionButton) {
     model = _model;
     rulerButton = _rulerButton;
+    buyButton = _buyButton;
     double standard = 0.68;
     if (MediaQuery.of(context).size.height > 800) standard = 0.72;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
@@ -244,7 +246,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
                     child: IconButton(
-                      // key: widget.rulerButton,
+                      key: widget.buyButton,
                       icon: Container(
                         width: 50,
                         height: 50,
@@ -279,7 +281,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
                     child: IconButton(
-                      // key: widget.rulerButton,
+                      key: widget.rulerButton,
                       icon: Container(
                         width: 50,
                         height: 50,

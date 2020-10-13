@@ -125,8 +125,7 @@ class _FolderDialogState extends State<FolderDialog> {
                               btnCancelText: '취소',
                               btnCancelOnPress: () {},
                               btnOkOnPress: () async {
-                                await widget.model
-                                    .deleteFolder(folderIds[index]);
+                                widget.model.deleteFolder(folderIds[index]);
                                 Navigator.maybePop(context);
                               })
                             ..show();
@@ -242,7 +241,7 @@ class _FolderDialogState extends State<FolderDialog> {
                       if (folderNames.contains(text)) {
                         return;
                       }
-                      await widget.model.createFolder(_textController.text);
+                      widget.model.createFolder(_textController.text);
                       setState(() {
                         page = "default";
                       });
@@ -265,7 +264,7 @@ class _FolderDialogState extends State<FolderDialog> {
                       return;
                     }
                     print(_textController.text);
-                    await widget.model.createFolder(_textController.text);
+                    widget.model.createFolder(_textController.text);
                     setState(() {
                       page = "default";
                     });
@@ -348,7 +347,7 @@ class _FolderDialogState extends State<FolderDialog> {
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
                       if (folderNames.contains(text)) return;
-                      await widget.model.renameFolder(
+                      widget.model.renameFolder(
                           curFolderId, _renameTextController.text);
                       setState(() {
                         page = "default";
@@ -368,7 +367,7 @@ class _FolderDialogState extends State<FolderDialog> {
                   onPressed: () async {
                     if (folderNames.contains(_renameTextController.text))
                       return;
-                    await widget.model
+                    widget.model
                         .renameFolder(curFolderId, _renameTextController.text);
                     setState(() {
                       page = "default";

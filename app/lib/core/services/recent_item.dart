@@ -47,7 +47,7 @@ class RecentItemService {
   }
 
   Future likeRequest(int id) async {
-    final response = await _api.client.post('${Api.endpoint}/home/like',
+    final response = await _api.client.post('${Api.endpoint}/v2/home/like',
         data: jsonEncode({'product_id': id}));
     print(response.statusCode);
   }
@@ -65,7 +65,7 @@ class RecentItemService {
   }
 
   Future dislikeRequest(int id) async {
-    final response = await _api.client.post('${Api.endpoint}/home/dislike',
+    final response = await _api.client.post('${Api.endpoint}/v2/home/dislike',
         data: jsonEncode({'product_id': id}));
   }
 }

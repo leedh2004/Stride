@@ -127,8 +127,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                               btnCancelText: '취소',
                               btnCancelOnPress: () {},
                               btnOkOnPress: () async {
-                                await widget.model
-                                    .deleteFolder(folderIds[index]);
+                                widget.model.deleteFolder(folderIds[index]);
                                 Navigator.maybePop(context);
                               })
                             ..show();
@@ -244,7 +243,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                       if (folderNames.contains(text)) {
                         return;
                       }
-                      await widget.model.createFolder(_textController.text);
+                      widget.model.createFolder(_textController.text);
                       setState(() {
                         page = "default";
                       });
@@ -267,7 +266,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                       return;
                     }
                     print(_textController.text);
-                    await widget.model.createFolder(_textController.text);
+                    widget.model.createFolder(_textController.text);
                     setState(() {
                       page = "default";
                     });
@@ -350,7 +349,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
                       if (folderNames.contains(text)) return;
-                      await widget.model.renameFolder(
+                      widget.model.renameFolder(
                           curFolderId, _renameTextController.text);
                       setState(() {
                         page = "default";
@@ -370,7 +369,7 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
                   onPressed: () async {
                     if (folderNames.contains(_renameTextController.text))
                       return;
-                    await widget.model
+                    widget.model
                         .renameFolder(curFolderId, _renameTextController.text);
                     setState(() {
                       page = "default";

@@ -9,6 +9,7 @@ import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
+import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../../main.dart';
 
 final Map<String, String> typeConverter = {
   'top': '상의',
@@ -26,9 +29,10 @@ final Map<String, String> typeConverter = {
 };
 
 class RecentDetailInfo extends StatefulWidget {
-  RecentDetailInfo(this.item, this.model);
+  RecentDetailInfo(this.item, this.model, this.show);
   final RecentItem item;
   final RecentItemModel model;
+  final bool show;
   @override
   _RecentDetailInfoState createState() => _RecentDetailInfoState();
 }
@@ -66,6 +70,12 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
       }
       precached.add(widget.item.product_id);
     }
+
+    String concept = "";
+    for (var c in widget.item.shop_concept) {
+      concept += '#${c} ';
+    }
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarIconBrightness: Brightness.light,
@@ -185,167 +195,184 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                 ),
                               )),
                         ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  !haveResult
-                                      ? RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            widget.model.dislikeRequest(
-                                                widget.item.product_id);
-                                            setState(() {
-                                              widget.item.likes = false;
-                                              haveResult = true;
-                                              likes = false;
-                                            });
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Color.fromRGBO(
-                                                  72, 116, 213, 1),
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        )
-                                      : likes
-                                          ? RawMaterialButton(
-                                              constraints:
-                                                  BoxConstraints(minWidth: 60),
-                                              onPressed: () {
-                                                widget.model
-                                                    .revertAndDislikeRequest(
-                                                        widget.item.product_id);
-                                                setState(() {
-                                                  widget.item.likes = false;
-                                                  likes = false;
-                                                });
-                                              },
-                                              elevation: 2.0,
-                                              fillColor: Colors.white,
-                                              child: Padding(
-                                                padding: EdgeInsets.all(0),
-                                                child: SvgPicture.asset(
-                                                  'images/times.svg',
-                                                  width: 25.0,
-                                                  color: Color.fromRGBO(
-                                                      72, 116, 213, 1),
-                                                ),
-                                              ),
-                                              padding: EdgeInsets.all(10.0),
-                                              shape: CircleBorder(),
-                                            )
-                                          : RawMaterialButton(
-                                              constraints:
-                                                  BoxConstraints(minWidth: 60),
-                                              onPressed: () {},
-                                              elevation: 2.0,
-                                              fillColor: Color.fromRGBO(
-                                                  72, 116, 213, 1),
-                                              child: Padding(
-                                                padding: EdgeInsets.all(0),
-                                                child: SvgPicture.asset(
+                        widget.show
+                            ? Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.75,
+                                child: Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        !haveResult
+                                            ? RawMaterialButton(
+                                                constraints: BoxConstraints(
+                                                    minWidth: 60),
+                                                onPressed: () {
+                                                  widget.model.dislikeRequest(
+                                                      widget.item.product_id);
+                                                  setState(() {
+                                                    widget.item.likes = false;
+                                                    haveResult = true;
+                                                    likes = false;
+                                                  });
+                                                },
+                                                elevation: 2.0,
+                                                fillColor: Colors.white,
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(0),
+                                                  child: SvgPicture.asset(
                                                     'images/times.svg',
                                                     width: 25.0,
-                                                    color: Colors.white),
-                                              ),
-                                              padding: EdgeInsets.all(10.0),
-                                              shape: CircleBorder(),
-                                            ),
-                                  RawMaterialButton(
-                                    constraints: BoxConstraints(minWidth: 60),
-                                    onPressed: () {
-                                      widget.model
-                                          .likeRequest(widget.item.product_id);
-                                      Provider.of<DressRoomService>(context,
-                                              listen: false)
-                                          .addItem(widget.item);
-                                      Navigator.maybePop(context, "collect");
-                                    },
-                                    elevation: 2.0,
-                                    fillColor: Colors.white,
-                                    child: FaIcon(
-                                      FontAwesomeIcons.thLarge,
-                                      color: backgroundColor,
-                                      size: 25,
-                                    ),
-                                    padding: EdgeInsets.all(10.0),
-                                    shape: CircleBorder(),
-                                  ),
-                                  !haveResult
-                                      ? RawMaterialButton(
+                                                    color: Color.fromRGBO(
+                                                        72, 116, 213, 1),
+                                                  ),
+                                                ),
+                                                padding: EdgeInsets.all(10.0),
+                                                shape: CircleBorder(),
+                                              )
+                                            : likes
+                                                ? RawMaterialButton(
+                                                    constraints: BoxConstraints(
+                                                        minWidth: 60),
+                                                    onPressed: () {
+                                                      widget.model
+                                                          .revertAndDislikeRequest(
+                                                              widget.item
+                                                                  .product_id);
+                                                      setState(() {
+                                                        widget.item.likes =
+                                                            false;
+                                                        likes = false;
+                                                      });
+                                                    },
+                                                    elevation: 2.0,
+                                                    fillColor: Colors.white,
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0),
+                                                      child: SvgPicture.asset(
+                                                        'images/times.svg',
+                                                        width: 25.0,
+                                                        color: Color.fromRGBO(
+                                                            72, 116, 213, 1),
+                                                      ),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.all(10.0),
+                                                    shape: CircleBorder(),
+                                                  )
+                                                : RawMaterialButton(
+                                                    constraints: BoxConstraints(
+                                                        minWidth: 60),
+                                                    onPressed: () {},
+                                                    elevation: 2.0,
+                                                    fillColor: Color.fromRGBO(
+                                                        72, 116, 213, 1),
+                                                    child: Padding(
+                                                      padding:
+                                                          EdgeInsets.all(0),
+                                                      child: SvgPicture.asset(
+                                                          'images/times.svg',
+                                                          width: 25.0,
+                                                          color: Colors.white),
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.all(10.0),
+                                                    shape: CircleBorder(),
+                                                  ),
+                                        RawMaterialButton(
                                           constraints:
                                               BoxConstraints(minWidth: 60),
                                           onPressed: () {
                                             widget.model.likeRequest(
                                                 widget.item.product_id);
-                                            setState(() {
-                                              widget.item.likes = true;
-                                              haveResult = true;
-                                              likes = true;
-                                            });
+                                            Provider.of<DressRoomService>(
+                                                    context,
+                                                    listen: false)
+                                                .addItem(widget.item);
+                                            Navigator.maybePop(
+                                                context, "collect");
                                           },
                                           elevation: 2.0,
                                           fillColor: Colors.white,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: pinkColor,
+                                          child: FaIcon(
+                                            FontAwesomeIcons.thLarge,
+                                            color: backgroundColor,
+                                            size: 25,
                                           ),
                                           padding: EdgeInsets.all(10.0),
                                           shape: CircleBorder(),
-                                        )
-                                      : !likes
-                                          ? RawMaterialButton(
-                                              constraints:
-                                                  BoxConstraints(minWidth: 60),
-                                              onPressed: () {
-                                                widget.model
-                                                    .revertAndLikeRequest(
-                                                        widget.item.product_id);
-                                                setState(() {
-                                                  widget.item.likes = true;
-                                                  likes = true;
-                                                });
-                                              },
-                                              elevation: 2.0,
-                                              fillColor: Colors.white,
-                                              child: SvgPicture.asset(
-                                                'images/like.svg',
-                                                width: 25.0,
-                                                color: pinkColor,
-                                              ),
-                                              padding: EdgeInsets.all(10.0),
-                                              shape: CircleBorder(),
-                                            )
-                                          : RawMaterialButton(
-                                              constraints:
-                                                  BoxConstraints(minWidth: 60),
-                                              onPressed: () {},
-                                              elevation: 2.0,
-                                              fillColor: pinkColor,
-                                              child: SvgPicture.asset(
-                                                'images/like.svg',
-                                                width: 25.0,
-                                                color: Colors.white,
-                                              ),
-                                              padding: EdgeInsets.all(10.0),
-                                              shape: CircleBorder(),
-                                            ),
-                                ],
-                              )),
-                        )
+                                        ),
+                                        !haveResult
+                                            ? RawMaterialButton(
+                                                constraints: BoxConstraints(
+                                                    minWidth: 60),
+                                                onPressed: () {
+                                                  widget.model.likeRequest(
+                                                      widget.item.product_id);
+                                                  setState(() {
+                                                    widget.item.likes = true;
+                                                    haveResult = true;
+                                                    likes = true;
+                                                  });
+                                                },
+                                                elevation: 2.0,
+                                                fillColor: Colors.white,
+                                                child: SvgPicture.asset(
+                                                  'images/like.svg',
+                                                  width: 25.0,
+                                                  color: pinkColor,
+                                                ),
+                                                padding: EdgeInsets.all(10.0),
+                                                shape: CircleBorder(),
+                                              )
+                                            : !likes
+                                                ? RawMaterialButton(
+                                                    constraints: BoxConstraints(
+                                                        minWidth: 60),
+                                                    onPressed: () {
+                                                      widget.model
+                                                          .revertAndLikeRequest(
+                                                              widget.item
+                                                                  .product_id);
+                                                      setState(() {
+                                                        widget.item.likes =
+                                                            true;
+                                                        likes = true;
+                                                      });
+                                                    },
+                                                    elevation: 2.0,
+                                                    fillColor: Colors.white,
+                                                    child: SvgPicture.asset(
+                                                      'images/like.svg',
+                                                      width: 25.0,
+                                                      color: pinkColor,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.all(10.0),
+                                                    shape: CircleBorder(),
+                                                  )
+                                                : RawMaterialButton(
+                                                    constraints: BoxConstraints(
+                                                        minWidth: 60),
+                                                    onPressed: () {},
+                                                    elevation: 2.0,
+                                                    fillColor: pinkColor,
+                                                    child: SvgPicture.asset(
+                                                      'images/like.svg',
+                                                      width: 25.0,
+                                                      color: Colors.white,
+                                                    ),
+                                                    padding:
+                                                        EdgeInsets.all(10.0),
+                                                    shape: CircleBorder(),
+                                                  ),
+                                      ],
+                                    )),
+                              )
+                            : Container()
                       ]),
                     ),
                     Padding(
@@ -357,7 +384,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                             children: [
                               Text(widget.item.shop_name, style: shopNameStyle),
                               UIHelper.horizontalSpaceSmall,
-                              Text('#데일리 #스트릿', style: conceptStyle),
+                              Text('${concept}', style: conceptStyle),
                             ],
                           ),
                           // Text(widget.item.shop_name, style: shopNameStyle),
@@ -426,7 +453,38 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                     Padding(
                         padding: EdgeInsets.all(16),
                         child: SizeDialog(widget.item)),
-                    UIHelper.verticalSpaceMedium,
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              Stride.analytics.logEvent(
+                                  name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                                  parameters: {
+                                    'itemId': widget.item.product_id.toString(),
+                                    'itemName': widget.item.product_name,
+                                    'itemCategory': widget.item.shop_name
+                                  });
+                              // 이 부분 코드는 나중에 수정해야할 듯.
+                              Provider.of<SwipeService>(context, listen: false)
+                                  .purchaseItem(widget.item.product_id);
+                              return ProductWebView(widget.item.product_url,
+                                  widget.item.shop_name);
+                            }));
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Center(child: Text('구매하기', style: buyStyle)),
+                          ),
+                        ),
+                      ),
+                    )
                   ])),
         ),
       ),
@@ -439,3 +497,4 @@ const conceptStyle = TextStyle(
     fontWeight: FontWeight.w700, fontSize: 16, color: backgroundColor);
 const titleStyle = TextStyle(fontSize: 20);
 const priceStyle = TextStyle(fontSize: 16);
+const buyStyle = TextStyle(fontSize: 20, color: Colors.white);

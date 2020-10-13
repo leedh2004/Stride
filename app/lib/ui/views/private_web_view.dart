@@ -19,7 +19,7 @@ class PrivateWebView extends StatelessWidget {
       body: SafeArea(
         child: Center(
           child: WebView(
-            initialUrl: 'http://www.stride.co.kr/auth',
+            initialUrl: 'https://www.stride.co.kr/auth',
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),

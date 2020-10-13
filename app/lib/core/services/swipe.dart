@@ -233,7 +233,7 @@ class SwipeService {
   Future<Product> likeRequest() async {
     print("LIKE!!");
     try {
-      final response = await _api.client.post('${Api.endpoint}/home/like',
+      final response = await _api.client.post('${Api.endpoint}/v2/home/like',
           data: jsonEncode({'product_id': items[index].product_id}));
       if (response.statusCode == 202) return null;
       print("Like ${response.statusCode}");
@@ -247,7 +247,7 @@ class SwipeService {
   Future dislikeRequest() async {
     print("DISLIKE!!");
     try {
-      final response = await _api.client.post('${Api.endpoint}/home/dislike',
+      final response = await _api.client.post('${Api.endpoint}/v2/home/dislike',
           data: jsonEncode({'product_id': items[index].product_id}));
     } catch (e) {
       _api.errorCreate(Error());
@@ -256,7 +256,7 @@ class SwipeService {
 
   Future purchaseItem(int id) async {
     try {
-      await _api.client.post('${Api.endpoint}/home/purchase',
+      await _api.client.post('${Api.endpoint}/v2/home/purchase',
           data: jsonEncode({'product_id': id}));
     } catch (e) {
       _api.errorCreate(Error());

@@ -30,6 +30,8 @@ class Coordinate {
     top.origin_color = json['top_origin_color'];
     top.clustered_color = json['top_clustered_color'];
     top.likes = json['top_likes'];
+    top.shop_concept = json['top_shop_concept'];
+
     top.image_urls = [top.thumbnail_url, ...top.image_urls];
     top.length = top.image_urls.length;
 
@@ -47,6 +49,7 @@ class Coordinate {
     bottom.shop_name = json['bottom_shop_name'];
     bottom.product_size = ProductSize.fromJson(json['bottom_size']);
     bottom.compressed_thumbnail_url = json['bottom_compressed_thumbnail_url'];
+    bottom.shop_concept = json['bottom_shop_concept'];
 
     bottom.image_urls = json['bottom_image_url'];
     bottom.origin_color = json['bottom_origin_color'];

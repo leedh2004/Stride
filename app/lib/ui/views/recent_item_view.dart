@@ -61,6 +61,7 @@ class _RecentItemViewState extends State<RecentItemView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Colors.white,
         appBar: new AppBar(
           backgroundColor: backgroundColor,
           title: Text('최근에 평가한 아이템'),
@@ -85,7 +86,7 @@ class _RecentItemViewState extends State<RecentItemView> {
                             final result = Navigator.push(context,
                                 MaterialPageRoute<String>(
                                     builder: (BuildContext context) {
-                              return RecentDetailInfo(item, model);
+                              return RecentDetailInfo(item, model, true);
                             }));
 
                             if (await result == 'collect') {

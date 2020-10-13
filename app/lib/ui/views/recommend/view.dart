@@ -17,6 +17,7 @@ class RecommendView extends StatelessWidget {
         model: RecommendationModel(Provider.of(context, listen: false),
             Provider.of(context, listen: false)),
         builder: (context, model, child) {
+          String name = model.authService.master.name;
           if (model.busy) {
             return LoadingWidget();
           }
@@ -39,7 +40,7 @@ class RecommendView extends StatelessWidget {
                           children: [
                             UIHelper.verticalSpaceSmall,
                             Text(
-                              '${model.authService.master.name}님이 평가한 아이템',
+                              '${name}님이 평가한 아이템',
                               style: HeaderStyle,
                             ),
                             UIHelper.verticalSpaceMedium,
@@ -78,7 +79,7 @@ class RecommendView extends StatelessWidget {
                                       FaIcon(
                                         FontAwesomeIcons.times,
                                         color: blueColor,
-                                        size: 55,
+                                        size: 50,
                                       ),
                                       UIHelper.verticalSpaceSmall,
                                       Text(
@@ -92,15 +93,15 @@ class RecommendView extends StatelessWidget {
                             ),
                             UIHelper.verticalSpaceSmall,
                             ItemRow(
-                                '추천 아이템',
+                                '${name}님의 추천 아이템',
                                 model.collectionService.recommendItems,
                                 recentmodel),
                             ItemRow(
-                                '${model.collectionService.conceptA} 컨셉의 아이템',
+                                '${name}님 취향의 ${model.collectionService.conceptA} 컨셉 아이템',
                                 model.collectionService.conceptItemA,
                                 recentmodel),
                             ItemRow(
-                                '${model.collectionService.conceptB} 컨셉의 아이템',
+                                '${name}님 취향의 ${model.collectionService.conceptB} 컨셉 아이템',
                                 model.collectionService.conceptItemB,
                                 recentmodel),
                             ItemRow(

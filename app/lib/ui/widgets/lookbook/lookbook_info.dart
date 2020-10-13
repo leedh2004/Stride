@@ -61,6 +61,10 @@ class _LookBookInfoState extends State<LookBookInfo> {
         fit: BoxFit.cover,
       ));
     }
+    String concept = "";
+    for (var c in item.shop_concept) {
+      concept += '#${c} ';
+    }
 
     Set precached = Provider.of<SwipeService>(context, listen: false).precached;
     if (!precached.contains(item.product_id)) {
@@ -99,17 +103,6 @@ class _LookBookInfoState extends State<LookBookInfo> {
                                   style: page == 0
                                       ? currentStyle
                                       : notCurrentStyle),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: Container(
-                            height: 20,
-                            child: VerticalDivider(
-                              color: Colors.black26,
-                              thickness: 3,
                             ),
                           ),
                         ),
@@ -355,7 +348,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                             children: [
                               Text(item.shop_name, style: shopNameStyle),
                               UIHelper.horizontalSpaceSmall,
-                              Text('#데일리 #스트릿', style: conceptStyle),
+                              Text('${concept}', style: conceptStyle),
                             ],
                           ),
                           // Text(item.shop_name, style: shopNameStyle),

@@ -28,7 +28,8 @@ class LookBookView extends StatelessWidget {
           var folderKeys = folder.keys.toList();
           var folderNames = folder.values.toList();
 
-          showWidget = Expanded(
+          showWidget = Container(
+            color: Colors.white,
             child: Column(children: [
               Container(
                 margin: EdgeInsets.fromLTRB(15, 5, 0, 0),
@@ -49,6 +50,7 @@ class LookBookView extends StatelessWidget {
               // Expanded(child: Container(color: Colors.red)),
               Expanded(
                 child: Container(
+                  color: Colors.white,
                   alignment: Alignment.topLeft,
                   child: Padding(
                     padding: EdgeInsets.all(16),

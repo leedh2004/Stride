@@ -38,13 +38,12 @@ class _ServiceViewState extends State<ServiceView>
     return Scaffold(
         key: ServiceView.scaffoldKey,
         body: TabBarView(
-            key: Key('test'),
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
               SwipeView(),
-              CollectionView(),
               RecommendView(),
+              CollectionView(),
               //LookBookView(),
               MyPageView(),
             ]),

@@ -182,6 +182,7 @@ class AuthenticationService {
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
+    print('checkToken()');
     String token = await storage.read(key: 'jwt_token');
     if (await storage.read(key: 'swipe_tutorial') != null) {
       swipe_tutorial = true;
@@ -198,46 +199,50 @@ class AuthenticationService {
       "Accept": "application/json",
       'Authorization': "Bearer ${token}",
     };
-    final response = await api.client.get(
-      '${Api.endpoint}/login/token',
-    );
-    print('checkToken()');
-    if (response.statusCode == 200) {
-      await storage.delete(key: 'jwt_token');
-      print(response.data);
-      var parsed = response.data as Map<String, dynamic>;
-      var id = parsed['user_id'];
-      var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
-      var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
-      StrideUser user = StrideUser(
-          id: id,
-          profile_flag: parsed['profile_flag'],
-          name: jsonDecode(parsed['name']),
-          shoulder: size['shoulder'],
-          bust: size['bust'],
-          like: likes['like'],
-          dislike: likes['dislike'],
-          waist: size['waist'],
-          hip: size['hip'],
-          thigh: size['thigh']);
-      //뉴토큰으로 토큰 교체해줘야함.
-      await storage.write(key: 'jwt_token', value: response.data['token']);
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: id, password: "SuperSecretPassword!");
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
+    print("!");
+    try {
+      final response = await api.client.get(
+        '${Api.endpoint}/login/token',
+      );
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        await storage.delete(key: 'jwt_token');
+        print(response.data);
+        var parsed = response.data as Map<String, dynamic>;
+        var id = parsed['user_id'];
+        var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
+        var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
+        StrideUser user = StrideUser(
+            id: id,
+            profile_flag: parsed['profile_flag'],
+            name: jsonDecode(parsed['name']),
+            shoulder: size['shoulder'],
+            bust: size['bust'],
+            like: likes['like'],
+            dislike: likes['dislike'],
+            waist: size['waist'],
+            hip: size['hip'],
+            thigh: size['thigh']);
+        //뉴토큰으로 토큰 교체해줘야함.
+        await storage.write(key: 'jwt_token', value: response.data['token']);
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: id, password: "SuperSecretPassword!");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            print('No user found for that email.');
+          } else if (e.code == 'wrong-password') {
+            print('Wrong password provided for that user.');
+          }
         }
+        master = user;
+        userController.add(user);
+      } else {
+        await storage.delete(key: 'jwt_token');
+        print("토큰이 없거나 만료되었습니다");
       }
-      master = user;
-      userController.add(user);
-    } else {
-      await storage.delete(key: 'jwt_token');
-      print("토큰이 없거나 만료되었습니다");
-    }
+    } catch (e) {}
     init = true;
   }
 }
