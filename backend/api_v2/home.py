@@ -34,7 +34,8 @@ def get_clothes():
         exception = QuerystringParser.empty_list(args.get('exception').split(','))
         result = filter_product(g.user_id, color, size, price, concept, type, exception)
         if not result:
-            return 'response data is empty', 204
+            result = []
+            return json.dumps(result, default=json_util.default, ensure_ascii=False), 200
         else:
             result = get_product_list(result)
             return result, 200

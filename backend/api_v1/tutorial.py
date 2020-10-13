@@ -28,6 +28,7 @@ def submit_tutorial_result():
     try:
         body = request.get_json()
         product_id = body['product_id']
+        update_user_profile_view(g.user_id)
         if extract_and_update_concept(product_id) is True:
             return jsonify("Success"), 200
     except:
