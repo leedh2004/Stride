@@ -80,9 +80,9 @@ user_like_items_mapping = \
 
 
 # create index
-if not es.indices.exists(index="user_ratings"):
-    es.indices.create(index="user_ratings", body=user_ratings_mapping)
-if not es.indices.exists(index='user_like_items'):
-    es.indices.create(index='user_like_items', body=user_like_items_mapping)
-if not es.indices.exists(index='products'):
-    es.indices.create(index='products', body=products_mapping)
+# if not es.indices.exists(index="user_ratings"):
+#     es.indices.create(index="user_ratings", body=user_ratings_mapping)
+# if not es.indices.exists(index='user_like_items'):
+#     es.indices.create(index='user_like_items', body=user_like_items_mapping)
+# if not es.indices.exists(index='products'):
+#     es.indices.create(index='products', body=products_mapping)
