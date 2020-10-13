@@ -5,7 +5,7 @@ sys.path.append('../../')
 sys.path.append('../../../')
 from config.oauthconfig import *
 from contextlib import contextmanager
-
+from elasticsearch import Elasticsearch
 
 @contextmanager
 def db_connect():
@@ -21,3 +21,12 @@ def db_connect():
     finally:
         cursor.close()
         service_conn.close()
+
+
+@contextmanager
+def es_connect():
+    es_connection = Elasticsearch(es_endpoint)
+    try:
+        yield (es_connection)
+    finally:
+        es_connection.close()

@@ -6,7 +6,6 @@ from config.oauthconfig import *
 from elasticsearch import helpers
 import backend.recommendation.queries as queries
 
-es = es_connection
 
 size_types_dict = {'length': 3, 'waist': 4, 'hip': 5, 'thigh': 6, 'rise': 7,
                    'hem': 8, 'shoulder': 9, 'bust': 10, 'arm_length': 11}
@@ -33,7 +32,7 @@ def create_product_document(product_info):
 
 
 # this function should be run periodically in crawling process to get sync between es and service db
-def index_product_documents():
+def index_product_documents(es):
     products_info = queries.get_new_products_from_db()
     docs = []
     product_ids = []
@@ -58,7 +57,7 @@ def index_product_documents():
 
 
 # this function indexes user_ratings into user_ratings and user_liked_items indices
-def index_user_rating_data():
+def index_user_rating_data(es):
     docs = []
     # index like items
     users = index_user_rating(like=True)
@@ -84,7 +83,7 @@ def index_user_rating_data():
     index_user_rating(like=False)
 
 
-def index_user_rating(like):
+def index_user_rating(like, es):
     docs = []
     product_ids = []
     updated_users_list = set()
@@ -125,7 +124,7 @@ def get_user_like_items(user_id, clothes_type):
 
 # this function removes from es invalid items whose active_flag turned false in db
 # this function should be called after indexing products to get sync with db
-def remove_invalid_items():
+def remove_invalid_items(es):
     invalid_product_ids = queries.get_invalid_products_in_es()
     es.delete_by_query(index='products', body={
         "query": {
