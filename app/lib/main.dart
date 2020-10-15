@@ -27,7 +27,6 @@ class MyHttpOverrides extends HttpOverrides {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
-  // await FlutterStatusbarColor.setStatusBarColor(Colors.black);
   HttpOverrides.global = MyHttpOverrides();
 
   await Firebase.initializeApp();
@@ -58,6 +57,7 @@ Future<void> main() async {
   await remoteConfig.fetch(expiration: const Duration(seconds: 0));
   await remoteConfig.activateFetched();
   final updatedVersion = remoteConfig.getString('version').trim();
+  print(updatedVersion);
   runZoned(() {
     runApp(Provider<ConfigService>.value(
         value: ConfigService(appleSignInAvailable, updatedVersion),

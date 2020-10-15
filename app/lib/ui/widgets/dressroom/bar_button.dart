@@ -205,7 +205,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 0",
         keyTarget: folderButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -218,14 +218,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "폴더 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "폴더로 나만의 옷들을 편하게 관리할 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     )
                   ],
@@ -238,7 +238,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 1",
         keyTarget: makeButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -251,21 +251,21 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "MAKE BUTTON",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "상/하의를 클릭하면 활성화됩니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "상/하의를 조합하여 나만의 룩북을 만들 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     UIHelper.verticalSpaceLarge,
@@ -281,7 +281,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 2",
         keyTarget: trashButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -294,14 +294,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "휴지통",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "선택된 옷들을 모두 삭제합니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     )
                   ],

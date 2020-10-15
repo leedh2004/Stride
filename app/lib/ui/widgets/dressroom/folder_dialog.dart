@@ -30,6 +30,7 @@ class _FolderDialogState extends State<FolderDialog> {
   bool change = false;
   var buttonColor = backgroundColor;
   var renameButtonColor = gray;
+  bool busy = false;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +126,12 @@ class _FolderDialogState extends State<FolderDialog> {
                               btnCancelText: '취소',
                               btnCancelOnPress: () {},
                               btnOkOnPress: () async {
-                                widget.model.deleteFolder(folderIds[index]);
-                                Navigator.maybePop(context);
+                                if (busy == false) {
+                                  busy = true;
+                                  widget.model.deleteFolder(folderIds[index]);
+                                  busy = false;
+                                  Navigator.maybePop(context);
+                                }
                               })
                             ..show();
                         })
@@ -238,13 +243,17 @@ class _FolderDialogState extends State<FolderDialog> {
                       }
                     },
                     onSubmitted: (String text) async {
-                      if (folderNames.contains(text)) {
-                        return;
+                      if (busy == false) {
+                        busy = true;
+                        if (folderNames.contains(text)) {
+                          return;
+                        }
+                        await widget.model.createFolder(_textController.text);
+                        busy = false;
+                        setState(() {
+                          page = "default";
+                        });
                       }
-                      widget.model.createFolder(_textController.text);
-                      setState(() {
-                        page = "default";
-                      });
                       //Navigator.maybePop(context);
                     },
                     decoration:
@@ -260,14 +269,18 @@ class _FolderDialogState extends State<FolderDialog> {
                 ),
                 RaisedButton(
                   onPressed: () async {
-                    if (folderNames.contains(_textController.text)) {
-                      return;
+                    if (busy == false) {
+                      busy = true;
+                      if (folderNames.contains(_textController.text)) {
+                        return;
+                      }
+                      print(_textController.text);
+                      await widget.model.createFolder(_textController.text);
+                      setState(() {
+                        page = "default";
+                      });
+                      busy = false;
                     }
-                    print(_textController.text);
-                    widget.model.createFolder(_textController.text);
-                    setState(() {
-                      page = "default";
-                    });
                     //Navigator.maybePop(context);
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
@@ -346,12 +359,16 @@ class _FolderDialogState extends State<FolderDialog> {
                     ],
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
-                      if (folderNames.contains(text)) return;
-                      widget.model.renameFolder(
-                          curFolderId, _renameTextController.text);
-                      setState(() {
-                        page = "default";
-                      });
+                      if (busy == false) {
+                        busy = true;
+                        if (folderNames.contains(text)) return;
+                        widget.model.renameFolder(
+                            curFolderId, _renameTextController.text);
+                        setState(() {
+                          page = "default";
+                        });
+                        busy = false;
+                      }
                     },
                     decoration: InputDecoration.collapsed(hintText: "새로운 이름"),
                   ),
@@ -365,13 +382,17 @@ class _FolderDialogState extends State<FolderDialog> {
                 ),
                 RaisedButton(
                   onPressed: () async {
-                    if (folderNames.contains(_renameTextController.text))
-                      return;
-                    widget.model
-                        .renameFolder(curFolderId, _renameTextController.text);
-                    setState(() {
-                      page = "default";
-                    });
+                    if (busy == false) {
+                      busy = true;
+                      if (folderNames.contains(_renameTextController.text))
+                        return;
+                      widget.model.renameFolder(
+                          curFolderId, _renameTextController.text);
+                      busy = false;
+                      setState(() {
+                        page = "default";
+                      });
+                    }
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
                   color: renameButtonColor,

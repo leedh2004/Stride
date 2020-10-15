@@ -99,7 +99,8 @@ class DressRoomService {
 
   Future makeCoordinate(int top, int bottom) async {
     try {
-      final response = await _api.client.post('${Api.endpoint}/coordination/',
+      final response = await _api.client.post(
+          '${Api.endpoint}/v2/coordination/',
           data:
               jsonEncode({'top_product_id': top, 'bottom_product_id': bottom}));
       // print("wtf");
@@ -137,7 +138,7 @@ class DressRoomService {
     for (var idx in selectedIdx)
       removeIds.add(items[current_folder][idx].product_id);
     try {
-      final response = await _api.client.put('${Api.endpoint}/dressroom/',
+      final response = await _api.client.put('${Api.endpoint}/v2/dressroom/',
           data: jsonEncode({'product_id': removeIds}));
       int cnt = 0;
       var temp = new List<RecentItem>();
@@ -168,10 +169,10 @@ class DressRoomService {
     try {
       var response;
       if (selectedIds.length == 0) {
-        response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+        response = await _api.client.post('${Api.endpoint}/v2/dressroom/folder',
             data: jsonEncode({'product_id': -1, 'folder_name': folderName}));
       } else {
-        response = await _api.client.post('${Api.endpoint}/dressroom/folder',
+        response = await _api.client.post('${Api.endpoint}/v2/dressroom/folder',
             data: jsonEncode(
                 {'product_id': selectedIds, 'folder_name': folderName}));
       }
@@ -194,7 +195,7 @@ class DressRoomService {
         current_folder = 0;
       }
       final response = await _api.client
-          .delete('${Api.endpoint}/dressroom/folder?folder_id=${folderId}');
+          .delete('${Api.endpoint}/v2/dressroom/folder?folder_id=${folderId}');
       folder.remove(folderId);
       items.remove(folderId);
       return true;
@@ -207,7 +208,7 @@ class DressRoomService {
   Future renameFolder(int folderId, String newName) async {
     try {
       final response = await _api.client.put(
-          '${Api.endpoint}/dressroom/folder/name',
+          '${Api.endpoint}/v2/dressroom/folder/name',
           data: jsonEncode({'folder_id': folderId, 'update_name': newName}));
       folder[folderId] = newName;
     } catch (e) {
@@ -224,7 +225,7 @@ class DressRoomService {
     }
     try {
       var response = await _api.client.put(
-          '${Api.endpoint}/dressroom/folder/move',
+          '${Api.endpoint}/v2/dressroom/folder/move',
           data: jsonEncode({'folder_id': toId, 'product_id': selectedIds}));
       items[toId] = [...items[toId], ...selectedProduct];
       for (var item in selectedProduct) {

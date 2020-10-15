@@ -95,6 +95,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                             onTap: () {
                               setState(() {
                                 page = 0;
+                                index = 0;
                               });
                             },
                             child: Padding(
@@ -115,6 +116,7 @@ class _LookBookInfoState extends State<LookBookInfo> {
                             onTap: () {
                               setState(() {
                                 page = 1;
+                                index = 0;
                               });
                             },
                             child: Padding(
@@ -232,111 +234,6 @@ class _LookBookInfoState extends State<LookBookInfo> {
                                 ),
                               )),
                         ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.75,
-                          child: Align(
-                              alignment: Alignment.bottomCenter,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  haveResult && likes
-                                      ? RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            widget.model
-                                                .likeRequest(item.product_id);
-                                            setState(() {
-                                              likes = false;
-                                              item.likes = false;
-                                            });
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Color.fromRGBO(
-                                                  72, 116, 213, 1),
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        )
-                                      : RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {},
-                                          elevation: 2.0,
-                                          fillColor:
-                                              Color.fromRGBO(72, 116, 213, 1),
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                  RawMaterialButton(
-                                    constraints: BoxConstraints(minWidth: 60),
-                                    onPressed: () {
-                                      Navigator.maybePop(context, "collect");
-                                    },
-                                    elevation: 2.0,
-                                    fillColor: Colors.white,
-                                    child: FaIcon(
-                                      FontAwesomeIcons.thLarge,
-                                      color: backgroundColor,
-                                      size: 25,
-                                    ),
-                                    padding: EdgeInsets.all(10.0),
-                                    shape: CircleBorder(),
-                                  ),
-                                  haveResult && likes
-                                      ? RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {},
-                                          elevation: 2.0,
-                                          fillColor: pinkColor,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: Colors.white,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        )
-                                      : RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            widget.model.dislikeRequest(
-                                                item.product_id);
-                                            setState(() {
-                                              likes = true;
-                                              item.likes = true;
-                                            });
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: pinkColor,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                ],
-                              )),
-                        )
                       ]),
                     ),
                     Padding(

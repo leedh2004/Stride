@@ -29,17 +29,20 @@ class LookBookService {
       print(top.product_name);
       print(bottom.product_name);
 
-      final response = await _api.client.post('${Api.endpoint}/coordination/',
-          data: jsonEncode({
-            'top_product_id': top.product_id,
-            'bottom_product_id': bottom.product_id,
-            'name': name
-          }));
+      final response =
+          await _api.client.post('${Api.endpoint}/v2/coordination/',
+              data: jsonEncode({
+                'top_product_id': top.product_id,
+                'bottom_product_id': bottom.product_id,
+                'name': name
+              }));
       if (response.statusCode == 200) {
         int coor_id = json.decode(response.data)["coor_id"];
         print("!");
         Coordinate item = new Coordinate(coor_id, name, top, bottom);
         print("!!");
+        print(items[0]);
+        print(item);
         items[0] = [item, ...items[0]];
         print("!!!");
       }
@@ -51,8 +54,9 @@ class LookBookService {
 
   Future getLookBook() async {
     folder_id = new List();
-    items = new Map();
-    folder = new Map();
+    // items = new Map();
+    print("!!!!!!!!!!!!!!!!!!!!@@@@@@@@@@@@#!@#?@!#?#@!?#@!?");
+    // folder = new Map();
     current_folder = 0;
     try {
       var response = await _api.client.get(
@@ -66,6 +70,7 @@ class LookBookService {
         for (var item in parsed[folder[info['folder_id']]]) {
           temp.add(Coordinate.fromJson(item));
         }
+        print(info['folder_id']);
         items[info['folder_id']] = temp;
       }
       init = true;
@@ -76,7 +81,7 @@ class LookBookService {
 
   Future rename(int index, String name) async {
     try {
-      final response = await _api.client.put('${Api.endpoint}/coordination/',
+      final response = await _api.client.put('${Api.endpoint}/v2/coordination/',
           data: jsonEncode({
             'coor_id': items[current_folder][index].id,
             'update_name': name

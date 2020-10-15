@@ -151,10 +151,10 @@ class SwipeService {
     precached.remove(items[index].product_id);
     index++;
     if (index + 5 >= length) {
-      if (index + 2 >= length) {
-        index--;
-        _api.errorCreate(Error());
-      }
+      // if (index + 2 >= length) {
+      //   index--;
+      //   _api.errorCreate(Error());
+      // }
       items = items.sublist(index);
       index = 0;
       length = items.length;

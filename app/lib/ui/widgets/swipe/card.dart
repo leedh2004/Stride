@@ -21,18 +21,20 @@ List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
-  GlobalKey rulerButton, buyButton;
+  GlobalKey rulerButton, buyButton, cardKey;
   Function onTapDislikeButton, onTapLikeButton, onTapCollectionButton;
   SwipeCardSection(
       BuildContext context,
       SwipeModel _model,
       GlobalKey _rulerButton,
       GlobalKey _buyButton,
+      GlobalKey _cardKey,
       Function _onTapDislikeButton,
       Function _onTapLikeButton,
       Function _onTapCollectionButton) {
     model = _model;
     rulerButton = _rulerButton;
+    cardKey = _cardKey;
     buyButton = _buyButton;
     double standard = 0.68;
     if (MediaQuery.of(context).size.height > 800) standard = 0.72;
@@ -124,6 +126,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     child: Container(
                       margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: GestureDetector(
+                        key: widget.cardKey,
                         // excludeFromSemantics: true,
                         onPanStart: (details) {
                           print('start!');
@@ -244,7 +247,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
                     child: IconButton(
                       key: widget.buyButton,
                       icon: Container(
@@ -279,7 +282,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+                    padding: EdgeInsets.fromLTRB(0, 0, 25, 20),
                     child: IconButton(
                       key: widget.rulerButton,
                       icon: Container(

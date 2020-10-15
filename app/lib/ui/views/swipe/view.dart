@@ -3,11 +3,13 @@ import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
+import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
@@ -34,7 +36,8 @@ class _SwipeViewState extends State<SwipeView> {
   bool onflag = false;
   GlobalKey collectionButton = GlobalKey(),
       buyButton2 = GlobalKey(),
-      rulerButton = GlobalKey();
+      rulerButton = GlobalKey(),
+      cardKey = GlobalKey();
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
 
@@ -165,7 +168,7 @@ class _SwipeViewState extends State<SwipeView> {
       TargetFocus(
         identify: "Target 2",
         keyTarget: buyButton2,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -178,14 +181,14 @@ class _SwipeViewState extends State<SwipeView> {
                       "구매 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "상품을 구매할 수 있습니다",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     )
                   ],
@@ -199,7 +202,7 @@ class _SwipeViewState extends State<SwipeView> {
       TargetFocus(
         identify: "Target 1",
         keyTarget: rulerButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -212,14 +215,14 @@ class _SwipeViewState extends State<SwipeView> {
                       "자세히 보기 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "상품의 사이즈, 색상, 컨셉 등을 빠르게 확인할 수 있습니다",
-                        style: TextStyle(color: Colors.white),
+                        "상품의 사이즈, 색상, 컨셉 등을\n 빠르게 확인할 수 있습니다",
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     )
                   ],
@@ -233,7 +236,7 @@ class _SwipeViewState extends State<SwipeView> {
       TargetFocus(
         identify: "Target 0",
         keyTarget: collectionButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -246,14 +249,14 @@ class _SwipeViewState extends State<SwipeView> {
                       "콜렉션 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.all(16),
                       child: Text(
                         "마음에 드는 상품을 저장할 수 있습니다",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     )
                   ],
@@ -269,6 +272,7 @@ class _SwipeViewState extends State<SwipeView> {
     var configService = Provider.of<ConfigService>(context, listen: false);
     var swipeService = Provider.of<SwipeService>(context, listen: false);
     var dressService = Provider.of<DressRoomService>(context, listen: false);
+    var lookService = Provider.of<LookBookService>(context, listen: false);
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
     // var lookService = Provider.of<LookBookService>(context, listen: false);
@@ -278,30 +282,33 @@ class _SwipeViewState extends State<SwipeView> {
         builder: (context, model, child) {
           if (swipeService.init == false) {
             if (dressService.init == false) {
-              print("GETDRESSROOM!!!!!!!!!!!!!!!!!!!!!!!!!!");
               dressService.getDressRoom();
+              lookService.getLookBook();
             }
             model.initCards();
             return LoadingWidget();
           } else if (model.busy)
             return FadeIn(delay: 0.5, child: (LoadingWidget()));
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            if ((configService.currentVersion != configService.updateVersion) &&
-                !configService.alreadyShow) {
-              ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-                duration: Duration(milliseconds: 1500),
-                content: Text('Stride앱의 최신 버전이 나왔습니다!'),
-              ));
-              configService.alreadyShow = true;
-            }
-            if (authService.swipe_tutorial == false) {
-              authService.swipe_tutorial = true;
-              var _storage = authService.storage;
-              _storage.write(key: 'swipe_tutorial', value: 'true');
-              _afterLayout();
-            }
-          });
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   if ((configService.currentVersion != configService.updateVersion) &&
+          // !configService.alreadyShow) {
+          //     ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+          //       duration: Duration(milliseconds: 1500),
+          //       content: Text('Stride앱의 최신 버전이 나왔습니다!'),
+          //     ));
+          //     configService.alreadyShow = true;
+          //   }
+          //   if (authService.swipe_tutorial == false) {
+          //     // await Navigator.of(context).push(PageRouteBuilder(
+          //     //     opaque: false, pageBuilder: (___, _, __) => ProductDialog()));
+
+          //     authService.swipe_tutorial = true;
+          //     var _storage = authService.storage;
+          //     _storage.write(key: 'swipe_tutorial', value: 'true');
+          //     _afterLayout();
+          //   }
+          // });
 
           return FadeIn(
             delay: 0.3,
@@ -329,6 +336,7 @@ class _SwipeViewState extends State<SwipeView> {
                   model,
                   rulerButton,
                   buyButton2,
+                  cardKey,
                   () => onTapDislikeButton(model),
                   () => onTapLikeButton(model),
                   () => onTapCollectButton(model)),

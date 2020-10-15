@@ -75,7 +75,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          elevation: 3,
+          elevation: 2,
           clipBehavior: Clip.antiAlias,
           child: Stack(
             alignment: Alignment.bottomLeft,
@@ -117,20 +117,20 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
               ),
               Container(
                 alignment: Alignment.bottomLeft,
-                height: 200,
+                height: 100,
                 decoration: BoxDecoration(
-                  color: Colors.red,
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    Colors.black12,
-                    Colors.black26,
-                    Colors.black54
-                  ], stops: [
-                    0.1,
-                    0.2,
-                    0.4,
-                    0.9
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  color: Colors.black12,
+                  // gradient: LinearGradient(colors: [
+                  //   Colors.transparent,
+                  //   Colors.black12,
+                  //   Colors.black26,
+                  //   Colors.black54
+                  // ], stops: [
+                  //   0.1,
+                  //   0.2,
+                  //   0.4,
+                  //   0.9
+                  // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
