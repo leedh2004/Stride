@@ -2,8 +2,7 @@
 from flask import Flask, g, request
 from gevent.pywsgi import WSGIServer
 import logging
-from logbeam import CloudWatchLogsHandler
-import os
+import logging.config
 from datetime import datetime
 import sys
 sys.path.append('../')
@@ -15,14 +14,18 @@ from backend.api_v1.login import login
 from backend.api_v1.home import home
 from backend.api_v1.user import user
 from backend.api_v1.auth import auth
+from backend.api_v1.tutorial import tutorial
+from backend.api_v2.home import v2_home
+from backend.api_v2.recommenation import v2_recommendation
+from backend.api_v2.coordination import v2_coordination
+from backend.api_v2.dressroom import v2_dressroom
 from backend.authentication.kakao import kakao
 from backend.authentication.naver import naver
 from backend.authentication.auth import *
 from flask_cors import CORS
 
-dt = str(datetime.now()).split(" ")[0]
-LOG_FORMAT = "[%(asctime)-10s] - %(message)s"
-logging.basicConfig(level=logging.INFO, format=LOG_FORMAT)
+dt = datetime.now()
+
 
 app = Flask(__name__)
 app.url_map.strict_slashes = False
@@ -37,42 +40,18 @@ app.register_blueprint(home, url_prefix='/home')
 app.register_blueprint(naver, url_prefix='/naver')
 app.register_blueprint(user, url_prefix='/user')
 app.register_blueprint(auth, url_prefix='/auth')
-log_stream = 'api-log'
+app.register_blueprint(tutorial, url_prefix='/tutorial')
 
-server_handler = CloudWatchLogsHandler(
-    log_group_name='stride',
-    log_stream_name=str(os.getpid()) + "/" + dt,
-    buffer_duration=10000,
-    batch_count=10,
-    batch_size=1048576
-)
+app.register_blueprint(v2_home, url_prefix='/v2/home')
+app.register_blueprint(v2_recommendation, url_prefix='/v2/recommendation')
+app.register_blueprint(v2_coordination, url_prefix='/v2/coordination')
+app.register_blueprint(v2_dressroom, url_prefix='/v2/dressroom')
 
-def log_parse(path, qs, res_data):
-    res_all = {
-        'top': [],
-        'all': [],
-        'skirt': [],
-        'dress': [],
-        'pants': []
-    }
-    res = {
-        'total': 0,
-        'product_id': []
-    }
-    if path == '/home/all':
-        res_data = json.loads(res_data)
-        for key in res_data.keys():
-            for item in res_data[key]:
-                res_all[key].append(item['product_id'])
-        return res_all
-    elif 'size' in str(qs):
-        res_data = json.loads(res_data)
-        for data in res_data:
-            res['product_id'].append(data['product_id'])
-        res['total'] = len(res['product_id'])
-        return res
-    else:
-        return False
+with open("logging.json", "rt") as file:
+    config = json.load(file)
+logging.config.dictConfig(config)
+logger = logging.getLogger()
+
 
 @app.route('/admin/check')
 def hello_world():
@@ -84,29 +63,25 @@ def error_test():
 
 @app.after_request
 def log(response):
-    user = ''
-    result = authentication()
-    if result is False:
-        user = 'unidentified'
-    else:
-        user = result
-    if request.path == '/admin/check':
+    try:
+        auth = authentication()
+        # health check
+        if request.path == '/admin/check':
+            return response
+        if auth is False:
+            user = 'unidentified'
+        else:
+            user = g.user_id
+        if request.method in ['GET', 'DELETE']:
+            log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(dt.now()), str(user), str(response.status), str(request),  str(response.data))
+        else:
+            log_msg = "{0}-{1}-{2}-{3}-{4}-{5}".format(str(dt.now()), str(user), str(response.status), str(request), str(response.data), str(request.data))
+        logger.info(log_msg)
         return response
-
-    logger = logging.getLogger(log_stream)
-    logger.addHandler(server_handler)
-    res_data = response.get_data().decode('utf-8')
-    req_data = request.get_data().decode('utf-8')
-    parsed_log = log_parse(request.path, request.query_string, res_data)
-    if parsed_log != False:
-        res_data = parsed_log
-    if request.method in ['GET', 'DELETE']:
-        log_msg = "{0}-{1}-{2}-{3}".format(str(user), str(request), str(response.status), res_data)
-    else:
-        log_msg = "{0}-{1}-{2}-{3}-{4}".format(str(user), str(request), str(response.status), res_data, req_data)
-    logger.info(log_msg)
-    return response
-
+    except Exception as Ex:
+        log_msg = "{0}-{1}-{2}-{3}".format(str(dt.now()), str(Ex), str(request), str(response.data))
+        logger.info(log_msg)
+        return response
 
 if __name__ == '__main__':
     print("Server on 5000 Port, MODE = PRODUCTION")

@@ -4,7 +4,7 @@ sys.path.append('../../')
 sys.path.append('../../../')
 
 
-class DressfolderModel:
+class CoordinationfolderModel:
     def fetch_data(self, item, column):
         self.folder_id = item[column['folder_id']]
         self.user_id = item[column['user_id']]

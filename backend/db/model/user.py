@@ -3,6 +3,7 @@ from decimal import Decimal
 sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
+from backend.module.size import SizeParser
 from math import *
 
 class UserSizeModel:
@@ -13,34 +14,13 @@ class UserSizeModel:
         self.shoulder = []
         self.bust = []
 
+    def origin_fetch_data(self, item, column):
+        self.waist = SizeParser.decimal_parser(item[column['waist']], 'waist')
+        self.hip = SizeParser.decimal_parser(item[column['hip']], 'hip')
+        self.thigh = SizeParser.decimal_parser(item[column['thigh']], 'thigh')
+        self.shoulder = SizeParser.decimal_parser(item[column['shoulder']], 'shoulder')
+        self.bust = SizeParser.decimal_parser(item[column['bust']], 'bust')
 
-    def fetch_data(self, item):
-        self.waist = self.decimal_parser(item[0], 'waist')
-        self.hip = self.decimal_parser(item[1], 'hip')
-        self.thigh = self.decimal_parser(item[2], 'thigh')
-        self.shoulder = self.decimal_parser(item[3], 'shoulder')
-        self.bust = self.decimal_parser(item[4], 'bust')
-
-    def origin_fetch_data(self, item):
-        self.waist = self.decimal_parser(item[0], 'waist')
-        self.hip = self.decimal_parser(item[1], 'hip')
-        self.thigh = self.decimal_parser(item[2], 'thigh')
-        self.shoulder = self.decimal_parser(item[3], 'shoulder')
-        self.bust = self.decimal_parser(item[4], 'bust')
-
-    def decimal_parser(self, sizes, tag):
-        size = []
-        if sizes is None:
-            size = None
-        else:
-            for item in sizes:
-                if tag == 'hip' or tag == 'bust':
-                    size.append(float(floor(float(item) * 2)))
-                elif tag == 'waist':
-                    size.append(float(floor(float(item) / 1.27)))
-                else:
-                    size.append(float(floor(float(item))))
-        return size
 
 
 

@@ -4,11 +4,13 @@ from backend.db.init import *
 
 def insert_like(product_id):
     with db_connect() as (service_conn, cursor):
-        query = """INSERT INTO likes(user_id, product_id) VALUES (%s, %s)"""
+        query = """
+        INSERT INTO evaluation(user_id, product_id, likes) VALUES (%s, %s, TRUE) 
+        ON CONFLICT (user_id, product_id) DO UPDATE SET likes= TRUE
+        """
         sequence_query = """INSERT INTO dressroom(user_id, product_id) VALUES (%s, %s)"""
         try:
-            print(type(g.user_id), g.user_id, product_id)
-            cursor.execute(query, (g.user_id, product_id))
+            cursor.execute(query, (g.user_id, product_id, ))
             service_conn.commit()
             cursor.execute(sequence_query, (g.user_id, product_id))
             service_conn.commit()
@@ -17,10 +19,27 @@ def insert_like(product_id):
             service_conn.rollback()
             raise
 
+def v2_insert_like(product_id):
+    with db_connect() as (service_conn, cursor):
+        query = """
+        INSERT INTO evaluation(user_id, product_id, likes) VALUES (%s, %s, TRUE) 
+        ON CONFLICT (user_id, product_id) DO UPDATE SET likes= TRUE
+        """
+        try:
+            cursor.execute(query, (g.user_id, product_id, ))
+            service_conn.commit()
+            return True
+        except Exception as ex:
+            print(ex)
+            service_conn.rollback()
+            raise
 
 def insert_dislikes(product_id):
     with db_connect() as (service_conn, cursor):
-        query = """INSERT INTO dislikes(user_id, product_id) VALUES (%s, %s)"""
+        query = """
+        INSERT INTO evaluation(user_id, product_id, likes) VALUES (%s, %s, FALSE ) 
+        ON CONFLICT (user_id, product_id) DO UPDATE SET likes= FALSE 
+        """
         try:
             cursor.execute(query, (g.user_id, product_id))
             service_conn.commit()

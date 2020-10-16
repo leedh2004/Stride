@@ -8,7 +8,7 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.authentication.auth import *
-from backend.authentication.encrypt import *
+from backend.module.db import DBEncryption
 
 auth = Blueprint('auth', __name__)
 
@@ -26,29 +26,40 @@ def login():
         headers.update({"Authorization": "Bearer " + str(access_token)})
         response = requests.request("POST", url, headers=headers)
         response_json = response.json()
-        print('kakao : ', response_json)
+        print('response', response_json)
         user_id = response_json.get('id')
-        account = response_json.get('kakao_account')
+        profile = response_json.get('properties')
         id = str(user_id) + "@kakao.com"
         insert_user(id)
+        print(profile)
+        if profile['nickname'] is not None:
+            name = profile['nickname']
+            upsert_user_name(DBEncryption.encode_text(name), id)
+        else:
+            name = None
         user_id = str(id)
-        print('user_id', user_id)
         g.user_id = user_id
         update_login_timestamp(user_id)
         flag = select_user_profile_flag()
         size = select_user_size()
         token = encode_jwt_token(id)
-        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
+        likes = get_like_dislike_cnt()
+        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
+                        "size": size, "likes": likes, "name": name}), 200
     elif channel == 'apple':
         user_id = access_token
         user_id = str(user_id).split('@')[0] + '@apple.com'
+        name = body['name']
+        if name is not None:
+            upsert_user_name(DBEncryption.encode_text(name), user_id)
+        # name = select_user_name(user_id)
         insert_user(user_id)
-        # email = user_id
-        # email = encode_text(email)
-        # update_user_email(email, email)
         update_login_timestamp(user_id)
         g.user_id = user_id
         flag = select_user_profile_flag()
         size = select_user_size()
         token = encode_jwt_token(user_id)
-        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag, "size": size}), 200
+        likes = get_like_dislike_cnt()
+        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
+                        "size": size, "likes": likes, "name": name}), 200
+

@@ -28,7 +28,6 @@ def get_clothes():
                 recommendation_list = get_single_type_item_recommendation(g.user_id, type, True)
             elif size == 'off':
                 recommendation_list = get_single_type_item_recommendation(g.user_id, type, False)
-            print(recommendation_list)
             result = get_recommended_product(recommendation_list[type])
         else:
             check_like_cnt() ## 좋아요 몇 개 체크..
@@ -52,7 +51,6 @@ def get_all_type_clothes_limit_num():
                 recommendation_list = get_entire_types_item_recommendation(g.user_id, True)
             elif size == 'off':
                 recommendation_list = get_entire_types_item_recommendation(g.user_id, False)
-            print(recommendation_list)
             result = get_recommended_product_all(recommendation_list)
         else:
             check_like_cnt()  ## 좋아요 몇 개 체크..
