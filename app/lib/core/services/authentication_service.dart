@@ -182,25 +182,25 @@ class AuthenticationService {
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
-    print('checkToken()');
-    String token = await storage.read(key: 'jwt_token');
-    if (await storage.read(key: 'swipe_tutorial') != null) {
-      swipe_tutorial = true;
-    }
-    if (await storage.read(key: 'dress_tutorial') != null) {
-      dress_tutorial = true;
-    }
-    if (token == null) {
-      init = true;
-      return;
-    }
-    api.client.options.headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      'Authorization': "Bearer ${token}",
-    };
-    print("!");
     try {
+      print('checkToken()');
+      String token = await storage.read(key: 'jwt_token');
+      if (await storage.read(key: 'swipe_tutorial') != null) {
+        swipe_tutorial = true;
+      }
+      if (await storage.read(key: 'dress_tutorial') != null) {
+        dress_tutorial = true;
+      }
+      if (token == null) {
+        init = true;
+        return;
+      }
+      api.client.options.headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        'Authorization': "Bearer ${token}",
+      };
+      print("!");
       final response = await api.client.get(
         '${Api.endpoint}/login/token',
       );
@@ -235,6 +235,7 @@ class AuthenticationService {
           } else if (e.code == 'wrong-password') {
             print('Wrong password provided for that user.');
           }
+          init = true;
         }
         master = user;
         userController.add(user);
@@ -242,7 +243,9 @@ class AuthenticationService {
         await storage.delete(key: 'jwt_token');
         print("토큰이 없거나 만료되었습니다");
       }
-    } catch (e) {}
+    } catch (e) {
+      init = true;
+    }
     init = true;
   }
 }

@@ -35,7 +35,6 @@ class DetailInfo extends StatelessWidget {
   Widget build(BuildContext context) {
     RecentItem item =
         Provider.of<SwipeService>(context, listen: false).items[(model.index)];
-    print("!!!Sx");
     print(item.type);
 
     for (int i = 0; i < item.image_urls.length; i++) {
@@ -88,22 +87,28 @@ class DetailInfo extends StatelessWidget {
                                     tag: item.product_id,
                                     // tag: item.image_urls[model.image_index],
                                     child: GestureDetector(
-                                      onTapUp: (details) {
-                                        double standard =
-                                            MediaQuery.of(context).size.width /
-                                                2;
-                                        if (standard <
-                                            details.globalPosition.dx) {
-                                          model.nextImage();
-                                        } else {
-                                          model.prevImage();
-                                        }
-                                      },
-                                      child: Image.network(
-                                        item.image_urls[model.image_index],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )),
+                                        onTapUp: (details) {
+                                          double standard =
+                                              MediaQuery.of(context)
+                                                      .size
+                                                      .width /
+                                                  2;
+                                          if (standard <
+                                              details.globalPosition.dx) {
+                                            model.nextImage();
+                                          } else {
+                                            model.prevImage();
+                                          }
+                                        },
+                                        child: Image.asset(
+                                          'images/swipe_image_logo.jpg',
+                                          fit: BoxFit.cover,
+                                        )
+                                        // Image.network(
+                                        //   item.image_urls[model.image_index],
+                                        //   fit: BoxFit.cover,
+                                        // ),
+                                        )),
                               ),
                               Align(
                                 alignment: Alignment.topLeft,
@@ -261,12 +266,14 @@ class DetailInfo extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Text(item.shop_name, style: shopNameStyle),
+                                    // Text(item.shop_name, style: shopNameStyle),
+                                    Text("스트라이드", style: shopNameStyle),
                                     UIHelper.horizontalSpaceSmall,
                                     Text('$concept', style: conceptStyle),
                                   ],
                                 ),
-                                Text(item.product_name, style: shopNameStyle),
+                                // Text(item.product_name, style: shopNameStyle),
+                                Text("심플 스트라이프 셔츠", style: shopNameStyle),
                                 UIHelper.verticalSpaceSmall,
                                 Row(
                                   children: [

@@ -290,25 +290,25 @@ class _SwipeViewState extends State<SwipeView> {
           } else if (model.busy)
             return FadeIn(delay: 0.5, child: (LoadingWidget()));
 
-          // WidgetsBinding.instance.addPostFrameCallback((_) {
-          //   if ((configService.currentVersion != configService.updateVersion) &&
-          // !configService.alreadyShow) {
-          //     ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-          //       duration: Duration(milliseconds: 1500),
-          //       content: Text('Stride앱의 최신 버전이 나왔습니다!'),
-          //     ));
-          //     configService.alreadyShow = true;
-          //   }
-          //   if (authService.swipe_tutorial == false) {
-          //     // await Navigator.of(context).push(PageRouteBuilder(
-          //     //     opaque: false, pageBuilder: (___, _, __) => ProductDialog()));
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if ((configService.currentVersion != configService.updateVersion) &&
+                !configService.alreadyShow) {
+              ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+                duration: Duration(milliseconds: 1500),
+                content: Text('Stride앱의 최신 버전이 나왔습니다!'),
+              ));
+              configService.alreadyShow = true;
+            }
+            if (authService.swipe_tutorial == false) {
+              // await Navigator.of(context).push(PageRouteBuilder(
+              //     opaque: false, pageBuilder: (___, _, __) => ProductDialog()));
 
-          //     authService.swipe_tutorial = true;
-          //     var _storage = authService.storage;
-          //     _storage.write(key: 'swipe_tutorial', value: 'true');
-          //     _afterLayout();
-          //   }
-          // });
+              authService.swipe_tutorial = true;
+              var _storage = authService.storage;
+              _storage.write(key: 'swipe_tutorial', value: 'true');
+              _afterLayout();
+            }
+          });
 
           return FadeIn(
             delay: 0.3,

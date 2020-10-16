@@ -14,11 +14,13 @@ class SwipeCardAlignment extends StatefulWidget {
   RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
+  bool test = false;
 
-  SwipeCardAlignment(RecentItem _item, int _index) {
+  SwipeCardAlignment(RecentItem _item, int _index, {bool tests}) {
     // print("NEW");
     item = _item;
     index = _index;
+    if (tests != null) test = tests;
     if (index >= item.length) {
       index = item.length - 1;
     }
@@ -86,7 +88,12 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       child: Hero(
                         tag: widget.item.product_id,
                         // tag: widget.item.image_urls[widget.index],
-                        child: widget.images[widget.index],
+                        child: widget.test
+                            ? Image.asset(
+                                'images/swipe_image_logo.jpg',
+                                fit: BoxFit.cover,
+                              )
+                            : widget.images[widget.index],
                       ))),
               Align(
                 alignment: Alignment.topLeft,
@@ -120,17 +127,6 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                 height: 100,
                 decoration: BoxDecoration(
                   color: Colors.black12,
-                  // gradient: LinearGradient(colors: [
-                  //   Colors.transparent,
-                  //   Colors.black12,
-                  //   Colors.black26,
-                  //   Colors.black54
-                  // ], stops: [
-                  //   0.1,
-                  //   0.2,
-                  //   0.4,
-                  //   0.9
-                  // ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
@@ -139,7 +135,8 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          widget.item.product_name, //'로드리 스커트',
+                          "심플 스트라이프 셔츠",
+                          // widget.item.product_name, //'로드리 스커트',
                           style: whiteShadowStyle,
                         ),
                         Text(

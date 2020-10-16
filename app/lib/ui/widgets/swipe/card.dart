@@ -445,7 +445,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           angle: (pi / 180.0) * frontCardRot,
           child: SizedBox.fromSize(
               size: cardsSize[0],
-              child: SwipeCardAlignment(item, model.image_index)),
+              child: SwipeCardAlignment(item, model.image_index, tests: true)),
         ));
   }
 

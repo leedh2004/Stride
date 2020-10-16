@@ -127,6 +127,7 @@ flutter:
     - images/loading.gif
     - images/loading_white.gif
     - images/search.png
+    - images/swipe_image_logo.jpg
 
   fonts:
     - family: NotoSansKR
