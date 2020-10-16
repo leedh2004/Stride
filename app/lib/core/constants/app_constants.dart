@@ -12,7 +12,7 @@ const int DRESS = 4;
 // SWIPE VIEW CONSTANT
 const int LIKE = 0;
 const int HATE = 1;
-const int PASS = 2;
+
 const double MAX_OPACITY = 1.0;
 const int OPACITY_SPEED = 5;
 // SWIPE CARD DRAG SPEED CONSTANT
@@ -21,8 +21,6 @@ const int Y_SPEED = 10;
 // SWIPE OPACITY CHANGE STANDARD DISTANCE CONSTANT
 const double START_RIGHT = 2;
 const double START_LEFT = -2;
-const double START_UP = -1;
 // SWIPE REQUEST STANDARD DISTANCE CONSTANT
 const double STANDARD_RIGHT = 3.0;
 const double STANDARD_LEFT = -3.0;
-const double STANDARD_UP = -2.0;

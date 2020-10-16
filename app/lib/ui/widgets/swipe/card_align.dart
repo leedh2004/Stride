@@ -1,24 +1,26 @@
 import 'dart:io';
 
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
-import 'package:app/ui/views/swipe/view.dart';
+import 'package:app/ui/views/swipe/info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 class SwipeCardAlignment extends StatefulWidget {
-  SwipeCard item;
+  RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
+  bool test = false;
 
-  SwipeCardAlignment(SwipeCard _item, int _index) {
+  SwipeCardAlignment(RecentItem _item, int _index, {bool tests}) {
     // print("NEW");
     item = _item;
     index = _index;
+    if (tests != null) test = tests;
     if (index >= item.length) {
       index = item.length - 1;
     }
@@ -75,7 +77,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          elevation: 3,
+          elevation: 2,
           clipBehavior: Clip.antiAlias,
           child: Stack(
             alignment: Alignment.bottomLeft,
@@ -84,8 +86,14 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                   child: AspectRatio(
                       aspectRatio: 11 / 16,
                       child: Hero(
-                        tag: widget.item.image_urls[widget.index],
-                        child: widget.images[widget.index],
+                        tag: widget.item.product_id,
+                        // tag: widget.item.image_urls[widget.index],
+                        child: widget.test
+                            ? Image.asset(
+                                'images/swipe_image_logo.jpg',
+                                fit: BoxFit.cover,
+                              )
+                            : widget.images[widget.index],
                       ))),
               Align(
                 alignment: Alignment.topLeft,
@@ -116,18 +124,9 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
               ),
               Container(
                 alignment: Alignment.bottomLeft,
+                height: 100,
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(colors: [
-                    Colors.transparent,
-                    Colors.black12,
-                    Colors.black26,
-                    Colors.black54
-                  ], stops: [
-                    0.1,
-                    0.2,
-                    0.4,
-                    0.9
-                  ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                  color: Colors.black12,
                 ),
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(20, 0, 0, 20),
@@ -136,13 +135,16 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          widget.item.product_name, //'로드리 스커트',
+                          "심플 스트라이프 셔츠",
+                          // widget.item.product_name, //'로드리 스커트',
                           style: whiteShadowStyle,
                         ),
                         Text(
-                          '${widget.item.price}원 [${widget.item.type.toUpperCase()}]',
+                          '${typeConverter[widget.item.type]} ${widget.item.price}원',
                           style: whiteSmallShadowStyle,
                         )
+                        // style: TextStyle(
+                        //     fontSize: 40, fontFamily: 'NotoSansKR'))
                       ]),
                 ),
               ),
@@ -151,11 +153,44 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
                   child: IconButton(
-                    // key: SwipeView.rulerButton,
-                    icon: SvgPicture.asset(
-                      'images/ruler.svg',
+                    icon: Container(
                       width: 50,
-                      color: Colors.white,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.info,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                    onPressed: () {
+                      print("wtf");
+                    },
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 70, 20),
+                  child: IconButton(
+                    icon: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(25)),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.shoppingCart,
+                          size: 15,
+                          color: Colors.black,
+                        ),
+                      ),
                     ),
                     onPressed: () {
                       print("wtf");
@@ -170,11 +205,11 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
 }
 
 // class SwipeCardAlignment extends StatelessWidget {
-//   SwipeCard item;
+//   RecentItem item;
 //   int index;
 //   List<dynamic> images = new List<dynamic>();
 
-//   SwipeCardAlignment(SwipeCard _item, int _index) {
+//   SwipeCardAlignment(RecentItem _item, int _index) {
 //     item = _item;
 //     index = _index;
 //     if (index >= item.length) {

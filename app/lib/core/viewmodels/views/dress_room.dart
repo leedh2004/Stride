@@ -1,4 +1,5 @@
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
@@ -28,13 +29,13 @@ class DressRoomModel extends BaseModel {
     notifyListeners();
   }
 
-  List<Product> findSelectedTop() {
-    List<Product> top = _service.findSelectedTop(selectedIdx.toList());
+  List<RecentItem> findSelectedTop() {
+    List<RecentItem> top = _service.findSelectedTop(selectedIdx.toList());
     return top;
   }
 
-  List<Product> findSelectedBotoom() {
-    List<Product> bottom = _service.findSelectedBottom(selectedIdx.toList());
+  List<RecentItem> findSelectedBotoom() {
+    List<RecentItem> bottom = _service.findSelectedBottom(selectedIdx.toList());
     return bottom;
   }
 
@@ -88,11 +89,8 @@ class DressRoomModel extends BaseModel {
 
   Future deleteFolder(int folderId) async {
     if (await _service.deleteFolder(folderId)) {
-      print("!!!!!!!!!!!!!!!!!!!!");
       current_folder = _service.current_folder;
       notifyListeners();
-    } else {
-      print("delete 서버 실패");
     }
   }
 

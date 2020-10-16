@@ -12,14 +12,14 @@ class PrivateWebView extends StatelessWidget {
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.maybePop(context);
           },
         ),
       ),
       body: SafeArea(
         child: Center(
           child: WebView(
-            initialUrl: 'http://www.stride.co.kr/auth',
+            initialUrl: 'https://www.stride.co.kr/auth',
             javascriptMode: JavascriptMode.unrestricted,
           ),
         ),

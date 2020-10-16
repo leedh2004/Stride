@@ -1,3 +1,4 @@
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ class NoItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
+        // color: backgroundColor,
         child: Align(
           alignment: Alignment.center + Alignment(0, -0.25),
           child: Column(
@@ -18,10 +20,10 @@ class NoItemView extends StatelessWidget {
                 width: 100,
                 height: 100,
               ),
-              Text("좋아하는 상품이 없어요", style: headerStyle),
+              Text("콜렉션에 상품이 없어요", style: headerStyle),
               UIHelper.verticalSpaceSmall,
-              Text("예쁜 아이템을 오른쪽으로 스와이프해서", style: dressRoomsubHeaderStyle),
-              Text("나만의 드레스룸을 꾸며 보아요", style: dressRoomsubHeaderStyle),
+              Text("마음에 드는 아이템을 저장해서", style: dressRoomsubHeaderStyle),
+              Text("나만의 콜렉션룸을 꾸며 보아요", style: dressRoomsubHeaderStyle),
             ],
           ),
         ),

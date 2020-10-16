@@ -1,10 +1,14 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
+import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
+import 'package:app/ui/views/recent_info.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +18,10 @@ import 'package:provider/provider.dart';
 
 class DressRoomItemWidget extends StatelessWidget {
   final int index;
-  final Product item;
+  final RecentItem item;
   final double opacity;
-  DressRoomItemWidget(this.item, this.opacity, this.index);
+  final RecentItemModel model;
+  DressRoomItemWidget(this.item, this.opacity, this.index, this.model);
 
   @override
   Widget build(BuildContext context) {
@@ -31,13 +36,16 @@ class DressRoomItemWidget extends StatelessWidget {
                   aspectRatio: 18 / 1,
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(3),
-                    child: CachedNetworkImage(
-                        imageUrl: item.thumbnail_url,
-                        fit: BoxFit.cover,
-                        httpHeaders: {
-                          HttpHeaders.refererHeader:
-                              "http://api-stride.com:5000/"
-                        }),
+                    child: Hero(
+                      tag: item.product_id,
+                      child: CachedNetworkImage(
+                          imageUrl: item.compressed_thumbnail_url,
+                          fit: BoxFit.cover,
+                          httpHeaders: {
+                            HttpHeaders.refererHeader:
+                                "http://api-stride.com:5000/"
+                          }),
+                    ),
                   ),
                 ),
               ),
@@ -68,7 +76,7 @@ class DressRoomItemWidget extends StatelessWidget {
                   FontAwesomeIcons.search,
                   color: Colors.white,
                 ),
-                onPressed: () {
+                onPressed: () async {
                   if (opacity == 1) {
                     Stride.analytics.logEvent(
                         name: 'DRESSROOM_ITEM_INFO_CLICKED',
@@ -77,9 +85,25 @@ class DressRoomItemWidget extends StatelessWidget {
                           'itemName': item.product_name,
                           'itemCategory': item.shop_name
                         });
-                    Navigator.of(context).push(PageRouteBuilder(
-                        opaque: false,
-                        pageBuilder: (___, _, __) => ProductDialog(item)));
+                    final result = Navigator.push(context,
+                        MaterialPageRoute<String>(
+                            builder: (BuildContext context) {
+                      return RecentDetailInfo(item, model, false);
+                    }));
+
+                    if (await result == 'collect') {
+                      //                           RecentItem item =
+                      //     Provider.of<SwipeService>(context, listen: false).items[model.index];
+                      // model.addItem(item);
+                      ServiceView.scaffoldKey.currentState
+                          .showSnackBar(SnackBar(
+                        duration: Duration(milliseconds: 1500),
+                        content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+                      ));
+                    }
+                    // Navigator.of(context).push(PageRouteBuilder(
+                    //     opaque: false,
+                    //     pageBuilder: (___, _, __) => ProductDialog(item)));
                   } else {
                     Provider.of<DressRoomModel>(context, listen: false)
                         .selectItem(index);
@@ -109,7 +133,7 @@ class DressRoomItemWidget extends StatelessWidget {
                       style: TextStyle(fontWeight: FontWeight.bold)),
                 ),
                 Align(
-                  alignment: Alignment.centerRight + Alignment(-0.2, 0),
+                  alignment: Alignment.bottomRight,
                   child: InkWell(
                     onTap: () => {
                       Navigator.push(context,

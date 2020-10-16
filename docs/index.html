@@ -4,12 +4,20 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
+
 <html>
 	<head>
 		<title>STRIDE</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Stride" />
+		<meta property="og:title" content="스트라이드 - 스와이프로 즐기는 패션 아이템 탐색 및 쇼핑" />
+		<meta property="og:description" content="스와이핑 카드로 마음에 드는 옷을 빠르게 탐색하는 신개념 여성 패션 쇼핑 어플리케이션" />
+		<meta property="og:image" content="https://stridedodamshindam.s3.ap-northeast-2.amazonaws.com/page_og_attachment/og_stride_main.png" />
+
 		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"/>
 		<noscript><link rel="stylesheet" href="assets/css/noscript.css" /></noscript>
 		<style type="text/css">
 			.my1{
@@ -26,8 +34,28 @@
 					width:80%;
 				}
 			}
-			
 		</style>
+		<!-- Global site tag (gtag.js) - Google Ads: 544476608 --> <script async src="https://www.googletagmanager.com/gtag/js?id=AW-544476608"></script> 
+		<script> window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'AW-544476608'); </script>
+		<script>
+			function gtag_report_conversion(url) {
+			var callback = function () {
+				if (typeof(url) != 'undefined') {
+				window.location = url;
+				}
+			};
+			console.log("!!")
+			console.log(url)
+			//   gtag('event', 'conversion', {
+			// 	  'send_to': 'AW-CONVERSION_ID/CONVERSION_LABEL',
+			// 	  'value': 1.0,
+			// 	  'currency': 'USD',
+			// 	  'event_callback': callback
+			//   });
+			gtag('event', 'conversion', {'send_to': 'AW-544476608/mTmFCJP0sOIBEMCb0IMC', 'event_callback':callback});
+			return false;
+			}
+		</script>
 	</head>
 	<body class="is-preload">
 
@@ -40,30 +68,44 @@
 						<p>스와이프로 즐기는<br />
 							패션 아이템 탐색 및 쇼핑
 						</p>
-					</header>
+					</header> 
+					
 
 				<!-- Nav -->
-					<!-- <nav id="nav">
+					<nav id="nav">
 						<ul>
-							<li><a href="#first">서비스 기능 소개</a></li>
-							<li><a href="#kimjobs">시연영상</a></li>
-							<li><a href="#second">핵심 기술 소개</a></li>
-							<li><a href="#levelup">닥터솔저의 성장</a></li>
-							<li><a href="#cta">팀원 소개</a></li>
+							<li><a href="#download">다운로드</a></li>
+							<li><a href="#information">소개</a></li>
+							<li><a href="#contact">연락</a></li>
 						</ul>
-					</nav> -->
+					</nav>
 
 				<!-- Main -->
 					<div id="main">
 
 						<!-- First Section -->
-							<section id="first" class="main special">
-								<header class="major">
+							<section id="download" class="main special">
+								<div style="margin: 0 auto;">			
+									<div  style="display:inline-block; margin-right: 0px;">
+										<h3>for IOS</h3>
+										<img src="images/app-store-badge.png" width=300px alt="" 
+										onclick="return gtag_report_conversion('https://apps.apple.com/kr/app/stride-%EC%8A%A4%ED%8A%B8%EB%9D%BC%EC%9D%B4%EB%93%9C-%EC%97%AC%EC%84%B1-%ED%8C%A8%EC%85%98-%EC%87%BC%ED%95%91/id1531507804')"
+										/>
+									</div>
+									<div  style="display:inline-block;">
+										<h3>for Android</h3>
+										<img src="images/google-play-badge.png" width=300px alt="" 
+										onclick="return gtag_report_conversion('https://play.google.com/store/apps/details?id=kr.co.stride.app')"
+										/>
+									</div>
+								</div>
+								
+								<header id="information" class="major" style="margin-top: 70px;">
 									<h2>어떤 서비스를 제공하나요?</h2>
 								</header>
 								<div class="spotlight">
-									<img src="images/1.png" alt="" width=350px/>
-									<img src="images/2.png" alt="" width=350px/>
+									<img src="images/1.png" alt="" width=300px style="margin-right: 10px"/>
+									<img src="images/2.png" alt="" width=300px style="margin-right: 10px"/>
 									<div class="content">			
 										<header class="major">
 											<h2>Stride</h2>
@@ -83,43 +125,41 @@
 										<p style="margin-right: 30px;">
 											Stride는 사용자의 취향과 사이즈에 맞는 아이템만 보여주어
 											더욱 빠르고 즐거운 쇼핑 경험을 제공합니다.<br />
-											'좋아요'한 상품만 담아 나만의 옷장을 만들어 보세요!
 										</p>
 									</div>
-									<img src="images/3.png" alt="" width=350px/>
-									<img src="images/4.png" alt="" width=350px/>
+									<img src="images/3.png" alt="" width=300px style="margin-right: 10px"/>
+									<img src="images/6.png" alt="" width=300px style="margin-right: 10px"/>
 								</div>
 								<div class="spotlight">
-									<img src="images/5.png" alt="" width=350px/>
+									<img src="images/4.png" alt="" width=300px style="margin-right: 10px"/>
+									<img src="images/5.png" alt="" width=300px style="margin-right: 10px"/>
 									<div class="content">			
 										<header class="major">
-											<h2>Look book</h2>
+											<h2>콜렉션</h2>
 										</header>
 										<br>
-											드레스룸 코디, 룩북 등 Stride의 다양한 기능으로<br /> 자신만의 패션 조합을 완성해보세요!
+											콜렉션, 룩북 등 Stride의 다양한 기능으로<br /> 자신만의 패션 조합을 완성해보세요!
 										</p>
 									</div>
 								</div>
-								<header class="major">
+								<!-- <header class="major">
 									<h2>Screen Shoot
 									</h2>
 									<h3>device: iPhone 11 Emulator
 									</h3>
-								</header>
-								<div>
-									<!-- 미디어쿼리로 바꿔줄거임 -->
+								</header> -->
+								<!-- <div>
 									<img src="images/aa.png" alt="" class="my1"/>
 									<img src="images/bb.png" alt="" class="my1"/>
 									<img src="images/cc.png" alt="" class="my1"/>
 									<img src="images/dd.png" alt="" class="my1"/>
 								</div>
 								<div>
-									<!-- 미디어쿼리로 바꿔줄거임 -->
 									<img src="images/ee.png" alt="" class="my1"/>
 									<img src="images/ff.png" alt="" class="my1"/>
 									<img src="images/gg.png" alt="" class="my1"/>
 									<img src="images/hh.png" alt="" class="my1"/>
-								</div>
+								</div> -->
 								<!-- <footer class="major">
 									<ul class="actions special">
 										<li><a href="generic.html" class="button">Learn More</a></li>
@@ -187,8 +227,8 @@
 								</header>
 							</section> -->
 						<!-- Second Section -->
-							<section id="levelup" class="main special">
-								<header class="major">
+							<!-- <section id="levelup" class="main special"> -->
+								<!-- <header class="major">
 									<h2>Stride Dev Info</h2>
 									<p>20.07.01 ~
 									</p>
@@ -208,7 +248,7 @@
 										<span class="icon solid fa-code"></span>
 										<strong>?</strong> Code lines
 									</li>
-								</ul>
+								</ul> -->
 								<!-- <div class="spotlight">
 									<img src="images/gitflow.png" width=250px alt="" />
 									<div class="content">			
@@ -222,7 +262,7 @@
 										</p> 
 									</div>
 								</div> -->
-								<div class="spotlight">
+								<!-- <div class="spotlight">
 									<img src="images/appstore.png" width=200px alt="" />
 									<div class="content">			
 										<header class="major">
@@ -231,9 +271,6 @@
 										<p>
 											App Store 심사 후 업데이트됩니다.
 										</p>
-										<!-- <ul class="actions">
-											<li><a href="generic.html" class="button">Learn More</a></li>
-										</ul> -->
 									</div>
 									
 								</div>
@@ -250,10 +287,10 @@
 										</p>
 										
 									</div>
-								</div>
+								</div> -->
 								
 							
-							</section>
+							<!-- </section> -->
 
 						<!-- Get Started -->
 							
@@ -261,86 +298,20 @@
 					</div>
 
 				<!-- Footer -->
-					<footer id="footer" style="text-align: center;">
-						<div id="cta" style="width:100%">
-							<h2>Contact & Developers</h2>
-							<p>
-								Email: "help.stride@gmail.com"<br/>
-								SW Maestro 11</p>
-						</div>
-						<div style="width:100%"> 
-						<div style=" display: inline-block;" class="my2">
-							<section class="main special">
-							<div class="spotlight">
-								<div>
-									<!-- <img src="images/dh.png" style="width:100%; border-radius:50%" alt="" /> -->
-									<div class="content">			
-										<header class="major">
-											<h2>이도현</h2>
-										</header>
-										<p>
-											React <br/>
-											Flutter
-										</p>
-										<!-- <ul class="actions">
-											<li><a href="generic.html" class="button">Learn More</a></li>
-										</ul> -->
-									</div>
-								</div>
+					<section id="contact">
+						<footer style="text-align: center; margin: 70px;">
+							<div id="cta" style="width:100%">
+								<h2>Contact & Developers</h2>
+								<p>
+									Email: "help.stride@gmail.com"<br/>
+									SW Maestro 11</p>
 							</div>
-							</section>
-						</div>
-
-						<div style=" display: inline-block; margin:0 10%;" class="my2">
-							<section class="main special">
-							<div class="spotlight">
-								<div>
-									<!-- <img src="images/jj3.png" style="width:100%; border-radius:50%" alt="" /> -->
-									<div class="content">			
-										<header class="major">
-											<h2>황희담</h2>
-										</header>
-										<p>
-											Recommnedation Algorithm <br />
-											Elastic Search
-										</p>
-										<!-- <ul class="actions">
-											<li><a href="generic.html" class="button">Learn More</a></li>
-										</ul> -->
-									</div>
-								</div>
-							</div>
-							</section>
-						</div>
-
-						<div style=" display: inline-block;" class="my2">
-							<section class="main special">
-							<div class="spotlight">
-								<div>
-									<!-- <img src="images/wonjin.jpeg" style="width:100%; border-radius:50%" alt="" /> -->
-									<div class="content">			
-										<header class="major">
-											<h2>이신육</h2>
-										</header>
-										<p>
-											Server <br />
-											Crawling <br />
-											DataBase
-										</p>
-										<!-- <ul class="actions">
-											<li><a href="generic.html" class="button">Learn More</a></li>
-										</ul> -->
-									</div>
-								</div>
-							</div>
-							</section>
-						</div>
-						</div>
-
-						
-						
-						<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
-					</footer>
+	
+							
+							
+							<p class="copyright">&copy; Untitled. Design: <a href="https://html5up.net">HTML5 UP</a>.</p>
+						</footer>
+					</section>
 
 			</div>
 

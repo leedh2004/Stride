@@ -113,7 +113,7 @@ class _SizeInputDialogState extends State<SizeInputDialog> {
                 ]);
                 // Provider.of<StrideUser>(context, listen: false).profile_flag =
                 //     true;
-                Navigator.pop(context);
+                Navigator.maybePop(context);
               }
             },
           ),

@@ -7,7 +7,7 @@ import 'package:app/ui/widgets/loading.dart';
 import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
@@ -32,9 +32,10 @@ class LoginView extends StatelessWidget {
     final authCode = installed
         ? await AuthCodeClient.instance.requestWithTalk()
         : await AuthCodeClient.instance.request();
+    print(authCode);
     AccessTokenResponse token =
         await AuthApi.instance.issueAccessToken(authCode);
-    model.login(token.accessToken, "kakao");
+    model.login(token.accessToken, "kakao", null);
   }
 
   @override
@@ -139,7 +140,7 @@ class LoginView extends StatelessWidget {
 //                 // print(info);
 //                 Provider.of<AuthenticationService>(context, listen: false)
 //                     .login(info[0], info[1] + '@' + info[2]);
-//                 Navigator.pop(context);
+//                 Navigator.maybePop(context);
 //               })
 //         ].toSet(),
 //         initialUrl:
@@ -173,7 +174,7 @@ class LoginView extends StatelessWidget {
 //                     .login(info[0], info[1] + '@' + info[2]);
 //                 print(info[1]); // id
 //                 print(info[2]); // channel
-//                 Navigator.pop(context);
+//                 Navigator.maybePop(context);
 //               })
 //         ].toSet(),
 //         initialUrl:

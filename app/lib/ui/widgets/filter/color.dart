@@ -1,3 +1,4 @@
+import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
 
@@ -9,43 +10,61 @@ class BoolWrapper {
 }
 
 class ColorFilter extends StatefulWidget {
+  SwipeModel model;
+  ColorFilter(this.model);
   @override
   _ColorFilterState createState() => _ColorFilterState();
 }
 
 class _ColorFilterState extends State<ColorFilter> {
-  BoolWrapper all = BoolWrapper(true);
-  BoolWrapper red = BoolWrapper(false);
-  BoolWrapper black = BoolWrapper(false);
-  BoolWrapper white = BoolWrapper(false);
-  BoolWrapper gray = BoolWrapper(false);
-  BoolWrapper brown = BoolWrapper(false);
-  BoolWrapper beige = BoolWrapper(false);
-  BoolWrapper navy = BoolWrapper(false);
-  BoolWrapper blue = BoolWrapper(false);
-  BoolWrapper green = BoolWrapper(false);
-  BoolWrapper ivory = BoolWrapper(false);
-  BoolWrapper pink = BoolWrapper(false);
-  BoolWrapper yellow = BoolWrapper(false);
-  BoolWrapper orange = BoolWrapper(false);
-  BoolWrapper purple = BoolWrapper(false);
+  BoolWrapper all;
+  BoolWrapper red;
+  BoolWrapper black;
+  BoolWrapper white;
+  BoolWrapper gray;
+  BoolWrapper brown;
+  BoolWrapper beige;
+  BoolWrapper navy;
+  BoolWrapper blue;
+  BoolWrapper green;
+  BoolWrapper ivory;
+  BoolWrapper pink;
+  BoolWrapper yellow;
+  BoolWrapper orange;
+  BoolWrapper purple;
 
   Widget unSelectedWidget(Color color, BoolWrapper type, String title) {
     bool blackBorder = false;
     if (['상관없음', '화이트', '아이보리'].contains(title)) blackBorder = true;
     return InkWell(
       onTap: () {
-        setState(() {
-          if (identical(type, all)) {
-            red.value = black.value = white.value = gray.value = brown.value =
-                beige.value = navy.value = blue.value = green.value =
-                    ivory.value = pink.value =
-                        yellow.value = orange.value = purple.value = false;
-          } else if (all.value == true) {
-            all.value = false;
-          }
-          type.value = true;
-        });
+        if (identical(type, all)) {
+          red.value = black.value = white.value = gray.value = brown.value =
+              beige.value = navy.value = blue.value = green.value =
+                  ivory.value = pink.value =
+                      yellow.value = orange.value = purple.value = false;
+        } else if (all.value == true) {
+          all.value = false;
+        }
+        type.value = true;
+        List<String> colors = new List();
+        all.value ? colors.add('all') : null;
+        red.value ? colors.add('red') : null;
+        black.value ? colors.add('black') : null;
+        white.value ? colors.add('white') : null;
+        gray.value ? colors.add('gray') : null;
+        brown.value ? colors.add('brown') : null;
+        beige.value ? colors.add('beige') : null;
+        navy.value ? colors.add('navy') : null;
+        blue.value ? colors.add('blue') : null;
+        green.value ? colors.add('green') : null;
+        ivory.value ? colors.add('ivory') : null;
+        pink.value ? colors.add('pink') : null;
+        yellow.value ? colors.add('yellow') : null;
+        orange.value ? colors.add('orange') : null;
+        purple.value ? colors.add('purple') : null;
+        widget.model.setColors(colors);
+        setState(() {});
       },
       child: Column(children: [
         Container(
@@ -75,24 +94,40 @@ class _ColorFilterState extends State<ColorFilter> {
     if (['상관없음', '화이트', '아이보리'].contains(title)) blackBorder = true;
     return InkWell(
       onTap: () {
-        setState(() {
-          type.value = false;
-          if (!(all.value ||
-              black.value ||
-              white.value ||
-              gray.value ||
-              brown.value ||
-              beige.value ||
-              navy.value ||
-              blue.value ||
-              green.value ||
-              ivory.value ||
-              pink.value ||
-              yellow.value ||
-              orange.value ||
-              purple.value ||
-              red.value)) all.value = true;
-        });
+        type.value = false;
+        if (!(all.value ||
+            black.value ||
+            white.value ||
+            gray.value ||
+            brown.value ||
+            beige.value ||
+            navy.value ||
+            blue.value ||
+            green.value ||
+            ivory.value ||
+            pink.value ||
+            yellow.value ||
+            orange.value ||
+            purple.value ||
+            red.value)) all.value = true;
+        List<String> colors = new List();
+        all.value ? colors.add('all') : null;
+        red.value ? colors.add('red') : null;
+        black.value ? colors.add('black') : null;
+        white.value ? colors.add('white') : null;
+        gray.value ? colors.add('gray') : null;
+        brown.value ? colors.add('brown') : null;
+        beige.value ? colors.add('beige') : null;
+        navy.value ? colors.add('navy') : null;
+        blue.value ? colors.add('blue') : null;
+        green.value ? colors.add('green') : null;
+        ivory.value ? colors.add('ivory') : null;
+        pink.value ? colors.add('pink') : null;
+        yellow.value ? colors.add('yellow') : null;
+        orange.value ? colors.add('orange') : null;
+        purple.value ? colors.add('purple') : null;
+        widget.model.setColors(colors);
+        setState(() {});
       },
       child: Column(children: [
         Container(
@@ -120,6 +155,22 @@ class _ColorFilterState extends State<ColorFilter> {
 
   @override
   Widget build(BuildContext context) {
+    all = BoolWrapper(widget.model.filter.colors.contains('all'));
+    black = BoolWrapper(widget.model.filter.colors.contains('black'));
+    white = BoolWrapper(widget.model.filter.colors.contains('white'));
+    gray = BoolWrapper(widget.model.filter.colors.contains('gray'));
+    brown = BoolWrapper(widget.model.filter.colors.contains('brown'));
+    beige = BoolWrapper(widget.model.filter.colors.contains('beige'));
+    navy = BoolWrapper(widget.model.filter.colors.contains('navy'));
+    blue = BoolWrapper(widget.model.filter.colors.contains('blue'));
+    green = BoolWrapper(widget.model.filter.colors.contains('green'));
+    ivory = BoolWrapper(widget.model.filter.colors.contains('ivory'));
+    pink = BoolWrapper(widget.model.filter.colors.contains('pink'));
+    yellow = BoolWrapper(widget.model.filter.colors.contains('yellow'));
+    orange = BoolWrapper(widget.model.filter.colors.contains('orange'));
+    purple = BoolWrapper(widget.model.filter.colors.contains('purple'));
+    red = BoolWrapper(widget.model.filter.colors.contains('red'));
+
     Map<Color, BoolWrapper> types = {
       Color.fromRGBO(255, 255, 255, 0.9): all,
       Color.fromRGBO(0, 0, 0, 1): black,

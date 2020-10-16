@@ -1,13 +1,10 @@
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recommend/view.dart';
 import 'package:app/ui/views/swipe/view.dart';
-import 'package:app/ui/widgets/radius_container.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'dressroom/view.dart';
-import 'lookbook/view.dart';
+import 'collection/view.dart';
 import 'mypage/view.dart';
 
 class ServiceView extends StatefulWidget {
@@ -25,6 +22,9 @@ class _ServiceViewState extends State<ServiceView>
   void initState() {
     super.initState();
     _tabController = new TabController(vsync: this, length: 4);
+    _tabController.addListener(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -42,8 +42,8 @@ class _ServiceViewState extends State<ServiceView>
             physics: NeverScrollableScrollPhysics(),
             children: [
               SwipeView(),
-              DressRoomView(),
               RecommendView(),
+              CollectionView(),
               //LookBookView(),
               MyPageView(),
             ]),
@@ -81,25 +81,31 @@ class _ServiceViewState extends State<ServiceView>
                             : Colors.white),
                   )),
                   Tab(
-                      icon: Container(
-                    padding: EdgeInsets.all(12),
-                    child: SvgPicture.asset('images/menu_lookbook.svg',
-                        width: 36,
-                        height: 36,
-                        color: _tabController.index == 2
-                            ? Colors.black
-                            : Colors.white),
+                      icon: Padding(
+                    padding: EdgeInsets.only(top: 6),
+                    child: Container(
+                      width: 30,
+                      height: 30,
+                      child: FaIcon(FontAwesomeIcons.thLarge,
+                          color: _tabController.index == 2
+                              ? Colors.black
+                              : Colors.white),
+                    ),
                   )),
                   Tab(
-                      icon: Container(
-                    padding: EdgeInsets.all(12),
-                    child: SvgPicture.asset('images/menu_mypage.svg',
-                        width: 36,
-                        height: 36,
-                        color: _tabController.index == 3
-                            ? Colors.black
-                            : Colors.white),
-                  )),
+                    icon: Padding(
+                      padding: EdgeInsets.only(top: 6),
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        // padding: EdgeInsets.all(12),
+                        child: FaIcon(FontAwesomeIcons.userAlt,
+                            color: _tabController.index == 3
+                                ? Colors.black
+                                : Colors.white),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),

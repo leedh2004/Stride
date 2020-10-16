@@ -11,13 +11,24 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart' hide Router;
 import 'package:flutter/services.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
 
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext context) {
+    return super.createHttpClient(context)..maxConnectionsPerHost = 5;
+  }
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  GestureBinding.instance.resamplingEnabled = true;
+  HttpOverrides.global = MyHttpOverrides();
+
   await Firebase.initializeApp();
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
@@ -46,6 +57,7 @@ Future<void> main() async {
   await remoteConfig.fetch(expiration: const Duration(seconds: 0));
   await remoteConfig.activateFetched();
   final updatedVersion = remoteConfig.getString('version').trim();
+  print(updatedVersion);
   runZoned(() {
     runApp(Provider<ConfigService>.value(
         value: ConfigService(appleSignInAvailable, updatedVersion),
@@ -74,11 +86,13 @@ class Stride extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            //for modal..
-            highlightColor: Colors.transparent,
-            splashColor: Colors.transparent),
+          fontFamily: 'NotoSansKR',
+          primarySwatch: Colors.blue,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          //for modal..
+          // highlightColor: Colors.transparent,
+          // splashColor: Colors.transparent
+        ),
         initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
         navigatorObservers: [observer],
