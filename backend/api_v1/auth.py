@@ -50,10 +50,10 @@ def login():
         user_id = access_token
         user_id = str(user_id).split('@')[0] + '@apple.com'
         name = body['name']
+        insert_user(user_id)
         if name is not None:
             upsert_user_name(DBEncryption.encode_text(name), user_id)
         # name = select_user_name(user_id)
-        insert_user(user_id)
         update_login_timestamp(user_id)
         g.user_id = user_id
         flag = select_user_profile_flag()
@@ -62,4 +62,3 @@ def login():
         likes = get_like_dislike_cnt()
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
                         "size": size, "likes": likes, "name": name}), 200
-
