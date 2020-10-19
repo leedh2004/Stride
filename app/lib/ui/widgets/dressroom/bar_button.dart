@@ -1,6 +1,5 @@
-import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -120,8 +119,6 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                             btnCancelColor: gray,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
-                              Stride.analytics
-                                  .logEvent(name: "DRESS_ROOM_REMOVE_ITEM");
                               Provider.of<DressRoomModel>(context,
                                       listen: false)
                                   .removeItem();
@@ -165,17 +162,9 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                     color: Color.fromRGBO(245, 242, 253, 1),
                     child: SvgPicture.asset('images/folder.svg',
                         width: 25, height: 25),
-                    // alignment: Alignment.centerRight,
-
-                    // icon: FaIcon(FontAwesomeIcons.solidFolder),
                     onPressed: () {
-                      // var folder =
-                      //     Provider.of<DressRoomService>(context, listen: false)
-                      //         .folder;
-                      // var folderIds = folder.keys.toList();
-                      // var folderNames = folder.values.toList();
                       Stride.analytics
-                          .logEvent(name: "DRESS_ROOM_FODLER_BUTTON_CLICKED");
+                          .logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                       showMaterialModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context,
@@ -216,7 +205,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 0",
         keyTarget: folderButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -229,14 +218,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "폴더 버튼",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "폴더로 드레스룸을 편하게 관리할 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
+                        "폴더로 나만의 옷들을 편하게 관리할 수 있습니다.",
+                        style: TextStyle(color: Colors.black),
                       ),
                     )
                   ],
@@ -249,7 +238,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 1",
         keyTarget: makeButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -262,21 +251,21 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "MAKE BUTTON",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "상/하의를 클릭하면 활성화됩니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "상/하의를 조합하여 나만의 룩북을 만들 수 있습니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     ),
                     UIHelper.verticalSpaceLarge,
@@ -292,7 +281,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
       TargetFocus(
         identify: "Target 2",
         keyTarget: trashButton,
-        color: backgroundColor,
+        color: Colors.white,
         contents: [
           ContentTarget(
               align: AlignContent.top,
@@ -305,14 +294,14 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       "휴지통",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
                         "선택된 옷들을 모두 삭제합니다.",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.black),
                       ),
                     )
                   ],
@@ -368,8 +357,8 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
           padding: EdgeInsets.fromLTRB(70, 12, 70, 12),
           color: backgroundColor,
           onPressed: () async {
-            List<Product> top = model.findSelectedTop();
-            List<Product> bottom = model.findSelectedBotoom();
+            List<RecentItem> top = model.findSelectedTop();
+            List<RecentItem> bottom = model.findSelectedBotoom();
             Stride.analytics.logEvent(name: "DRESSROOM_MAKE_BUTTON_CLICKED");
             showMaterialModalBottomSheet(
                 backgroundColor: Colors.transparent,

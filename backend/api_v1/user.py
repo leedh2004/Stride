@@ -7,7 +7,6 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from backend.db.queries.user import *
-from backend.authentication.encrypt import *
 from backend.authentication.auth import *
 
 user = Blueprint('user', __name__)
@@ -50,3 +49,38 @@ def survey():
     except:
         return jsonify("Fail"), 500
 
+
+@user.route('/history/<page>', methods=['GET'])
+@login_required
+def get_history(page):
+    try:
+        result = get_history_list(page)
+        return result, 200
+    except:
+        return jsonify("Fail"), 500
+
+
+@user.route('/history', methods=['PUT'])
+@login_required
+def modify_history():
+    try:
+        body = request.get_json()
+        product_id = body['product_id']
+        result = modify_history_one(product_id)
+        if result is True:
+            return jsonify("Success"), 200
+        else:
+            return jsonify("Fail"), 500
+    except:
+        return jsonify("Fail"), 500
+
+
+
+@user.route('history/count', methods=['GET'])
+@login_required
+def get_history_cnt():
+    try:
+        result = get_like_dislike_cnt()
+        return result, 200
+    except:
+        return jsonify("Fail"), 500

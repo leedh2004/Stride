@@ -14,6 +14,24 @@ class AuthenticationService {
   BehaviorSubject<StrideUser> userController = BehaviorSubject<StrideUser>();
   Stream<StrideUser> get user => userController.stream;
   FlutterSecureStorage storage = new FlutterSecureStorage();
+  StrideUser master;
+
+  void minusLike() {
+    master.like--;
+  }
+
+  void minusDislike() {
+    master.dislike--;
+  }
+
+  void addLike() {
+    master.like++;
+  }
+
+  void addDislike() {
+    master.dislike++;
+  }
+
   bool init = false;
   bool swipe_tutorial = false;
   bool dress_tutorial = false;
@@ -63,13 +81,16 @@ class AuthenticationService {
     userController.add(testuser);
   }
 
-  Future<bool> loginWithApple({List<Scope> scopes = const []}) async {
+  Future<List<String>> loginWithApple({List<Scope> scopes = const []}) async {
     final result = await AppleSignIn.performRequests(
         [AppleIdRequest(requestedScopes: scopes)]);
     // 2. check the result
     switch (result.status) {
       case AuthorizationStatus.authorized:
         final appleIdCredential = result.credential;
+        print('!!!!!!!!NAME@@@@@@@@@');
+        // print(
+        // '${appleIdCredential.fullName.givenName} ${appleIdCredential.fullName.familyName}');
         final oAuthProvider = OAuthProvider('apple.com');
         final credential = oAuthProvider.credential(
           idToken: String.fromCharCodes(appleIdCredential.identityToken),
@@ -77,9 +98,14 @@ class AuthenticationService {
               String.fromCharCodes(appleIdCredential.authorizationCode),
         );
         final authResult = await _firebaseAuth.signInWithCredential(credential);
+        print(authResult);
         String email = authResult.user.email;
         await _firebaseAuth.signOut();
-        return login(email, "apple");
+        return [
+          email,
+          '${appleIdCredential.fullName.familyName}${appleIdCredential.fullName.givenName}'
+        ];
+      // return login(email, "apple");
 
       case AuthorizationStatus.error:
         print(result.error.toString());
@@ -98,25 +124,38 @@ class AuthenticationService {
     return null;
   }
 
-  Future<bool> login(String accessToken, String channel) async {
+  Future<bool> login(String accessToken, String channel, String name) async {
+    print("!!");
     try {
       final response = await api.client.post('${Api.endpoint}/auth/token',
-          data: jsonEncode(
-              {'access_token': accessToken, 'channel': '${channel}'}));
+          data: jsonEncode({
+            'access_token': accessToken,
+            'channel': '${channel}',
+            'name': name
+          }));
       var parsed = response.data as Map<String, dynamic>;
+      print(parsed);
       var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
       String id = parsed['user_id'];
       String token = parsed['token'];
       // 토큰이 없을 때만 일로 오니까 !
+      print(parsed['name']);
+      print("???!!!!!!!!!!ZXCZC");
+      var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
       await storage.write(key: 'jwt_token', value: token);
       StrideUser user = StrideUser(
           id: id,
+          like: likes['like'],
+          dislike: likes['dislike'],
           profile_flag: parsed['profile_flag'],
+          name: parsed['name'],
           shoulder: size['shoulder'],
           bust: size['bust'],
           waist: size['waist'],
           hip: size['hip'],
           thigh: size['thigh']);
+      master = user;
+
       try {
         await FirebaseAuth.instance.createUserWithEmailAndPassword(
             email: id, password: "SuperSecretPassword!");
@@ -143,58 +182,69 @@ class AuthenticationService {
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
-    String token = await storage.read(key: 'jwt_token');
-
-    if (await storage.read(key: 'swipe_tutorial') != null) {
-      swipe_tutorial = true;
-    }
-
-    if (await storage.read(key: 'dress_tutorial') != null) {
-      dress_tutorial = true;
-    }
-
-    if (token == null) {
-      init = true;
-      return;
-    }
-    api.client.options.headers = {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-      'Authorization': "Bearer ${token}",
-    };
-    final response = await api.client.get(
-      '${Api.endpoint}/login/token',
-    );
-    if (response.statusCode == 200) {
-      print(response.data);
-      var parsed = response.data as Map<String, dynamic>;
-      var id = parsed['user_id'];
-      var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
-      StrideUser user = StrideUser(
-          id: id,
-          profile_flag: parsed['profile_flag'],
-          shoulder: size['shoulder'],
-          bust: size['bust'],
-          waist: size['waist'],
-          hip: size['hip'],
-          thigh: size['thigh']);
-      //뉴토큰으로 토큰 교체해줘야함.
-      await storage.delete(key: 'jwt_token');
-      await storage.write(key: 'jwt_token', value: response.data['token']);
-      try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: id, password: "SuperSecretPassword!");
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          print('No user found for that email.');
-        } else if (e.code == 'wrong-password') {
-          print('Wrong password provided for that user.');
-        }
+    try {
+      print('checkToken()');
+      String token = await storage.read(key: 'jwt_token');
+      if (await storage.read(key: 'swipe_tutorial') != null) {
+        swipe_tutorial = true;
       }
-      userController.add(user);
-    } else {
-      await storage.delete(key: 'jwt_token');
-      print("토큰이 없거나 만료되었습니다");
+      if (await storage.read(key: 'dress_tutorial') != null) {
+        dress_tutorial = true;
+      }
+      if (token == null) {
+        init = true;
+        return;
+      }
+      api.client.options.headers = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        'Authorization': "Bearer ${token}",
+      };
+      print("!");
+      final response = await api.client.get(
+        '${Api.endpoint}/login/token',
+      );
+      print(response.statusCode);
+
+      if (response.statusCode == 200) {
+        await storage.delete(key: 'jwt_token');
+        print(response.data);
+        var parsed = response.data as Map<String, dynamic>;
+        var id = parsed['user_id'];
+        var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
+        var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
+        StrideUser user = StrideUser(
+            id: id,
+            profile_flag: parsed['profile_flag'],
+            name: jsonDecode(parsed['name']),
+            shoulder: size['shoulder'],
+            bust: size['bust'],
+            like: likes['like'],
+            dislike: likes['dislike'],
+            waist: size['waist'],
+            hip: size['hip'],
+            thigh: size['thigh']);
+        //뉴토큰으로 토큰 교체해줘야함.
+        await storage.write(key: 'jwt_token', value: response.data['token']);
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: id, password: "SuperSecretPassword!");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            print('No user found for that email.');
+          } else if (e.code == 'wrong-password') {
+            print('Wrong password provided for that user.');
+          }
+          init = true;
+        }
+        master = user;
+        userController.add(user);
+      } else {
+        await storage.delete(key: 'jwt_token');
+        print("토큰이 없거나 만료되었습니다");
+      }
+    } catch (e) {
+      init = true;
     }
     init = true;
   }

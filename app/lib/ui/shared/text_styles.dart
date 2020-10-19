@@ -29,18 +29,19 @@ const whiteStyle = TextStyle(color: Colors.white);
 
 const whiteShadowStyle = TextStyle(
   color: Colors.white,
-  fontSize: 25,
-  shadows: <Shadow>[
-    Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
-  ],
+  fontSize: 21,
+  fontFamily: 'NotoSansKR',
+  // shadows: <Shadow>[
+  //   Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
+  // ],
 );
 
 const whiteSmallShadowStyle = TextStyle(
   color: Colors.white,
-  fontSize: 20,
-  shadows: <Shadow>[
-    Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
-  ],
+  fontSize: 18,
+  // shadows: <Shadow>[
+  //   Shadow(offset: Offset(4.0, 4.0), blurRadius: 5.0, color: Colors.black),
+  // ],
 );
 const redHeaderStyle = TextStyle(
     fontSize: 35,
@@ -58,13 +59,16 @@ const inputPurpleStyle = TextStyle(
 
 String priceText(int price) {
   String str = price.toString();
-  String ret = "";
-  int idx = str.length - 1;
-  int cnt = 0;
-  for (int i = idx; i >= 0; i--) {
-    ret = str[i] + ret;
-    cnt++;
-    if (cnt % 3 == 0 && idx != 0) ret = ',' + ret;
-  }
+  String ret = str.substring(0, str.length - 3) +
+      ',' +
+      str.substring(str.length - 3, str.length);
+  // String ret = "";
+  // int idx = str.length - 1;
+  // int cnt = 0;
+  // for (int i = idx; i >= 0; i--) {
+  //   ret = str[i] + ret;
+  //   cnt++;
+  //   if (cnt % 3 == 0 && idx != 0 ) ret = ',' + ret;
+  // }
   return ret;
 }

@@ -9,44 +9,35 @@ conn = pg2.connect(dbname=db_name, user=db_user, password=db_password,
                    host=db_host, port=db_port)
 
 
-
 size_types = ('length', 'waist', 'hip', 'thigh', 'rise', 'hem', 'shoulder', 'bust', 'arm_length')
 
 
-def get_like_items():
+def get_like_items_documents():
     db_cursor = conn.cursor()
     db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM likes
-        WHERE likes.es_flag = false;
+        SELECT evaluation.user_id, shop.shop_id, products.product_id, products.type, shop.shop_concept
+        FROM evaluation join products using (product_id) join shop using (shop_id)
+        WHERE evaluation.likes = true and evaluation.es_flag = false;
     """)
     like_items = db_cursor.fetchall()
+    docs = [{'user_id': item[0], 'shop_id': str(item[1]), 'product_id': str(item[2]), 'clothes_type': item[3],
+             'shop_concept': item[4], 'rating': 'like'} for item in like_items]
     db_cursor.close()
-    return like_items
+    return docs
 
 
-def get_pass_items():
+def get_dislike_items_documents():
     db_cursor = conn.cursor()
     db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM pass
-        WHERE pass.es_flag = false;
-    """)
-    pass_items = db_cursor.fetchall()
-    db_cursor.close()
-    return pass_items
-
-
-def get_dislike_items():
-    db_cursor = conn.cursor()
-    db_cursor.execute("""
-        SELECT user_id, product_id
-        FROM dislikes
-        WHERE dislikes.es_flag = false;
+        SELECT evaluation.user_id, shop.shop_id, products.product_id, products.type, shop.shop_concept
+        FROM evaluation join products using (product_id) join shop using (shop_id)
+        WHERE evaluation.likes = false and evaluation.es_flag = false;
     """)
     dislike_items = db_cursor.fetchall()
+    docs = [{'user_id': item[0], 'shop_id': str(item[1]), 'product_id': str(item[2]), 'clothes_type': item[3],
+             'shop_concept': item[4], 'rating': 'dislike', 'preference_score': 0.0} for item in dislike_items]
     db_cursor.close()
-    return dislike_items
+    return docs
 
 
 def get_shop_concepts_from_shop_id(shop_id):
@@ -77,9 +68,10 @@ def get_products_from_shop_id(shop_id):
 def get_new_products_from_db():
     db_cursor = conn.cursor()
     db_cursor.execute(f"""
-        SELECT product_id, shop_id, type, length::float4[], waist::float4[], hip::float4[], thigh::float4[], 
-            rise::float4[], hem::float4[], shoulder::float4[], bust::float4[], arm_length::float4[]
-        FROM products
+        SELECT product_id, shop.shop_id, type, length::float4[], waist::float4[], hip::float4[], thigh::float4[], 
+            rise::float4[], hem::float4[], shoulder::float4[], bust::float4[], arm_length::float4[], 
+            price, clustered_color as color, shop_concept
+        FROM products join shop using (shop_id)
         WHERE active_flag = true and es_flag = false;
     """)
     products = db_cursor.fetchall()
@@ -87,61 +79,36 @@ def get_new_products_from_db():
     return products
 
 
-# update es_flag for both products and user behavior tables
 def update_es_flag_products_table(product_id):
     db_cursor = conn.cursor()
     db_cursor.execute("""
         UPDATE products
         SET es_flag = true
-        WHERE products.product_id = %d""" % (product_id,))
+        WHERE products.product_id in %s """ % (product_id,))
     db_cursor.close()
     conn.commit()
 
 
-def update_es_flag_rating_tables(preference, product_id):
+def update_evaluation_table_es_flag(like, product_ids):
     db_cursor = conn.cursor()
-    if preference == 'likes':
-        db_cursor.execute("""UPDATE likes SET es_flag = True WHERE likes.product_id = %d""" % (product_id,))
-    elif preference == 'pass':
-        db_cursor.execute("""UPDATE pass SET es_flag = True WHERE pass.product_id = %d""" % (product_id,))
-    elif preference == 'dislikes':
-        db_cursor.execute("""UPDATE dislikes SET es_flag = True WHERE dislikes.product_id = %d""" % (product_id,))
+    if like:
+        db_cursor.execute("""UPDATE evaluation SET es_flag = true WHERE likes = true and product_id in %s""", (product_ids,))
+    else:
+        db_cursor.execute("""UPDATE evaluation SET es_flag = true WHERE likes = false and product_id in %s""", (product_ids,))
     db_cursor.close()
     conn.commit()
 
 
+# this function returns an array of str(product_id) for a given user and clothes type
 def get_like_items_of_user(user_id, clothes_type):
     db_cursor = conn.cursor()
     db_cursor.execute("""
-            SELECT p.product_id 
-            FROM products p JOIN likes l ON (p.product_id = l.product_id)
-            WHERE l.user_id = '%s' and p.es_flag = true and p.type = '%s';
-        """ % (user_id, clothes_type))
-    user_rated_items = db_cursor.fetchall()
-    db_cursor.close()
-    return user_rated_items
-
-
-def get_pass_items_of_user(user_id, clothes_type):
-    db_cursor = conn.cursor()
-    db_cursor.execute("""
-            SELECT products.product_id 
-            FROM products JOIN pass ON (products.product_id = pass.product_id)
-            WHERE pass.user_id = '%s' and products.es_flag = true and products.type = '%s';
-        """ % (user_id, clothes_type))
-    user_rated_items = db_cursor.fetchall()
-    db_cursor.close()
-    return user_rated_items
-
-
-def get_dislike_items_of_user(user_id, clothes_type):
-    db_cursor = conn.cursor()
-    db_cursor.execute("""
-            SELECT products.product_id 
-            FROM products JOIN dislikes ON (products.product_id = dislikes.product_id)
-            WHERE dislikes.user_id = '%s' and products.es_flag = true and products.type = '%s';
-        """ % (user_id, clothes_type))
-    user_rated_items = db_cursor.fetchall()
+            SELECT ARRAY(
+            SELECT p.product_id::varchar(255)
+            FROM products p JOIN evaluation l USING (product_id)
+            WHERE l.user_id = %s and p.type = %s and l.likes = true);
+        """, (user_id, clothes_type))
+    user_rated_items = db_cursor.fetchone()[0]
     db_cursor.close()
     return user_rated_items
 
@@ -150,12 +117,12 @@ def get_user_size_data(user_id):
     db_cursor = conn.cursor()
     user_size_dict = {}
     db_cursor.execute(
-        f"""
+        """
         SELECT length::float4[], waist::float4[], hip::float4[] as hip, thigh::float4[] as thigh, 
                 rise::float4[], hem::float4[], shoulder::float4[], bust::float4[], arm_length::float4[]
         FROM users
-        WHERE user_id = '{user_id}'
-        """
+        WHERE user_id = %s
+        """, (user_id,)
     )
     user_size_data = db_cursor.fetchone()
     for size_type_index in range(len(size_types)):
@@ -164,10 +131,9 @@ def get_user_size_data(user_id):
     return user_size_dict
 
 
-def get_user_tutorial_shop_concepts(user_id):
+def get_user_shop_concepts(user_id):
     db_cursor = conn.cursor()
-    db_cursor.execute(f"""
-        SELECT shop_concept FROM users WHERE user_id = '{user_id}'""")
+    db_cursor.execute("""SELECT shop_concept FROM users WHERE user_id = %s""", (user_id,))
     shop_concepts = db_cursor.fetchone()[0]
     db_cursor.close()
     return shop_concepts
@@ -175,26 +141,24 @@ def get_user_tutorial_shop_concepts(user_id):
 
 def get_entire_user_seen_items_from_db(user_id):
     db_cursor = conn.cursor()
-    query = """select product_id from likes where user_id = %s
-    UNION DISTINCT select product_id from dislikes where user_id = %s 
-    UNION DISTINCT select product_id from pass where user_id = %s"""
-    db_cursor.execute(query, (user_id, user_id, user_id))
-    items = db_cursor.fetchall()
-    result = [str(item[0]) for item in items]
+    query = """select array(select evaluation.product_id::varchar(255)
+        from evaluation join products using (product_id) 
+        where user_id = %s)"""
+    db_cursor.execute(query, (user_id, ))
+    items = db_cursor.fetchone()[0]
     db_cursor.close()
-    return result
+    return items
 
 
 def get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type):
     db_cursor = conn.cursor()
-    query = """select products.product_id from products where type = %s and product_id in 
-    (select product_id from likes where user_id = %s UNION DISTINCT select product_id from dislikes where user_id = %s 
-    UNION DISTINCT select product_id from pass where user_id = %s)"""
-    db_cursor.execute(query, (clothes_type, user_id, user_id, user_id))
-    items = db_cursor.fetchall()
-    result = [str(item[0]) for item in items]
+    query = """select array(select evaluation.product_id::varchar(255)
+        from evaluation join products using (product_id) 
+        where user_id = %s and products.type = %s)"""
+    db_cursor.execute(query, (user_id, clothes_type))
+    items = db_cursor.fetchone()[0]
     db_cursor.close()
-    return result
+    return items
 
 
 def get_user_liked_shop_concepts_from_db(user_id):
@@ -221,54 +185,52 @@ def get_user_liked_shop_concepts_from_db(user_id):
     return preferred_shop_concepts
 
 
-def get_recommended_shops_by_user_preferred_concepts_from_db(user_id):
-    user_preferred_concepts = get_user_liked_shop_concepts_from_db(user_id)
+def get_user_preferred_concept_shops_from_db(user_id):
+    user_concepts = get_user_shop_concepts(user_id)
     db_cursor = conn.cursor()
-    recommended_shops = set()
-    query = """select shop_id from shop where %s = ANY(shop_concept)"""
-    db_cursor.execute(query, (user_preferred_concepts[0],))
-    best_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    db_cursor.execute(query, (user_preferred_concepts[1],))
-    second_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    db_cursor.execute(query, (user_preferred_concepts[2],))
-    third_concept_matched_shops = {str(shop_id[0]) for shop_id in db_cursor.fetchall()}
-    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(second_concept_matched_shops))
-    recommended_shops = recommended_shops.union(best_concept_matched_shops.intersection(third_concept_matched_shops))
-    recommended_shops = recommended_shops.union(second_concept_matched_shops.intersection(third_concept_matched_shops))
+    query = """
+    SELECT ARRAY(
+    SELECT s.shop_id
+    FROM shop s, LATERAL (
+        SELECT count(*) AS ct
+        FROM   unnest(s.shop_concept) sc
+        WHERE  sc = ANY(%s)
+    ) x
+    ORDER  BY x.ct DESC);
+    """
+    db_cursor.execute(query, (user_concepts,))
+    res = db_cursor.fetchone()[0]
     db_cursor.close()
-    return list(recommended_shops)
+    return res
 
 
 def get_clothes_type_popular_items_from_db(clothes_type):
     db_cursor = conn.cursor()
-    query = """select product_id from likes join products using (product_id) where type = %s 
-    group by product_id order by count(product_id) desc limit 10"""
+    query = """select ARRAY(select product_id::varchar(255) from likes join products using (product_id) where type = %s 
+    group by product_id order by count(product_id) desc limit 10)"""
     db_cursor.execute(query, (clothes_type,))
-    result = db_cursor.fetchall()
-    popular_items = [str(r[0]) for r in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return popular_items
+    return result
 
 
 def get_all_type_popular_items_from_db():
     db_cursor = conn.cursor()
-    query = """select product_id from likes join products using (product_id) 
-        group by product_id order by count(product_id) desc limit 10"""
+    query = """select ARRAY(select product_id::varchar(255) from likes join products using (product_id) 
+        group by product_id order by count(product_id) desc limit 10)"""
     db_cursor.execute(query)
-    result = db_cursor.fetchall()
-    popular_items = [str(r[0]) for r in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return popular_items
+    return result
 
 
-def get_entire_user_ids_from_db():
+def get_update_user_ids_from_db():
     db_cursor = conn.cursor()
-    query = """select user_id from users"""
+    query = """select array(select user_id from users where last_login_at >= now() - INTERVAL '1 DAY');"""
     db_cursor.execute(query)
-    result = db_cursor.fetchall()
-    popular_items = [r[0] for r in result]
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return popular_items
+    return result
 
 
 def count_user_liked_items_from_db(user_id):
@@ -280,25 +242,42 @@ def count_user_liked_items_from_db(user_id):
     return result[0]
 
 
-def get_clothes_type_non_preferred_items_from_db(preferred_shops, clothes_type):
+def get_clothes_type_non_preferred_items_from_db(non_pref_shops, clothes_type):
     db_cursor = conn.cursor()
-    preferred_shops = tuple(preferred_shops)
-    query = """select products.product_id from products join shop using (shop_id) 
-    where shop.shop_id not in %s and type = %s order by random() limit 5"""
-    db_cursor.execute(query, (preferred_shops, clothes_type))
-    result = db_cursor.fetchall()
-    non_preferred_items = [str(item[0]) for item in result]
+    query = """select ARRAY(select products.product_id::varchar(255) from products join shop using (shop_id) 
+    where shop.shop_id in %s and type = %s order by random() limit 5)"""
+    db_cursor.execute(query, (tuple(non_pref_shops), clothes_type))
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return non_preferred_items
+    return result
 
 
-def get_all_type_non_preferred_items_from_db(preferred_shops):
+def get_all_type_non_preferred_items_from_db(non_pref_shops):
     db_cursor = conn.cursor()
-    preferred_shops = tuple(preferred_shops)
-    query = """select product_id from products join shop using (shop_id) 
-    where shop_id not in %s order by random() limit 5"""
-    db_cursor.execute(query, (preferred_shops, ))
-    result = db_cursor.fetchall()
-    non_preferred_items = [str(item[0]) for item in result]
+    query = """select ARRAY (select product_id::varchar(255) from products join shop using (shop_id) 
+    where shop_id in %s order by random() limit 5)"""
+    db_cursor.execute(query, (tuple(non_pref_shops), ))
+    result = db_cursor.fetchone()[0]
     db_cursor.close()
-    return non_preferred_items
+    return result
+
+
+def get_invalid_products_in_es():
+    db_cursor = conn.cursor()
+    query = """select array(select product_id::varchar(255) from products where active_flag = false and es_flag = true)"""
+    db_cursor.execute(query)
+    result = db_cursor.fetchone()[0]
+    db_cursor.close()
+    return result
+
+
+def update_user_concepts(user_id, concepts):
+    db_cursor = conn.cursor()
+    try:
+        db_cursor.execute("""UPDATE users SET shop_concept = %s WHERE user_id = %s """, (concepts, user_id))
+        conn.commit()
+    except Exception as e:
+        print(e)
+        conn.rollback()
+    finally:
+        db_cursor.close()

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -13,8 +14,8 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class DressRoomSelectDialog extends StatefulWidget {
-  final List<Product> top;
-  final List<Product> bottom;
+  final List<RecentItem> top;
+  final List<RecentItem> bottom;
   final CarouselController _controller = CarouselController();
   DressRoomSelectDialog(this.top, this.bottom);
   @override
@@ -190,22 +191,6 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                         setState(() {
                           page = "rename";
                         });
-                        // Stride.analytics
-                        //     .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
-                        // Provider.of<LookBookService>(context, listen: false)
-                        //     .addItem(top[top_idx], widget.bottom[bottom_idx]);
-                        // ServiceView.scaffoldKey.currentState
-                        //     .showSnackBar(SnackBar(
-                        //         duration: Duration(milliseconds: 1500),
-                        //         content: Row(children: [
-                        //           Icon(
-                        //             Icons.check,
-                        //             color: backgroundColor,
-                        //           ),
-                        //           UIHelper.horizontalSpaceMedium,
-                        //           Text('룩북에 저장되었습니다.'),
-                        //         ])));
-                        // Navigator.pop(context);
                       },
                       child: Container(
                         child: Text(
@@ -275,7 +260,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                     controller: _renameTextController,
                     onSubmitted: (String text) async {
                       Stride.analytics
-                          .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
+                          .logEvent(name: "DRESSROOM_MAKE_COORDINATE");
                       await Provider.of<LookBookService>(context, listen: false)
                           .addItem(
                               widget.top[top_idx],
@@ -292,7 +277,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                                 UIHelper.horizontalSpaceMedium,
                                 Text('룩북에 저장되었습니다.'),
                               ])));
-                      Navigator.pop(context);
+                      Navigator.maybePop(context);
                     },
                     decoration: InputDecoration.collapsed(hintText: "새로운 이름"),
                   ),
@@ -307,7 +292,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                 RaisedButton(
                   onPressed: () async {
                     Stride.analytics
-                        .logEvent(name: "DRESS_ROOM_MAKE_COORDINATE");
+                        .logEvent(name: "DRESSROOM_MAKE_COORDINATE");
                     await Provider.of<LookBookService>(context, listen: false)
                         .addItem(widget.top[top_idx], widget.bottom[bottom_idx],
                             _renameTextController.text);
@@ -321,7 +306,7 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
                           UIHelper.horizontalSpaceMedium,
                           Text('룩북에 저장되었습니다.'),
                         ])));
-                    Navigator.pop(context);
+                    Navigator.maybePop(context);
                   },
                   padding: EdgeInsets.fromLTRB(100, 20, 100, 20),
                   color: backgroundColor,
@@ -337,17 +322,3 @@ class _DressRoomSelectDialogState extends State<DressRoomSelectDialog> {
     return showWidget;
   }
 }
-
-// class DressRoomSelectDialog extends StatelessWidget {
-//   final List<Product> widget.top;
-//   final List<Product> bottom;
-//   final CarouselController _controller = CarouselController();
-//   // int top_idx = 0;
-//   // int bottom_idx = 0;
-//   DressRoomSelectDialog(this.top, this.bottom);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return
-//   }
-// }

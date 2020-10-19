@@ -32,14 +32,15 @@ def get_all_type_clothes():
                 'top': []
             }
             for type in types:
-                if type is 'all':
+                if type == 'all':
                     cursor.execute(all_query)
                 else:
                     cursor.execute(query, (type, ))
                 result = cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -70,14 +71,15 @@ def get_all_type_clothes_sf():
                 'top': []
             }
             for type in types:
-                if type is 'all':
+                if type == 'all':
                     cursor.execute(all_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust']))
                 else:
                     cursor.execute(type_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], type))
                 result = cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -104,9 +106,10 @@ def get_type_clothes_sf(type):
                 cursor.execute(type_size_query, (size['waist'], size['hip'], size['thigh'], size['shoulder'], size['bust'], type))
             result = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -126,9 +129,10 @@ def get_clothes_category(type):
                 cursor.execute(query, (type,))
             result = cursor.fetchall()
             product = []
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -151,10 +155,10 @@ def get_recommended_product(products):
             result = cursor.fetchall()
             cursor.execute(query, (tuple(non_preferred_item),))
             result += cursor.fetchall()
+            colnames = DBMapping.mapping_column(cursor)
             for item in result:
-                print(item[0])
                 load = ProductModel()
-                load.fetch_data(item)
+                load.fetch_data(item, colnames)
                 product.append(load.__dict__)
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
         except Exception as ex:
@@ -213,9 +217,10 @@ def get_recommended_product_all(products):
                 result = cursor.fetchall()
                 cursor.execute(query, (tuple(non_preferred_item), ))
                 result += cursor.fetchall()
+                colnames = DBMapping.mapping_column(cursor)
                 for item in result:
                     load = ProductModel()
-                    load.fetch_data(item)
+                    load.fetch_data(item, colnames)
                     product[type].append(load.__dict__)
 
             return json.dumps(product, default=json_util.default, ensure_ascii=False)
@@ -226,7 +231,7 @@ def get_recommended_product_all(products):
 
 def check_like_cnt():
     with db_connect() as (service_conn, cursor):
-        query = """SELECT count(*) FROM likes WHERE user_id = %s"""
+        query = """SELECT count(*) FROM evaluation WHERE user_id = %s AND likes is True"""
         update_query = """UPDATE users SET recommendation_flag = True WHERE user_id = %s"""
         try:
             cursor.execute(query, (g.user_id, ))
@@ -237,3 +242,81 @@ def check_like_cnt():
         except Exception as ex:
             print(ex)
             pass
+
+
+def get_mock_product_list():
+    with db_connect() as (service_conn, cursor):
+        mock_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True ORDER BY random() LIMIT 20"""
+        eval_query = """SELECT * FROM evaluation WHERE user_id = %s AND product_id IN %s"""
+        get_list_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND p.product_id IN %s"""
+        cursor.execute(mock_query)
+        result = cursor.fetchall()
+        product = []
+        product_eval = {}
+        product_id = []
+        # ES MOCK product_id
+        colnames = DBMapping.mapping_column(cursor)
+        for item in result:
+            load = ProductModel()
+            load.fetch_data(item, colnames)
+            product_id.append(load.__dict__['product_id'])
+        cursor.execute(eval_query, (g.user_id, tuple(product_id)))
+
+        # Check History
+        colnames = DBMapping.mapping_column(cursor)
+        result = cursor.fetchall()
+        for item in result:
+            load = EvaluationModel()
+            load.fetch_brief_data(item, colnames)
+            brief_data = load.get_brief_data()
+            product_eval[brief_data['product_id']] = brief_data['likes']
+        # Select And update
+        cursor.execute(get_list_query, (tuple(product_id), ))
+        colnames = DBMapping.mapping_column(cursor)
+        result = cursor.fetchall()
+        for item in result:
+            load = ProductModel()
+            load.fetch_data(item, colnames)
+            load_product_id = load.__dict__['product_id']
+            if product_eval.get(load_product_id) is not None:
+                load.__dict__['likes'] = product_eval.get(load_product_id)
+            else:
+                load.__dict__['likes'] = None
+            product.append(load.__dict__)
+
+        return json.dumps(product, default=json_util.default, ensure_ascii=False)
+
+
+def get_product_list(recommend_list):
+    with db_connect() as (service_conn, cursor):
+        eval_query = """SELECT * FROM evaluation WHERE user_id = %s AND product_id IN %s"""
+        get_list_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND p.product_id IN %s"""
+
+        product = []
+        product_eval = {}
+        product_id = recommend_list
+
+        cursor.execute(eval_query, (g.user_id, tuple(product_id)))
+        # Check History
+        colnames = DBMapping.mapping_column(cursor)
+        result = cursor.fetchall()
+        for item in result:
+            load = EvaluationModel()
+            load.fetch_brief_data(item, colnames)
+            brief_data = load.get_brief_data()
+            product_eval[brief_data['product_id']] = brief_data['likes']
+        # Select And update
+        cursor.execute(get_list_query, (tuple(product_id), ))
+        colnames = DBMapping.mapping_column(cursor)
+        result = cursor.fetchall()
+        for item in result:
+            load = ProductModel()
+            load.fetch_data(item, colnames)
+            load_product_id = load.__dict__['product_id']
+            if product_eval.get(load_product_id) is not None:
+                load.__dict__['likes'] = product_eval.get(load_product_id)
+            else:
+                load.__dict__['likes'] = None
+            product.append(load.__dict__)
+
+        return json.dumps(product, default=json_util.default, ensure_ascii=False)

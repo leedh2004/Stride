@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
+import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/size.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/main.dart';
@@ -44,7 +45,7 @@ Map<String, String> top = {
 };
 
 class ProductTable extends StatefulWidget {
-  Product item;
+  RecentItem item;
   ProductSize product_size;
   List<String> keys;
   Map<String, String> mapper;
@@ -52,7 +53,7 @@ class ProductTable extends StatefulWidget {
   Map<String, Size> sizeMapper = new Map();
   String current;
 
-  ProductTable(Product _item) {
+  ProductTable(RecentItem _item) {
     item = _item;
     product_size = _item.product_size;
     keys = product_size.size.keys.toList();
@@ -79,12 +80,6 @@ class ProductTable extends StatefulWidget {
 class _ProductTableState extends State<ProductTable> {
   @override
   Widget build(BuildContext context) {
-    Stride.analytics.logEvent(name: "DRESS_ROOM_SHOW_SIZE", parameters: {
-      'itemId': widget.item.product_id.toString(),
-      'itemName': widget.item.product_name,
-      'itemCategory': widget.item.shop_name
-    });
-
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

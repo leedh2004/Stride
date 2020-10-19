@@ -1,32 +1,27 @@
 import 'package:app/core/models/product.dart';
+import 'package:app/core/models/recentItem.dart';
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class SwipeModel extends BaseModel {
   DressRoomService dressRoomService;
+  AuthenticationService _authenticationService;
   SwipeService _swipeService;
+  DressRoomService _dressRoomService;
   bool trick = false;
-  String type;
-  int index;
-  int image_index = 0;
-  bool size_flag;
+  int image_index = 0, index;
+  Filter filter;
 
-  SwipeModel(DressRoomService _dressRoomService, SwipeService swipeService) {
-    dressRoomService = _dressRoomService;
+  SwipeModel(SwipeService swipeService, DressRoomService dressRoomService,
+      AuthenticationService authenticationService) {
+    _authenticationService = authenticationService;
     _swipeService = swipeService;
-    type = _swipeService.type;
-    index = swipeService.index[type];
-    size_flag = size_flag;
+    _dressRoomService = dressRoomService;
+    index = _swipeService.index;
+    filter = Filter.from(_swipeService.filter);
     print("SwipeModel 생성!");
-    print(type);
-    print(index);
-    //print(items[1][0].product_name);
-  }
-
-  void flagChange() {
-    _swipeService.flagChange();
-    size_flag = _swipeService.size_flag;
   }
 
   Future initCards() async {
@@ -34,48 +29,80 @@ class SwipeModel extends BaseModel {
     notifyListeners();
   }
 
-  void nextImage() {
-    int max_length = _swipeService.items[type][index].image_urls.length - 1;
-    if (image_index < max_length) {
-      image_index++;
-      notifyListeners();
-    }
+  bool isNotChangedFilter(int index) {
+    return _swipeService.isNotchangedFilter(index);
   }
 
-  void prevImage() {
-    if (image_index > 0) {
-      image_index--;
-      notifyListeners();
-    }
+  bool allNotChangedFilter() {
+    return filter.allNotchangedFilter();
   }
 
-  void changeType(String str) {
-    _swipeService.changeType(str);
-    type = _swipeService.type;
-    index = _swipeService.index[type];
-    image_index = 0;
+  void setInitFilter() {
+    filter.setTypes(['all']);
     notifyListeners();
   }
 
-  Future nextItem() async {
-    // setBusy(true);
-    await _swipeService.nextItem();
-    index = _swipeService.index[type];
-    image_index = 0;
-    // setBusy(false);
+  void setClothTypes(List<String> types) {
+    filter.setTypes(types);
   }
 
-  Future likeRequest() async {
-    Product item = await _swipeService.likeRequest();
-    if (item != null) dressRoomService.addItem(item);
+  void setConcepts(List<String> types) {
+    filter.setConcepts(types);
+  }
+
+  void setPrice(int start, int end) {
+    filter.setPrice(start, end);
+  }
+
+  void setColors(List<String> colors) {
+    filter.setColors(colors);
+  }
+
+  void setSize(bool value) {
+    filter.setSize(value);
+  }
+
+  void setFilter() async {
+    setBusy(true);
+    await _swipeService.setFilter(filter);
+    image_index = 0;
+    index = _swipeService.index;
+    setBusy(false);
+  }
+
+  bool nextImage() {
+    int max_length = _swipeService.items[index].image_urls.length - 1;
+    if (image_index < max_length) {
+      image_index++;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  bool prevImage() {
+    if (image_index > 0) {
+      image_index--;
+      notifyListeners();
+      return true;
+    }
+    return false;
+  }
+
+  Future nextItem() async {
+    await _swipeService.nextItem();
+    index = _swipeService.index;
+    image_index = 0;
+  }
+
+  void likeRequest() async {
+    await _swipeService.likeRequest();
+    _authenticationService.addLike();
   }
 
   void dislikeRequest() async {
     await _swipeService.dislikeRequest();
-  }
-
-  void passRequest() async {
-    await _swipeService.passRequest();
+    _authenticationService.addDislike();
   }
 
   void purchaseItem(int id) async {
@@ -84,10 +111,14 @@ class SwipeModel extends BaseModel {
 
   void test() async {
     setBusy(true);
-    await _swipeService.initSizeCards();
+    // await _swipeService.initSizeCards();
     image_index = 0;
 
     setBusy(false);
-    notifyListeners();
+    // notifyListeners();
+  }
+
+  void addItem(RecentItem item) async {
+    _dressRoomService.addItem(item);
   }
 }
