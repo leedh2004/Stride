@@ -43,7 +43,7 @@ dependencies:
   carousel_slider: ^2.2.1
   modal_bottom_sheet: ^0.2.0+1
   awesome_dialog: ^1.1.3
-  fancy_shimmer_image: ^1.2.0
+  #fancy_shimmer_image: ^1.2.0
 
   kakao_flutter_sdk: ^0.5.0
   dio: ^3.0.10
@@ -53,19 +53,19 @@ dependencies:
   # shared_preferences: ^0.5.8
   
   flutter_secure_storage: ^3.3.3
-  sleek_circular_slider: ^1.1.0
+  #sleek_circular_slider: ^1.1.0
   cached_network_image: ^2.2.0+1
   rxdart: ^0.24.1
   tutorial_coach_mark: ^0.5.1
-  flutter_sliding_tutorial: ^0.1.0
-  animations: ^1.1.2
-  intro_slider: ^2.3.1
-  flutter_range_slider: ^1.4.0
+  #flutter_sliding_tutorial: ^0.1.0
+  #animations: ^1.1.2
+  #intro_slider: ^2.3.1
+  #flutter_range_slider: ^1.4.0
   flutter_svg: ^0.18.1
   animated_widgets: ^1.0.6
   flutter_launcher_icons: ^0.7.5
   loading: ^1.0.2
-  flutter_staggered_grid_view: ^0.3.2
+  #flutter_staggered_grid_view: ^0.3.2
 
 flutter_icons:
   android: true
@@ -103,19 +103,19 @@ flutter:
     - images/fashion.png
     - images/intro.png
     - images/kakao_login.png
-    - images/swipe.png
-    - images/tap.png
-    - images/ruler.png
+    # - images/swipe.png
+    # - images/tap.png
+    # - images/ruler.png
     - images/fix.png
     - images/folder_plus.png
     - images/remove.png
     - images/left-arrow.png
-    - images/up-arrow.png
+    # - images/up-arrow.png
     - images/trash.svg
     - images/folder.svg
     - images/edit.svg
     - images/buy.svg
-    - images/ruler.svg
+    # - images/ruler.svg
     - images/menu_heart.svg
     - images/menu_swipe.svg
     - images/menu_lookbook.svg
@@ -123,18 +123,18 @@ flutter:
     - images/times.svg
     - images/like.svg
     - images/icon.png
-    - images/a.png
-    - images/loading.gif
-    - images/loading_white.gif
+    # - images/a.png
+    # - images/loading.gif
+    # - images/loading_white.gif
     - images/search.png
-    - images/swipe_image_logo.jpg
+    # - images/swipe_image_logo.jpg
 
-  fonts:
-    - family: NotoSansKR
-      fonts:
-      - asset: assets/fonts/notosanskr-regular.ttf
-      - asset: assets/fonts/notosanskr-bold.ttf
-        weight: 700
+  # fonts:
+  #   - family: NotoSansKR
+  #     fonts:
+  #     - asset: assets/fonts/notosanskr-regular.ttf
+  #     - asset: assets/fonts/notosanskr-bold.ttf
+  #       weight: 700
       
 
 

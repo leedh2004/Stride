@@ -1,5 +1,4 @@
 import 'package:app/core/viewmodels/views/swipe.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class BoolWrapper {

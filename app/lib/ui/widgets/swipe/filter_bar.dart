@@ -1,9 +1,5 @@
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
-import 'package:app/main.dart';
-import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:app/ui/widgets/filter/color.dart';
 import 'package:app/ui/widgets/filter/concept.dart';

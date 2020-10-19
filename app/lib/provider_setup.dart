@@ -6,7 +6,6 @@ import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'core/models/swipeCard.dart';
 import 'core/models/user.dart';
 import 'core/services/api.dart';
 import 'core/services/recent_item.dart';

@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
-import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
 class RecentItemService {

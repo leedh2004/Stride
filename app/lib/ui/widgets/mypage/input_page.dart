@@ -2,8 +2,6 @@ import 'package:app/core/models/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
-import 'package:app/ui/widgets/swipe/circle.dart';
-import 'package:app/ui/widgets/swipe/purple_circle.dart';
 import 'package:app/ui/widgets/swipe/sliderTheme.dart';
 import 'package:flutter/material.dart';
 

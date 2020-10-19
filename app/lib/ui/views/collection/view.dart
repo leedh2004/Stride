@@ -1,4 +1,3 @@
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/dressroom/view.dart';
 import 'package:app/ui/views/lookbook/view.dart';
 import 'package:flutter/material.dart';

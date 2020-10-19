@@ -1,4 +1,3 @@
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/ui_helper.dart';

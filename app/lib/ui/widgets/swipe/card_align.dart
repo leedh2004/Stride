@@ -1,12 +1,10 @@
 import 'dart:io';
 
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -14,13 +12,11 @@ class SwipeCardAlignment extends StatefulWidget {
   RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
-  bool test = false;
 
-  SwipeCardAlignment(RecentItem _item, int _index, {bool tests}) {
+  SwipeCardAlignment(RecentItem _item, int _index) {
     // print("NEW");
     item = _item;
     index = _index;
-    if (tests != null) test = tests;
     if (index >= item.length) {
       index = item.length - 1;
     }
@@ -88,12 +84,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       child: Hero(
                         tag: widget.item.product_id,
                         // tag: widget.item.image_urls[widget.index],
-                        child: widget.test
-                            ? Image.asset(
-                                'images/swipe_image_logo.jpg',
-                                fit: BoxFit.cover,
-                              )
-                            : widget.images[widget.index],
+                        child: widget.images[widget.index],
                       ))),
               Align(
                 alignment: Alignment.topLeft,
@@ -135,8 +126,8 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          "심플 스트라이프 셔츠",
-                          // widget.item.product_name, //'로드리 스커트',
+                          // "심플 스트라이프 셔츠",
+                          widget.item.product_name, //'로드리 스커트',
                           style: whiteShadowStyle,
                         ),
                         Text(

@@ -20,7 +20,7 @@ import 'package:provider/provider.dart';
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext context) {
-    return super.createHttpClient(context)..maxConnectionsPerHost = 5;
+    return super.createHttpClient(context)..maxConnectionsPerHost = 9;
   }
 }
 

@@ -1,8 +1,6 @@
 import 'package:app/core/models/user.dart';
-import 'package:app/core/services/config.dart';
 import 'package:app/ui/views/error_view.dart';
 import 'package:app/ui/views/service_view.dart';
-import 'package:app/ui/widgets/tutorial/tutorial_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
@@ -55,7 +53,6 @@ class RootView extends StatelessWidget {
             Stride.analytics.setUserId(user.id);
             if (user.profile_flag) {
               // showWidget = TutorialView();
-
               showWidget = ServiceView();
             } else {
               showWidget = TutorialView();

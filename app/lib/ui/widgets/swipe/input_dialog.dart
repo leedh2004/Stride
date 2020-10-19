@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:app/core/models/tutorial.dart';
-import 'package:app/core/models/user.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -21,15 +20,15 @@ class _InputInfoDialogState extends State<InputInfoDialog> {
   int page = 1;
   bool _visible = false;
   double age = 20;
-  var _shoulderRange;
+  var _shoulderRange = RangeWrapper(RangeValues(38, 44));
   var _shoulderflag = FlagWrapper(true);
-  var _breastRange;
+  var _breastRange = RangeWrapper(RangeValues(83, 98));
   var _breastflag = FlagWrapper(true);
-  var _waistRange;
+  var _waistRange = RangeWrapper(RangeValues(25, 31));
   var _waistflag = FlagWrapper(true);
-  var _hipRange;
+  var _hipRange = RangeWrapper(RangeValues(88, 100));
   var _hipflag = FlagWrapper(true);
-  var _thighRange;
+  var _thighRange = RangeWrapper(RangeValues(24, 36));
   var _thighflag = FlagWrapper(true);
 
   Map<String, bool> size = {

@@ -1,12 +1,9 @@
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/recent_item.dart';
-import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/service_view.dart';
-import 'package:app/ui/views/swipe/info.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

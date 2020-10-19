@@ -1,5 +1,3 @@
-import 'package:app/core/models/product.dart';
-import 'package:app/core/models/tutorial_box.dart';
 import 'package:app/core/services/tutorial.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 

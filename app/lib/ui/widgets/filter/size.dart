@@ -1,7 +1,4 @@
-import 'package:app/core/models/tutorial.dart';
-import 'package:app/core/models/user.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class SizeFilter extends StatefulWidget {

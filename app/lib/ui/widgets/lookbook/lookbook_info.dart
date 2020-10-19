@@ -2,19 +2,15 @@ import 'dart:io';
 
 import 'package:app/core/models/coordinate.dart';
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
-import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
-import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/views/collection/view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 

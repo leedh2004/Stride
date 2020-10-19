@@ -1,4 +1,3 @@
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
 
 // 145 ~ 175

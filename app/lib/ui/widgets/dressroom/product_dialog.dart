@@ -1,17 +1,9 @@
-import 'dart:io';
 import 'package:animated_widgets/animated_widgets.dart';
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/size.dart';
-import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/text_styles.dart';
-import 'package:app/ui/shared/ui_helper.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProductDialog extends StatefulWidget {
   RecentItem item;

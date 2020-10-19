@@ -1,12 +1,9 @@
-import 'package:animated_widgets/animated_widgets.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/models/size.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 Map<String, String> pants = {
   "총장": "length",

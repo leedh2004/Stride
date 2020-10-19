@@ -1,4 +1,3 @@
-import 'package:app/core/models/map_mall.dart';
 import 'package:app/core/models/product_size.dart';
 import 'package:app/ui/shared/text_styles.dart';
 

@@ -1,5 +1,4 @@
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/services/dress_room.dart';
@@ -9,7 +8,6 @@ import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
-import 'package:app/ui/widgets/dressroom/product_dialog.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
 import 'package:app/ui/widgets/swipe/card.dart';
@@ -20,7 +18,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../base_widget.dart';
-import '../product_web_view.dart';
 import '../service_view.dart';
 
 class SwipeView extends StatefulWidget {

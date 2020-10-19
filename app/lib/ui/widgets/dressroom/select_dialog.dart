@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/main.dart';

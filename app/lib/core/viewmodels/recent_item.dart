@@ -1,7 +1,5 @@
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/recent_item.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 

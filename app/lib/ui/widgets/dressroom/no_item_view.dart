@@ -1,4 +1,3 @@
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';

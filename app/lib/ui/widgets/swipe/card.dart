@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
@@ -445,7 +444,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           angle: (pi / 180.0) * frontCardRot,
           child: SizedBox.fromSize(
               size: cardsSize[0],
-              child: SwipeCardAlignment(item, model.image_index, tests: true)),
+              child: SwipeCardAlignment(item, model.image_index)),
         ));
   }
 

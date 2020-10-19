@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'api.dart';
 
