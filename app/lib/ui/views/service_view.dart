@@ -2,6 +2,7 @@ import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recommend/view.dart';
 import 'package:app/ui/views/swipe/view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'collection/view.dart';
@@ -35,80 +36,88 @@ class _ServiceViewState extends State<ServiceView>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.light,
+        statusBarIconBrightness: Brightness.light,
+      ),
+      child: Scaffold(
         key: ServiceView.scaffoldKey,
         body: TabBarView(
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              SwipeView(),
-              RecommendView(),
-              CollectionView(),
+              SafeArea(child: SwipeView()),
+              SafeArea(child: RecommendView()),
+              SafeArea(child: CollectionView()),
               //LookBookView(),
-              MyPageView(),
+              SafeArea(child: MyPageView()),
             ]),
-        appBar: PreferredSize(
-            child: AppBar(
-              elevation: 0,
-              backgroundColor: backgroundColor,
-              bottom: TabBar(
-                controller: _tabController,
-                indicatorColor: Colors.transparent,
-                labelColor: Colors.black,
-                onTap: (index) {
-                  setState(() {});
-                },
-                // unselectedLabelColor: Colors.white,
-                tabs: <Widget>[
-                  Tab(
-                      icon: Container(
-                    padding: EdgeInsets.all(12),
-                    child: SvgPicture.asset(
-                      'images/menu_swipe.svg',
-                      width: 36,
-                      height: 36,
-                      color: _tabController.index == 0
-                          ? Colors.black
-                          : Colors.white,
-                    ),
-                  )),
-                  Tab(
-                      icon: Container(
-                    padding: EdgeInsets.all(12),
-                    child: SvgPicture.asset('images/menu_heart.svg',
-                        color: _tabController.index == 1
-                            ? Colors.black
-                            : Colors.white),
-                  )),
-                  Tab(
-                      icon: Padding(
-                    padding: EdgeInsets.only(top: 6),
-                    child: Container(
-                      width: 30,
-                      height: 30,
-                      child: FaIcon(FontAwesomeIcons.thLarge,
-                          color: _tabController.index == 2
-                              ? Colors.black
-                              : Colors.white),
-                    ),
-                  )),
-                  Tab(
-                    icon: Padding(
-                      padding: EdgeInsets.only(top: 6),
-                      child: Container(
-                        width: 30,
-                        height: 30,
-                        // padding: EdgeInsets.all(12),
-                        child: FaIcon(FontAwesomeIcons.userAlt,
-                            color: _tabController.index == 3
-                                ? Colors.black
-                                : Colors.white),
-                      ),
-                    ),
+        bottomNavigationBar: BottomAppBar(
+          elevation: 2,
+          color: Colors.white,
+          child: TabBar(
+            controller: _tabController,
+            indicatorColor: Colors.transparent,
+            labelColor: Colors.black,
+            onTap: (index) {
+              setState(() {});
+            },
+            // unselectedLabelColor: Colors.white,
+            tabs: <Widget>[
+              Tab(
+                  icon: Container(
+                padding: EdgeInsets.all(12),
+                child: SvgPicture.asset(
+                  'images/menu_swipe.svg',
+                  width: 36,
+                  height: 36,
+                  color: _tabController.index == 0
+                      ? backgroundColor
+                      : Color.fromRGBO(233, 236, 244, 1),
+                ),
+              )),
+              Tab(
+                  icon: Container(
+                padding: EdgeInsets.all(12),
+                child: SvgPicture.asset('images/menu_heart.svg',
+                    color: _tabController.index == 1
+                        ? backgroundColor
+                        : Color.fromRGBO(233, 236, 244, 1)),
+              )),
+              Tab(
+                  icon: Padding(
+                padding: EdgeInsets.only(top: 6),
+                child: Container(
+                  width: 30,
+                  height: 30,
+                  child: FaIcon(FontAwesomeIcons.thLarge,
+                      color: _tabController.index == 2
+                          ? backgroundColor
+                          : Color.fromRGBO(233, 236, 244, 1)),
+                ),
+              )),
+              Tab(
+                icon: Padding(
+                  padding: EdgeInsets.only(top: 6),
+                  child: Container(
+                    width: 30,
+                    height: 30,
+                    // padding: EdgeInsets.all(12),
+                    child: FaIcon(FontAwesomeIcons.userAlt,
+                        color: _tabController.index == 3
+                            ? backgroundColor
+                            : Color.fromRGBO(233, 236, 244, 1)),
                   ),
-                ],
+                ),
               ),
-            ),
-            preferredSize: Size.fromHeight(60)));
+            ],
+          ),
+        ),
+        // appBar: PreferredSize(
+        //     child:
+        //     preferredSize: Size.fromHeight(60))
+      ),
+    );
   }
 }

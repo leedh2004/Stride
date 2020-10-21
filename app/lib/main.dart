@@ -26,13 +26,16 @@ class MyHttpOverrides extends HttpOverrides {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // bool isAnEmulator = await FlutterIsEmulator.isDeviceAnEmulatorOrASimulator;
   GestureBinding.instance.resamplingEnabled = true;
   HttpOverrides.global = MyHttpOverrides();
-
+  final appleSignInAvailable = await ConfigService.check();
+  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
   await Firebase.initializeApp();
+
+  // if (!isAnEmulator) {
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  final appleSignInAvailable = await ConfigService.check();
   final FirebaseMessaging fcm = FirebaseMessaging();
   if (Platform.isIOS) {
     fcm.requestNotificationPermissions(
@@ -51,18 +54,18 @@ Future<void> main() async {
         print('onLaunch: $message');
       },
     );
+    // }
+    final RemoteConfig remoteConfig = await RemoteConfig.instance;
+    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+    await remoteConfig.activateFetched();
+    final updatedVersion = remoteConfig.getString('version').trim();
+    print(updatedVersion);
+    runZoned(() {
+      runApp(Provider<ConfigService>.value(
+          value: ConfigService(appleSignInAvailable, updatedVersion),
+          child: Stride()));
+    }, onError: Crashlytics.instance.recordError);
   }
-  KakaoContext.clientId = "caa6c865e94aa692c781ac217de8f393";
-  final RemoteConfig remoteConfig = await RemoteConfig.instance;
-  await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-  await remoteConfig.activateFetched();
-  final updatedVersion = remoteConfig.getString('version').trim();
-  print(updatedVersion);
-  runZoned(() {
-    runApp(Provider<ConfigService>.value(
-        value: ConfigService(appleSignInAvailable, updatedVersion),
-        child: Stride()));
-  }, onError: Crashlytics.instance.recordError);
   // runApp(Stride());
 }
 
@@ -74,7 +77,7 @@ class Stride extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    analytics.logAppOpen(); // 앱 시작.
+    // analytics.logAppOpen(); // 앱 시작.
     //가로 방향 회전 금지
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -86,7 +89,7 @@ class Stride extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
-          fontFamily: 'NotoSansKR',
+          // fontFamily: 'Nanum',
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           //for modal..
@@ -95,7 +98,7 @@ class Stride extends StatelessWidget {
         ),
         initialRoute: RoutePaths.Root,
         onGenerateRoute: Router.generateRoute,
-        navigatorObservers: [observer],
+        // navigatorObservers: [observer],
       ),
     );
   }

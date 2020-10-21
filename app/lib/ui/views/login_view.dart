@@ -1,6 +1,7 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/viewmodels/authentication.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/loading.dart';
@@ -49,45 +50,72 @@ class LoginView extends StatelessWidget {
                 Container(
                   width: double.infinity,
                   child: Image.asset(
-                    'images/intro.png',
+                    'images/intro.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
                 if (Provider.of<AuthenticationService>(context).init == true)
-                  Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        FadeIn(
-                          delay: 1,
-                          child: SizedBox(
-                            width: 300,
-                            child: RaisedButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () => _signInWithKakao(context, model),
-                              child: Image.asset('images/kakao_login.png'),
-                            ),
-                          ),
-                        ),
-                        if (configService.isAppleAvailable)
-                          UIHelper.verticalSpaceMedium,
-                        if (configService.isAppleAvailable)
-                          FadeIn(
-                            delay: 1,
-                            child: SizedBox(
-                              width: 300,
-                              child: AppleSignInButton(
-                                style: ButtonStyle.black, // style as needed
-                                type: ButtonType.signIn, // style as needed
-                                onPressed: () =>
-                                    _signInWithApple(context, model),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40),
+                          )),
+                      height: 250,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            UIHelper.verticalSpaceMedium,
+                            Text.rich(TextSpan(children: [
+                              TextSpan(
+                                  text: '클릭 한번으로 로그인까지 ',
+                                  style: TextStyle(fontSize: 16)),
+                              TextSpan(
+                                  text: '단 3초!',
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w700)),
+                            ])),
+                            Text('간편하게 로그인하세요', style: TextStyle(fontSize: 16)),
+                            UIHelper.verticalSpaceMedium,
+                            FadeIn(
+                              delay: 1,
+                              child: SizedBox(
+                                width: 300,
+                                child: RaisedButton(
+                                  padding: EdgeInsets.all(0),
+                                  onPressed: () =>
+                                      _signInWithKakao(context, model),
+                                  child: Image.asset('images/kakao_login.png'),
+                                ),
                               ),
                             ),
-                          ),
-                        UIHelper.verticalSpaceLarge,
-                        UIHelper.verticalSpaceLarge,
-                      ],
+                            if (configService.isAppleAvailable)
+                              UIHelper.verticalSpaceMedium,
+                            if (configService.isAppleAvailable)
+                              FadeIn(
+                                delay: 1,
+                                child: SizedBox(
+                                  width: 300,
+                                  child: AppleSignInButton(
+                                    style: ButtonStyle.black, // style as needed
+                                    type: ButtonType.signIn, // style as needed
+                                    onPressed: () =>
+                                        _signInWithApple(context, model),
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 if (model.busy) WhiteLoadingWidget()
@@ -101,7 +129,7 @@ class LoginView extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: Image.asset(
-                      'images/intro.png',
+                      'images/intro.jpg',
                       fit: BoxFit.cover,
                     ),
                   )

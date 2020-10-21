@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +74,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          elevation: 2,
+          elevation: 3,
           clipBehavior: Clip.antiAlias,
           child: Stack(
             alignment: Alignment.bottomLeft,
@@ -86,32 +87,34 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                         // tag: widget.item.image_urls[widget.index],
                         child: widget.images[widget.index],
                       ))),
-              Align(
-                alignment: Alignment.topLeft,
-                child: Row(
-                    children: List.generate(widget.item.length, (idx) {
-                  if (widget.item.length == 1) return Container();
-                  return idx == widget.index
-                      ? Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10)),
-                            margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                            height: 5,
-                          ),
-                        )
-                      : Expanded(
-                          child: Container(
-                            padding: EdgeInsets.only(top: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.black12,
-                                borderRadius: BorderRadius.circular(10)),
-                            margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                            height: 5,
-                          ),
-                        );
-                })),
+              Padding(
+                padding: EdgeInsets.only(top: 25),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(widget.item.length, (idx) {
+                        if (widget.item.length == 1) return Container();
+                        return idx == widget.index
+                            ? Container(
+                                width: 30,
+                                decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
+                                height: 6,
+                              )
+                            : Container(
+                                width: 30,
+                                padding: EdgeInsets.only(top: 10),
+                                decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                    borderRadius: BorderRadius.circular(10)),
+                                margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
+                                height: 6,
+                              );
+                      })),
+                ),
               ),
               Container(
                 alignment: Alignment.bottomLeft,

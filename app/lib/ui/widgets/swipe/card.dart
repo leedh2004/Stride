@@ -1,11 +1,14 @@
 import 'dart:math';
 import 'package:app/core/constants/app_constants.dart';
 import 'package:app/core/models/recentItem.dart';
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/product_web_view.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
@@ -14,14 +17,21 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-Alignment align = Alignment.center + Alignment(0, -0.7);
-List<Alignment> cardsAlign = [align, align, align];
+Alignment align = Alignment.center;
+
+List<Alignment> cardsAlign = [
+  Alignment(0, -0.6),
+  Alignment(0, -0.3),
+  Alignment(0, 0)
+];
+
 List<Size> cardsSize = List(3);
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
   GlobalKey rulerButton, buyButton, cardKey;
   Function onTapDislikeButton, onTapLikeButton, onTapCollectionButton;
+
   SwipeCardSection(
       BuildContext context,
       SwipeModel _model,
@@ -35,14 +45,15 @@ class SwipeCardSection extends StatefulWidget {
     rulerButton = _rulerButton;
     cardKey = _cardKey;
     buyButton = _buyButton;
-    double standard = 0.68;
-    if (MediaQuery.of(context).size.height > 800) standard = 0.72;
+    double standard = 0.63;
+    if (MediaQuery.of(context).size.height > 800) standard = 0.67;
     cardsSize[0] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * (standard + 0.05));
-    cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * standard);
-    cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.9,
-        MediaQuery.of(context).size.height * standard);
+        MediaQuery.of(context).size.height * (standard));
+    cardsSize[1] = Size(MediaQuery.of(context).size.width * 0.85,
+        MediaQuery.of(context).size.height * (standard));
+    cardsSize[2] = Size(MediaQuery.of(context).size.width * 0.8,
+        MediaQuery.of(context).size.height * (standard));
+
     onTapDislikeButton = _onTapDislikeButton;
     onTapLikeButton = _onTapLikeButton;
     onTapCollectionButton = _onTapCollectionButton;
@@ -55,7 +66,12 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
   List<SwipeCardAlignment> cards = List();
   AnimationController _controller;
+
+  Tween<Alignment> _tween = Tween(begin: cardsAlign[2], end: cardsAlign[0]);
   Animation _animation;
+
+  int tutorial_like = 0;
+
   int index = 0;
   bool move_flag = false;
   bool left_effect = false;
@@ -70,7 +86,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   @override
   void initState() {
     super.initState();
-    frontCardAlign = cardsAlign[0];
+    frontCardAlign = cardsAlign[2];
     _controller =
         AnimationController(duration: Duration(milliseconds: 300), vsync: this);
     _controller.addListener(() => setState(() {}));
@@ -86,6 +102,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         }
       }
     });
+    // _animation = _tween.animate(_ontroller)
+    //       ..addListener(() {
+    //           setState(() {});
+    //       });
   }
 
   void changeCardsOrder() {
@@ -105,6 +125,33 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   @override
   Widget build(BuildContext context) {
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (tutorial_like == 6 && authService.swipe_heart_tutorial == false) {
+        authService.swipe_heart_tutorial = true;
+        tutorial_like++;
+        var _storage = authService.storage;
+        _storage.write(key: 'swipe_heart_tutorial', value: 'true');
+
+        ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+          elevation: 6.0,
+          behavior: SnackBarBehavior.floating,
+          duration: Duration(milliseconds: 3000),
+          backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10))),
+          content: Row(children: [
+            Image.asset('assets/purple_star.png', width: 30),
+            Padding(
+                padding: EdgeInsets.all(8),
+                child: Text('카드의 좌/우를 클릭하면 빠르게\n 아이템을 탐색할 수 있습니다!')),
+          ]),
+        ));
+      }
+    });
+
     return Stack(
       children: <Widget>[
         backCard(context),
@@ -116,6 +163,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 : frontCard(context, widget.model),
         nopeTextWidget(),
         likeTextWidget(),
+        tutorial_like < 6 && authService.swipe_heart_tutorial == false
+            ? tutorialTextWidget()
+            : Container(),
+
         _controller.status != AnimationStatus.forward
             ? Align(
                 alignment: cardsAlign[0],
@@ -133,11 +184,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                         onPanUpdate: (DragUpdateDetails details) {
                           List<double> opacity = [0, 0];
 
-                          if (frontCardAlign.x > START_RIGHT) {
+                          if (frontCardAlign.x > 0) {
                             opacity[LIKE] = frontCardAlign.x / OPACITY_SPEED;
                             if (opacity[LIKE] >= MAX_OPACITY)
                               opacity[LIKE] = MAX_OPACITY;
-                          } else if (frontCardAlign.x < START_LEFT) {
+                          } else if (frontCardAlign.x < 0) {
                             opacity[HATE] = -frontCardAlign.x / OPACITY_SPEED;
                             if (opacity[HATE] >= MAX_OPACITY)
                               opacity[HATE] = MAX_OPACITY;
@@ -177,6 +228,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           });
                           // Send result reqeust to server
                           if (frontCardAlign.x > STANDARD_RIGHT) {
+                            tutorial_like++;
                             move_flag = true;
                             Stride.analytics
                                 .logEvent(name: 'LIKE', parameters: {
@@ -197,7 +249,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             widget.model.dislikeRequest();
                             animateCards();
                           } else {
-                            // Return to the initial rotation and alignment
                             move_flag = false;
                             animateCards();
                           }
@@ -303,6 +354,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                         }));
                         if (await result == 'like') {
                           onTapLikeButton();
+                          tutorial_like++;
                         } else if (await result == 'dislike') {
                           onTapDislikeButton();
                         } else if (await result == 'collect') {
@@ -338,15 +390,50 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    child: FaIcon(
-                      FontAwesomeIcons.solidHeart,
-                      size: 100,
-                      color: pinkColor,
+                    child: Image.asset(
+                      'assets/swipe_heart.png',
+                      width: 100,
                     )),
               ),
             ),
           ),
         ));
+  }
+
+  Widget tutorialTextWidget() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(16, 100, 16, 0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Color.fromRGBO(63, 70, 82, 0.8)),
+      height: 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                  5,
+                  (index) => tutorial_like > index
+                      ? Padding(
+                          padding: EdgeInsets.all(8),
+                          child: FaIcon(
+                            FontAwesomeIcons.solidHeart,
+                            color: pinkColor,
+                          ),
+                        )
+                      : Padding(
+                          padding: EdgeInsets.all(8),
+                          child: FaIcon(FontAwesomeIcons.heart,
+                              color: Colors.white30),
+                        ))),
+          Text(
+            '화면을 좌/우로 스와이프해 아이템을 평가해보세요!',
+            style: TextStyle(color: Colors.white),
+          )
+        ],
+      ),
+    );
   }
 
   Widget nopeTextWidget() {
@@ -371,10 +458,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 alignment: Alignment.center,
                 child: Container(
                     padding: EdgeInsets.all(3),
-                    child: FaIcon(
-                      FontAwesomeIcons.times,
-                      size: 100,
-                      color: Colors.blue,
+                    child: Image.asset(
+                      'assets/swipe_dislike.png',
+                      width: 100,
                     )),
               ),
             ),
@@ -393,11 +479,13 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.backCardAlignmentAnim(_controller).value
+          ? CardsAnimation.backCardAlignmentAnim(_controller, frontCardAlign)
+              .value
           : cardsAlign[0],
       child: SizedBox.fromSize(
           size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.backCardSizeAnim(_controller).value
+              ? CardsAnimation.backCardSizeAnim(_controller, frontCardAlign)
+                  .value
               : cardsSize[2],
           child: SwipeCardAlignment(item, 0)),
     );
@@ -414,11 +502,13 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
     return Align(
       alignment: _controller.status == AnimationStatus.forward
-          ? CardsAnimation.middleCardAlignmentAnim(_controller).value
+          ? CardsAnimation.middleCardAlignmentAnim(_controller, frontCardAlign)
+              .value
           : cardsAlign[1],
       child: SizedBox.fromSize(
           size: _controller.status == AnimationStatus.forward
-              ? CardsAnimation.middleCardSizeAnim(_controller).value
+              ? CardsAnimation.middleCardSizeAnim(_controller, frontCardAlign)
+                  .value
               : cardsSize[1],
           child: SwipeCardAlignment(item, 0)),
     );
@@ -526,27 +616,49 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
 class CardsAnimation {
   static Animation<Alignment> backCardAlignmentAnim(
-      AnimationController parent) {
-    return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[1]).animate(
+      AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x >= STANDARD_RIGHT || beginAlign.x <= STANDARD_LEFT) {
+      return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[1]).animate(
+          CurvedAnimation(
+              parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
+    }
+    return AlignmentTween(begin: cardsAlign[0], end: cardsAlign[0]).animate(
         CurvedAnimation(
             parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
   }
 
-  static Animation<Size> backCardSizeAnim(AnimationController parent) {
-    return SizeTween(begin: cardsSize[2], end: cardsSize[1]).animate(
-        CurvedAnimation(
-            parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
-  }
-
-  static Animation<Alignment> middleCardAlignmentAnim(
-      AnimationController parent) {
-    return AlignmentTween(begin: cardsAlign[1], end: cardsAlign[2]).animate(
+  static Animation<Size> backCardSizeAnim(
+      AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x >= STANDARD_RIGHT || beginAlign.x <= STANDARD_LEFT) {
+      return SizeTween(begin: cardsSize[2], end: cardsSize[1]).animate(
+          CurvedAnimation(
+              parent: parent, curve: Interval(0.4, 0.7, curve: Curves.easeIn)));
+    }
+    return SizeTween(begin: cardsSize[2], end: cardsSize[2]).animate(
         CurvedAnimation(
             parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
   }
 
-  static Animation<Size> middleCardSizeAnim(AnimationController parent) {
-    return SizeTween(begin: cardsSize[1], end: cardsSize[0]).animate(
+  static Animation<Alignment> middleCardAlignmentAnim(
+      AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x >= STANDARD_RIGHT || beginAlign.x <= STANDARD_LEFT) {
+      return AlignmentTween(begin: cardsAlign[1], end: cardsAlign[2]).animate(
+          CurvedAnimation(
+              parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
+    }
+    return AlignmentTween(begin: cardsAlign[1], end: cardsAlign[1]).animate(
+        CurvedAnimation(
+            parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
+  }
+
+  static Animation<Size> middleCardSizeAnim(
+      AnimationController parent, Alignment beginAlign) {
+    if (beginAlign.x >= STANDARD_RIGHT || beginAlign.x <= STANDARD_LEFT) {
+      return SizeTween(begin: cardsSize[1], end: cardsSize[0]).animate(
+          CurvedAnimation(
+              parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
+    }
+    return SizeTween(begin: cardsSize[1], end: cardsSize[1]).animate(
         CurvedAnimation(
             parent: parent, curve: Interval(0.2, 0.5, curve: Curves.easeIn)));
   }

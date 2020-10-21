@@ -34,6 +34,7 @@ class AuthenticationService {
 
   bool init = false;
   bool swipe_tutorial = false;
+  bool swipe_heart_tutorial = false;
   bool dress_tutorial = false;
 
   Api api;
@@ -187,6 +188,9 @@ class AuthenticationService {
       String token = await storage.read(key: 'jwt_token');
       if (await storage.read(key: 'swipe_tutorial') != null) {
         swipe_tutorial = true;
+      }
+      if (await storage.read(key: 'swipe_heart_tutorial') != null) {
+        swipe_heart_tutorial = true;
       }
       if (await storage.read(key: 'dress_tutorial') != null) {
         dress_tutorial = true;

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
@@ -56,19 +55,11 @@ class DetailInfo extends StatelessWidget {
       concept += '#${c} ';
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        // For Android.
-        // Use [light] for white status bar and [dark] for black status bar.
-        statusBarIconBrightness: Brightness.light,
-        // For iOS.
-        // Use [dark] for white status bar and [light] for black status bar.
-        statusBarBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(children: [
+          SingleChildScrollView(
               physics: ClampingScrollPhysics(),
               child: BaseWidget<SwipeModel>(
                   model: model,
@@ -103,38 +94,46 @@ class DetailInfo extends StatelessWidget {
                                       ),
                                     )),
                               ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Row(
-                                    children: List.generate(
-                                        item.image_urls.length, (idx) {
-                                  if (item.image_urls.length == 1)
-                                    return Container();
-                                  return idx == model.image_index
-                                      ? Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            margin:
-                                                EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                            height: 5,
-                                          ),
-                                        )
-                                      : Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.only(top: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.black12,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            margin:
-                                                EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                            height: 5,
-                                          ),
-                                        );
-                                })),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.75 -
+                                        30,
+                                child: Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(
+                                          item.image_urls.length, (idx) {
+                                        if (item.image_urls.length == 1)
+                                          return Container();
+                                        return idx == model.image_index
+                                            ? Container(
+                                                width: 30,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                margin: EdgeInsets.fromLTRB(
+                                                    3, 5, 3, 0),
+                                                height: 6,
+                                              )
+                                            : Container(
+                                                width: 30,
+                                                padding:
+                                                    EdgeInsets.only(top: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.black12,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10)),
+                                                margin: EdgeInsets.fromLTRB(
+                                                    3, 5, 3, 0),
+                                                height: 6,
+                                              );
+                                      })),
+                                ),
                               ),
                               SizedBox(
                                 height:
@@ -185,70 +184,8 @@ class DetailInfo extends StatelessWidget {
                                 height:
                                     MediaQuery.of(context).size.height * 0.75,
                                 child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            Navigator.maybePop(
-                                                context, "dislike");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Color.fromRGBO(
-                                                  72, 116, 213, 1),
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                        RawMaterialButton(
-                                          onPressed: () {
-                                            Navigator.maybePop(
-                                                context, "collect");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: FaIcon(
-                                            FontAwesomeIcons.thLarge,
-                                            color: backgroundColor,
-                                            size: 25,
-                                          ),
-                                          // child: SvgPicture.asset(
-                                          //   'images/buy.svg',
-                                          //   width: 25.0,
-                                          //   color: backgroundColor,
-                                          // ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                        RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            Navigator.maybePop(context, "like");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: pinkColor,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                      ],
-                                    )),
+                                  alignment: Alignment.bottomCenter,
+                                ),
                               )
                             ]),
                           ),
@@ -351,10 +288,113 @@ class DetailInfo extends StatelessWidget {
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                          UIHelper.verticalSpaceMedium,
+                          UIHelper.verticalSpaceMedium,
+                          UIHelper.verticalSpaceSmall
                         ]);
                   })),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white10, Colors.white])),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "dislike");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/dislike_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  // RawMaterialButton(
+                  //   constraints: BoxConstraints(minWidth: 60),
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "dislike");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: Padding(
+                  //     padding: EdgeInsets.all(0),
+                  //     child: SvgPicture.asset(
+                  //       'images/times.svg',
+                  //       width: 25.0,
+                  //       color: Color.fromRGBO(72, 116, 213, 1),
+                  //     ),
+                  //   ),
+                  //   padding: EdgeInsets.all(10.0),
+                  //   shape: CircleBorder(),
+                  // ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "collect");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/star_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "like");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/heart_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  // RawMaterialButton(
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "collect");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: FaIcon(
+                  //     FontAwesomeIcons.solidStar,
+                  //     color: backgroundColor,
+                  //     size: 25,
+                  //   ),
+                  // child: SvgPicture.asset(
+                  //   'images/buy.svg',
+                  //   width: 25.0,
+                  //   color: backgroundColor,
+                  // ),
+                  // padding: EdgeInsets.all(10.0),
+                  // shape: CircleBorder(),
+                  // ),
+                  // RawMaterialButton(
+                  //   constraints: BoxConstraints(minWidth: 60),
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "like");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: SvgPicture.asset(
+                  //     'images/like.svg',
+                  //     width: 25.0,
+                  //     color: pinkColor,
+                  //   ),
+                  //   padding: EdgeInsets.all(10.0),
+                  //   shape: CircleBorder(),
+                  // ),
+                ],
+              ),
+            ),
+          )
+        ]),
       ),
     );
   }

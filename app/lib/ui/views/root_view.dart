@@ -47,16 +47,16 @@ class RootView extends StatelessWidget {
       if (error == null) {
         return Consumer<StrideUser>(builder: (context, user, child) {
           if (user == null) {
-            print("!!!");
+            // print("!!!");
             showWidget = LoginView();
           } else {
-            Stride.analytics.setUserId(user.id);
-            if (user.profile_flag) {
-              // showWidget = TutorialView();
-              showWidget = ServiceView();
-            } else {
-              showWidget = TutorialView();
-            }
+            // Stride.analytics.setUserId(user.id);
+            // if (user.profile_flag) {
+            // showWidget = TutorialView();
+            showWidget = ServiceView();
+            // } else {
+            // showWidget = TutorialView();
+            // }
           }
           return AnimatedSwitcher(
               duration: Duration(milliseconds: 500), child: showWidget);

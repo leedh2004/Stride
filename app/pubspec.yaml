@@ -66,6 +66,7 @@ dependencies:
   flutter_launcher_icons: ^0.7.5
   loading: ^1.0.2
   #flutter_staggered_grid_view: ^0.3.2
+  # flutter_is_emulator: ^1.0.0
 
 flutter_icons:
   android: true
@@ -98,10 +99,20 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
+    - assets/dislike_button.png
+    - assets/heart_button.png
+    - assets/star_button.png
+    - assets/purple_star.png
+    - assets/swipe_dislike.png
+    - assets/swipe_heart.png
+    - assets/stride_text_logo.png
+
     - images/store.png
     - images/love.png
     - images/fashion.png
     - images/intro.png
+    - images/intro.jpg
+
     - images/kakao_login.png
     # - images/swipe.png
     # - images/tap.png
@@ -123,6 +134,8 @@ flutter:
     - images/times.svg
     - images/like.svg
     - images/icon.png
+    - images/stride_text.png
+    - images/filter.png
     # - images/a.png
     # - images/loading.gif
     # - images/loading_white.gif
@@ -130,9 +143,9 @@ flutter:
     # - images/swipe_image_logo.jpg
 
   # fonts:
-  #   - family: NotoSansKR
+  #   - family: Nanum
   #     fonts:
-  #     - asset: assets/fonts/notosanskr-regular.ttf
+  #     - asset: assets/fonts/NanumPenScript-Regular.ttf
   #     - asset: assets/fonts/notosanskr-bold.ttf
   #       weight: 700
       
