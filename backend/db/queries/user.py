@@ -258,3 +258,20 @@ def select_user_name(user_id):
         except Exception as Ex:
             result = None
             return result
+
+
+def has_user_concept():
+    with db_connect() as (service_conn, cursor):
+        query = """
+        SELECT count(shop_concept) FROM users WHERE user_id = %s;
+        """
+        try:
+            cursor.execute(query, (g.user_id, ))
+            result = cursor.fetchone()[0]
+            if result == 0:
+                return False
+            else:
+                return True
+        except Exception as Ex:
+            print(Ex)
+            return False
