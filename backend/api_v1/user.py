@@ -84,3 +84,14 @@ def get_history_cnt():
         return result, 200
     except:
         return jsonify("Fail"), 500
+
+
+@user.route('/flag', methods=['POST'])
+@login_required
+def init_flag():
+    try:
+        if initialize_flag() is True:
+            return jsonify("Success"), 200
+    except Exception as ex:
+        print(ex)
+        return jsonify("Fail"), 500
