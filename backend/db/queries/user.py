@@ -275,3 +275,15 @@ def has_user_concept():
         except Exception as Ex:
             print(Ex)
             return False
+
+
+def initialize_flag():
+    with db_connect() as (service_conn, cursor):
+        query = """UPDATE users SET profile_flag = FALSE WHERE user_id = %s"""
+        try:
+            cursor.execute(query, (g.user_id,))
+            service_conn.commit()
+            return True
+        except Exception as Ex:
+            print(Ex)
+            return False
