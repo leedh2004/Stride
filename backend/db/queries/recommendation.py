@@ -22,8 +22,11 @@ def get_recommended_multi_mock_list():
         ORDER BY random() LIMIT 20;
         """
         select_new_arrived = """SELECT * FROM products WHERE product_id IN(SELECT product_id FROM products ORDER BY created_at desc limit 1000) ORDER BY random() LIMIT 20"""
-        cursor.execute(get_user_concept, (g.user_id, ))
-        concept = cursor.fetchone()[0]
+        if has_user_concept() is True:
+            cursor.execute(get_user_concept, (g.user_id, ))
+            concept = cursor.fetchone()[0]
+        else:
+            concept = ['daily', 'simple']
         concept_1 = concept[0]
         concept_2 = concept[1]
         total_result = {

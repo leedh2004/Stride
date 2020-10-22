@@ -6,6 +6,7 @@ from flask import g
 import json
 from bson import json_util
 
+
 def get_random_list():
     with db_connect() as (service_conn, cursor):
         query = """SELECT * FROM products ORDER BY random() limit 9"""
@@ -47,3 +48,30 @@ def extract_and_update_concept(product_id):
             print(Ex)
             raise
 
+
+
+class Tutorial:
+
+    @staticmethod
+    def cal_concept():
+        with db_connect() as (service_conn, cursor):
+            aggregate_concept_query = """
+            SELECT shop_concept, count(*)
+             FROM (
+                SELECT unnest(s.shop_concept) AS shop_concept FROM evaluation e JOIN products p on e.product_id = p.product_id JOIN shop s ON p.shop_id = s.shop_id  WHERE user_id=%s AND likes is True) t
+            GROUP BY shop_concept
+            """
+            update_query = """
+            UPDATE users SET shop_concept = %s WHERE user_id = %s
+            """
+            try:
+                cursor.execute(aggregate_concept_query, (g.user_id, ))
+                result = cursor.fetchall()
+                cal_result = Concept.calc_(result)
+                cursor.execute(update_query, (cal_result, g.user_id))
+                service_conn.commit()
+                return True
+            except Exception as Ex:
+                print(Ex)
+                return False
+                raise

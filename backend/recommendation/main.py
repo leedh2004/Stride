@@ -4,6 +4,7 @@ sys.path.append('../../')
 sys.path.append('../../../')
 import backend.recommendation.queries as queries
 import backend.recommendation.recommendation as recommendation
+from backend.db.queries.user import *
 from backend.db.init import *
 import random
 
@@ -109,35 +110,61 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                           {"range": {"max_shoulder": {"gte": min(user_size_data['shoulder'])}}},
                           {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
             must_conditions += range_size
-        res = es.search(
-            index='products',
-            body={
-                "size": 50,
-                "_source": ["product_id"],
-                "query": {
-                    "bool": {
-                        "filter": filter_conditions,
-                        "must": must_conditions,
-                        "should": {
-                            "terms": {
-                                "shop_concept": user_prefer_concepts
-                            }
-                        },
-                        "must_not": [
-                            {
+        if has_user_concept() is True:
+            res = es.search(
+                index='products',
+                body={
+                    "size": 50,
+                    "_source": ["product_id"],
+                    "query": {
+                        "bool": {
+                            "filter": filter_conditions,
+                            "must": must_conditions,
+                            "should": {
                                 "terms": {
-                                    "product_id": user_seen_items
+                                    "shop_concept": user_prefer_concepts
                                 }
-                            }
-                        ]
+                            },
+                            "must_not": [
+                                {
+                                    "terms": {
+                                        "product_id": user_seen_items
+                                    }
+                                }
+                            ]
+                        }
                     }
                 }
-            }
-        )
+            )
+        else:
+            print("not concept")
+            res = es.search(
+                index='products',
+                body={
+                    "size": 50,
+                    "_source": ["product_id"],
+                    "query": {
+                        "bool": {
+                            "filter": filter_conditions,
+                            "must": must_conditions,
+                            "must_not": [
+                                {
+                                    "terms": {
+                                        "product_id": user_seen_items
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            )
+
         print(res['hits']['hits'])
         result_product_ids = [item['_source']['product_id'] for item in res['hits']['hits']]
         result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
         return result_product_ids
+
+
 
 
 def personalized_recommendation(user_id):
