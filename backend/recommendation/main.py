@@ -86,10 +86,6 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
         es = es_connection
         user_prefer_concepts = queries.get_user_shop_concepts(user_id)
         user_seen_items = queries.get_entire_user_seen_items_from_db(user_id) + exclude_list
-        should_conditions = []
-        if user_prefer_concepts:
-            should_concepts = {"terms": {"shop_concept": user_prefer_concepts}}
-            should_conditions.append(should_concepts)
         filter_conditions = []
         if colors:
             terms_colors = {"terms": {"color": colors}}
@@ -112,6 +108,12 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                           {"range": {"max_shoulder": {"gte": min(user_size_data['shoulder'])}}},
                           {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
             must_conditions += range_size
+        should_conditions = []
+        if user_prefer_concepts:
+            must_concept = {"term": {"shop_concept": user_prefer_concepts[0]}}
+            should_concepts = {"terms": {"shop_concept": user_prefer_concepts[1:]}}
+            should_conditions.append(should_concepts)
+            must_conditions.append(must_concept)
         res = es.search(
             index='products',
             body={
@@ -138,6 +140,8 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
         result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
         random.shuffle(result_product_ids)
         return result_product_ids
+
+
 
 
 def remove_off_season_items():
