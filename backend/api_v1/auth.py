@@ -62,3 +62,14 @@ def login():
         likes = get_like_dislike_cnt()
         return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
                         "size": size, "likes": likes, "name": name}), 200
+    elif channel == 'non_member':
+        user_id = str(access_token)
+        insert_user(user_id)
+        g.user_id = user_id
+        flag = select_user_profile_flag()
+        size = select_user_size()
+        token = encode_jwt_token(user_id)
+        likes = get_like_dislike_cnt()
+        return jsonify({"token": token, "user_id": user_id, "profile_flag": flag,
+                        "size": size, "likes": likes}), 200
+
