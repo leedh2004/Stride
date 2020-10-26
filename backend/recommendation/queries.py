@@ -284,7 +284,7 @@ def update_user_concepts(user_id, concepts):
 
 
 def get_off_season_items():
-    off_season_keywords = ('반팔', '숏팬츠','나시', '슬리브리스', '슬리브', '썸머', '린넨', '쿨', '여름', '반바지', '숏데님', '쇼츠')
+    off_season_keywords = ('반팔', '숏팬츠','나시', '슬리브리스', '슬리브', '썸머', '린넨', '쿨', '여름', '반바지', '숏데님', '쇼츠', '4부', 'half', '하프', 'linen')
     remove_items = []
     with conn.cursor() as db_cursor:
         try:
