@@ -281,3 +281,22 @@ def update_user_concepts(user_id, concepts):
         conn.rollback()
     finally:
         db_cursor.close()
+
+
+def get_off_season_items():
+    off_season_keywords = ('반팔', '숏팬츠','나시', '슬리브리스', '슬리브', '썸머', '린넨', '쿨', '여름', '반바지', '숏데님', '쇼츠')
+    remove_items = []
+    with conn.cursor() as db_cursor:
+        try:
+            for k in off_season_keywords:
+                like_pattern = '%{}%'.format(k)
+                query = """select array(select product_id::varchar(255) from products where product_name like %s)"""
+                db_cursor.execute(query, (like_pattern,))
+                items = db_cursor.fetchone()[0]
+                remove_items += items
+            return remove_items
+        except Exception as e:
+            print(e)
+            conn.rollback()
+        finally:
+            db_cursor.close()
