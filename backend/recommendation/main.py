@@ -81,13 +81,15 @@ def update_user_preferred_shop_concepts():
         queries.update_user_concepts(user, concepts)
 
 
-
-
 def filter_product(user_id: str, colors: list, size_on: bool, price: list, concepts: list, clothes_type: list, exclude_list: list) -> list:
     with es_connect() as (es_connection):
         es = es_connection
         user_prefer_concepts = queries.get_user_shop_concepts(user_id)
         user_seen_items = queries.get_entire_user_seen_items_from_db(user_id) + exclude_list
+        should_conditions = []
+        if user_prefer_concepts:
+            should_concepts = {"terms": {"shop_concept": user_prefer_concepts}}
+            should_conditions.append(should_concepts)
         filter_conditions = []
         if colors:
             terms_colors = {"terms": {"color": colors}}
@@ -110,66 +112,42 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                           {"range": {"max_shoulder": {"gte": min(user_size_data['shoulder'])}}},
                           {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
             must_conditions += range_size
-        if has_user_concept() is True:
-            res = es.search(
-                index='products',
-                body={
-                    "size": 50,
-                    "_source": ["product_id"],
-                    "query": {
-                        "bool": {
-                            "filter": filter_conditions,
-                            "must": must_conditions,
-                            "should": {
+        res = es.search(
+            index='products',
+            body={
+                "size": 50,
+                "_source": ["product_id"],
+                "query": {
+                    "bool": {
+                        "filter": filter_conditions,
+                        "must": must_conditions,
+                        "should": should_conditions,
+                        "must_not": [
+                            {
                                 "terms": {
-                                    "shop_concept": user_prefer_concepts
+                                    "product_id": user_seen_items
                                 }
-                            },
-                            "must_not": [
-                                {
-                                    "terms": {
-                                        "product_id": user_seen_items
-                                    }
-                                }
-                            ]
-                        }
+                            }
+                        ]
                     }
                 }
-            )
-        else:
-            print("not concept")
-            res = es.search(
-                index='products',
-                body={
-                    "size": 50,
-                    "_source": ["product_id"],
-                    "query": {
-                        "bool": {
-                            "filter": filter_conditions,
-                            "must": must_conditions,
-                            "must_not": [
-                                {
-                                    "terms": {
-                                        "product_id": user_seen_items
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            )
-
+            }
+        )
         print(res['hits']['hits'])
         result_product_ids = [item['_source']['product_id'] for item in res['hits']['hits']]
         result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
+        random.shuffle(result_product_ids)
         return result_product_ids
 
 
-
-
-def personalized_recommendation(user_id):
-    # get best items
-    # choose with user concepts
-    user_prefer_concepts = queries.get_user_liked_shop_concepts_from_db(user_id)
-    # no need to exclude items that user has already seen!
-    # just add some randomness to the list, shuffle
+def remove_off_season_items():
+    remove_items = queries.get_off_season_items()
+    if remove_items:
+        with es_connect() as es:
+            es.delete_by_query(index='products', body={
+                "query": {
+                    "terms": {
+                        "product_id": remove_items
+                    }
+                }
+            })

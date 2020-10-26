@@ -60,7 +60,7 @@ def index_product_documents(es):
 def index_user_rating_data(es):
     docs = []
     # index like items
-    users = index_user_rating(like=True)
+    users = index_user_rating(True, es)
     if not users:
         return
     for user in users:
@@ -80,7 +80,7 @@ def index_user_rating_data(es):
     except Exception as e:
         print(e)
     # index dislike items
-    index_user_rating(like=False)
+    index_user_rating(False, es)
 
 
 def index_user_rating(like, es):
