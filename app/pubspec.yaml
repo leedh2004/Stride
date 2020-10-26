@@ -34,7 +34,8 @@ dependencies:
   firebase_crashlytics: ^0.1.4+1
   firebase_analytics: ^6.0.0
   firebase_messaging: ^7.0.0
-
+  uuid: ^2.2.2
+  
   provider: ^4.3.1
   # provider: ^3.0.0
   font_awesome_flutter: ^8.8.1
@@ -106,6 +107,10 @@ flutter:
     - assets/swipe_dislike.png
     - assets/swipe_heart.png
     - assets/stride_text_logo.png
+    - assets/buy.png
+    - assets/like-of-filled-heart.png
+    - assets/close_purple.png
+    - assets/right-arrow.png
 
     - images/store.png
     - images/love.png
@@ -142,12 +147,12 @@ flutter:
     - images/search.png
     # - images/swipe_image_logo.jpg
 
-  # fonts:
-  #   - family: Nanum
-  #     fonts:
-  #     - asset: assets/fonts/NanumPenScript-Regular.ttf
-  #     - asset: assets/fonts/notosanskr-bold.ttf
-  #       weight: 700
+  fonts:
+    - family: Nanum
+      fonts:
+      - asset: assets/fonts/NanumSquareRoundR.ttf
+      - asset: assets/fonts/NanumSquareRoundEB.ttf
+        weight: 700
       
 
 

@@ -51,17 +51,20 @@ const inputPurpleStyle = TextStyle(
     color: backgroundColor, fontSize: 24, fontWeight: FontWeight.w700);
 
 String priceText(int price) {
+  // String ret = str.substring(0, str.length - 3) +
+  //     ',' +
+  //     str.substring(str.length - 3, str.length);
   String str = price.toString();
-  String ret = str.substring(0, str.length - 3) +
-      ',' +
-      str.substring(str.length - 3, str.length);
-  // String ret = "";
-  // int idx = str.length - 1;
-  // int cnt = 0;
-  // for (int i = idx; i >= 0; i--) {
-  //   ret = str[i] + ret;
-  //   cnt++;
-  //   if (cnt % 3 == 0 && idx != 0 ) ret = ',' + ret;
-  // }
+  String ret = "";
+  int idx = str.length - 1;
+  int cnt = 0;
+  //24000
+  for (int i = idx; i >= 0; i--) {
+    ret = str[i] + ret;
+    cnt++;
+    if (cnt % 3 == 0 && i != 0) {
+      ret = ',' + ret;
+    }
+  }
   return ret;
 }

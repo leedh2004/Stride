@@ -4,6 +4,7 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/service_view.dart';
@@ -19,8 +20,12 @@ class RecommendItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String concept = "";
+    for (var c in item.shop_concept) {
+      concept += '#${c} ';
+    }
+
     return Container(
-      width: 110,
       margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
       child: InkWell(
         onTap: () async {
@@ -36,67 +41,73 @@ class RecommendItemWidget extends StatelessWidget {
           }));
 
           if (await result == 'collect') {
-            //                           RecentItem item =
-            //     Provider.of<SwipeService>(context, listen: false).items[model.index];
-            // model.addItem(item);
             ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
               duration: Duration(milliseconds: 1500),
               content: Text('해당상품이 콜렉션에 추가되었습니다.'),
             ));
           }
-          // Navigator.of(context).push(PageRouteBuilder(
-          //     opaque: false, pageBuilder: (___, _, __) => ProductDialog(item)));
         },
-        child: Column(children: [
-          Expanded(
-            child: Stack(children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    child: AspectRatio(
-                      aspectRatio: 12 / 16,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(3),
-                        child: Hero(
-                          tag: item.product_id,
-                          child: CachedNetworkImage(
-                              imageUrl: item.compressed_thumbnail_url,
-                              fit: BoxFit.cover,
-                              httpHeaders: {
-                                HttpHeaders.refererHeader:
-                                    "http://api-stride.com:5000/"
-                              }),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Container(
+            width: 172,
+            height: 250,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: Hero(
+                tag: item.product_id,
+                child: CachedNetworkImage(
+                    imageUrl: item.compressed_thumbnail_url,
+                    fit: BoxFit.cover,
+                    httpHeaders: {
+                      HttpHeaders.refererHeader: "http://api-stride.com:5000/"
+                    }),
               ),
-            ]),
+            ),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(
+            item.product_name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          ),
+          SizedBox(
+            height: 8,
+          ),
+          Text(item.price + '원',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 21)),
+          SizedBox(
+            height: 8,
           ),
           Container(
-            margin: EdgeInsets.fromLTRB(0, 5, 0, 5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  item.product_name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                Stack(
+            width: 172,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(item.price + '원',
-                          style: TextStyle(fontWeight: FontWeight.bold)),
+                    Container(
+                        padding: EdgeInsets.all(6),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Color.fromRGBO(244, 244, 251, 1)),
+                        child: Text('${typeConverter[item.type]}')),
+                    SizedBox(
+                      height: 8,
                     ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: InkWell(
-                        onTap: () => {
+                    Text(
+                      '$concept',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: 12),
+                    )
+                  ],
+                ),
+                InkWell(
+                    onTap: () => {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             Stride.analytics.logEvent(
@@ -113,15 +124,13 @@ class RecommendItemWidget extends StatelessWidget {
                                 item.product_url, item.shop_name);
                           }))
                         },
-                        child: SvgPicture.asset(
-                          'images/buy.svg',
-                          color: backgroundColor,
-                          width: 16,
-                        ),
+                    child: Padding(
+                      padding: EdgeInsets.only(right: 8),
+                      child: Image.asset(
+                        'assets/buy.png',
+                        width: 30,
                       ),
-                    ),
-                  ],
-                )
+                    )),
               ],
             ),
           )

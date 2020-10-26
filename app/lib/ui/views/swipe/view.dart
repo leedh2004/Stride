@@ -7,16 +7,15 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
-import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:app/ui/widgets/filter/concept.dart';
 import 'package:app/ui/widgets/filter/price.dart';
 import 'package:app/ui/widgets/filter/size.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
-import 'package:app/ui/widgets/swipe/card.dart';
 import 'package:app/ui/widgets/filter/color.dart';
-
+import 'package:app/ui/widgets/swipe/card_gesture.dart';
+import 'package:app/ui/widgets/swipe/image.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -32,14 +31,11 @@ class SwipeView extends StatefulWidget {
 
 class _SwipeViewState extends State<SwipeView> {
   //TabController tabController;
-  bool size_flag = false;
-  String type = 'all';
+  bool size_flag = false, onflag = false;
   double like_opacity = 0, dislike_opacity = 0;
-  bool onflag = false;
   GlobalKey collectionButton = GlobalKey(),
       buyButton2 = GlobalKey(),
-      rulerButton = GlobalKey(),
-      cardKey = GlobalKey();
+      rulerButton = GlobalKey();
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
 
@@ -66,18 +62,6 @@ class _SwipeViewState extends State<SwipeView> {
   }
 
   onTapCollectButton(SwipeModel model) async {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //   SwipeCard item = Provider.of<SwipeService>(context).items[model.index];
-    //   Stride.analytics
-    //       .logEvent(name: 'SWIPE_PURCHASE_BUTTON_CLICKED', parameters: {
-    //     'itemId': item.product_id.toString(),
-    //     'itemName': item.product_name,
-    //     'itemCategory': item.shop_name
-    //   });
-
-    //   model.purchaseItem(item.product_id);
-    //   return ProductWebView(item.product_url, item.shop_name);
-    // }));
     RecentItem item =
         Provider.of<SwipeService>(context, listen: false).items[model.index];
     model.addItem(item);
@@ -126,31 +110,6 @@ class _SwipeViewState extends State<SwipeView> {
     model.nextItem();
     onflag = false;
   }
-
-  // onTapSizeButton(SwipeModel model, value) async {
-  //   setState(() {
-  //     size_flag = value;
-  //   });
-  //   if (size_flag) {
-  //     ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-  //         duration: Duration(milliseconds: 1500),
-  //         content: Row(children: [
-  //           Icon(
-  //             Icons.check,
-  //             color: backgroundColor,
-  //           ),
-  //           UIHelper.horizontalSpaceMedium,
-  //           Text('자신의 사이즈에 맞는 옷만 봅니다'),
-  //         ])));
-  //   }
-  //   // model.flagChange();
-  //   if (size_flag) {
-  //     Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_ON");
-  //     model.test();
-  //   } else {
-  //     Stride.analytics.logEvent(name: "SWIPE_SIZE_TOGGLE_OFF");
-  //   }
-  // }
 
   void showTutorial() {
     tutorialCoachMark = TutorialCoachMark(context,
@@ -495,7 +454,6 @@ class _SwipeViewState extends State<SwipeView> {
                   model,
                   rulerButton,
                   buyButton2,
-                  cardKey,
                   () => onTapDislikeButton(model),
                   () => onTapLikeButton(model),
                   () => onTapCollectButton(model)),
@@ -504,15 +462,7 @@ class _SwipeViewState extends State<SwipeView> {
                   duration: Duration(milliseconds: 300),
                   opacity: dislike_opacity,
                   child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        padding: EdgeInsets.all(3),
-                        child: FaIcon(
-                          FontAwesomeIcons.times,
-                          size: 100,
-                          color: blueColor,
-                        )),
-                  ),
+                      alignment: Alignment.center, child: dislikeImageWidget()),
                 ),
               ),
               IgnorePointer(
@@ -520,15 +470,7 @@ class _SwipeViewState extends State<SwipeView> {
                   duration: Duration(milliseconds: 300),
                   opacity: like_opacity,
                   child: Align(
-                    alignment: Alignment.center,
-                    child: Container(
-                        padding: EdgeInsets.all(3),
-                        child: FaIcon(
-                          FontAwesomeIcons.solidHeart,
-                          size: 100,
-                          color: pinkColor,
-                        )),
-                  ),
+                      alignment: Alignment.center, child: heartImageWidget()),
                 ),
               ),
             ]),

@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:uuid/uuid.dart';
 import 'api.dart';
 
 class AuthenticationService {
@@ -126,8 +127,8 @@ class AuthenticationService {
   }
 
   Future<bool> login(String accessToken, String channel, String name) async {
-    print("!!");
     try {
+      print("login()");
       final response = await api.client.post('${Api.endpoint}/auth/token',
           data: jsonEncode({
             'access_token': accessToken,
@@ -177,50 +178,59 @@ class AuthenticationService {
       };
       print('헤더 붙임!');
     } catch (e) {
-      api.errorCreate(Error());
+      print(e);
+      // api.errorCreate(Error());
     }
   }
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
+    print('checkToken()');
     try {
-      print('checkToken()');
+      String uid = await storage.read(key: 'uid');
       String token = await storage.read(key: 'jwt_token');
-      if (await storage.read(key: 'swipe_tutorial') != null) {
+
+      if (await storage.read(key: 'swipe_tutorial') != null)
         swipe_tutorial = true;
-      }
-      if (await storage.read(key: 'swipe_heart_tutorial') != null) {
+      if (await storage.read(key: 'swipe_heart_tutorial') != null)
         swipe_heart_tutorial = true;
-      }
-      if (await storage.read(key: 'dress_tutorial') != null) {
+      if (await storage.read(key: 'dress_tutorial') != null)
         dress_tutorial = true;
-      }
-      if (token == null) {
+
+      //
+      if (token == null && uid != null) {
         init = true;
-        return;
+        await login(uid, "non_member", "non_member");
       }
+
+      if (token == null && uid == null) {
+        init = true;
+        var uuid = Uuid();
+        var uid = uuid.v4();
+        await storage.write(key: 'uid', value: uid);
+        await login(uid, "non_member", "non_member");
+      }
+
       api.client.options.headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
         'Authorization': "Bearer ${token}",
       };
-      print("!");
-      final response = await api.client.get(
-        '${Api.endpoint}/login/token',
-      );
-      print(response.statusCode);
 
-      if (response.statusCode == 200) {
+      var id;
+      try {
+        final response = await api.client.get(
+          '${Api.endpoint}/login/token',
+        );
         await storage.delete(key: 'jwt_token');
         print(response.data);
         var parsed = response.data as Map<String, dynamic>;
-        var id = parsed['user_id'];
+        id = parsed['user_id'];
         var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
         var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
         StrideUser user = StrideUser(
             id: id,
             profile_flag: parsed['profile_flag'],
-            name: jsonDecode(parsed['name']),
             shoulder: size['shoulder'],
             bust: size['bust'],
             like: likes['like'],
@@ -228,28 +238,25 @@ class AuthenticationService {
             waist: size['waist'],
             hip: size['hip'],
             thigh: size['thigh']);
-        //뉴토큰으로 토큰 교체해줘야함.
         await storage.write(key: 'jwt_token', value: response.data['token']);
-        try {
-          await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: id, password: "SuperSecretPassword!");
-        } on FirebaseAuthException catch (e) {
-          if (e.code == 'user-not-found') {
-            print('No user found for that email.');
-          } else if (e.code == 'wrong-password') {
-            print('Wrong password provided for that user.');
-          }
-          init = true;
-        }
         master = user;
-        userController.add(user);
-      } else {
+        await userController.add(user);
+      } catch (e) {
         await storage.delete(key: 'jwt_token');
-        print("토큰이 없거나 만료되었습니다");
+        await checkToken();
+        init = true;
+        print(e.toString());
       }
-    } catch (e) {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: id, password: "SuperSecretPassword!");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    } catch (e) {} finally {
       init = true;
     }
-    init = true;
   }
 }

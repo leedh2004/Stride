@@ -25,8 +25,8 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 Future<void> main() async {
+  print("START");
   WidgetsFlutterBinding.ensureInitialized();
-  // bool isAnEmulator = await FlutterIsEmulator.isDeviceAnEmulatorOrASimulator;
   GestureBinding.instance.resamplingEnabled = true;
   HttpOverrides.global = MyHttpOverrides();
   final appleSignInAvailable = await ConfigService.check();
@@ -55,17 +55,17 @@ Future<void> main() async {
       },
     );
     // }
-    final RemoteConfig remoteConfig = await RemoteConfig.instance;
-    await remoteConfig.fetch(expiration: const Duration(seconds: 0));
-    await remoteConfig.activateFetched();
-    final updatedVersion = remoteConfig.getString('version').trim();
-    print(updatedVersion);
-    runZoned(() {
-      runApp(Provider<ConfigService>.value(
-          value: ConfigService(appleSignInAvailable, updatedVersion),
-          child: Stride()));
-    }, onError: Crashlytics.instance.recordError);
   }
+  final RemoteConfig remoteConfig = await RemoteConfig.instance;
+  await remoteConfig.fetch(expiration: const Duration(seconds: 0));
+  await remoteConfig.activateFetched();
+  final updatedVersion = remoteConfig.getString('version').trim();
+  print(updatedVersion);
+  runZoned(() {
+    runApp(Provider<ConfigService>.value(
+        value: ConfigService(appleSignInAvailable, updatedVersion),
+        child: Stride()));
+  }, onError: Crashlytics.instance.recordError);
   // runApp(Stride());
 }
 
@@ -89,7 +89,7 @@ class Stride extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'stride',
         theme: ThemeData(
-          // fontFamily: 'Nanum',
+          fontFamily: 'Nanum',
           primarySwatch: Colors.blue,
           visualDensity: VisualDensity.adaptivePlatformDensity,
           //for modal..

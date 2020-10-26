@@ -10,18 +10,10 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-final Map<String, String> typeConverter = {
-  'top': '상의',
-  'pants': '팬츠',
-  'dress': '드레스',
-  'skirt': '스커트',
-  'outer': '아우터'
-};
+import '../../../mapper.dart';
 
 class DetailInfo extends StatelessWidget {
   SwipeModel model;

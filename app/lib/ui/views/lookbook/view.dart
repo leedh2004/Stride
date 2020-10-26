@@ -22,11 +22,22 @@ class LookBookView extends StatelessWidget {
           showWidget = LoadingWidget();
           model.getLookBook();
         } else {
-          var items =
-              Provider.of<LookBookService>(context).items[model.current_folder];
+          // var items =
+          //     Provider.of<LookBookService>(context).items[model.current_folder];
           var folder = Provider.of<LookBookService>(context).folder;
           var folderKeys = folder.keys.toList();
           var folderNames = folder.values.toList();
+          showWidget = Container(
+              child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  children: List.generate(folderNames.length, (index) {
+                    var items = Provider.of<LookBookService>(context)
+                        .items[folderKeys[index]];
+                    print(items);
+                    return FolderTextButton(
+                        model, folderNames[index], folderKeys[index], items);
+                  })));
 
           showWidget = Container(
             color: Colors.white,
@@ -48,60 +59,60 @@ class LookBookView extends StatelessWidget {
                 ),
               ),
               // Expanded(child: Container(color: Colors.red)),
-              Expanded(
-                child: Container(
-                  color: Colors.white,
-                  alignment: Alignment.topLeft,
-                  child: Padding(
-                    padding: EdgeInsets.all(16),
-                    child: items.length > 0
-                        ? GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 0.7,
-                              mainAxisSpacing: 16.0,
-                              crossAxisSpacing: 16.0,
-                            ),
-                            padding: EdgeInsets.all(5),
-                            itemBuilder: (context, index) {
-                              double opacity = 0;
-                              if (model.selectedIdx.contains(index))
-                                opacity = 1;
-                              return LookBookItem(
-                                  item: items[index],
-                                  opacity: opacity,
-                                  index: index);
-                            },
-                            itemCount: items.length,
-                          )
-                        : Container(
-                            child: Align(
-                              alignment: Alignment.center + Alignment(0, -0.25),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Image.asset(
-                                    'images/fashion.png',
-                                    width: 100,
-                                    height: 100,
-                                  ),
-                                  Text("룩북에 아이템이 없어요", style: headerStyle),
-                                  UIHelper.verticalSpaceSmall,
-                                  Text("좋아하는 상하의를 조합해서",
-                                      style: dressRoomsubHeaderStyle),
-                                  Text("나만의 룩북을 만들어 보아요",
-                                      style: dressRoomsubHeaderStyle),
-                                ],
-                              ),
-                            ),
-                          ),
-                  ),
-                ),
-              ),
-              LookBookButtonBar(model)
+              // Expanded(
+              //   child: Container(
+              //     color: Colors.white,
+              //     alignment: Alignment.topLeft,
+              //     child: Padding(
+              //       padding: EdgeInsets.all(16),
+              //       child: items.length > 0
+              //           ? GridView.builder(
+              //               shrinkWrap: true,
+              //               gridDelegate:
+              //                   SliverGridDelegateWithFixedCrossAxisCount(
+              //                 crossAxisCount: 2,
+              //                 childAspectRatio: 0.7,
+              //                 mainAxisSpacing: 16.0,
+              //                 crossAxisSpacing: 16.0,
+              //               ),
+              //               padding: EdgeInsets.all(5),
+              //               itemBuilder: (context, index) {
+              //                 double opacity = 0;
+              //                 if (model.selectedIdx.contains(index))
+              //                   opacity = 1;
+              //                 return LookBookItem(
+              //                     item: items[index],
+              //                     opacity: opacity,
+              //                     index: index);
+              //               },
+              //               itemCount: items.length,
+              //             )
+              //           : Container(
+              //               child: Align(
+              //                 alignment: Alignment.center + Alignment(0, -0.25),
+              //                 child: Column(
+              //                   mainAxisSize: MainAxisSize.min,
+              //                   crossAxisAlignment: CrossAxisAlignment.center,
+              //                   children: [
+              //                     Image.asset(
+              //                       'images/fashion.png',
+              //                       width: 100,
+              //                       height: 100,
+              //                     ),
+              //                     Text("룩북에 아이템이 없어요", style: headerStyle),
+              //                     UIHelper.verticalSpaceSmall,
+              //                     Text("좋아하는 상하의를 조합해서",
+              //                         style: dressRoomsubHeaderStyle),
+              //                     Text("나만의 룩북을 만들어 보아요",
+              //                         style: dressRoomsubHeaderStyle),
+              //                   ],
+              //                 ),
+              //               ),
+              //             ),
+              //     ),
+              //   ),
+              // ),
+              // LookBookButtonBar(model)
             ]),
           );
         }

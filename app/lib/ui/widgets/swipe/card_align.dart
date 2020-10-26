@@ -7,13 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
+import '../../../mapper.dart';
+
 class SwipeCardAlignment extends StatefulWidget {
   RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
 
   SwipeCardAlignment(RecentItem _item, int _index) {
-    // print("NEW");
     item = _item;
     index = _index;
     if (index >= item.length) {
