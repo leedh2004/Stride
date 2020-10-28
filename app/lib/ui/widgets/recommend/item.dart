@@ -26,7 +26,7 @@ class RecommendItemWidget extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.fromLTRB(0, 8, 8, 0),
+      margin: EdgeInsets.fromLTRB(0, 8, 12, 0),
       child: InkWell(
         onTap: () async {
           Stride.analytics
@@ -49,8 +49,8 @@ class RecommendItemWidget extends StatelessWidget {
         },
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Container(
-            width: 172,
-            height: 250,
+            width: 180,
+            height: 260,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
               child: Hero(
@@ -111,7 +111,7 @@ class RecommendItemWidget extends StatelessWidget {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             Stride.analytics.logEvent(
-                                name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                                name: 'RECOMMEND_PURCHASE_BUTTON_CLICKED',
                                 parameters: {
                                   'itemId': item.product_id.toString(),
                                   'itemName': item.product_name,

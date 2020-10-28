@@ -68,22 +68,16 @@ class _ServiceViewState extends State<ServiceView>
               Tab(
                   icon: Container(
                 padding: EdgeInsets.all(12),
-                child: SvgPicture.asset(
-                  'images/menu_swipe.svg',
-                  width: 36,
-                  height: 36,
-                  color: _tabController.index == 0
-                      ? backgroundColor
-                      : Color.fromRGBO(233, 236, 244, 1),
-                ),
+                child: _tabController.index == 0
+                    ? Image.asset('assets/home_s.png')
+                    : Image.asset('assets/home.png'),
               )),
               Tab(
                   icon: Container(
                 padding: EdgeInsets.all(12),
-                child: SvgPicture.asset('images/menu_heart.svg',
-                    color: _tabController.index == 1
-                        ? backgroundColor
-                        : Color.fromRGBO(233, 236, 244, 1)),
+                child: _tabController.index == 1
+                    ? Image.asset('assets/heart_s.png')
+                    : Image.asset('assets/heart.png'),
               )),
               Tab(
                   icon: Padding(
@@ -91,10 +85,9 @@ class _ServiceViewState extends State<ServiceView>
                 child: Container(
                   width: 30,
                   height: 30,
-                  child: FaIcon(FontAwesomeIcons.thLarge,
-                      color: _tabController.index == 2
-                          ? backgroundColor
-                          : Color.fromRGBO(233, 236, 244, 1)),
+                  child: _tabController.index == 2
+                      ? Image.asset('assets/collection_s.png')
+                      : Image.asset('assets/collection.png'),
                 ),
               )),
               Tab(
@@ -104,10 +97,9 @@ class _ServiceViewState extends State<ServiceView>
                     width: 30,
                     height: 30,
                     // padding: EdgeInsets.all(12),
-                    child: FaIcon(FontAwesomeIcons.userAlt,
-                        color: _tabController.index == 3
-                            ? backgroundColor
-                            : Color.fromRGBO(233, 236, 244, 1)),
+                    child: _tabController.index == 3
+                        ? Image.asset('assets/user_s.png')
+                        : Image.asset('assets/user.png'),
                   ),
                 ),
               ),

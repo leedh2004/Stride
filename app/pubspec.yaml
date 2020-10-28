@@ -35,7 +35,7 @@ dependencies:
   firebase_analytics: ^6.0.0
   firebase_messaging: ^7.0.0
   uuid: ^2.2.2
-  
+
   provider: ^4.3.1
   # provider: ^3.0.0
   font_awesome_flutter: ^8.8.1
@@ -104,6 +104,7 @@ flutter:
     - assets/heart_button.png
     - assets/star_button.png
     - assets/purple_star.png
+    - assets/purple_folder.png
     - assets/swipe_dislike.png
     - assets/swipe_heart.png
     - assets/stride_text_logo.png
@@ -111,6 +112,17 @@ flutter:
     - assets/like-of-filled-heart.png
     - assets/close_purple.png
     - assets/right-arrow.png
+    - assets/heart.svg 
+    - assets/search.png
+    - assets/collection.png
+    - assets/collection_s.png
+    - assets/heart.png 
+    - assets/heart_s.png 
+    - assets/home.png 
+    - assets/home_s.png 
+    - assets/user.png
+    - assets/user_s.png
+    - assets/config.png
 
     - images/store.png
     - images/love.png

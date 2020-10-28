@@ -11,6 +11,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart' hide ButtonStyle;
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 
 class LoginView extends StatelessWidget {
   Future<void> _signInWithApple(
@@ -21,6 +22,18 @@ class LoginView extends StatelessWidget {
       // TODO: Show alert here
       print(e);
     }
+  }
+
+  Future<void> _withoutSignIn(
+      BuildContext context, AuthenticationModel model) async {
+    var storage = model.authService.storage;
+    var uid = await storage.read(key: 'uid');
+    if (uid == null) {
+      var uuid = Uuid();
+      uid = uuid.v4();
+      await storage.write(key: 'uid', value: uid);
+    }
+    model.login(uid, "non_member", "non_member");
   }
 
   Future<void> _signInWithKakao(
@@ -50,6 +63,7 @@ class LoginView extends StatelessWidget {
               child: Stack(children: [
                 Container(
                   width: double.infinity,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: Image.asset(
                     'images/intro.jpg',
                     fit: BoxFit.cover,
@@ -66,7 +80,7 @@ class LoginView extends StatelessWidget {
                             topLeft: Radius.circular(40),
                             topRight: Radius.circular(40),
                           )),
-                      height: 250,
+                      height: 300,
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -76,7 +90,7 @@ class LoginView extends StatelessWidget {
                             UIHelper.verticalSpaceMedium,
                             Text.rich(TextSpan(children: [
                               TextSpan(
-                                  text: '클릭 한번으로 로그인까지 ',
+                                  text: '클릭 한번으로 가입까지 ',
                                   style: TextStyle(fontSize: 16)),
                               TextSpan(
                                   text: '단 3초!',
@@ -114,6 +128,23 @@ class LoginView extends StatelessWidget {
                                   ),
                                 ),
                               ),
+                            UIHelper.verticalSpaceMedium,
+                            FadeIn(
+                              delay: 1,
+                              child: SizedBox(
+                                width: 300,
+                                child: RaisedButton(
+                                  padding: EdgeInsets.all(12),
+                                  onPressed: () =>
+                                      _withoutSignIn(context, model),
+                                  child: Text(
+                                    '로그인 없이 이용하기',
+                                    style:
+                                        TextStyle(fontWeight: FontWeight.w700),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

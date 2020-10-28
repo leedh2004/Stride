@@ -7,12 +7,16 @@ import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/collection/view.dart';
+import 'package:app/ui/views/product_web_view.dart';
+import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+
+import '../../../main.dart';
 
 final Map<String, String> typeConverter = {
   'top': '상의',
@@ -308,6 +312,38 @@ class _LookBookInfoState extends State<LookBookInfo> {
                     ),
                     Padding(
                         padding: EdgeInsets.all(16), child: SizeDialog(item)),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+                      child: Center(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              Stride.analytics.logEvent(
+                                  name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                                  parameters: {
+                                    'itemId': item.product_id.toString(),
+                                    'itemName': item.product_name,
+                                    'itemCategory': item.shop_name
+                                  });
+                              // 이 부분 코드는 나중에 수정해야할 듯.
+                              Provider.of<SwipeService>(context, listen: false)
+                                  .purchaseItem(item.product_id);
+                              return ProductWebView(
+                                  item.product_url, item.shop_name);
+                            }));
+                          },
+                          child: Container(
+                            width: 300,
+                            height: 50,
+                            decoration: BoxDecoration(
+                                color: backgroundColor,
+                                borderRadius: BorderRadius.circular(25)),
+                            child: Center(child: Text('구매하기', style: buyStyle)),
+                          ),
+                        ),
+                      ),
+                    ),
                     UIHelper.verticalSpaceMedium,
                   ])),
         ),

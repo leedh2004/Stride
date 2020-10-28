@@ -127,8 +127,8 @@ class AuthenticationService {
   }
 
   Future<bool> login(String accessToken, String channel, String name) async {
+    print("login()");
     try {
-      print("login()");
       final response = await api.client.post('${Api.endpoint}/auth/token',
           data: jsonEncode({
             'access_token': accessToken,
@@ -178,8 +178,7 @@ class AuthenticationService {
       };
       print('헤더 붙임!');
     } catch (e) {
-      print(e);
-      // api.errorCreate(Error());
+      api.errorCreate(Error());
     }
   }
 
@@ -187,50 +186,37 @@ class AuthenticationService {
   Future checkToken() async {
     print('checkToken()');
     try {
-      String uid = await storage.read(key: 'uid');
       String token = await storage.read(key: 'jwt_token');
-
       if (await storage.read(key: 'swipe_tutorial') != null)
         swipe_tutorial = true;
       if (await storage.read(key: 'swipe_heart_tutorial') != null)
         swipe_heart_tutorial = true;
       if (await storage.read(key: 'dress_tutorial') != null)
         dress_tutorial = true;
-
-      //
-      if (token == null && uid != null) {
+      if (token == null) {
         init = true;
-        await login(uid, "non_member", "non_member");
+        return;
       }
-
-      if (token == null && uid == null) {
-        init = true;
-        var uuid = Uuid();
-        var uid = uuid.v4();
-        await storage.write(key: 'uid', value: uid);
-        await login(uid, "non_member", "non_member");
-      }
-
       api.client.options.headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
         'Authorization': "Bearer ${token}",
       };
-
-      var id;
-      try {
-        final response = await api.client.get(
-          '${Api.endpoint}/login/token',
-        );
+      final response = await api.client.get(
+        '${Api.endpoint}/login/token',
+      );
+      print(response.statusCode);
+      if (response.statusCode == 200) {
         await storage.delete(key: 'jwt_token');
         print(response.data);
         var parsed = response.data as Map<String, dynamic>;
-        id = parsed['user_id'];
+        var id = parsed['user_id'];
         var size = jsonDecode(parsed['size']) as Map<String, dynamic>;
         var likes = jsonDecode(parsed['likes']) as Map<String, dynamic>;
         StrideUser user = StrideUser(
             id: id,
             profile_flag: parsed['profile_flag'],
+            name: parsed['name'] != null ? jsonDecode(parsed['name']) : null,
             shoulder: size['shoulder'],
             bust: size['bust'],
             like: likes['like'],
@@ -238,25 +224,29 @@ class AuthenticationService {
             waist: size['waist'],
             hip: size['hip'],
             thigh: size['thigh']);
+        //뉴토큰으로 토큰 교체해줘야함.
         await storage.write(key: 'jwt_token', value: response.data['token']);
+        try {
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: id, password: "SuperSecretPassword!");
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'user-not-found') {
+            print('No user found for that email.');
+          } else if (e.code == 'wrong-password') {
+            print('Wrong password provided for that user.');
+          }
+          init = true;
+        }
         master = user;
-        await userController.add(user);
-      } catch (e) {
+        userController.add(user);
+      } else {
         await storage.delete(key: 'jwt_token');
-        await checkToken();
-        init = true;
-        print(e.toString());
+        print("토큰이 없거나 만료되었습니다");
       }
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: id, password: "SuperSecretPassword!");
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    } catch (e) {} finally {
+    } catch (e) {
+      print(e.toString());
       init = true;
     }
+    init = true;
   }
 }

@@ -28,8 +28,8 @@ class DressRoomFolderView extends StatelessWidget {
               model.getDressRoom();
               showWidget = LoadingWidget();
             } else {
-              var items = Provider.of<DressRoomService>(context)
-                  .items[model.current_folder];
+              // var items = Provider.of<DressRoomService>(context)
+              //     .items[model.current_folder];
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
@@ -41,7 +41,8 @@ class DressRoomFolderView extends StatelessWidget {
                       children: List.generate(folderNames.length, (index) {
                         var items = Provider.of<DressRoomService>(context)
                             .items[folderKeys[index]];
-                        print(items);
+                        if (folderKeys[index] == 0)
+                          folderNames[index] = "나의 콜렉션";
                         return FolderTextButton(model, folderNames[index],
                             folderKeys[index], items);
                       })));

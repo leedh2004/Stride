@@ -22,8 +22,8 @@ import 'card_animation.dart';
 Alignment align = Alignment.center;
 
 List<Alignment> cardsAlign = [
-  Alignment(0, -0.6),
-  Alignment(0, -0.3),
+  Alignment(0, -0.4),
+  Alignment(0, -0.2),
   Alignment(0, 0)
 ];
 

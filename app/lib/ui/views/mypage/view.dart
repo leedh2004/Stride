@@ -73,10 +73,10 @@ class MyPageView extends StatelessWidget {
             child: Row(
               children: [
                 Padding(
-                  padding: EdgeInsets.fromLTRB(50, 16, 16, 16),
+                  padding: EdgeInsets.fromLTRB(32, 32, 0, 16),
                   child: Text(
                     '마이페이지',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
                   ),
                 )
               ],
