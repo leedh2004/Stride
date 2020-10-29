@@ -66,6 +66,7 @@ def login():
         user_id = str(access_token)
         insert_user(user_id)
         g.user_id = user_id
+        update_login_timestamp(user_id)
         flag = select_user_profile_flag()
         size = select_user_size()
         token = encode_jwt_token(user_id)
