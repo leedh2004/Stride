@@ -6,7 +6,6 @@ import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:app/ui/widgets/filter/concept.dart';
 import 'package:app/ui/widgets/filter/price.dart';
@@ -15,10 +14,10 @@ import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
 import 'package:app/ui/widgets/filter/color.dart';
 import 'package:app/ui/widgets/swipe/card_gesture.dart';
+import 'package:app/ui/widgets/swipe/filter_bar.dart';
 import 'package:app/ui/widgets/swipe/image.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../base_widget.dart';
@@ -271,9 +270,6 @@ class _SwipeViewState extends State<SwipeView> {
               configService.alreadyShow = true;
             }
             if (authService.swipe_tutorial == false) {
-              // await Navigator.of(context).push(PageRouteBuilder(
-              //     opaque: false, pageBuilder: (___, _, __) => ProductDialog()));
-
               authService.swipe_tutorial = true;
               var _storage = authService.storage;
               _storage.write(key: 'swipe_tutorial', value: 'true');
@@ -304,130 +300,10 @@ class _SwipeViewState extends State<SwipeView> {
                   alignment: Alignment.topRight,
                   child: InkWell(
                     onTap: () {
-                      showModalBottomSheet(
-                          isScrollControlled: true,
-                          context: context,
-                          builder: (context) {
-                            var user = Provider.of<AuthenticationService>(
-                                    context,
-                                    listen: false)
-                                .userController
-                                .value;
-                            return FractionallySizedBox(
-                              heightFactor: 0.65,
-                              child: Stack(children: [
-                                DefaultTabController(
-                                  initialIndex: 0,
-                                  length: 5,
-                                  child: Scaffold(
-                                    backgroundColor: Colors.white,
-                                    appBar: PreferredSize(
-                                      preferredSize: Size.fromHeight(60),
-                                      child: AppBar(
-                                          automaticallyImplyLeading: false,
-                                          backgroundColor: Colors.white,
-                                          elevation: 0,
-                                          // title: Text('필터',
-                                          //     style:
-                                          //         TextStyle(color: Colors.black)),
-                                          bottom: TabBar(
-                                              labelColor: Colors.black,
-                                              unselectedLabelColor:
-                                                  Colors.black38,
-                                              indicatorColor: Colors.black,
-                                              tabs: [
-                                                Tab(
-                                                  child: Text(
-                                                    '옷 종류',
-                                                  ),
-                                                ),
-                                                Tab(
-                                                  child: Text(
-                                                    '컨셉',
-                                                  ),
-                                                ),
-                                                Tab(
-                                                  child: Text('가격'),
-                                                ),
-                                                Tab(
-                                                  child: Text('색상'),
-                                                ),
-                                                Tab(
-                                                  child: Text('사이즈'),
-                                                )
-                                              ])),
-                                    ),
-                                    body: TabBarView(
-                                      children: [
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 66),
-                                            child: Center(
-                                                child: ClothTypeFilter(model))),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 66),
-                                            child: Center(
-                                                child: ConceptFilter(model))),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 66),
-                                            child: PriceFilter(model)),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 66),
-                                            child: Center(
-                                                child: ColorFilter(model))),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(bottom: 66),
-                                            child: Center(
-                                                child: SizeFilter(model)))
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8),
-                                    child: Container(
-                                      width: 50,
-                                      height: 3,
-                                      decoration: BoxDecoration(
-                                          color: Colors.black12,
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                    ),
-                                  ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: Padding(
-                                    padding: EdgeInsets.fromLTRB(0, 0, 16, 16),
-                                    child: FlatButton(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(15)),
-                                        padding:
-                                            EdgeInsets.fromLTRB(50, 5, 50, 5),
-                                        color: Colors.black,
-                                        onPressed: () {
-                                          model.setFilter();
-                                          Navigator.maybePop(context);
-                                        },
-                                        child: Text(
-                                          '적용하기',
-                                          style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 16),
-                                        )),
-                                  ),
-                                )
-                              ]),
-                            );
-                          });
-                      // model.changeFolder(folderKey);
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) {
+                        return FilterBar(model, context);
+                      }));
                     },
                     child: Image.asset(
                       'images/filter.png',

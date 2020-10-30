@@ -27,15 +27,11 @@ const subHeaderMainColorStyle = TextStyle(
 );
 const whiteStyle = TextStyle(color: Colors.white);
 
-const whiteShadowStyle = TextStyle(
-  color: Colors.white,
-  fontSize: 21,
-);
+const whiteShadowStyle =
+    TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700);
 
-const whiteSmallShadowStyle = TextStyle(
-  color: Colors.white,
-  fontSize: 18,
-);
+const whiteSmallShadowStyle =
+    TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.w700);
 const redHeaderStyle = TextStyle(
     fontSize: 35,
     fontWeight: FontWeight.w900,

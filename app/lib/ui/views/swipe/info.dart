@@ -10,6 +10,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -43,8 +44,10 @@ class DetailInfo extends StatelessWidget {
       precached.add(item.product_id);
     }
     String concept = "";
-    for (var c in item.shop_concept) {
-      concept += '#${c} ';
+    for (var i = 0; i < item.shop_concept.length; i++) {
+      concept += '#';
+      concept += item.shop_concept[i];
+      if (i != item.shop_concept.length - 1) concept += ', ';
     }
 
     return Scaffold(
@@ -80,9 +83,14 @@ class DetailInfo extends StatelessWidget {
                                           model.prevImage();
                                         }
                                       },
-                                      child: Image.network(
-                                        item.image_urls[model.image_index],
-                                        fit: BoxFit.cover,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(32),
+                                            bottomRight: Radius.circular(32)),
+                                        child: Image.network(
+                                          item.image_urls[model.image_index],
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     )),
                               ),
@@ -101,84 +109,51 @@ class DetailInfo extends StatelessWidget {
                                           return Container();
                                         return idx == model.image_index
                                             ? Container(
-                                                width: 30,
+                                                width: 24,
                                                 decoration: BoxDecoration(
                                                     color: Colors.white,
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10)),
+                                                            4)),
                                                 margin: EdgeInsets.fromLTRB(
-                                                    3, 5, 3, 0),
-                                                height: 6,
+                                                    2, 5, 2, 0),
+                                                height: 4,
                                               )
                                             : Container(
-                                                width: 30,
+                                                width: 24,
                                                 padding:
                                                     EdgeInsets.only(top: 10),
                                                 decoration: BoxDecoration(
-                                                    color: Colors.black12,
+                                                    color: Color.fromRGBO(
+                                                        255, 255, 255, 0.5),
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            10)),
+                                                            4)),
                                                 margin: EdgeInsets.fromLTRB(
-                                                    3, 5, 3, 0),
-                                                height: 6,
+                                                    2, 5, 2, 0),
+                                                height: 4,
                                               );
                                       })),
                                 ),
                               ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.75 +
-                                        25,
-                                child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 40),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        child: RaisedButton(
-                                            onPressed: () {
-                                              Navigator.maybePop(context);
-                                            },
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        25.0)),
-                                            padding: EdgeInsets.all(0),
-                                            child: Ink(
-                                              decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      gradientStart,
-                                                      backgroundColor
-                                                    ],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          25.0)),
-                                              child: Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  alignment: Alignment.center,
-                                                  child: FaIcon(
-                                                    FontAwesomeIcons.arrowDown,
-                                                    color: Colors.white,
-                                                  )),
-                                            )),
-                                      ),
-                                    )),
-                              ),
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.75,
-                                child: Align(
-                                  alignment: Alignment.bottomCenter,
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.maybePop(context);
+                                  },
+                                  child: Padding(
+                                    padding: EdgeInsets.all(5),
+                                    child: Container(
+                                      width: 20,
+                                      height: 20,
+                                      child: SvgPicture.asset(
+                                          'assets/left-arrow.svg',
+                                          color: Colors.white),
+                                    ),
+                                  ),
                                 ),
-                              )
+                              ),
                             ]),
                           ),
                           Padding(
@@ -186,55 +161,164 @@ class DetailInfo extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Text(item.shop_name, style: shopNameStyle),
-                                    // Text("스트라이드", style: shopNameStyle),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text('$concept', style: conceptStyle),
-                                  ],
+                                SizedBox(
+                                  height: 27,
                                 ),
-                                Text(item.product_name, style: shopNameStyle),
-                                // Text("심플 스트라이프 셔츠", style: shopNameStyle),
-                                UIHelper.verticalSpaceSmall,
+                                Text(item.shop_name,
+                                    style: TextStyle(
+                                        color: Color(0xFF888C93),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Text(item.product_name,
+                                    style: TextStyle(
+                                        color: Color(0xFF2B3341),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18)),
+                                SizedBox(
+                                  height: 8,
+                                ),
                                 Row(
                                   children: [
-                                    Text('${typeConverter[item.type]}',
-                                        style: titleStyle),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text(
-                                      '${item.price}원',
-                                      style: titleStyle,
+                                    Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Color(0xFF8569EF)),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                          child: Text(
+                                            '${typeConverter[item.type]}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
+                                        )),
+                                    SizedBox(
+                                      width: 8,
                                     ),
+                                    Text(
+                                      concept,
+                                      style: TextStyle(
+                                          color: Color(0xFF616576),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 10),
+                                    )
                                   ],
                                 ),
-                                UIHelper.verticalSpaceSmall,
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                          text: '${item.price}',
+                                          style: TextStyle(
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF2B3341)),
+                                        ),
+                                        TextSpan(
+                                            text: ' 원',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18,
+                                                color: Color(0xFF2B3341)))
+                                      ])),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            Stride.analytics.logEvent(
+                                                name:
+                                                    'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                                                parameters: {
+                                                  'itemId': item.product_id
+                                                      .toString(),
+                                                  'itemName': item.product_name,
+                                                  'itemCategory': item.shop_name
+                                                });
+                                            // 이 부분 코드는 나중��� 수정해야할 듯.
+                                            Provider.of<SwipeService>(context,
+                                                    listen: false)
+                                                .purchaseItem(item.product_id);
+                                            return ProductWebView(
+                                                item.product_url,
+                                                item.shop_name);
+                                          }));
+                                        },
+                                        child: Container(
+                                          width: 54,
+                                          height: 54,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(27),
+                                            color: Color(0xFF8569EF),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(12),
+                                            child: Image.asset(
+                                              'assets/shopping-bag@2x.png',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Divider(),
+                                SizedBox(
+                                  height: 16,
+                                ),
+
+                                Text('색상정보',
+                                    style: TextStyle(
+                                        color: Color(0xFF888C93),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13)),
+                                SizedBox(
+                                  height: 14,
+                                ),
                                 item.clustered_color != null &&
                                         item.origin_color != null
                                     ? Wrap(children: [
                                         ...List.generate(
                                           item.clustered_color.length,
                                           (index) => Padding(
-                                            padding: EdgeInsets.only(right: 4),
+                                            padding: EdgeInsets.only(right: 10),
                                             child: CircleColorWidget(
                                                 item.clustered_color[index]),
                                           ),
                                         ),
                                         UIHelper.horizontalSpaceSmall,
-                                        ...List.generate(
-                                            item.origin_color.length,
-                                            (index) => index ==
-                                                    item.origin_color.length - 1
-                                                ? Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 4),
-                                                    child: Text(
-                                                        '${item.origin_color[index]}'))
-                                                : Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 4),
-                                                    child: Text(
-                                                        '${item.origin_color[index]},')))
+                                        // ...List.generate(
+                                        //     item.origin_color.length,
+                                        //     (index) => index ==
+                                        //             item.origin_color.length - 1
+                                        //         ? Padding(
+                                        //             padding: EdgeInsets.only(
+                                        //                 right: 4),
+                                        //             child: Text(
+                                        //                 '${item.origin_color[index]}'))
+                                        //         : Padding(
+                                        //             padding: EdgeInsets.only(
+                                        //                 right: 4),
+                                        //             child: Text(
+                                        //                 '${item.origin_color[index]},')))
                                       ])
                                     : Container(),
 
@@ -246,44 +330,9 @@ class DetailInfo extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.all(16),
                               child: SizeDialog(item)),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
-                            child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    Stride.analytics.logEvent(
-                                        name:
-                                            'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                                        parameters: {
-                                          'itemId': item.product_id.toString(),
-                                          'itemName': item.product_name,
-                                          'itemCategory': item.shop_name
-                                        });
-                                    // 이 부분 코드는 나중에 수정해야할 듯.
-                                    Provider.of<SwipeService>(context,
-                                            listen: false)
-                                        .purchaseItem(item.product_id);
-                                    return ProductWebView(
-                                        item.product_url, item.shop_name);
-                                  }));
-                                },
-                                child: Container(
-                                  width: 300,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: backgroundColor,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: Center(
-                                      child: Text('구매하기', style: buyStyle)),
-                                ),
-                              ),
-                            ),
-                          ),
                           UIHelper.verticalSpaceMedium,
                           UIHelper.verticalSpaceMedium,
-                          UIHelper.verticalSpaceSmall
+                          UIHelper.verticalSpaceMedium,
                         ]);
                   })),
           Align(

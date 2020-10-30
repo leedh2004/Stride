@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 myPageListTile(String title, Function onTap, Color color) => ListTile(
-    contentPadding: EdgeInsets.only(left: 50),
+    contentPadding: EdgeInsets.only(left: 27),
     title: Row(children: [
       Padding(
         padding: EdgeInsets.only(right: 30),
@@ -14,7 +14,7 @@ myPageListTile(String title, Function onTap, Color color) => ListTile(
       ),
       Text(
         title,
-        style: TextStyle(fontSize: 18),
+        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
       ),
     ]),
     onTap: onTap);

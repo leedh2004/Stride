@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:flutter/material.dart';
@@ -68,20 +70,24 @@ class _ColorFilterState extends State<ColorFilter> {
       },
       child: Column(children: [
         Container(
-          margin: EdgeInsets.all(8),
+          margin: EdgeInsets.only(left: 6, right: 6, bottom: 8),
           width: 45,
           height: 45,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(12),
             border: blackBorder
                 ? Border.all(color: Colors.black12)
                 : Border.all(color: Colors.transparent),
             color: color,
           ),
         ),
-        UIHelper.verticalSpaceSmall,
-        Text(title),
-        UIHelper.verticalSpaceSmall,
+        Text(
+          title,
+          style: TextStyle(fontSize: 10),
+        ),
+        SizedBox(
+          height: 24,
+        )
       ]),
     );
   }
@@ -129,13 +135,13 @@ class _ColorFilterState extends State<ColorFilter> {
         widget.model.setColors(colors);
         setState(() {});
       },
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Container(
-          margin: EdgeInsets.all(8),
+          margin: EdgeInsets.only(left: 6, right: 6, bottom: 8),
           width: 45,
           height: 45,
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
+            borderRadius: BorderRadius.circular(12),
             border: blackBorder
                 ? Border.all(color: Colors.black12)
                 : Border.all(color: Colors.transparent),
@@ -146,9 +152,16 @@ class _ColorFilterState extends State<ColorFilter> {
             color: blackCheck ? Colors.black : Colors.white,
           ),
         ),
-        UIHelper.verticalSpaceSmall,
-        Text(title),
-        UIHelper.verticalSpaceSmall,
+        Text(
+          title,
+          style: TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w700,
+              color: Color(0xFF8569EF)),
+        ),
+        SizedBox(
+          height: 24,
+        )
       ]),
     );
   }
@@ -214,16 +227,6 @@ class _ColorFilterState extends State<ColorFilter> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Padding(
-          //   padding: EdgeInsets.all(16),
-          //   child: Text(
-          //     '색상',
-          //     style: TextStyle(
-          //         fontSize: 18,
-          //         fontWeight: FontWeight.w600,
-          //         color: Colors.black26),
-          //   ),
-          // ),
           Wrap(
               children: List.generate(
                   keys.length,
@@ -232,12 +235,6 @@ class _ColorFilterState extends State<ColorFilter> {
                           keys[index], values[index], colors[index])
                       : unSelectedWidget(
                           keys[index], values[index], colors[index]))),
-          // Row(
-          //     children: List.generate(
-          //         keys.sublist(3, 6).length,
-          //         (index) => values[index + 3].value
-          //             ? selectedWidget(keys[index + 3], values[index + 3])
-          //             : unSelectedWidget(keys[index + 3], values[index + 3]))),
         ]);
   }
 }

@@ -23,20 +23,13 @@ class CircleColorWidget extends StatelessWidget {
   CircleColorWidget(this.color);
   @override
   Widget build(BuildContext context) {
-    return color == 'white' || color == 'ivory'
-        ? Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                border: Border.all(width: 1),
-                borderRadius: BorderRadius.circular(10),
-                color: colors[color]),
-          )
-        : Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10), color: colors[color]),
-          );
+    return Container(
+      width: 26,
+      height: 26,
+      decoration: BoxDecoration(
+          border: Border.all(width: 1, color: Color.fromRGBO(242, 242, 242, 1)),
+          borderRadius: BorderRadius.circular(13),
+          color: colors[color]),
+    );
   }
 }

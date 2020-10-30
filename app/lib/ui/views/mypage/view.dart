@@ -3,6 +3,7 @@ import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/views/mypage/config.dart';
 import 'package:app/ui/views/private_web_view.dart';
 import 'package:app/ui/widgets/mypage/input_dialog.dart';
 import 'package:app/ui/widgets/mypage/list_tile.dart';
@@ -51,6 +52,12 @@ class MyPageView extends StatelessWidget {
     ));
   }
 
+  onTapConfig(BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ConfigView();
+    }));
+  }
+
   onTapSizeButton(BuildContext context) {
     Stride.analytics.logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
     showMaterialModalBottomSheet(
@@ -66,47 +73,69 @@ class MyPageView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Container(
-            child: Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.fromLTRB(32, 32, 0, 16),
-                  child: Text(
-                    '마이페이지',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-                  ),
-                )
-              ],
-            ),
-          ),
-          Expanded(
-            child: Container(
-              child: ListView(
-                children: [
-                  myPageListTile('사이즈 수정', () => onTapSizeButton(context),
-                      backgroundColor),
-                  Divider(),
-                  myPageListTile(
-                      '최근에 본 상품', () => onTapRecent(context), backgroundColor),
-                  Divider(),
-                  myPageListTile(
-                      '문의﹒건의', () => onTapHelp(context), gradientStart),
-                  Divider(),
-                  myPageListTile(
-                      '앱 설문조사', () => onTapFeedBack(context), gradientStart),
-                  Divider(),
-                  myPageListTile('로그아웃', () => onTapLogout(context), blueColor),
-                  Divider(),
-                  myPageListTile(
-                      '개인정보 처리방침', () => onTapPrivateInfo(context), blueColor)
-                ],
+    return Scaffold(
+      body: Container(
+        child: Column(
+          children: [
+            Container(
+              width: double.infinity,
+              height: 200,
+              decoration: BoxDecoration(
+                  color: Color.fromRGBO(132, 115, 225, 1),
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(32),
+                      bottomRight: Radius.circular(32))),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(24, 96, 0, 0),
+                child: Text(
+                  '회원님',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w700),
+                ),
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.only(left: 24, right: 24, top: 23),
+              child: InkWell(
+                onTap: () => onTapSizeButton(context),
+                child: Container(
+                  width: double.infinity,
+                  height: 54,
+                  decoration: BoxDecoration(
+                      color: Color.fromRGBO(242, 240, 252, 1),
+                      borderRadius: BorderRadius.circular(8)),
+                  child: Center(
+                      child: Text(
+                    '내 사이즈 수정하기',
+                    style: TextStyle(color: Color(0xFF8569EF)),
+                  )),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                child: ListView(
+                  children: [
+                    myPageListTile('최근에 평가한 아이템', () => onTapRecent(context),
+                        backgroundColor),
+                    Divider(),
+                    myPageListTile(
+                        '문의 / 건의하기', () => onTapHelp(context), gradientStart),
+                    Divider(),
+                    myPageListTile(
+                        '앱 설문조사', () => onTapFeedBack(context), gradientStart),
+                    Divider(),
+                    myPageListTile(
+                        '환경설정', () => onTapConfig(context), blueColor),
+                    //     '개인정보 처리방침', () => onTapPrivateInfo(context), blueColor)
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

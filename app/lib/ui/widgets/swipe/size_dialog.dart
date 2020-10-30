@@ -88,11 +88,26 @@ class _SizeDialogState extends State<SizeDialog> {
       child: Center(
         child: Column(children: [
           Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              '사이즈 정보 (단면, cm)',
-              style: TextStyle(fontSize: 20),
-            ),
+              alignment: Alignment.centerLeft,
+              child: RichText(
+                  text: TextSpan(children: [
+                TextSpan(
+                  text: '사이즈 정보',
+                  style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFF616576),
+                      fontWeight: FontWeight.w700),
+                ),
+                TextSpan(
+                  text: ' (단면, cm)',
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Color.fromRGBO(98, 101, 117, 0.5),
+                      fontWeight: FontWeight.w700),
+                ),
+              ]))),
+          SizedBox(
+            height: 14,
           ),
           Table(
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
@@ -100,7 +115,8 @@ class _SizeDialogState extends State<SizeDialog> {
             children: [
               TableRow(
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(240, 240, 240, 1),
+                    borderRadius: BorderRadius.circular(12),
+                    color: Color(0xFFF3F4F8),
                   ),
                   children: [
                     Container(
@@ -108,7 +124,7 @@ class _SizeDialogState extends State<SizeDialog> {
                       child: Center(
                         child: Text(
                           'SIZE',
-                          style: tableHeaderSizeText,
+                          style: tableHeaderText,
                         ),
                       ),
                     ),
@@ -465,39 +481,47 @@ class _SizeDialogState extends State<SizeDialog> {
 // }
 
 Widget ColorSizeBox(String size) {
-  if (size == 'free') {
-    return Container(
-        color: semiPurple,
-        height: 40,
-        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
-  } else if (size == 'xs') {
-    return Container(
-        color: semiPurple,
-        height: 40,
-        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
-  } else if (size == 's') {
-    return Container(
-        color: semiPurple,
-        height: 40,
-        child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
-  } else if (size == 'm') {
-    return Container(
-        color: backgroundColor,
-        height: 40,
-        child:
-            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
-  } else if (size == 'l') {
-    return Container(
-        color: semiBlack,
-        height: 40,
-        child:
-            Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
-  } else if (size == 'xl') {}
   return Container(
-      color: semiBlack,
       height: 40,
-      child:
-          Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+      child: Center(
+          child: Text(size.toUpperCase(),
+              style: TextStyle(
+                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                  color: Color(0xFF8569EF)))));
+  // if (size == 'free') {
+  //   return Container(
+  //       color: semiPurple,
+  //       height: 40,
+  //       child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  // } else if (size == 'xs') {
+  //   return Container(
+  //       color: semiPurple,
+  //       height: 40,
+  //       child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  // } else if (size == 's') {
+  //   return Container(
+  //       color: semiPurple,
+  //       height: 40,
+  //       child: Center(child: Text(size.toUpperCase(), style: tableCellText)));
+  // } else if (size == 'm') {
+  //   return Container(
+  //       color: backgroundColor,
+  //       height: 40,
+  //       child:
+  //           Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+  // } else if (size == 'l') {
+  //   return Container(
+  //       color: semiBlack,
+  //       height: 40,
+  //       child:
+  //           Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
+  // } else if (size == 'xl') {}
+  // return Container(
+  //     color: semiBlack,
+  //     height: 40,
+  //     child:
+  //         Center(child: Text(size.toUpperCase(), style: tableCellWhiteText)));
 }
 
 const semiPurple = Color.fromRGBO(227, 220, 242, 1);
@@ -505,7 +529,8 @@ const semiBlack = Color.fromRGBO(55, 55, 55, 1);
 
 const tableHeaderSizeText =
     TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
-const tableHeaderText = TextStyle(fontSize: 14);
-const tableCellText = TextStyle(fontSize: 14, fontWeight: FontWeight.w700);
+const tableHeaderText = TextStyle(
+    fontSize: 11, fontWeight: FontWeight.w700, color: Color(0xFF888C93));
+const tableCellText = TextStyle(fontSize: 11, color: Color(0xFF323334));
 const tableCellWhiteText =
     TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: Colors.white);

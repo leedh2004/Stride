@@ -12,8 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../recent_item_view.dart';
 
-String NumToStr(int num) {}
-
 class RecommendView extends StatefulWidget {
   @override
   _RecommendViewState createState() => _RecommendViewState();

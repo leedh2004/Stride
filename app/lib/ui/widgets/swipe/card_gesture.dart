@@ -5,6 +5,7 @@ import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
@@ -266,85 +267,156 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget shoppingWidget(SwipeModel model, Function onTapDislikeButton,
       Function onTapLikeButton, Function onTapCollectionButton) {
+    String item = Provider.of<SwipeService>(context)
+        .items[(widget.model.index)]
+        .product_name;
+
     return Align(
         alignment: frontCardAlign,
         child: SizedBox.fromSize(
           size: cardsSize[0],
           child: Align(
-            alignment: Alignment.bottomRight,
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-                    child: IconButton(
-                      key: widget.buyButton,
-                      icon: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                          child: FaIcon(FontAwesomeIcons.shoppingCart,
-                              size: 15, color: Colors.transparent),
-                        ),
-                      ),
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          RecentItem item = Provider.of<SwipeService>(context)
-                              .items[model.index];
-                          Stride.analytics.logEvent(
-                              name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
-                              parameters: {
-                                'itemId': item.product_id.toString(),
-                                'itemName': item.product_name,
-                                'itemCategory': item.shop_name
-                              });
+            alignment: Alignment.bottomCenter,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                width: double.infinity,
+                height: 120,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    InkWell(
+                        onTap: () async {
+                          final result = await Navigator.push(context,
+                              MaterialPageRoute<String>(
+                                  builder: (BuildContext context) {
+                            return DetailInfo(model);
+                          }));
+                          if (await result == 'like') {
+                            onTapLikeButton();
+                            tutorial_like++;
+                          } else if (await result == 'dislike') {
+                            onTapDislikeButton();
+                          } else if (await result == 'collect') {
+                            onTapCollectionButton();
+                          }
+                        },
+                        child: Opacity(
+                          opacity: 0,
+                          child: Container(
+                              padding: EdgeInsets.fromLTRB(8, 8, 16, 8),
+                              child: Text(item)),
+                        )),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: InkWell(
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            RecentItem item = Provider.of<SwipeService>(context)
+                                .items[model.index];
+                            Stride.analytics.logEvent(
+                                name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
+                                parameters: {
+                                  'itemId': item.product_id.toString(),
+                                  'itemName': item.product_name,
+                                  'itemCategory': item.shop_name
+                                });
 
-                          model.purchaseItem(item.product_id);
-                          return ProductWebView(
-                              item.product_url, item.shop_name);
-                        }));
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 25, 20),
-                    child: IconButton(
-                      key: widget.rulerButton,
-                      icon: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(25)),
-                        child: Center(
-                          child: FaIcon(FontAwesomeIcons.info,
-                              size: 15, color: Colors.transparent),
+                            model.purchaseItem(item.product_id);
+                            return ProductWebView(
+                                item.product_url, item.shop_name);
+                          }));
+                        },
+                        child: Container(
+                          width: 44,
+                          height: 44,
                         ),
                       ),
-                      onPressed: () async {
-                        final result = await Navigator.push(context,
-                            MaterialPageRoute<String>(
-                                builder: (BuildContext context) {
-                          return DetailInfo(model);
-                        }));
-                        if (await result == 'like') {
-                          onTapLikeButton();
-                          tutorial_like++;
-                        } else if (await result == 'dislike') {
-                          onTapDislikeButton();
-                        } else if (await result == 'collect') {
-                          onTapCollectionButton();
-                        }
-                      },
-                    ),
-                  ),
-                ]),
+                    )
+                  ],
+                ),
+              ),
+            ),
           ),
+          // child: Align(
+          //   alignment: Alignment.bottomRight,
+          //   child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.end,
+          //       mainAxisSize: MainAxisSize.max,
+          //       children: [
+          //         Padding(
+          //           padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
+          //           child: IconButton(
+          //             key: widget.buyButton,
+          //             icon: Container(
+          //               width: 50,
+          //               height: 50,
+          //               decoration: BoxDecoration(
+          //                   color: Colors.transparent,
+          //                   borderRadius: BorderRadius.circular(25)),
+          //               child: Center(
+          //                 child: FaIcon(FontAwesomeIcons.shoppingCart,
+          //                     size: 15, color: Colors.transparent),
+          //               ),
+          //             ),
+          //             onPressed: () {
+          //               Navigator.push(context,
+          //                   MaterialPageRoute(builder: (context) {
+          //                 RecentItem item = Provider.of<SwipeService>(context)
+          //                     .items[model.index];
+          //                 Stride.analytics.logEvent(
+          //                     name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
+          //                     parameters: {
+          //                       'itemId': item.product_id.toString(),
+          //                       'itemName': item.product_name,
+          //                       'itemCategory': item.shop_name
+          //                     });
+
+          //                 model.purchaseItem(item.product_id);
+          //                 return ProductWebView(
+          //                     item.product_url, item.shop_name);
+          //               }));
+          //             },
+          //           ),
+          //         ),
+          //         Padding(
+          //           padding: EdgeInsets.fromLTRB(0, 0, 25, 20),
+          //           child: IconButton(
+          //             key: widget.rulerButton,
+          //             icon: Container(
+          //               width: 50,
+          //               height: 50,
+          //               decoration: BoxDecoration(
+          //                   color: Colors.transparent,
+          //                   borderRadius: BorderRadius.circular(25)),
+          //               child: Center(
+          //                 child: FaIcon(FontAwesomeIcons.info,
+          //                     size: 15, color: Colors.transparent),
+          //               ),
+          //             ),
+          //             onPressed: () async {
+          //               final result = await Navigator.push(context,
+          //                   MaterialPageRoute<String>(
+          //                       builder: (BuildContext context) {
+          //                 return DetailInfo(model);
+          //               }));
+          //               if (await result == 'like') {
+          //                 onTapLikeButton();
+          //                 tutorial_like++;
+          //               } else if (await result == 'dislike') {
+          //                 onTapDislikeButton();
+          //               } else if (await result == 'collect') {
+          //                 onTapCollectionButton();
+          //               }
+          //             },
+          //           ),
+          //         ),
+          //       ]),
+          // ),
         ));
   }
 
@@ -405,7 +477,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           Image.asset('assets/purple_star.png', width: 30),
           Padding(
               padding: EdgeInsets.all(8),
-              child: Text('카드의 좌/우를 클릭하면 빠르게\n 아이템을 탐색할 수 있습니다!')),
+              child: Text('카드의 좌/우를 탭하면 빠르게\n아이템을 탐색할 수 있습니다!')),
         ]),
       ));
     }

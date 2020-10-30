@@ -66,6 +66,7 @@ dependencies:
   animated_widgets: ^1.0.6
   flutter_launcher_icons: ^0.7.5
   loading: ^1.0.2
+  custom_switch: ^0.0.1
   #flutter_staggered_grid_view: ^0.3.2
   # flutter_is_emulator: ^1.0.0
 
@@ -101,7 +102,10 @@ flutter:
   assets:
     - assets/
     - assets/dislike_button.png
+    - assets/dislike_button_s.png
+
     - assets/heart_button.png
+    - assets/heart_button_s.png
     - assets/star_button.png
     - assets/purple_star.png
     - assets/purple_folder.png
@@ -123,6 +127,13 @@ flutter:
     - assets/user.png
     - assets/user_s.png
     - assets/config.png
+    - assets/left-arrow.svg
+    - assets/right.png
+    - assets/shopping-bag.svg
+    - assets/shopping-bag.png
+    - assets/shopping-bag@2x.png
+
+
 
     - images/store.png
     - images/love.png

@@ -42,6 +42,7 @@ class _ServiceViewState extends State<ServiceView>
         statusBarIconBrightness: Brightness.light,
       ),
       child: Scaffold(
+        backgroundColor: Color(0xFFFAF9FC),
         key: ServiceView.scaffoldKey,
         body: TabBarView(
             controller: _tabController,
@@ -51,59 +52,117 @@ class _ServiceViewState extends State<ServiceView>
               SafeArea(child: RecommendView()),
               SafeArea(child: CollectionView()),
               //LookBookView(),
-              SafeArea(child: MyPageView()),
+              MyPageView(),
             ]),
-        bottomNavigationBar: BottomAppBar(
-          elevation: 2,
-          color: Colors.white,
-          child: TabBar(
-            controller: _tabController,
-            indicatorColor: Colors.transparent,
-            labelColor: Colors.black,
-            onTap: (index) {
-              setState(() {});
-            },
-            // unselectedLabelColor: Colors.white,
-            tabs: <Widget>[
-              Tab(
-                  icon: Container(
-                padding: EdgeInsets.all(12),
-                child: _tabController.index == 0
-                    ? Image.asset('assets/home_s.png')
-                    : Image.asset('assets/home.png'),
-              )),
-              Tab(
-                  icon: Container(
-                padding: EdgeInsets.all(12),
-                child: _tabController.index == 1
-                    ? Image.asset('assets/heart_s.png')
-                    : Image.asset('assets/heart.png'),
-              )),
-              Tab(
-                  icon: Padding(
-                padding: EdgeInsets.only(top: 6),
-                child: Container(
-                  width: 30,
-                  height: 30,
-                  child: _tabController.index == 2
-                      ? Image.asset('assets/collection_s.png')
-                      : Image.asset('assets/collection.png'),
+        bottomNavigationBar: SizedBox(
+          height: 60,
+          child: Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
-              )),
-              Tab(
-                icon: Padding(
-                  padding: EdgeInsets.only(top: 6),
-                  child: Container(
-                    width: 30,
-                    height: 30,
-                    // padding: EdgeInsets.all(12),
-                    child: _tabController.index == 3
-                        ? Image.asset('assets/user_s.png')
-                        : Image.asset('assets/user.png'),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black12,
+                    offset: Offset(0.0, 1.0), //(x,y)
+                    blurRadius: 4.0,
                   ),
-                ),
+                ],
+                color: Colors.white),
+            child: Center(
+              child: TabBar(
+                controller: _tabController,
+                indicatorColor: Colors.transparent,
+                labelColor: Colors.black,
+                onTap: (index) {
+                  setState(() {});
+                },
+                // unselectedLabelColor: Colors.white,
+                tabs: <Widget>[
+                  Container(
+                      child: _tabController.index == 0
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/home_s.png',
+                                    width: 24,
+                                  ),
+                                  Text('홈')
+                                ])
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/home.png',
+                                    width: 24,
+                                  ),
+                                  Text('홈')
+                                ])),
+                  Container(
+                      child: _tabController.index == 1
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/heart_s.png',
+                                    width: 24,
+                                  ),
+                                  Text('추천')
+                                ])
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/heart.png',
+                                    width: 24,
+                                  ),
+                                  Text('추천')
+                                ])),
+                  Container(
+                      child: _tabController.index == 2
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/collection_s.png',
+                                    width: 24,
+                                  ),
+                                  Text('드레스룸')
+                                ])
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/collection.png',
+                                    width: 24,
+                                  ),
+                                  Text('드레스룸')
+                                ])),
+                  Container(
+                      child: _tabController.index == 3
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/user_s.png',
+                                    width: 24,
+                                  ),
+                                  Text('MY')
+                                ])
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                  Image.asset(
+                                    'assets/user.png',
+                                    width: 24,
+                                  ),
+                                  Text('MY')
+                                ])),
+                ],
               ),
-            ],
+            ),
           ),
         ),
         // appBar: PreferredSize(

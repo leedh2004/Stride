@@ -55,12 +55,13 @@ class RecommendItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Hero(
                 tag: item.product_id,
-                child: CachedNetworkImage(
-                    imageUrl: item.compressed_thumbnail_url,
-                    fit: BoxFit.cover,
-                    httpHeaders: {
-                      HttpHeaders.refererHeader: "http://api-stride.com:5000/"
-                    }),
+                child: Image.network(
+                  item.image_urls[0],
+                  fit: BoxFit.cover,
+                  // httpHeaders: {
+                  //   HttpHeaders.refererHeader: "http://api-stride.com:5000/"
+                  // }
+                ),
               ),
             ),
           ),

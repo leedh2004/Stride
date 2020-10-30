@@ -4,6 +4,7 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
@@ -13,9 +14,15 @@ class SwipeCardAlignment extends StatefulWidget {
   RecentItem item;
   int index;
   List<dynamic> images = new List<dynamic>();
+  String concepts = "";
 
   SwipeCardAlignment(RecentItem _item, int _index) {
     item = _item;
+    for (var i = 0; i < item.shop_concept.length; i++) {
+      concepts += '#';
+      concepts += item.shop_concept[i];
+      if (i != item.shop_concept.length - 1) concepts += ', ';
+    }
     index = _index;
     if (index >= item.length) {
       index = item.length - 1;
@@ -87,7 +94,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                         child: widget.images[widget.index],
                       ))),
               Padding(
-                padding: EdgeInsets.only(top: 25),
+                padding: EdgeInsets.only(top: 18),
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Row(
@@ -96,28 +103,28 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                         if (widget.item.length == 1) return Container();
                         return idx == widget.index
                             ? Container(
-                                width: 30,
+                                width: 24,
                                 decoration: BoxDecoration(
                                     color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10)),
-                                margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                height: 6,
+                                    borderRadius: BorderRadius.circular(4)),
+                                margin: EdgeInsets.fromLTRB(2, 5, 2, 0),
+                                height: 4,
                               )
                             : Container(
-                                width: 30,
+                                width: 24,
                                 padding: EdgeInsets.only(top: 10),
                                 decoration: BoxDecoration(
-                                    color: Colors.black12,
-                                    borderRadius: BorderRadius.circular(10)),
-                                margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                height: 6,
+                                    color: Color.fromRGBO(255, 255, 255, 0.5),
+                                    borderRadius: BorderRadius.circular(4)),
+                                margin: EdgeInsets.fromLTRB(2, 5, 2, 0),
+                                height: 4,
                               );
                       })),
                 ),
               ),
               Container(
                 alignment: Alignment.bottomLeft,
-                height: 100,
+                height: 120,
                 decoration: BoxDecoration(
                   color: Colors.black12,
                 ),
@@ -127,70 +134,138 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       mainAxisAlignment: MainAxisAlignment.end,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(
-                          // "심플 스트라이프 셔츠",
-                          widget.item.product_name, //'로드리 스커트',
-                          style: whiteShadowStyle,
+                        Row(
+                          children: [
+                            Text(
+                              // "심플 스트라이프 셔츠",
+                              widget.item.product_name, //'로드리 스커트',
+                              style: whiteShadowStyle,
+                            ),
+                            SizedBox(
+                              width: 4,
+                            ),
+                            Container(
+                              width: 15,
+                              height: 15,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8)),
+                              child: Center(
+                                child: FaIcon(
+                                  FontAwesomeIcons.info,
+                                  size: 10,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                        Text(
-                          '${typeConverter[widget.item.type]} ${widget.item.price}원',
-                          style: whiteSmallShadowStyle,
-                        )
+                        SizedBox(
+                          height: 8,
+                        ),
+                        RichText(
+                            text: TextSpan(children: [
+                          TextSpan(
+                            text: '${widget.item.price}',
+                            style: whiteSmallShadowStyle,
+                          ),
+                          TextSpan(
+                              text: ' 원',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18,
+                                  color: Colors.white))
+                        ])),
+                        SizedBox(
+                          height: 8,
+                        ),
+
+                        Row(children: [
+                          Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Color(0xFF8569EF)),
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                child: Text(
+                                  '${typeConverter[widget.item.type]}',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white),
+                                ),
+                              )),
+                          SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            widget.concepts,
+                            style: TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 0.8),
+                                fontWeight: FontWeight.w700,
+                                fontSize: 10),
+                          )
+                        ]),
                         // style: TextStyle(
                         //     fontSize: 40, fontFamily: 'NotoSansKR'))
                       ]),
                 ),
               ),
+              // Align(
+              //   alignment: Alignment.bottomRight,
+              //   child: Padding(
+              //     padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
+              //     child: IconButton(
+              //       icon: Container(
+              //         width: 50,
+              //         height: 50,
+              //         decoration: BoxDecoration(
+              //             color: Colors.white,
+              //             borderRadius: BorderRadius.circular(25)),
+              //         child: Center(
+              //           child: FaIcon(
+              //             FontAwesomeIcons.info,
+              //             size: 15,
+              //             color: Colors.black,
+              //           ),
+              //         ),
+              //       ),
+              //       onPressed: () {},
+              //     ),
+              //   ),
+              // ),
               Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
-                  child: IconButton(
-                    icon: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Center(
-                        child: FaIcon(
-                          FontAwesomeIcons.info,
-                          size: 15,
-                          color: Colors.black,
-                        ),
-                      ),
+                  alignment: Alignment.bottomRight,
+                  child: Padding(
+                    padding: EdgeInsets.all(25),
+                    child: Image.asset(
+                      'assets/shopping-bag@2x.png',
+                      width: 30,
                     ),
-                    onPressed: () {
-                      print("wtf");
-                    },
+                  )
+                  // Padding(
+                  //   padding: EdgeInsets.fromLTRB(0, 0, 70, 20),
+                  //   child: IconButton(
+                  //     icon: Container(
+                  //       width: 50,
+                  //       height: 50,
+                  //       decoration: BoxDecoration(
+                  //           color: Colors.white,
+                  //           borderRadius: BorderRadius.circular(25)),
+                  //       child: Center(
+
+                  //         child: FaIcon(
+                  //           FontAwesomeIcons.shoppingCart,
+                  //           size: 15,
+                  //           color: Colors.black,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     onPressed: () {
+                  //       print("wtf");
+                  //     },
+                  //   ),
+                  // ),
                   ),
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 70, 20),
-                  child: IconButton(
-                    icon: Container(
-                      width: 50,
-                      height: 50,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(25)),
-                      child: Center(
-                        child: FaIcon(
-                          FontAwesomeIcons.shoppingCart,
-                          size: 15,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      print("wtf");
-                    },
-                  ),
-                ),
-              ),
             ],
           )),
     );
