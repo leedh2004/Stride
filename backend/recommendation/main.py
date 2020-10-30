@@ -110,10 +110,8 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
             must_conditions += range_size
         should_conditions = []
         if user_prefer_concepts:
-            must_concept = {"term": {"shop_concept": user_prefer_concepts[0]}}
-            should_concepts = {"terms": {"shop_concept": user_prefer_concepts[1:]}}
+            should_concepts = {"terms": {"shop_concept": user_prefer_concepts}}
             should_conditions.append(should_concepts)
-            must_conditions.append(must_concept)
         res = es.search(
             index='products',
             body={
@@ -140,8 +138,6 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
         result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
         random.shuffle(result_product_ids)
         return result_product_ids
-
-
 
 
 def remove_off_season_items():
