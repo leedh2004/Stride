@@ -40,25 +40,50 @@ class _InputThirdPageState extends State<InputThirdPage> {
       unit = '인치';
     }
     return Column(children: [
+      SizedBox(
+        height: 35,
+      ),
       Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          flag.value
+              ? InkWell(
+                  onTap: () {
+                    setState(() {
+                      flag.value = !flag.value;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xFF8569EF)),
+                    child: Icon(Icons.check, color: Colors.white),
+                  ),
+                )
+              : InkWell(
+                  onTap: () {
+                    setState(() {
+                      flag.value = !flag.value;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xFFF3F4F8)),
+                    child: Icon(Icons.check, color: Colors.white),
+                  ),
+                ),
+          SizedBox(
+            width: 8,
+          ),
           Text(
             '$type',
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
           ),
-          Checkbox(
-            activeColor: backgroundColor,
-            checkColor: Colors.white,
-            value: flag.value,
-            onChanged: (bool value) {
-              setState(() {
-                flag.value = !flag.value;
-              });
-            },
-          ),
+          Spacer(),
           RichText(
               text: TextSpan(
-                  style: TextStyle(fontSize: 16.0, color: Colors.black),
+                  style: TextStyle(fontSize: 12.0, color: Colors.black),
                   children: [
                 TextSpan(
                     text: '${rangeWrapper.value.start.toInt()}',
@@ -72,6 +97,9 @@ class _InputThirdPageState extends State<InputThirdPage> {
               ]))
         ],
       ),
+      SizedBox(
+        height: 21,
+      ),
       PurpleSliderTheme(
           context,
           RangeSlider(
@@ -83,30 +111,26 @@ class _InputThirdPageState extends State<InputThirdPage> {
                       setState(() => rangeWrapper.value = range);
                     }
                   : null)),
+      SizedBox(
+        height: 21,
+      ),
     ]);
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      RichText(
-          text: TextSpan(
-              style: TextStyle(fontSize: 16.0, color: Colors.black),
-              children: [
-            TextSpan(text: '사이즈', style: inputPurpleStyle),
-            TextSpan(text: '를 수정하시겠어요?'),
-          ])),
-      UIHelper.verticalSpaceSmall,
-      Text(
-        '잘 모르시는 부분은 체크박스를 해제 해주세요!',
-        style: TextStyle(fontSize: 12.0),
-      ),
-
-      UIHelper.verticalSpaceSmall,
       mySlider('어깨(단면)', widget.shoulderflag, widget.shoulderRange, 50, 30),
+      Divider(),
       mySlider('가슴(둘레)', widget.breastflag, widget.breastRange, 110, 70),
+      Divider(),
+
       mySlider('허리(둘레)', widget.waistflag, widget.waistRange, 40, 20),
+      Divider(),
+
       mySlider('엉덩이(둘레)', widget.hipflag, widget.hipRange, 110, 80),
+      Divider(),
+
       mySlider('허벅지(단면)', widget.thighflag, widget.thighRange, 45, 18),
 // 아께 30 ~ 50
       // 가슴 30 ~ 60

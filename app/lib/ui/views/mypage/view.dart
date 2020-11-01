@@ -22,21 +22,6 @@ class MyPageView extends StatelessWidget {
     }));
   }
 
-  onTapPrivateInfo(BuildContext context) {
-    Stride.analytics.logEvent(name: 'MYPAGE_PRIVATE_BUTTON_CLICKED');
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return PrivateWebView();
-    }));
-  }
-
-  onTapLogout(BuildContext context) {
-    Stride.analytics.logEvent(name: 'MYPAGE_LOGOUT_BUTTON_CLICKED');
-    Provider.of<SwipeService>(context, listen: false).init = false;
-    Provider.of<DressRoomService>(context, listen: false).init = false;
-    Provider.of<LookBookService>(context, listen: false).init = false;
-    Provider.of<AuthenticationService>(context, listen: false).logout();
-  }
-
   onTapFeedBack(BuildContext context) {
     Stride.analytics.logEvent(name: 'MYPAGE_FEEDBACK_BUTTON_CLICKED');
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -60,15 +45,12 @@ class MyPageView extends StatelessWidget {
 
   onTapSizeButton(BuildContext context) {
     Stride.analytics.logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
-    showMaterialModalBottomSheet(
-      isDismissible: true,
-      expand: false,
-      context: context,
-      builder: (_context, controller) => SizeInputDialog(
-          Provider.of<AuthenticationService>(_context, listen: false)
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SizeInputDialog(
+          Provider.of<AuthenticationService>(context, listen: false)
               .userController
-              .value),
-    );
+              .value);
+    }));
   }
 
   @override
@@ -86,14 +68,15 @@ class MyPageView extends StatelessWidget {
                       bottomLeft: Radius.circular(32),
                       bottomRight: Radius.circular(32))),
               child: Padding(
-                padding: EdgeInsets.fromLTRB(24, 96, 0, 0),
-                child: Text(
-                  '회원님',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.w700),
-                ),
+                padding: EdgeInsets.fromLTRB(12, 80, 12, 0),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Stride\n\n실시간으로 평가 데이터를 분석해 \n스와이프 할수록 더 취향에 맞는 상품을 보여드립니다',
+                        style: TextStyle(color: Colors.white),
+                      )
+                    ]),
               ),
             ),
             Padding(

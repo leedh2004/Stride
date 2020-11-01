@@ -34,7 +34,8 @@ class _SwipeViewState extends State<SwipeView> {
   double like_opacity = 0, dislike_opacity = 0;
   GlobalKey collectionButton = GlobalKey(),
       buyButton2 = GlobalKey(),
-      rulerButton = GlobalKey();
+      rulerButton = GlobalKey(),
+      filterButton = GlobalKey();
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
 
@@ -74,7 +75,7 @@ class _SwipeViewState extends State<SwipeView> {
       content: Row(children: [
         Image.asset('assets/purple_star.png', width: 30),
         Padding(
-            padding: EdgeInsets.all(8), child: Text('해당 상품이 콜렉션에 추가되었습니다.')),
+            padding: EdgeInsets.all(8), child: Text('해당 상품이 드레스룸에 추가되었습니다.')),
       ]),
     ));
 
@@ -110,7 +111,7 @@ class _SwipeViewState extends State<SwipeView> {
     onflag = false;
   }
 
-  void showTutorial() {
+  void showTutorial(BuildContext context) {
     tutorialCoachMark = TutorialCoachMark(context,
         targets: targets,
         colorShadow: Colors.red,
@@ -118,7 +119,12 @@ class _SwipeViewState extends State<SwipeView> {
         hideSkip: true,
         paddingFocus: 10,
         opacityShadow: 0.8, onFinish: () {
-      print("finish");
+      var authService =
+          Provider.of<AuthenticationService>(context, listen: false);
+      var _storage = authService.storage;
+      _storage.write(key: 'swipe_tutorial', value: 'true');
+      authService.swipe_tutorial = true;
+      setState(() {});
     }, onClickTarget: (target) {
       print(target);
     }, onClickSkip: () {
@@ -127,9 +133,9 @@ class _SwipeViewState extends State<SwipeView> {
       ..show();
   }
 
-  void _afterLayout() {
+  void _afterLayout(context) {
     Future.delayed(Duration(milliseconds: 500), () {
-      showTutorial();
+      showTutorial(context);
     });
   }
 
@@ -148,7 +154,7 @@ class _SwipeViewState extends State<SwipeView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "구매 버튼",
+                      "쇼핑몰 페이지 이동",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -157,7 +163,7 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "상품을 구매할 수 있습니다",
+                        "해당 쇼핑몰로 이동하여 상품을 살펴보고 구매할 수 있습니다",
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     )
@@ -182,7 +188,7 @@ class _SwipeViewState extends State<SwipeView> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: <Widget>[
                     Text(
-                      "자세히 보기 버튼",
+                      "상세 정보 보기",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
@@ -191,10 +197,11 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "상품의 사이즈, 색상, 컨셉 등을\n 빠르게 확인할 수 있습니다",
+                        "상품의 이름을 클릭해 사이즈, 색상, 컨셉 등을\n 빠르게 확인할 수 있습니다",
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
-                    )
+                    ),
+                    SizedBox(height: 40),
                   ],
                 ),
               ))
@@ -216,16 +223,50 @@ class _SwipeViewState extends State<SwipeView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      "콜렉션 버튼",
+                      "'좋아요'보다 더 마음에 드는, 정말 사고 싶은 옷을 발견했다면? ⭐️ 을 눌러서 '좋아요'를 표시하는 동시에 컬렉션에 모아보세요!",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                          fontSize: 16.0),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text(
+                        "나만의 옷장에 저장하고 어울리는 옷을 모아 상하의 코디를 맞춰보고 룩북으로  기록할 수 있습니다",
+                        style: TextStyle(fontSize: 14, color: Colors.black),
+                      ),
+                    )
+                  ],
+                ),
+              ))
+        ],
+      ),
+    );
+
+    targets.add(
+      TargetFocus(
+        identify: "Target 3",
+        keyTarget: filterButton,
+        color: Colors.white,
+        contents: [
+          ContentTarget(
+              align: AlignContent.bottom,
+              child: Container(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "필터 설정",
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.black,
                           fontSize: 20.0),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.only(top: 10.0),
                       child: Text(
-                        "마음에 드는 상품을 저장할 수 있습니다",
+                        "내가 찾고 싶은 아이템이 보이지 않는다면?\n원하는 카테고리, 컨셉, 사이즈, 가격, 컬러에 맞춘 아이템을 필터로 검색해보세요!",
                         style: TextStyle(fontSize: 16, color: Colors.black),
                       ),
                     )
@@ -260,7 +301,7 @@ class _SwipeViewState extends State<SwipeView> {
           } else if (model.busy)
             return FadeIn(delay: 0.5, child: (LoadingWidget()));
 
-          WidgetsBinding.instance.addPostFrameCallback((_) {
+          WidgetsBinding.instance.addPostFrameCallback((_) async {
             if ((configService.currentVersion != configService.updateVersion) &&
                 !configService.alreadyShow) {
               ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
@@ -270,10 +311,7 @@ class _SwipeViewState extends State<SwipeView> {
               configService.alreadyShow = true;
             }
             if (authService.swipe_tutorial == false) {
-              authService.swipe_tutorial = true;
-              var _storage = authService.storage;
-              _storage.write(key: 'swipe_tutorial', value: 'true');
-              _afterLayout();
+              _afterLayout(context);
             }
           });
 
@@ -295,10 +333,11 @@ class _SwipeViewState extends State<SwipeView> {
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(right: 16),
+                padding: EdgeInsets.only(right: 25, top: 15),
                 child: Align(
                   alignment: Alignment.topRight,
                   child: InkWell(
+                    key: filterButton,
                     onTap: () {
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
@@ -306,9 +345,9 @@ class _SwipeViewState extends State<SwipeView> {
                       }));
                     },
                     child: Image.asset(
-                      'images/filter.png',
-                      width: 70,
-                      height: 70,
+                      'assets/filter.png',
+                      width: 50,
+                      height: 50,
                     ),
                   ),
                 ),

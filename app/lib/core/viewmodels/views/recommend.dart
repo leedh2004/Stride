@@ -12,7 +12,7 @@ class RecommendationModel extends BaseModel {
     print("RecommendationModel 생성!");
     collectionService = _service;
     authService = _authService;
-    init = false;
+    init = collectionService.init;
   }
 
   Future initialize() async {

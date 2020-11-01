@@ -87,18 +87,31 @@ class _ServiceViewState extends State<ServiceView>
                               children: [
                                   Image.asset(
                                     'assets/home_s.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('홈')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '홈',
+                                    style: TextStyle(fontSize: 10),
+                                  )
                                 ])
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                   Image.asset(
                                     'assets/home.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('홈')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text('홈',
+                                      style: TextStyle(
+                                          color:
+                                              Color.fromRGBO(233, 235, 243, 1),
+                                          fontSize: 10)),
                                 ])),
                   Container(
                       child: _tabController.index == 1
@@ -107,18 +120,33 @@ class _ServiceViewState extends State<ServiceView>
                               children: [
                                   Image.asset(
                                     'assets/heart_s.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('추천')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '아이템',
+                                    style: TextStyle(fontSize: 10),
+                                  )
                                 ])
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                   Image.asset(
                                     'assets/heart.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('추천')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '아이템',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color:
+                                            Color.fromRGBO(233, 235, 243, 1)),
+                                  )
                                 ])),
                   Container(
                       child: _tabController.index == 2
@@ -127,18 +155,33 @@ class _ServiceViewState extends State<ServiceView>
                               children: [
                                   Image.asset(
                                     'assets/collection_s.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('드레스룸')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '드레스룸',
+                                    style: TextStyle(fontSize: 10),
+                                  )
                                 ])
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                   Image.asset(
                                     'assets/collection.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('드레스룸')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    '드레스룸',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color:
+                                            Color.fromRGBO(233, 235, 243, 1)),
+                                  )
                                 ])),
                   Container(
                       child: _tabController.index == 3
@@ -147,18 +190,33 @@ class _ServiceViewState extends State<ServiceView>
                               children: [
                                   Image.asset(
                                     'assets/user_s.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('MY')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    'MY',
+                                    style: TextStyle(fontSize: 10),
+                                  )
                                 ])
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                   Image.asset(
                                     'assets/user.png',
-                                    width: 24,
+                                    width: 20,
                                   ),
-                                  Text('MY')
+                                  SizedBox(
+                                    height: 4,
+                                  ),
+                                  Text(
+                                    'MY',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        color:
+                                            Color.fromRGBO(233, 235, 243, 1)),
+                                  )
                                 ])),
                 ],
               ),

@@ -43,7 +43,7 @@ class RecommendItemWidget extends StatelessWidget {
           if (await result == 'collect') {
             ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
               duration: Duration(milliseconds: 1500),
-              content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+              content: Text('해당상품이 드레스룸에 추가되었습니다.'),
             ));
           }
         },
@@ -68,11 +68,14 @@ class RecommendItemWidget extends StatelessWidget {
           SizedBox(
             height: 8,
           ),
-          Text(
-            item.product_name,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+          Container(
+            width: 180,
+            child: Text(
+              item.product_name,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+            ),
           ),
           SizedBox(
             height: 8,
@@ -126,7 +129,7 @@ class RecommendItemWidget extends StatelessWidget {
                           }))
                         },
                     child: Padding(
-                      padding: EdgeInsets.only(right: 8),
+                      padding: EdgeInsets.fromLTRB(4, 8, 8, 8),
                       child: Image.asset(
                         'assets/buy.png',
                         width: 30,

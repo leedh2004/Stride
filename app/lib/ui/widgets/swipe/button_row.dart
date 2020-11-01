@@ -20,10 +20,10 @@ Widget buttonRow(SwipeModel model, Function onTapDislikeButton,
       ),
       InkWell(
         onTap: onTapPurchaseButton,
+        key: buyButton,
         // padding: EdgeInsets.all(0),
         child: Image.asset(
           'assets/star_button.png',
-          key: buyButton,
           width: 80,
           height: 80,
         ),

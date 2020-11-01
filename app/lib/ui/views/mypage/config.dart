@@ -1,9 +1,33 @@
+import 'package:app/core/services/authentication_service.dart';
+import 'package:app/core/services/config.dart';
+import 'package:app/core/services/dress_room.dart';
+import 'package:app/core/services/lookbook.dart';
+import 'package:app/core/services/swipe.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
+
+import '../../../main.dart';
+import '../private_web_view.dart';
 
 class ConfigView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    onTapPrivateInfo(BuildContext context) {
+      Stride.analytics.logEvent(name: 'MYPAGE_PRIVATE_BUTTON_CLICKED');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return PrivateWebView();
+      }));
+    }
+
+    onTapLogout(BuildContext context) {
+      Stride.analytics.logEvent(name: 'MYPAGE_LOGOUT_BUTTON_CLICKED');
+      Provider.of<SwipeService>(context, listen: false).init = false;
+      Provider.of<DressRoomService>(context, listen: false).init = false;
+      Provider.of<LookBookService>(context, listen: false).init = false;
+      Provider.of<AuthenticationService>(context, listen: false).logout();
+    }
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -31,19 +55,29 @@ class ConfigView extends StatelessWidget {
                   '계정설정',
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                 ),
+                // SizedBox(
+                //   height: 24,
+                // ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [Text('계정연결')],
+                // ),
                 SizedBox(
                   height: 24,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('계정연결')],
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('로그아웃'), Image.asset('assets/right.png')],
+                  children: [
+                    Text('로그아웃'),
+                    InkWell(
+                        onTap: () {
+                          onTapLogout(context);
+                          Navigator.maybePop(context);
+                        },
+                        child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Image.asset('assets/right.png')))
+                  ],
                 ),
                 SizedBox(
                   height: 24,
@@ -67,10 +101,11 @@ class ConfigView extends StatelessWidget {
                     Column(
                       children: [
                         Text(
-                          '최신 버전 1.21.1',
+                          '최신 버전 ${Provider.of<ConfigService>(context).updateVersion}',
                           style: TextStyle(color: Color(0xFF8569EF)),
                         ),
-                        Text('현재 버전 1.20.1'),
+                        Text(
+                            '현재 버전 ${Provider.of<ConfigService>(context).currentVersion}'),
                       ],
                     )
                   ],
@@ -78,30 +113,34 @@ class ConfigView extends StatelessWidget {
                 SizedBox(
                   height: 24,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [Text('이용약관'), Image.asset('assets/right.png')],
-                ),
-                SizedBox(
-                  height: 24,
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [Text('이용약관'), Image.asset('assets/right.png')],
+                // ),
+                // SizedBox(
+                //   height: 24,
+                // ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text('개인정보 처리방침'),
-                    Image.asset('assets/right.png')
+                    InkWell(
+                        onTap: () => onTapPrivateInfo(context),
+                        child: Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Image.asset('assets/right.png')))
                   ],
                 ),
                 SizedBox(
                   height: 24,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('오픈소스 라이선스'),
-                    Image.asset('assets/right.png')
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Text('오픈소스 라이선스'),
+                //     Image.asset('assets/right.png')
+                //   ],
+                // ),
               ],
             ),
           ),

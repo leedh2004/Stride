@@ -159,24 +159,6 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     })),
                               ),
                             ),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.maybePop(context);
-                                },
-                                child: Padding(
-                                  padding: EdgeInsets.all(5),
-                                  child: Container(
-                                    width: 20,
-                                    height: 20,
-                                    child: SvgPicture.asset(
-                                        'assets/left-arrow.svg',
-                                        color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ),
                           ]),
                         ),
                         Padding(
@@ -438,7 +420,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                         Padding(
                                             padding: EdgeInsets.all(8),
                                             child:
-                                                Text('해당 상품이 콜렉션에 추가되었습니다.')),
+                                                Text('해당 상품이 드레스룸에 추가되었습니다.')),
                                       ]),
                                     ));
                                   },
@@ -497,7 +479,24 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                             )),
                       ),
                     )
-                  : Container()
+                  : Container(),
+              Padding(
+                padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
+                child: InkWell(
+                  onTap: () {
+                    Navigator.maybePop(context);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.all(5),
+                    child: Container(
+                      width: 20,
+                      height: 20,
+                      child: Image.asset('assets/left-arrow.png',
+                          color: Colors.white),
+                    ),
+                  ),
+                ),
+              ),
             ]),
           );
         }));

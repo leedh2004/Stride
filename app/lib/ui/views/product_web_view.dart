@@ -10,23 +10,35 @@ class ProductWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: Text(mall),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.maybePop(context);
-          },
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
         ),
-        // actions: <Widget>[
-        //   IconButton(
-        //       icon: Icon(Icons.share),
-        //       onPressed: () {
-        //         print("공유하기 클릭");
-        //       })
-        // ],
+        actions: [
+          Padding(
+            padding: EdgeInsets.only(right: 24),
+            child: Image.asset(
+              'assets/stride_text_logo.png',
+              width: 50,
+            ),
+          )
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          mall,
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+        ),
       ),
+      // actions: <Widget>[
+      //   IconButton(
+      //       icon: Icon(Icons.share),
+      //       onPressed: () {
+      //         print("공유하기 클릭");
+      //       })
+      // ],
       body: SafeArea(
         child: Center(
           child: WebView(

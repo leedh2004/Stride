@@ -50,9 +50,9 @@ class _CollectionViewState extends State<CollectionView>
                     elevation: 0,
                     centerTitle: false,
                     title: Padding(
-                      padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
+                      padding: EdgeInsets.fromLTRB(8, 8, 0, 0),
                       child: Text(
-                        '콜렉션',
+                        '드레스룸',
                         style: TextStyle(
                             color: Colors.black,
                             fontSize: 18,

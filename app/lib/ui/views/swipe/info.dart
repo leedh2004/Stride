@@ -136,24 +136,6 @@ class DetailInfo extends StatelessWidget {
                                       })),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
-                                child: InkWell(
-                                  onTap: () {
-                                    Navigator.maybePop(context);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.all(5),
-                                    child: Container(
-                                      width: 20,
-                                      height: 20,
-                                      child: SvgPicture.asset(
-                                          'assets/left-arrow.svg',
-                                          color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ),
                             ]),
                           ),
                           Padding(
@@ -434,7 +416,24 @@ class DetailInfo extends StatelessWidget {
                 ],
               ),
             ),
-          )
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
+            child: InkWell(
+              onTap: () {
+                Navigator.maybePop(context);
+              },
+              child: Padding(
+                padding: EdgeInsets.all(5),
+                child: Container(
+                  width: 20,
+                  height: 20,
+                  child:
+                      Image.asset('assets/left-arrow.png', color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ]),
       ),
     );

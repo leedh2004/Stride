@@ -211,7 +211,7 @@ class DressRoomItemWidget extends StatelessWidget {
   //                     ServiceView.scaffoldKey.currentState
   //                         .showSnackBar(SnackBar(
   //                       duration: Duration(milliseconds: 1500),
-  //                       content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+  //                       content: Text('해당상품이 드레스룸에 추가되었습니다.'),
   //                     ));
   //                   }
   //                   // Navigator.of(context).push(PageRouteBuilder(

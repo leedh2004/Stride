@@ -42,7 +42,7 @@ class DressRoomFolderView extends StatelessWidget {
                         var items = Provider.of<DressRoomService>(context)
                             .items[folderKeys[index]];
                         if (folderKeys[index] == 0)
-                          folderNames[index] = "나의 콜렉션";
+                          folderNames[index] = "나의 드레스룸";
                         return FolderTextButton(model, folderNames[index],
                             folderKeys[index], items);
                       })));

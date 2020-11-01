@@ -5,7 +5,6 @@ import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
-import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
@@ -15,7 +14,6 @@ import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
 import 'package:app/ui/widgets/swipe/tutorial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import 'card_animation.dart';
@@ -286,6 +284,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     InkWell(
+                        key: widget.rulerButton,
                         onTap: () async {
                           final result = await Navigator.push(context,
                               MaterialPageRoute<String>(
@@ -313,6 +312,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     Align(
                       alignment: Alignment.bottomRight,
                       child: InkWell(
+                        key: widget.buyButton,
                         onTap: () {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
@@ -477,7 +477,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           Image.asset('assets/purple_star.png', width: 30),
           Padding(
               padding: EdgeInsets.all(8),
-              child: Text('카드의 좌/우를 탭하면 빠르게\n아이템을 탐색할 수 있습니다!')),
+              child: Text('사진의 좌우 영역을 탭해서\n 상품 상세이미지를 확인할 수 있습니다!')),
         ]),
       ));
     }
@@ -500,7 +500,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 : frontCard(context, widget.model),
         dislikeOpacityWidget(),
         likeOpactiyWidget(),
-        tutorial_like < 5 && authService.swipe_heart_tutorial == false
+        tutorial_like < 5 &&
+                authService.swipe_heart_tutorial == false &&
+                authService.swipe_tutorial == true
             ? tutorialTextWidget(tutorial_like)
             : Container(),
         _controller.status != AnimationStatus.forward
