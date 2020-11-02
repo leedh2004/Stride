@@ -109,7 +109,7 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                           {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
             must_conditions += range_size
         should_conditions = []
-        if user_prefer_concepts:
+        if user_prefer_concepts and not concepts:
             should_concepts = {"terms": {"shop_concept": user_prefer_concepts}}
             should_conditions.append(should_concepts)
         res = es.search(
