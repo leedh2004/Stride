@@ -32,13 +32,6 @@ class ProductWebView extends StatelessWidget {
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ),
-      // actions: <Widget>[
-      //   IconButton(
-      //       icon: Icon(Icons.share),
-      //       onPressed: () {
-      //         print("공유하기 클릭");
-      //       })
-      // ],
       body: SafeArea(
         child: Center(
           child: WebView(

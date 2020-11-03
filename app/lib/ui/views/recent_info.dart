@@ -4,6 +4,7 @@ import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
@@ -405,24 +406,25 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     Provider.of<DressRoomService>(context,
                                             listen: false)
                                         .addItem(widget.item);
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      elevation: 6.0,
-                                      behavior: SnackBarBehavior.floating,
-                                      duration: Duration(milliseconds: 1500),
-                                      backgroundColor:
-                                          Color.fromRGBO(63, 70, 82, 0.9),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10))),
-                                      content: Row(children: [
-                                        Image.asset('assets/purple_star.png',
-                                            width: 30),
-                                        Padding(
-                                            padding: EdgeInsets.all(8),
-                                            child:
-                                                Text('해당 상품이 드레스룸에 추가되었습니다.')),
-                                      ]),
-                                    ));
+                                    collection_flush.show(context);
+                                    // Scaffold.of(context).showSnackBar(SnackBar(
+                                    //   elevation: 6.0,
+                                    //   behavior: SnackBarBehavior.floating,
+                                    //   duration: Duration(milliseconds: 1500),
+                                    //   backgroundColor:
+                                    //       Color.fromRGBO(63, 70, 82, 0.9),
+                                    //   shape: RoundedRectangleBorder(
+                                    //       borderRadius: BorderRadius.all(
+                                    //           Radius.circular(10))),
+                                    //   content: Row(children: [
+                                    //     Image.asset('assets/purple_star.png',
+                                    //         width: 30),
+                                    //     Padding(
+                                    //         padding: EdgeInsets.all(8),
+                                    //         child:
+                                    //             Text('해당 상품이 드레스룸에 추가되었습니다.')),
+                                    //   ]),
+                                    // ));
                                   },
                                   // padding: EdgeInsets.all(0),
                                   child: Image.asset(

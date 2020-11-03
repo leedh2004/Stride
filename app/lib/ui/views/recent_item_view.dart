@@ -3,6 +3,7 @@ import 'package:app/core/services/recent_item.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/service_view.dart';
@@ -118,11 +119,12 @@ class _RecentItemViewState extends State<RecentItemView> {
                                   }));
 
                                   if (await result == 'collect') {
-                                    ServiceView.scaffoldKey.currentState
-                                        .showSnackBar(SnackBar(
-                                      duration: Duration(milliseconds: 1500),
-                                      content: Text('해당상품이 콜렉션에 추가되었습니다.'),
-                                    ));
+                                    // ServiceView.scaffoldKey.currentState
+                                    //     .showSnackBar(SnackBar(
+                                    //   duration: Duration(milliseconds: 1500),
+                                    //   content: Text('해당상품이 콜렉션에 추가되었습니다.'),
+                                    // ));
+                                    collection_flush.show(context);
                                   }
                                   setState(() {});
                                 },

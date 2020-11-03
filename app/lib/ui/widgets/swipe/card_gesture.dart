@@ -5,6 +5,7 @@ import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
@@ -83,6 +84,14 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   double frontCardRot = 0.0;
   List<double> _opacity = [0, 0];
+
+  void tutorial(context) async {
+    await flushList2[0].show(context);
+    await flushList2[1].show(context);
+    await flushList2[2].show(context);
+    await flushList2[3].show(context);
+    await flushList2[4].show(context);
+  }
 
   @override
   void initState() {
@@ -286,6 +295,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     InkWell(
                         key: widget.rulerButton,
                         onTap: () async {
+                          flushList[9].dismiss(true);
                           final result = await Navigator.push(context,
                               MaterialPageRoute<String>(
                                   builder: (BuildContext context) {
@@ -299,6 +309,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           } else if (await result == 'collect') {
                             onTapCollectionButton();
                           }
+                          tutorial(context);
                         },
                         child: Opacity(
                           opacity: 0,
@@ -460,27 +471,27 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   }
 
   void after_tutorial(AuthenticationService authService) {
-    if (tutorial_like == 5 && authService.swipe_heart_tutorial == false) {
-      authService.swipe_heart_tutorial = true;
-      tutorial_like++;
-      var _storage = authService.storage;
-      _storage.write(key: 'swipe_heart_tutorial', value: 'true');
+    // if (tutorial_like == 5 && authService.swipe_heart_tutorial == false) {
+    //   authService.swipe_heart_tutorial = true;
+    //   tutorial_like++;
+    //   var _storage = authService.storage;
+    //   _storage.write(key: 'swipe_heart_tutorial', value: 'true');
 
-      ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-        elevation: 6.0,
-        behavior: SnackBarBehavior.floating,
-        duration: Duration(milliseconds: 3000),
-        backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(10))),
-        content: Row(children: [
-          Image.asset('assets/purple_star.png', width: 30),
-          Padding(
-              padding: EdgeInsets.all(8),
-              child: Text('사진의 좌우 영역을 탭해서\n 상품 상세이미지를 확인할 수 있습니다!')),
-        ]),
-      ));
-    }
+    // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   elevation: 6.0,
+    //   behavior: SnackBarBehavior.floating,
+    //   duration: Duration(milliseconds: 3000),
+    //   backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+    //   shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.all(Radius.circular(10))),
+    //   content: Row(children: [
+    //     Image.asset('assets/purple_star.png', width: 30),
+    //     Padding(
+    //         padding: EdgeInsets.all(8),
+    //         child: Text('사진의 좌우 영역을 탭해서\n 상품 상세이미지를 확인할 수 있습니다!')),
+    //   ]),
+    // ));
+    // }
   }
 
   @override
@@ -502,7 +513,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         likeOpactiyWidget(),
         tutorial_like < 5 &&
                 authService.swipe_heart_tutorial == false &&
-                authService.swipe_tutorial == true
+                authService.swipe_tutorial == false
             ? tutorialTextWidget(tutorial_like)
             : Container(),
         _controller.status != AnimationStatus.forward
@@ -575,6 +586,10 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             widget.model.likeRequest();
                             animateCards();
+                            flushList[1].dismiss(true);
+                            // ServiceView.scaffoldKey.currentState
+                            //     .hideCurrentSnackBar();
+
                           } else if (frontCardAlign.x < STANDARD_LEFT) {
                             move_flag = true;
                             Stride.analytics
@@ -599,6 +614,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                 right_effect = true;
                                 HapticFeedback.mediumImpact();
                               });
+                            } else {
+                              flushList2[1].dismiss(true);
                             }
                           } else {
                             if ((!widget.model.prevImage())) {
@@ -606,6 +623,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                 left_effect = true;
                                 HapticFeedback.mediumImpact();
                               });
+                            } else {
+                              flushList2[2].dismiss(true);
                             }
                           }
                           // animateCards();

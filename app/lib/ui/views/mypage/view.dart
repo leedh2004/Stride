@@ -3,6 +3,7 @@ import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/mypage/config.dart';
 import 'package:app/ui/views/private_web_view.dart';
 import 'package:app/ui/widgets/mypage/input_dialog.dart';
@@ -31,10 +32,11 @@ class MyPageView extends StatelessWidget {
 
   onTapHelp(BuildContext context) {
     Stride.analytics.logEvent(name: 'MYPAGE_CONTACT_BUTTON_CLICKED');
-    ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-      duration: Duration(milliseconds: 1500),
-      content: Text('help.stride@gmail.com 으로 문의 부탁드립니다.'),
-    ));
+    // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   duration: Duration(milliseconds: 1500),
+    //   content: Text('help.stride@gmail.com 으로 문의 부탁드립니다.'),
+    // ));
+    help_flush.show(context);
   }
 
   onTapConfig(BuildContext context) {

@@ -1,5 +1,6 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:app/ui/widgets/filter/color.dart';
@@ -85,19 +86,7 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                 InkWell(
                   onTap: () {
                     model.setFilter();
-                    ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-                      elevation: 6.0,
-                      behavior: SnackBarBehavior.floating,
-                      duration: Duration(milliseconds: 2000),
-                      backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(10))),
-                      content: Row(children: [
-                        Padding(
-                            padding: EdgeInsets.all(8),
-                            child: Text('필터가 적용되었습니다.')),
-                      ]),
-                    ));
+                    filter_flush.show(context);
                     Navigator.maybePop(context);
                   },
                   child: Container(

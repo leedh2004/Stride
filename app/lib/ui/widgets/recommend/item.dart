@@ -4,6 +4,7 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
@@ -41,10 +42,11 @@ class RecommendItemWidget extends StatelessWidget {
           }));
 
           if (await result == 'collect') {
-            ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-              duration: Duration(milliseconds: 1500),
-              content: Text('해당상품이 드레스룸에 추가되었습니다.'),
-            ));
+            // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+            //   duration: Duration(milliseconds: 1500),
+            //   content: Text('해당상품이 드레스룸에 추가되었습니다.'),
+            // ));
+            collection_flush.show(context);
           }
         },
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

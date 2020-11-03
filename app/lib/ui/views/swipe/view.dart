@@ -6,6 +6,7 @@ import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/widgets/filter/cloth_type.dart';
 import 'package:app/ui/widgets/filter/concept.dart';
 import 'package:app/ui/widgets/filter/price.dart';
@@ -17,6 +18,7 @@ import 'package:app/ui/widgets/swipe/card_gesture.dart';
 import 'package:app/ui/widgets/swipe/filter_bar.dart';
 import 'package:app/ui/widgets/swipe/image.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
@@ -38,6 +40,7 @@ class _SwipeViewState extends State<SwipeView> {
       filterButton = GlobalKey();
   TutorialCoachMark tutorialCoachMark;
   List<TargetFocus> targets = List();
+  bool test = false;
 
   @override
   void initState() {
@@ -59,25 +62,27 @@ class _SwipeViewState extends State<SwipeView> {
     });
     model.nextItem();
     onflag = false;
+    flushList[4].dismiss(false);
   }
 
   onTapCollectButton(SwipeModel model) async {
     RecentItem item =
         Provider.of<SwipeService>(context, listen: false).items[model.index];
     model.addItem(item);
-    ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-      elevation: 6.0,
-      behavior: SnackBarBehavior.floating,
-      duration: Duration(milliseconds: 1500),
-      backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(10))),
-      content: Row(children: [
-        Image.asset('assets/purple_star.png', width: 30),
-        Padding(
-            padding: EdgeInsets.all(8), child: Text('해당 상품이 드레스룸에 추가되었습니다.')),
-      ]),
-    ));
+    // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+    //   elevation: 6.0,
+    //   behavior: SnackBarBehavior.floating,
+    //   duration: Duration(milliseconds: 1500),
+    //   backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+    //   shape: RoundedRectangleBorder(
+    //       borderRadius: BorderRadius.all(Radius.circular(10))),
+    //   content: Row(children: [
+    //     Image.asset('assets/purple_star.png', width: 30),
+    //     Padding(
+    //         padding: EdgeInsets.all(8), child: Text('해당 상품이 드레스룸에 추가되었습니다.')),
+    //   ]),
+    // ));
+    collection_flush.show(context);
 
     if (onflag) return false;
     Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
@@ -109,6 +114,7 @@ class _SwipeViewState extends State<SwipeView> {
 
     model.nextItem();
     onflag = false;
+    flushList[4].dismiss(true);
   }
 
   void showTutorial(BuildContext context) {
@@ -133,10 +139,33 @@ class _SwipeViewState extends State<SwipeView> {
       ..show();
   }
 
-  void _afterLayout(context) {
-    Future.delayed(Duration(milliseconds: 500), () {
-      showTutorial(context);
+  void _afterLayout(context) async {
+    if (test == true) return;
+    test = true;
+    await flushList[0].show(context);
+    await flushList[1].show(context).then((result) async {
+      if (result) {
+        await flushList[2].show(context);
+      } else {
+        await flushList[3].show(context);
+      }
     });
+    await flushList[7].show(context);
+    await flushList[4].show(context).then((result) async {
+      if (result) {
+        await flushList[5].show(context);
+      } else {
+        await flushList[6].show(context);
+      }
+    });
+    await flushList[8].show(context);
+    await flushList[9].show(context).then((result) async {
+      await flushList[10].show(context);
+    });
+  }
+
+  void _afterLayoutPhase2(context) async {
+    await flushList2[0].show(context);
   }
 
   void initTargets() {
@@ -232,7 +261,7 @@ class _SwipeViewState extends State<SwipeView> {
                     Padding(
                       padding: const EdgeInsets.all(16),
                       child: Text(
-                        "나만의 옷장에 저장하고 어울리는 옷을 모아 상하의 코디를 맞춰보고 룩북으로  기록할 수 있습니다",
+                        "나만의 옷장에 저장하고 ���울리는 옷을 모아 상하의 코디를 맞춰보고 룩북으로  기록할 수 있습니다",
                         style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     )
@@ -304,15 +333,16 @@ class _SwipeViewState extends State<SwipeView> {
           WidgetsBinding.instance.addPostFrameCallback((_) async {
             if ((configService.currentVersion != configService.updateVersion) &&
                 !configService.alreadyShow) {
-              ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-                duration: Duration(milliseconds: 1500),
-                content: Text('Stride앱의 최신 버전이 나왔습니다!'),
-              ));
+              // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+              //   duration: Duration(milliseconds: 1500),
+              //   content: Text('Stride앱의 최신 버���이 나왔습니다!'),
+              // ));
+              new_version_flush.show(context);
               configService.alreadyShow = true;
             }
-            if (authService.swipe_tutorial == false) {
-              _afterLayout(context);
-            }
+            // if (authService.swipe_tutorial == false) {
+            _afterLayout(context);
+            // }
           });
 
           return FadeIn(
@@ -338,11 +368,14 @@ class _SwipeViewState extends State<SwipeView> {
                   alignment: Alignment.topRight,
                   child: InkWell(
                     key: filterButton,
-                    onTap: () {
-                      Navigator.push(context,
+                    onTap: () async {
+                      flushList2[3].dismiss(true);
+                      await Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return FilterBar(model, context);
                       }));
+                      await flushList2[5].show(context);
+                      await flushList2[6].show(context);
                     },
                     child: Image.asset(
                       'assets/filter.png',
