@@ -402,7 +402,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                 InkWell(
                                   onTap: () {
                                     widget.model
-                                        .likeRequest(widget.item.product_id);
+                                        .collectRequest(widget.item.product_id);
                                     Provider.of<DressRoomService>(context,
                                             listen: false)
                                         .addItem(widget.item);

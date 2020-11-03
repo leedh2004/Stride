@@ -244,6 +244,11 @@ class SwipeService {
     }
   }
 
+  Future collectRequest() async {
+    final response = await _api.client.post('${Api.endpoint}/v2/dressroom',
+        data: jsonEncode({'product_id': items[index].product_id}));
+  }
+
   Future dislikeRequest() async {
     print("DISLIKE!!");
     try {

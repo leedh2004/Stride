@@ -85,9 +85,9 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                 ),
                 InkWell(
                   onTap: () {
+                    Navigator.pop(context);
                     model.setFilter();
                     filter_flush.show(context);
-                    Navigator.maybePop(context);
                   },
                   child: Container(
                     width: double.infinity,

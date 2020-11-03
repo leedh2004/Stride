@@ -163,7 +163,7 @@ class _DressRoomItemViewState extends State<DressRoomItemView> {
                                     borderRadius: BorderRadius.circular(12),
                                     color: Color(0xFFF4F4FC)),
                                 child: Align(
-                                  child: SvgPicture.asset('images/trash.svg',
+                                  child: Image.asset('assets/delete.png',
                                       width: 22, height: 22),
                                 ),
                               ),
@@ -189,7 +189,7 @@ class _DressRoomItemViewState extends State<DressRoomItemView> {
                                     borderRadius: BorderRadius.circular(12),
                                     color: Color(0xFFF4F4FC)),
                                 child: Align(
-                                  child: SvgPicture.asset('images/folder.svg',
+                                  child: Image.asset('assets/folder_move.png',
                                       width: 22, height: 22),
                                 ),
                               ),

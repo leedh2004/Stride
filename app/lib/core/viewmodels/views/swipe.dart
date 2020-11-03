@@ -96,13 +96,20 @@ class SwipeModel extends BaseModel {
   }
 
   void likeRequest() async {
-    await _swipeService.likeRequest();
+    _swipeService.likeRequest();
     _authenticationService.addLike();
   }
 
   void dislikeRequest() async {
-    await _swipeService.dislikeRequest();
+    _swipeService.dislikeRequest();
     _authenticationService.addDislike();
+  }
+
+  void collectRequest() async {
+    _swipeService.likeRequest();
+    _swipeService.collectRequest();
+
+    _authenticationService.addLike();
   }
 
   void purchaseItem(int id) async {

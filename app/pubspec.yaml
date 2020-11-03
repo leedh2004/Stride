@@ -76,7 +76,7 @@ dependencies:
 flutter_icons:
   android: true
   ios: true
-  image_path: "images/icon.png"
+  image_path: "assets/icon.png"
   
 
 
@@ -137,6 +137,15 @@ flutter:
     - assets/shopping-bag@2x.png
     - assets/filter.png
     - assets/stride_logo.png
+    - assets/email.png
+    - assets/folder_move.png
+    - assets/filter_text.png
+    - assets/delete.png
+    - assets/clean-clothes.png 
+    - assets/name_edit.png
+    - assets/gear.png
+    - assets/folder.png
+    - assets/chat.png
 
 
 

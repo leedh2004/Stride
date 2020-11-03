@@ -50,6 +50,12 @@ class RecentItemService {
     print(response.statusCode);
   }
 
+  Future collectRequest(int id) async {
+    final response = await _api.client.post('${Api.endpoint}/v2/dressroom',
+        data: jsonEncode({'product_id': id}));
+    print(response.statusCode);
+  }
+
   Future revertAndDislikeRequest(int id) async {
     try {
       final response = await _api.client

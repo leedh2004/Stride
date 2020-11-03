@@ -1,10 +1,14 @@
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/recommend/view.dart';
+import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/views/swipe/view.dart';
+import 'package:app/ui/views/tutorial/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 import 'collection/view.dart';
 import 'mypage/view.dart';
 
@@ -36,6 +40,8 @@ class _ServiceViewState extends State<ServiceView>
 
   @override
   Widget build(BuildContext context) {
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
@@ -48,10 +54,9 @@ class _ServiceViewState extends State<ServiceView>
             controller: _tabController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              SafeArea(child: SwipeView()),
+              SafeArea(child: TutorialWrapper()),
               SafeArea(child: RecommendView()),
               SafeArea(child: CollectionView()),
-              //LookBookView(),
               MyPageView(),
             ]),
         bottomNavigationBar: SizedBox(
@@ -76,7 +81,9 @@ class _ServiceViewState extends State<ServiceView>
                 indicatorColor: Colors.transparent,
                 labelColor: Colors.black,
                 onTap: (index) {
+                  // if (authService.flush_tutorial == -1) {
                   setState(() {});
+                  // }
                 },
                 // unselectedLabelColor: Colors.white,
                 tabs: <Widget>[

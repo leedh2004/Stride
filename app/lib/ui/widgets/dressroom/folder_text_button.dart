@@ -141,7 +141,15 @@ class FolderTextButton extends StatelessWidget {
                             : Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color: Color(0xFFFAF9FC)),
+                                    color: Color(0xFFFAF9FC),
+                                    border:
+                                        Border.all(color: Color(0xFFF4F4FC))),
+                                child: Center(
+                                  child: Image.asset(
+                                    'assets/folder.png',
+                                    width: 35,
+                                  ),
+                                ),
                               )),
             SizedBox(
               height: 16,

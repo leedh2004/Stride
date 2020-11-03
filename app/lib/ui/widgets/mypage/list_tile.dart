@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-myPageListTile(String title, Function onTap, Color color) => ListTile(
+myPageListTile(String title, Function onTap, String file) => ListTile(
     contentPadding: EdgeInsets.only(left: 27),
     title: Row(children: [
       Padding(
-        padding: EdgeInsets.only(right: 30),
-        child: Container(
-          width: 10,
-          height: 10,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5), color: color),
-        ),
-      ),
+          padding: EdgeInsets.only(right: 30),
+          child: Image.asset(
+            file,
+            width: 15,
+          )),
       Text(
         title,
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
       ),
     ]),
     onTap: onTap);

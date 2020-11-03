@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 Widget buttonRow(SwipeModel model, Function onTapDislikeButton,
-    Function onTapPurchaseButton, Function onTapLikeButton, var buyButton) {
+    Function onTapCollectButton, Function onTapLikeButton, var buyButton) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceAround,
     children: <Widget>[
@@ -19,7 +19,7 @@ Widget buttonRow(SwipeModel model, Function onTapDislikeButton,
         ),
       ),
       InkWell(
-        onTap: onTapPurchaseButton,
+        onTap: onTapCollectButton,
         key: buyButton,
         // padding: EdgeInsets.all(0),
         child: Image.asset(

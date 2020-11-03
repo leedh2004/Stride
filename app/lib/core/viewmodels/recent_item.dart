@@ -31,6 +31,12 @@ class RecentItemModel extends BaseModel {
     auth_service.minusDislike();
   }
 
+  void collectRequest(int id) {
+    service.likeRequest(id);
+    service.collectRequest(id);
+    auth_service.addLike();
+  }
+
   void dislikeRequest(int id) {
     service.dislikeRequest(id);
     auth_service.addDislike();

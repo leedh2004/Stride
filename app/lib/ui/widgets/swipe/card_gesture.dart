@@ -86,9 +86,15 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   List<double> _opacity = [0, 0];
 
   void tutorial(context) async {
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
+    RecentItem item = Provider.of<SwipeService>(context, listen: false)
+        .items[(widget.model.index)];
     await flushList2[0].show(context);
-    await flushList2[1].show(context);
-    await flushList2[2].show(context);
+    if (authService.flush_tutorial == 1 && item.image_urls.length >= 2) {
+      await flushList2[1].show(context);
+      await flushList2[2].show(context);
+    }
     await flushList2[3].show(context);
     await flushList2[4].show(context);
   }
@@ -274,9 +280,15 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   Widget shoppingWidget(SwipeModel model, Function onTapDislikeButton,
       Function onTapLikeButton, Function onTapCollectionButton) {
+    if (Provider.of<SwipeService>(context).items.length <= widget.model.index) {
+      return Container();
+    }
+
     String item = Provider.of<SwipeService>(context)
         .items[(widget.model.index)]
         .product_name;
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
 
     return Align(
         alignment: frontCardAlign,
@@ -295,7 +307,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     InkWell(
                         key: widget.rulerButton,
                         onTap: () async {
-                          flushList[9].dismiss(true);
+                          if (authService.flush_tutorial == 0) {
+                            flushList[9].dismiss(true);
+                          }
                           final result = await Navigator.push(context,
                               MaterialPageRoute<String>(
                                   builder: (BuildContext context) {
@@ -309,7 +323,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           } else if (await result == 'collect') {
                             onTapCollectionButton();
                           }
-                          tutorial(context);
+                          if (authService.flush_tutorial == 1) {
+                            tutorial(context);
+                          }
                         },
                         child: Opacity(
                           opacity: 0,
@@ -470,36 +486,11 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         ));
   }
 
-  void after_tutorial(AuthenticationService authService) {
-    // if (tutorial_like == 5 && authService.swipe_heart_tutorial == false) {
-    //   authService.swipe_heart_tutorial = true;
-    //   tutorial_like++;
-    //   var _storage = authService.storage;
-    //   _storage.write(key: 'swipe_heart_tutorial', value: 'true');
-
-    // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
-    //   elevation: 6.0,
-    //   behavior: SnackBarBehavior.floating,
-    //   duration: Duration(milliseconds: 3000),
-    //   backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
-    //   shape: RoundedRectangleBorder(
-    //       borderRadius: BorderRadius.all(Radius.circular(10))),
-    //   content: Row(children: [
-    //     Image.asset('assets/purple_star.png', width: 30),
-    //     Padding(
-    //         padding: EdgeInsets.all(8),
-    //         child: Text('사진의 좌우 영역을 탭해서\n 상품 상세이미지를 확인할 수 있습니다!')),
-    //   ]),
-    // ));
-    // }
-  }
-
   @override
   Widget build(BuildContext context) {
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => after_tutorial(authService));
+
     return Stack(
       children: <Widget>[
         backCard(context),
@@ -511,11 +502,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                 : frontCard(context, widget.model),
         dislikeOpacityWidget(),
         likeOpactiyWidget(),
-        tutorial_like < 5 &&
-                authService.swipe_heart_tutorial == false &&
-                authService.swipe_tutorial == false
-            ? tutorialTextWidget(tutorial_like)
-            : Container(),
         _controller.status != AnimationStatus.forward
             ? Align(
                 alignment: cardsAlign[0],
@@ -563,7 +549,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           // If the front card was swiped far enough to count as swiped
                           // String type =
                           //     Provider.of<SwipeService>(context, listen: false)
-                          //         .type;
+                          //         .type;x
                           int index =
                               Provider.of<SwipeService>(context, listen: false)
                                   .index;
@@ -586,10 +572,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             widget.model.likeRequest();
                             animateCards();
-                            flushList[1].dismiss(true);
-                            // ServiceView.scaffoldKey.currentState
-                            //     .hideCurrentSnackBar();
-
+                            if (authService.flush_tutorial == 0) {
+                              flushList[1].dismiss(true);
+                            }
                           } else if (frontCardAlign.x < STANDARD_LEFT) {
                             move_flag = true;
                             Stride.analytics
@@ -600,6 +585,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             widget.model.dislikeRequest();
                             animateCards();
+                            if (authService.flush_tutorial == 0) {
+                              flushList[1].dismiss(false);
+                            }
                           } else {
                             move_flag = false;
                             animateCards();

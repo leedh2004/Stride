@@ -28,47 +28,24 @@ class DressRoomFolderView extends StatelessWidget {
               model.getDressRoom();
               showWidget = LoadingWidget();
             } else {
-              // var items = Provider.of<DressRoomService>(context)
-              //     .items[model.current_folder];
               var folder = Provider.of<DressRoomService>(context).folder;
               var folderKeys = folder.keys.toList();
               var folderNames = folder.values.toList();
-              showWidget = Container(
-                  child: GridView.count(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8,
-                      mainAxisSpacing: 16,
-                      children: List.generate(folderNames.length, (index) {
-                        var items = Provider.of<DressRoomService>(context)
-                            .items[folderKeys[index]];
-                        if (folderKeys[index] == 0)
-                          folderNames[index] = "나의 드레스룸";
-                        return FolderTextButton(model, folderNames[index],
-                            folderKeys[index], items);
-                      })));
-
-              // showWidget = Container(
-              //   child: GridView.builder(
-              //     // shrinkWrap: true,
-              //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              //       crossAxisCount: 4,
-              //       childAspectRatio: 1.0,
-              //       mainAxisSpacing: 10.0,
-              //       crossAxisSpacing: 8.0,
-              //     ),
-              //     scrollDirection: Axis.horizontal,
-              //     itemCount: folderNames.length,
-              //     itemBuilder: (context, index) {
-              //       var folderName = folderNames[index];
-              //       if (folderName == 'default') folderName = '♥';
-              //       return FolderTextButton(
-              //           model,
-              //           folderName,
-              //           folderKeys[index],
-              //           folderKeys[index] != model.current_folder);
-              //     },
-              //   ),
-              // );
+              showWidget = Stack(children: [
+                Container(
+                    child: GridView.count(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8,
+                        mainAxisSpacing: 16,
+                        children: List.generate(folderNames.length, (index) {
+                          var items = Provider.of<DressRoomService>(context)
+                              .items[folderKeys[index]];
+                          if (folderKeys[index] == 0)
+                            folderNames[index] = "내가 찜한 옷";
+                          return FolderTextButton(model, folderNames[index],
+                              folderKeys[index], items);
+                        }))),
+              ]);
             }
             return showWidget;
           }

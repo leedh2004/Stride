@@ -13,6 +13,24 @@ Flushbar collection_flush = Flushbar(
       child: Image.asset('assets/purple_star.png', width: 26)),
 );
 
+Flushbar tutorial_restart_flush = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 2500),
+  isDismissible: false,
+  borderRadius: 8,
+  message: '튜토리얼을 다시 진행하시겠어요?',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+  mainButton: FlatButton(
+    onPressed: () {
+      tutorial_restart_flush.dismiss(true); // result = true
+    },
+    child: Text(
+      "다시 진행하기",
+      style: TextStyle(color: Colors.amber),
+    ),
+  ),
+);
+
 Flushbar help_flush = Flushbar(
   duration: Duration(milliseconds: 2000),
   margin: EdgeInsets.all(8),
@@ -50,7 +68,6 @@ List<Flushbar> flushList = [
         child: Image.asset('assets/stride_logo.png', width: 26)),
   ),
   Flushbar(
-    // duration: Duration(milliseconds: 1500),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -65,7 +82,7 @@ List<Flushbar> flushList = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 1500),
+    duration: Duration(milliseconds: 2000),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -79,7 +96,7 @@ List<Flushbar> flushList = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 1500),
+    duration: Duration(milliseconds: 2000),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -104,7 +121,7 @@ List<Flushbar> flushList = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 1500),
+    duration: Duration(milliseconds: 2000),
     margin: EdgeInsets.all(8),
     flushbarPosition: FlushbarPosition.TOP,
     isDismissible: false,
@@ -119,7 +136,7 @@ List<Flushbar> flushList = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 1500),
+    duration: Duration(milliseconds: 2000),
     margin: EdgeInsets.all(8),
     flushbarPosition: FlushbarPosition.TOP,
     isDismissible: false,
@@ -134,7 +151,7 @@ List<Flushbar> flushList = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 3000),
+    duration: Duration(milliseconds: 4000),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -183,7 +200,7 @@ List<Flushbar> flushList = [
     isDismissible: false,
     borderRadius: 8,
     messageText: Wrap(children: [
-      Text('이 곳에서 사이즈 정보, 색상등의 정보를 확인하실 수 있습니다!',
+      Text('좋아요! 이 곳에서 사이즈 정보, 색상 등의 정보를 확인하실 수 있습니다!',
           style: TextStyle(color: Colors.white, fontSize: 14)),
     ]),
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
@@ -192,7 +209,7 @@ List<Flushbar> flushList = [
 
 List<Flushbar> flushList2 = [
   Flushbar(
-    duration: Duration(milliseconds: 3000),
+    duration: Duration(milliseconds: 3500),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -200,15 +217,15 @@ List<Flushbar> flushList2 = [
       Text('상품을 구매하고 싶다면?\n',
           style: TextStyle(color: Colors.white, fontSize: 14)),
       Wrap(children: [
-        Text('카드 우측 하단의 ', style: TextStyle(color: Colors.white, fontSize: 14)),
         Padding(
           padding: EdgeInsets.only(right: 4),
           child: Image.asset(
             'assets/shopping-bag.png',
-            width: 20,
+            width: 18,
+            height: 18,
           ),
         ),
-        Text('을 눌러 구매 페이지로 이동할 수 있습니다.',
+        Text('을 눌러 구매 페이지로 이동할 수 있어요.',
             style: TextStyle(color: Colors.white, fontSize: 14)),
       ]),
     ]),
@@ -219,7 +236,7 @@ List<Flushbar> flushList2 = [
     isDismissible: false,
     borderRadius: 8,
     messageText: Text(
-      '카드의 오른쪽을 탭하면 같은 아이템의 다른 이미지를 보실 수 있어요! 한 번 탭해보시겠어요?',
+      '카드의 오른쪽 부분을 탭하면 같은 아이템의 다른 이미지를 보실 수 있어요! 한 번 탭해보시겠어요?',
       style: TextStyle(color: Colors.white),
     ),
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
@@ -229,7 +246,7 @@ List<Flushbar> flushList2 = [
     isDismissible: false,
     borderRadius: 8,
     messageText: Text(
-      '좋아요, 이번에는 카드의 왼쪽을 탭해보시겠어요?',
+      '좋아요, 이번에는 카드의 왼쪽 부분을 탭해보시겠어요?',
       style: TextStyle(color: Colors.white),
     ),
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
@@ -243,7 +260,7 @@ List<Flushbar> flushList2 = [
       style: TextStyle(color: Colors.white),
     ),
     messageText: Text(
-      '우측 상단에 필터설정 버튼을 탭 해보세요!',
+      '한 번 우측 상단에 필터설정 버튼을 탭 해보세요!',
       style: TextStyle(color: Colors.white),
     ),
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
@@ -260,7 +277,7 @@ List<Flushbar> flushList2 = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 3000),
+    duration: Duration(milliseconds: 2000),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
@@ -271,12 +288,12 @@ List<Flushbar> flushList2 = [
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   ),
   Flushbar(
-    duration: Duration(milliseconds: 3000),
+    duration: Duration(milliseconds: 4000),
     margin: EdgeInsets.all(8),
     isDismissible: false,
     borderRadius: 8,
     messageText: Text(
-      '화면 상단의 ? 버튼을 클릭하면 다시 튜토리얼로 돌아와, 스트라이드의 다양한 기능을 알아보실 수 있습니다!',
+      "화면 상단의 '?' 버튼을 클릭하면 다시 튜토리얼로 돌아와, 스트라이드의 다양한 기능을 알아보실 수 있습니다!",
       style: TextStyle(color: Colors.white),
     ),
     backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),

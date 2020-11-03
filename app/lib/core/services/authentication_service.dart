@@ -8,7 +8,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:uuid/uuid.dart';
 import 'api.dart';
 
 class AuthenticationService {
@@ -16,6 +15,12 @@ class AuthenticationService {
   Stream<StrideUser> get user => userController.stream;
   FlutterSecureStorage storage = new FlutterSecureStorage();
   StrideUser master;
+  bool init = false;
+  bool onTutorial = false;
+  int flush_tutorial = 0;
+  bool swipe_tutorial = false;
+  bool swipe_heart_tutorial = false;
+  bool dress_tutorial = false;
 
   void minusLike() {
     master.like--;
@@ -32,11 +37,6 @@ class AuthenticationService {
   void addDislike() {
     master.dislike++;
   }
-
-  bool init = false;
-  bool swipe_tutorial = false;
-  bool swipe_heart_tutorial = false;
-  bool dress_tutorial = false;
 
   Api api;
   final _firebaseAuth = FirebaseAuth.instance;
@@ -129,6 +129,14 @@ class AuthenticationService {
   Future<bool> login(String accessToken, String channel, String name) async {
     print("login()");
     try {
+      if (await storage.read(key: 'flush_tutorial') != null)
+        flush_tutorial = -1;
+      if (await storage.read(key: 'swipe_tutorial') != null)
+        swipe_tutorial = true;
+      if (await storage.read(key: 'swipe_heart_tutorial') != null)
+        swipe_heart_tutorial = true;
+      if (await storage.read(key: 'dress_tutorial') != null)
+        dress_tutorial = true;
       final response = await api.client.post('${Api.endpoint}/auth/token',
           data: jsonEncode({
             'access_token': accessToken,
@@ -184,28 +192,34 @@ class AuthenticationService {
 
   //예외적으로 try, catch 구문을 쓰지 않음.
   Future checkToken() async {
-    print('checkToken()');
     try {
       String token = await storage.read(key: 'jwt_token');
+      if (await storage.read(key: 'flush_tutorial') != null) {
+        flush_tutorial = -1;
+        print("WTF!!!!!!!!!@#!@##@#@!!@##@");
+      }
       if (await storage.read(key: 'swipe_tutorial') != null)
         swipe_tutorial = true;
       if (await storage.read(key: 'swipe_heart_tutorial') != null)
         swipe_heart_tutorial = true;
       if (await storage.read(key: 'dress_tutorial') != null)
         dress_tutorial = true;
+
       if (token == null) {
         init = true;
         return;
       }
+
       api.client.options.headers = {
         "Content-Type": "application/json",
         "Accept": "application/json",
         'Authorization': "Bearer ${token}",
       };
+
       final response = await api.client.get(
         '${Api.endpoint}/login/token',
       );
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
         await storage.delete(key: 'jwt_token');
         print(response.data);
@@ -224,7 +238,8 @@ class AuthenticationService {
             waist: size['waist'],
             hip: size['hip'],
             thigh: size['thigh']);
-        //뉴토큰으로 토큰 교체해줘야함.
+        master = user;
+        userController.add(user);
         await storage.write(key: 'jwt_token', value: response.data['token']);
         try {
           await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -237,8 +252,6 @@ class AuthenticationService {
           }
           init = true;
         }
-        master = user;
-        userController.add(user);
       } else {
         await storage.delete(key: 'jwt_token');
         print("토큰이 없거나 만료되었습니다");

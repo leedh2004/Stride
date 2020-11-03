@@ -1,3 +1,4 @@
+import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/core/viewmodels/views/recommend.dart';
 import 'package:app/ui/shared/app_colors.dart';
@@ -43,6 +44,9 @@ class _RecommendViewState extends State<RecommendView> {
       // if failed,use refreshFailed()
       _refreshController.refreshCompleted();
     }
+
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
 
     return Stack(children: [
       Scaffold(
@@ -353,23 +357,36 @@ class _RecommendViewState extends State<RecommendView> {
                   });
             }),
       ),
-      Container(
-        width: double.infinity,
-        height: double.infinity,
-        color: Colors.black54,
-        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          FaIcon(FontAwesomeIcons.lock, color: Colors.white),
-          SizedBox(
-            height: 24,
-          ),
-          Center(
-            child: Text(
-              '좋아요를 5개 이상하면 기능을 사용하실 수 있습니다.',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ]),
-      ),
+      authService.master.like < 5
+          ? Container(
+              width: double.infinity,
+              height: double.infinity,
+              color: Colors.black54,
+              child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    FaIcon(FontAwesomeIcons.lock, color: Colors.amber),
+                    SizedBox(
+                      height: 24,
+                    ),
+                    Center(
+                      child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              '좋아요를 5개 이상하면 기능을 사용하실 수 있습니다.',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            SizedBox(
+                              height: 8,
+                            ),
+                            Text("'좋아요'를 할수록, '좋아하는 옷'만 보입니다",
+                                style: TextStyle(color: Colors.white))
+                          ]),
+                    ),
+                  ]),
+            )
+          : Container()
     ]);
   }
 }

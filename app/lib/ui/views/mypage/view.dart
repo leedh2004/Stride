@@ -58,31 +58,26 @@ class MyPageView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        centerTitle: false,
+        title: Padding(
+          padding: EdgeInsets.fromLTRB(8, 8, 0, 0),
+          child: Text(
+            '마이페이지',
+            style: TextStyle(
+                color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+          ),
+        ),
+      ),
       body: Container(
         child: Column(
           children: [
-            Container(
-              width: double.infinity,
-              height: 200,
-              decoration: BoxDecoration(
-                  color: Color.fromRGBO(132, 115, 225, 1),
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(32),
-                      bottomRight: Radius.circular(32))),
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(12, 80, 12, 0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Stride\n\n실시간으로 평가 데이터를 분석해 \n스와이프 할수록 더 취향에 맞는 상품을 보여드립니다',
-                        style: TextStyle(color: Colors.white),
-                      )
-                    ]),
-              ),
-            ),
             Padding(
-              padding: EdgeInsets.only(left: 24, right: 24, top: 23),
+              padding:
+                  EdgeInsets.only(left: 24, right: 24, top: 24, bottom: 24),
               child: InkWell(
                 onTap: () => onTapSizeButton(context),
                 child: Container(
@@ -91,11 +86,21 @@ class MyPageView extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Color.fromRGBO(242, 240, 252, 1),
                       borderRadius: BorderRadius.circular(8)),
-                  child: Center(
-                      child: Text(
-                    '내 사이즈 수정하기',
-                    style: TextStyle(color: Color(0xFF8569EF)),
-                  )),
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          '내 사이즈 수정하기',
+                          style: TextStyle(color: Color(0xFF8569EF)),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Image.asset(
+                          'assets/name_edit.png',
+                          width: 12,
+                        )
+                      ]),
                 ),
               ),
             ),
@@ -104,16 +109,16 @@ class MyPageView extends StatelessWidget {
                 child: ListView(
                   children: [
                     myPageListTile('최근에 평가한 아이템', () => onTapRecent(context),
-                        backgroundColor),
+                        "assets/clean-clothes.png"),
+                    Divider(),
+                    myPageListTile('문의 / 건의하기', () => onTapHelp(context),
+                        "assets/email.png"),
+                    Divider(),
+                    myPageListTile('앱 설문조사', () => onTapFeedBack(context),
+                        "assets/chat.png"),
                     Divider(),
                     myPageListTile(
-                        '문의 / 건의하기', () => onTapHelp(context), gradientStart),
-                    Divider(),
-                    myPageListTile(
-                        '앱 설문조사', () => onTapFeedBack(context), gradientStart),
-                    Divider(),
-                    myPageListTile(
-                        '환경설정', () => onTapConfig(context), blueColor),
+                        '환경설정', () => onTapConfig(context), "assets/gear.png"),
                     //     '개인정보 처리방침', () => onTapPrivateInfo(context), blueColor)
                   ],
                 ),
