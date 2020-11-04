@@ -49,9 +49,9 @@ android {
         applicationId "kr.co.stride.app"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 17
+        versionCode 20
         // versionCode flutterVersionCode.toInteger()
-        versionName "1.4.0"
+        versionName "1.5.2"
         // versionName flutterVersionName
         multiDexEnabled true
     }

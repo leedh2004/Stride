@@ -1,5 +1,6 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/recommend/view.dart';
 import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/views/swipe/view.dart';
@@ -81,9 +82,13 @@ class _ServiceViewState extends State<ServiceView>
                 indicatorColor: Colors.transparent,
                 labelColor: Colors.black,
                 onTap: (index) {
-                  // if (authService.flush_tutorial == -1) {
-                  setState(() {});
-                  // }
+                  if (authService.flush_tutorial >= 0) {
+                    // disable_flush.show(context);
+                    _tabController.index = 0;
+                    // setState(() {
+                    // });
+                    return;
+                  }
                 },
                 // unselectedLabelColor: Colors.white,
                 tabs: <Widget>[

@@ -7,6 +7,7 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/flush.dart';
+import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/widgets/loading.dart';
 import 'package:app/ui/widgets/swipe/button_row.dart';
 import 'package:app/ui/widgets/swipe/card_gesture.dart';
@@ -45,9 +46,11 @@ class _SwipeViewState extends State<SwipeView> {
   }
 
   onTapDislikeButton(SwipeModel model) async {
+    if (onflag) return false;
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
-    if (onflag) return false;
+    if (authService.flush_tutorial == WAIT_SWIPE_BUTTON)
+      flushList[4].dismiss(false);
     onflag = true;
     Stride.analytics.logEvent(name: 'SWIPE_HATE_BUTTON_CLICKED');
     model.dislikeRequest();
@@ -60,12 +63,19 @@ class _SwipeViewState extends State<SwipeView> {
     });
     model.nextItem();
     onflag = false;
-    if (authService.flush_tutorial >= 0) flushList[4].dismiss(false);
   }
 
   onTapCollectButton(SwipeModel model) async {
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
     RecentItem item =
         Provider.of<SwipeService>(context, listen: false).items[model.index];
+    if (authService.flush_tutorial >= 0) {
+      if (authService.flush_tutorial == WAIT_COLLECTION_BUTTON)
+        flushList[8].dismiss(true);
+      else
+        return;
+    }
     model.addItem(item);
     collection_flush.show(context);
     if (onflag) return false;
@@ -84,9 +94,11 @@ class _SwipeViewState extends State<SwipeView> {
   }
 
   onTapLikeButton(SwipeModel model) async {
+    if (onflag) return false;
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
-    if (onflag) return false;
+    if (authService.flush_tutorial == WAIT_SWIPE_BUTTON)
+      flushList[4].dismiss(true);
     Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
     onflag = true;
     model.likeRequest();
@@ -100,7 +112,6 @@ class _SwipeViewState extends State<SwipeView> {
 
     model.nextItem();
     onflag = false;
-    if (authService.flush_tutorial >= 0) flushList[4].dismiss(true);
   }
 
   @override
@@ -161,6 +172,10 @@ class _SwipeViewState extends State<SwipeView> {
                       alignment: Alignment.topLeft,
                       child: InkWell(
                         onTap: () {
+                          if (authService.flush_tutorial >= 0) {
+                            // disable_flush.show(context);
+                            return;
+                          }
                           widget.tutorialRestart();
                         },
                         child: Padding(
@@ -178,14 +193,20 @@ class _SwipeViewState extends State<SwipeView> {
                   child: InkWell(
                     key: filterButton,
                     onTap: () async {
-                      if (authService.flush_tutorial == 1) {
-                        flushList2[3].dismiss(true);
+                      if (authService.flush_tutorial >= 0) {
+                        if (authService.flush_tutorial == WAIT_FILTER_BUTTON) {
+                          flushList2[3].dismiss(true);
+                        } else {
+                          // disable_flush.show(context);
+                          return;
+                        }
                       }
+
                       await Navigator.push(context,
                           MaterialPageRoute(builder: (context) {
                         return FilterBar(model, context);
                       }));
-                      if (authService.flush_tutorial == 1) {
+                      if (authService.flush_tutorial == TUTORIAL_END) {
                         authService.storage
                             .write(key: 'flush_tutorial', value: 'true');
                         authService.flush_tutorial = -1;

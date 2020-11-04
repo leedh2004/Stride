@@ -9,6 +9,7 @@ import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
+import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:app/ui/widgets/swipe/image.dart';
 import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
@@ -90,12 +91,23 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
         Provider.of<AuthenticationService>(context, listen: false);
     RecentItem item = Provider.of<SwipeService>(context, listen: false)
         .items[(widget.model.index)];
-    await flushList2[0].show(context);
-    if (authService.flush_tutorial == 1 && item.image_urls.length >= 2) {
+    if (authService.flush_tutorial == WAIT_PHASE2 &&
+        item.image_urls.length >= 2) {
       await flushList2[1].show(context);
       await flushList2[2].show(context);
     }
+    authService.flush_tutorial = WAIT_BUY_BUTTON;
+    await flushList2[0].show(context).then((value) async {
+      await nice_flush.show(context);
+    });
+  }
+
+  void tutorial2(context) async {
+    var authService =
+        Provider.of<AuthenticationService>(context, listen: false);
+    authService.flush_tutorial = WAIT_FILTER_BUTTON;
     await flushList2[3].show(context);
+    authService.flush_tutorial = TUTORIAL_END;
     await flushList2[4].show(context);
   }
 
@@ -307,8 +319,14 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     InkWell(
                         key: widget.rulerButton,
                         onTap: () async {
-                          if (authService.flush_tutorial == 0) {
-                            flushList[9].dismiss(true);
+                          if (authService.flush_tutorial >= 0) {
+                            if (authService.flush_tutorial ==
+                                WAIT_INFO_BUTTON) {
+                              flushList[9].dismiss(true);
+                            } else {
+                              // disable_flush.show(context);
+                              return;
+                            }
                           }
                           final result = await Navigator.push(context,
                               MaterialPageRoute<String>(
@@ -323,7 +341,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           } else if (await result == 'collect') {
                             onTapCollectionButton();
                           }
-                          if (authService.flush_tutorial == 1) {
+                          if (authService.flush_tutorial == WAIT_PHASE2) {
                             tutorial(context);
                           }
                         },
@@ -340,8 +358,16 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         key: widget.buyButton,
-                        onTap: () {
-                          Navigator.push(context,
+                        onTap: () async {
+                          if (authService.flush_tutorial >= 0) {
+                            if (authService.flush_tutorial == WAIT_BUY_BUTTON) {
+                              flushList2[0].dismiss(true);
+                            } else {
+                              // disable_flush.show(context);
+                              return;
+                            }
+                          }
+                          await Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
                             RecentItem item = Provider.of<SwipeService>(context)
                                 .items[model.index];
@@ -352,11 +378,14 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                   'itemName': item.product_name,
                                   'itemCategory': item.shop_name
                                 });
-
                             model.purchaseItem(item.product_id);
                             return ProductWebView(
                                 item.product_url, item.shop_name);
                           }));
+                          if (authService.flush_tutorial == WAIT_BUY_BUTTON) {
+                            authService.flush_tutorial = WAIT_PHASE3;
+                            tutorial2(context);
+                          }
                         },
                         child: Container(
                           width: 44,
@@ -572,7 +601,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             widget.model.likeRequest();
                             animateCards();
-                            if (authService.flush_tutorial == 0) {
+                            if (authService.flush_tutorial == WAIT_SWIPE) {
                               flushList[1].dismiss(true);
                             }
                           } else if (frontCardAlign.x < STANDARD_LEFT) {
@@ -585,7 +614,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                             });
                             widget.model.dislikeRequest();
                             animateCards();
-                            if (authService.flush_tutorial == 0) {
+                            if (authService.flush_tutorial == WAIT_SWIPE) {
                               flushList[1].dismiss(false);
                             }
                           } else {
@@ -603,7 +632,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                 HapticFeedback.mediumImpact();
                               });
                             } else {
-                              flushList2[1].dismiss(true);
+                              if (authService.flush_tutorial == WAIT_PHASE2)
+                                flushList2[1].dismiss(true);
                             }
                           } else {
                             if ((!widget.model.prevImage())) {
@@ -612,7 +642,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                                 HapticFeedback.mediumImpact();
                               });
                             } else {
-                              flushList2[2].dismiss(true);
+                              if (authService.flush_tutorial == WAIT_PHASE2)
+                                flushList2[2].dismiss(true);
                             }
                           }
                           // animateCards();
