@@ -162,13 +162,13 @@ def get_clothes_type_items_shown_to_user_from_db(user_id, clothes_type):
 
 
 def get_user_liked_shop_concepts_from_db(user_id):
-    shop_concepts_with_weight = {'basic': 0.3, 'daily': 0.3, 'simple': 0.6, 'chic': 0.7, 'street': 0.6, 'romantic': 0.7,
-                                 'unique': 0.8, 'sexy': 0.7, 'vintage': 0.7}
+    shop_concepts_with_weight = {'basic': 0.2, 'daily': 0.2, 'simple': 0.6, 'chic': 0.7, 'street': 0.6, 'romantic': 0.3,
+                                 'unique': 0.8, 'sexy': 0.4, 'vintage': 0.7}
     shop_concept_counts = {'basic': 0, 'daily': 0, 'simple': 0, 'chic': 0, 'street': 0,
                            'romantic': 0, 'unique': 0, 'sexy': 0, 'vintage': 0}
     db_cursor = conn.cursor()
     query = """select count(shop_id), shop_concept 
-    from (products join likes using (product_id)) join shop using (shop_id) 
+    from (products join evaluation e on products.product_id = e.product_id) join shop using (shop_id) 
     where user_id = %s group by shop_id, shop_concept;"""
     db_cursor.execute(query, (user_id,))
     results = db_cursor.fetchall()
@@ -295,6 +295,19 @@ def get_off_season_items():
                 items = db_cursor.fetchone()[0]
                 remove_items += items
             return remove_items
+        except Exception as e:
+            print(e)
+            conn.rollback()
+        finally:
+            db_cursor.close()
+
+
+def get_entire_users_from_db():
+    with conn.cursor() as db_cursor:
+        try:
+            query = """select array(select user_id from users)"""
+            db_cursor.execute(query)
+            return db_cursor.fetchone()[0]
         except Exception as e:
             print(e)
             conn.rollback()

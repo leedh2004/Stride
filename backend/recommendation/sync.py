@@ -19,4 +19,5 @@ with es_connect() as es_connection:
     # remove invalid items
     index.remove_invalid_items(es_connection)
 
-
+    # remove off_season items
+    main.remove_off_season_items(es_connection)

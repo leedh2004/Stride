@@ -73,7 +73,9 @@ def get_entire_types_item_recommendation(user_id, size_filter, es):
 
 # this function should be executed periodically to update user preferring shop concepts
 def update_user_preferred_shop_concepts():
-    users = queries.get_update_user_ids_from_db()
+    # users = queries.get_update_user_ids_from_db()
+    users = queries.get_entire_users_from_db()
+    print(users)
     print("updating shop concepts of users:", users)
     for user in users:
         concepts = queries.get_user_liked_shop_concepts_from_db(user)[:3]
@@ -91,7 +93,7 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
             terms_colors = {"terms": {"color": colors}}
             filter_conditions.append(terms_colors)
         if concepts:
-            terms_shop_concept = {"terms": {"shop_concept": concepts}}
+            terms_shop_concept = {"terms": {"shop_concept": concepts, "boost": 2.0}}
             filter_conditions.append(terms_shop_concept)
         if clothes_type and 'all' not in clothes_type:
             terms_clothes_type = {"terms": {"clothes_type": clothes_type}}
@@ -140,14 +142,13 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
         return result_product_ids
 
 
-def remove_off_season_items():
+def remove_off_season_items(es):
     remove_items = queries.get_off_season_items()
     if remove_items:
-        with es_connect() as es:
-            es.delete_by_query(index='products', body={
-                "query": {
-                    "terms": {
-                        "product_id": remove_items
-                    }
+        es.delete_by_query(index='products', body={
+            "query": {
+                "terms": {
+                    "product_id": remove_items
                 }
-            })
+            }
+        })
