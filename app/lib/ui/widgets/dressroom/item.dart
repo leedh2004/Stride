@@ -51,13 +51,9 @@ class DressRoomItemWidget extends StatelessWidget {
                       alignment: Alignment.bottomRight,
                       child: InkWell(
                         onTap: () {
-                          Stride.analytics.logEvent(
-                              name: 'DRESSROOM_ITEM_INFO_CLICKED',
-                              parameters: {
-                                'itemId': item.product_id.toString(),
-                                'itemName': item.product_name,
-                                'itemCategory': item.shop_name
-                              });
+                          Stride.logEvent(
+                            name: 'DRESSROOM_ITEM_INFO_CLICKED',
+                          );
                           Navigator.push(context, MaterialPageRoute<String>(
                               builder: (BuildContext context) {
                             return RecentDetailInfo(item, model, false);
@@ -110,13 +106,9 @@ class DressRoomItemWidget extends StatelessWidget {
                   onTap: () => {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
-                          Stride.analytics.logEvent(
-                              name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                              parameters: {
-                                'itemId': item.product_id.toString(),
-                                'itemName': item.product_name,
-                                'itemCategory': item.shop_name
-                              });
+                          Stride.logEvent(
+                            name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
+                          );
                           // 이 부분 코드는 나중에 수정해야할 듯.
                           Provider.of<SwipeService>(context, listen: false)
                               .purchaseItem(item.product_id);
@@ -191,7 +183,7 @@ class DressRoomItemWidget extends StatelessWidget {
   //               ),
   //               onPressed: () async {
   //                 if (opacity == 1) {
-  //                   Stride.analytics.logEvent(
+  //                   Stride.logEvent(
   //                       name: 'DRESSROOM_ITEM_INFO_CLICKED',
   //                       parameters: {
   //                         'itemId': item.product_id.toString(),
@@ -251,7 +243,7 @@ class DressRoomItemWidget extends StatelessWidget {
   //                   onTap: () => {
   //                     Navigator.push(context,
   //                         MaterialPageRoute(builder: (context) {
-  //                       Stride.analytics.logEvent(
+  //                       Stride.logEvent(
   //                           name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
   //                           parameters: {
   //                             'itemId': item.product_id.toString(),

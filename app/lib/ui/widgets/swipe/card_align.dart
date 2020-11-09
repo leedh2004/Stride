@@ -1,8 +1,11 @@
 import 'dart:io';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/swipe.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/views/swipe/info.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -13,11 +16,14 @@ import '../../../mapper.dart';
 class SwipeCardAlignment extends StatefulWidget {
   RecentItem item;
   int index;
-  List<dynamic> images = new List<dynamic>();
+  List<CachedNetworkImageProvider> images = new List();
+  List<CachedNetworkImage> imgs = new List();
   String concepts = "";
+  bool _isBackCard;
 
-  SwipeCardAlignment(RecentItem _item, int _index) {
+  SwipeCardAlignment(RecentItem _item, int _index, bool isBackCard) {
     item = _item;
+    _isBackCard = isBackCard;
     for (var i = 0; i < item.shop_concept.length; i++) {
       concepts += '#';
       concepts += item.shop_concept[i];
@@ -28,9 +34,18 @@ class SwipeCardAlignment extends StatefulWidget {
       index = item.length - 1;
     }
     for (int i = 0; i < item.image_urls.length; i++) {
-      images.add(Image.network(
+      images.add(CachedNetworkImageProvider(
         item.image_urls[i],
+        // placeholder: (context, url) => CircularProgressIndicator(
+        //   backgroundColor: backgroundColor,
+        // ),
         headers: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
+        // fit: BoxFit.cover,
+      ));
+      imgs.add(CachedNetworkImage(
+        imageUrl: item.image_urls[i],
+        placeholder: (context, url) => CupertinoActivityIndicator(),
+        httpHeaders: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
         fit: BoxFit.cover,
       ));
     }
@@ -44,14 +59,16 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
   //State는 폐기되지 않아
   @override
   void initState() {
-    print("INIT");
     // TODO: implement initState
     super.initState();
   }
 
   @override
   void didChangeDependencies() {
-    print("UPDATE");
+    print("DID CHANGE@@@@@");
+    for (int i = 0; i < widget.images.length; i++) {
+      precacheImage(widget.images[i], context);
+    }
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
   }
@@ -59,21 +76,18 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
   @override
   void didUpdateWidget(SwipeCardAlignment oldWidget) {
     // TODO: implement didUpdateWidget
-    // print("WTF!");
     super.didUpdateWidget(oldWidget);
+    // print("WTF!");
+    if (widget._isBackCard) {
+      print("BACK CARD UPDATE @@@@@@@@@@@@@@@@@@@@");
+      for (int i = 0; i < widget.images.length; i++) {
+        precacheImage(widget.images[i], context);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // print("BUILD");
-    Set precached = Provider.of<SwipeService>(context, listen: false).precached;
-    if (!precached.contains(widget.item.product_id)) {
-      for (int i = 0; i < widget.images.length; i++) {
-        precacheImage(widget.images[i].image, context);
-      }
-      precached.add(widget.item.product_id);
-    }
-
     return Container(
       padding: EdgeInsets.only(top: 30),
       child: Card(
@@ -91,7 +105,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       child: Hero(
                         tag: widget.item.product_id,
                         // tag: widget.item.image_urls[widget.index],
-                        child: widget.images[widget.index],
+                        child: widget.imgs[widget.index],
                       ))),
               Padding(
                 padding: EdgeInsets.only(top: 18),

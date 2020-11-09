@@ -91,10 +91,10 @@ class _LookBookFolderDialogState extends State<LookBookFolderDialog> {
               ListTile(
                 contentPadding: EdgeInsets.all(0),
                 onTap: () {
-                  if (widget.model.selectedIdx.isNotEmpty) {
-                    widget.model.moveFolder(folderIds[index]);
-                    Navigator.maybePop(context);
-                  }
+                  // if (widget.model.selectedIdx.isNotEmpty) {
+                  //   widget.model.moveFolder(folderIds[index]);
+                  //   Navigator.maybePop(context);
+                  // }
                 },
                 leading: index != 0
                     ? FlatButton(

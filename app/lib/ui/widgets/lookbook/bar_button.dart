@@ -65,7 +65,7 @@ class _LookBookButtonBarState extends State<LookBookButtonBar> {
                         child: SvgPicture.asset('images/folder.svg',
                             width: 25, height: 25),
                         onPressed: () {
-                          Stride.analytics.logEvent(
+                          Stride.logEvent(
                               name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                           showMaterialModalBottomSheet(
                               shape: RoundedRectangleBorder(
@@ -95,8 +95,8 @@ class _LookBookButtonBarState extends State<LookBookButtonBar> {
                       child: SvgPicture.asset('images/trash.svg',
                           width: 25, height: 25, semanticsLabel: 'Acme Logo'),
                       onPressed: () {
-                        Stride.analytics
-                            .logEvent(name: "DRESSROOM_REMOVE_BUTTON_CLICKED");
+                        Stride.logEvent(
+                            name: "DRESSROOM_REMOVE_BUTTON_CLICKED");
                         AwesomeDialog(
                             context: context,
                             dialogType: DialogType.ERROR,
@@ -114,8 +114,8 @@ class _LookBookButtonBarState extends State<LookBookButtonBar> {
                             btnCancelColor: gray,
                             btnCancelOnPress: () {},
                             btnOkOnPress: () {
-                              Provider.of<LookBookModel>(context, listen: false)
-                                  .removeItem();
+                              // Provider.of<LookBookModel>(context, listen: false)
+                              //     .removeItem();
                             })
                           ..show();
                       }),
@@ -143,8 +143,7 @@ class _LookBookButtonBarState extends State<LookBookButtonBar> {
                     child: SvgPicture.asset('images/folder.svg',
                         width: 25, height: 25),
                     onPressed: () {
-                      Stride.analytics
-                          .logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
+                      Stride.logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                       showMaterialModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context,

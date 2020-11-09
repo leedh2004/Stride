@@ -8,6 +8,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -142,6 +143,8 @@ class _RecentItemViewState extends State<RecentItemView> {
                                                 imageUrl: item
                                                     .compressed_thumbnail_url,
                                                 fit: BoxFit.cover,
+                                                placeholder: (context, url) =>
+                                                    CupertinoActivityIndicator(),
                                               ),
                                             ),
                                           ),

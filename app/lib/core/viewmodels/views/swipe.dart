@@ -93,6 +93,7 @@ class SwipeModel extends BaseModel {
     await _swipeService.nextItem();
     index = _swipeService.index;
     image_index = 0;
+    // notifyListeners();
   }
 
   void likeRequest() async {

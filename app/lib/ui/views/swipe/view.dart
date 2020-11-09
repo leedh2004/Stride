@@ -52,7 +52,7 @@ class _SwipeViewState extends State<SwipeView> {
     if (authService.flush_tutorial == WAIT_SWIPE_BUTTON)
       flushList[4].dismiss(false);
     onflag = true;
-    Stride.analytics.logEvent(name: 'SWIPE_HATE_BUTTON_CLICKED');
+    Stride.logEvent(name: 'SWIPE_HATE_BUTTON_CLICKED');
     model.dislikeRequest();
     setState(() {
       dislike_opacity = 1;
@@ -79,7 +79,7 @@ class _SwipeViewState extends State<SwipeView> {
     model.addItem(item);
     collection_flush.show(context);
     if (onflag) return false;
-    Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
+    Stride.logEvent(name: 'SWIPE_COLLECT_BUTTON_CLICKED');
     onflag = true;
     model.collectRequest();
     setState(() {
@@ -99,7 +99,7 @@ class _SwipeViewState extends State<SwipeView> {
         Provider.of<AuthenticationService>(context, listen: false);
     if (authService.flush_tutorial == WAIT_SWIPE_BUTTON)
       flushList[4].dismiss(true);
-    Stride.analytics.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
+    Stride.logEvent(name: 'SWIPE_LIKE_BUTTON_CLICKED');
     onflag = true;
     model.likeRequest();
     setState(() {
@@ -176,6 +176,9 @@ class _SwipeViewState extends State<SwipeView> {
                             // disable_flush.show(context);
                             return;
                           }
+                          Stride.logEvent(
+                              name: "SWIPE_TUTORIAL_RESTART_BUTTON_CLICKED");
+
                           widget.tutorialRestart();
                         },
                         child: Padding(
@@ -193,6 +196,7 @@ class _SwipeViewState extends State<SwipeView> {
                   child: InkWell(
                     key: filterButton,
                     onTap: () async {
+                      Stride.logEvent(name: "SWIPE_FILTER_BUTTON_CLICKED");
                       if (authService.flush_tutorial >= 0) {
                         if (authService.flush_tutorial == WAIT_FILTER_BUTTON) {
                           flushList2[3].dismiss(true);
@@ -206,7 +210,8 @@ class _SwipeViewState extends State<SwipeView> {
                           MaterialPageRoute(builder: (context) {
                         return FilterBar(model, context);
                       }));
-                      if (authService.flush_tutorial == TUTORIAL_END) {
+                      if (authService.flush_tutorial == WAIT_FILTER_BUTTON) {
+                        Stride.logEvent(name: "TUTORIAL_END");
                         authService.storage
                             .write(key: 'flush_tutorial', value: 'true');
                         authService.flush_tutorial = -1;

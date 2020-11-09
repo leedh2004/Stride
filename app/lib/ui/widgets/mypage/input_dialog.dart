@@ -8,6 +8,8 @@ import 'package:app/ui/widgets/mypage/input_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
+
 class SizeInputDialog extends StatefulWidget {
   StrideUser user;
   SizeInputDialog(this.user);
@@ -117,6 +119,7 @@ class _SizeInputDialogState extends State<SizeInputDialog> {
                 ),
                 onTap: () async {
                   print(_shoulderRange.value);
+                  Stride.logEvent(name: 'MYPAGE_SIZE_CHANGED');
                   if (await Provider.of<TutorialService>(context, listen: false)
                       .sendSize([
                     _waistRange,

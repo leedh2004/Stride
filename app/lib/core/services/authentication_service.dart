@@ -16,6 +16,7 @@ class AuthenticationService {
   FlutterSecureStorage storage = new FlutterSecureStorage();
   StrideUser master;
   bool init = false;
+  bool review = false;
   bool onTutorial = false;
   int flush_tutorial = 0;
   bool swipe_tutorial = false;
@@ -204,6 +205,7 @@ class AuthenticationService {
         swipe_heart_tutorial = true;
       if (await storage.read(key: 'dress_tutorial') != null)
         dress_tutorial = true;
+      if (await storage.read(key: 'review') != null) review = true;
 
       if (token == null) {
         init = true;

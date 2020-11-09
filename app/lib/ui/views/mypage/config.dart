@@ -14,14 +14,14 @@ class ConfigView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     onTapPrivateInfo(BuildContext context) {
-      Stride.analytics.logEvent(name: 'MYPAGE_PRIVATE_BUTTON_CLICKED');
+      Stride.logEvent(name: 'MYPAGE_PRIVATE_BUTTON_CLICKED');
       Navigator.push(context, MaterialPageRoute(builder: (context) {
         return PrivateWebView();
       }));
     }
 
     onTapLogout(BuildContext context) {
-      Stride.analytics.logEvent(name: 'MYPAGE_LOGOUT_BUTTON_CLICKED');
+      Stride.logEvent(name: 'MYPAGE_LOGOUT_BUTTON_CLICKED');
       Provider.of<SwipeService>(context, listen: false).init = false;
       Provider.of<DressRoomService>(context, listen: false).init = false;
       Provider.of<LookBookService>(context, listen: false).init = false;

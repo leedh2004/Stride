@@ -8,6 +8,7 @@ import 'package:app/ui/views/mypage/config.dart';
 import 'package:app/ui/views/private_web_view.dart';
 import 'package:app/ui/widgets/mypage/input_dialog.dart';
 import 'package:app/ui/widgets/mypage/list_tile.dart';
+import 'package:app/ui/widgets/swipe/card_gesture.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:provider/provider.dart';
@@ -18,20 +19,26 @@ import '../service_view.dart';
 
 class MyPageView extends StatelessWidget {
   onTapRecent(BuildContext context) {
+    Stride.logEvent(name: 'MYPAGE_GO_TO_RECENT_ITME_BUTTON_CLICKED');
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return RecentItemView();
     }));
   }
 
-  onTapFeedBack(BuildContext context) {
-    Stride.analytics.logEvent(name: 'MYPAGE_FEEDBACK_BUTTON_CLICKED');
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return FeedbackWebView();
-    }));
+  onTapFeedBack(BuildContext context) async {
+    Stride.logEvent(name: 'MYPAGE_FEEDBACK_BUTTON_CLICKED');
+    // Navigator.push(context, MaterialPageRoute(builder: (context) {
+    //   return FeedbackWebView();
+    // }));
+    if (await inAppReview.isAvailable()) {
+      inAppReview.requestReview();
+    } else {
+      ban_review_flush.show(context);
+    }
   }
 
   onTapHelp(BuildContext context) {
-    Stride.analytics.logEvent(name: 'MYPAGE_CONTACT_BUTTON_CLICKED');
+    Stride.logEvent(name: 'MYPAGE_HELP_BUTTON_CLICKED');
     // ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
     //   duration: Duration(milliseconds: 1500),
     //   content: Text('help.stride@gmail.com 으로 문의 부탁드립니다.'),
@@ -40,13 +47,14 @@ class MyPageView extends StatelessWidget {
   }
 
   onTapConfig(BuildContext context) {
+    Stride.logEvent(name: 'MYPAGE_CONFIGURE_BUTTON_CLICKED');
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return ConfigView();
     }));
   }
 
   onTapSizeButton(BuildContext context) {
-    Stride.analytics.logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
+    Stride.logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return SizeInputDialog(
           Provider.of<AuthenticationService>(context, listen: false)
@@ -114,7 +122,7 @@ class MyPageView extends StatelessWidget {
                     myPageListTile('문의 / 건의하기', () => onTapHelp(context),
                         "assets/email.png"),
                     Divider(),
-                    myPageListTile('앱 설문조사', () => onTapFeedBack(context),
+                    myPageListTile('앱 평가하기', () => onTapFeedBack(context),
                         "assets/chat.png"),
                     Divider(),
                     myPageListTile(

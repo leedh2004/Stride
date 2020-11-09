@@ -10,6 +10,7 @@ import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/views/service_view.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -30,12 +31,7 @@ class RecommendItemWidget extends StatelessWidget {
       margin: EdgeInsets.fromLTRB(0, 8, 12, 0),
       child: InkWell(
         onTap: () async {
-          Stride.analytics
-              .logEvent(name: 'DRESSROOM_ITEM_INFO_CLICKED', parameters: {
-            'itemId': item.product_id.toString(),
-            'itemName': item.product_name,
-            'itemCategory': item.shop_name
-          });
+          Stride.logEvent(name: 'RECOMMEND_ITEM_INFO_CLICKED');
           final result = Navigator.push(context,
               MaterialPageRoute<String>(builder: (BuildContext context) {
             return RecentDetailInfo(item, model, true);
@@ -57,9 +53,11 @@ class RecommendItemWidget extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: Hero(
                 tag: item.product_id,
-                child: Image.network(
-                  item.image_urls[0],
+                child: CachedNetworkImage(
+                  imageUrl: item.image_urls[0],
                   fit: BoxFit.cover,
+                  placeholder: (context, url) => CupertinoActivityIndicator(),
+
                   // httpHeaders: {
                   //   HttpHeaders.refererHeader: "http://api-stride.com:5000/"
                   // }
@@ -116,13 +114,9 @@ class RecommendItemWidget extends StatelessWidget {
                     onTap: () => {
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) {
-                            Stride.analytics.logEvent(
-                                name: 'RECOMMEND_PURCHASE_BUTTON_CLICKED',
-                                parameters: {
-                                  'itemId': item.product_id.toString(),
-                                  'itemName': item.product_name,
-                                  'itemCategory': item.shop_name
-                                });
+                            Stride.logEvent(
+                              name: 'RECOMMEND_PURCHASE_BUTTON_CLICKED',
+                            );
                             // 이 부분 코드는 나중에 수정해야할 듯.
                             Provider.of<SwipeService>(context, listen: false)
                                 .purchaseItem(item.product_id);

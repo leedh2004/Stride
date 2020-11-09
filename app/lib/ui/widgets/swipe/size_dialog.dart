@@ -343,7 +343,7 @@ class _SizeDialogState extends State<SizeDialog> {
 
 //   @override
 //   Widget build(BuildContext context) {
-//     Stride.analytics.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
+//     Stride.logEvent(name: "SWIPE_SHOW_SIZE", parameters: {
 //       'itemId': item.product_id.toString(),
 //       'itemName': item.product_name,
 //       'itemCategory': item.shop_name

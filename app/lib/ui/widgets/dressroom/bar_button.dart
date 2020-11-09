@@ -67,7 +67,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                         child: SvgPicture.asset('images/folder.svg',
                             width: 25, height: 25),
                         onPressed: () {
-                          Stride.analytics.logEvent(
+                          Stride.logEvent(
                               name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                           showMaterialModalBottomSheet(
                               shape: RoundedRectangleBorder(
@@ -100,8 +100,8 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                       child: SvgPicture.asset('images/trash.svg',
                           width: 25, height: 25, semanticsLabel: 'Acme Logo'),
                       onPressed: () {
-                        Stride.analytics
-                            .logEvent(name: "DRESSROOM_REMOVE_BUTTON_CLICKED");
+                        Stride.logEvent(
+                            name: "DRESSROOM_REMOVE_BUTTON_CLICKED");
                         AwesomeDialog(
                             context: context,
                             dialogType: DialogType.ERROR,
@@ -163,8 +163,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
                     child: SvgPicture.asset('images/folder.svg',
                         width: 25, height: 25),
                     onPressed: () {
-                      Stride.analytics
-                          .logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
+                      Stride.logEvent(name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                       showMaterialModalBottomSheet(
                           backgroundColor: Colors.transparent,
                           context: context,
@@ -359,7 +358,7 @@ class _DressRoomButtonBarState extends State<DressRoomButtonBar> {
           onPressed: () async {
             List<RecentItem> top = model.findSelectedTop();
             List<RecentItem> bottom = model.findSelectedBotoom();
-            Stride.analytics.logEvent(name: "DRESSROOM_MAKE_BUTTON_CLICKED");
+            Stride.logEvent(name: "DRESSROOM_MAKE_BUTTON_CLICKED");
             showMaterialModalBottomSheet(
                 backgroundColor: Colors.transparent,
                 expand: false,

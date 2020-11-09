@@ -14,6 +14,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import '../../../main.dart';
 import '../recent_item_view.dart';
 
 class RecommendView extends StatefulWidget {
@@ -39,6 +40,7 @@ class _RecommendViewState extends State<RecommendView> {
 
     void _onRefresh(RecommendationModel model) async {
       // monitor network fetch
+      Stride.logEvent(name: "RECOMMEND_REFRESH_PAGE");
       await model.initialize();
       // await Future.delayed(Duration(milliseconds: 1000));
       // if failed,use refreshFailed()
@@ -129,6 +131,9 @@ class _RecommendViewState extends State<RecommendView> {
                                         ),
                                         InkWell(
                                           onTap: () {
+                                            Stride.logEvent(
+                                                name:
+                                                    "RECOMMEND_GO_TO_RECENT_SEE_ITEM_BUTTON_CLICKED");
                                             Navigator.push(context,
                                                 MaterialPageRoute(
                                                     builder: (context) {
@@ -241,17 +246,30 @@ class _RecommendViewState extends State<RecommendView> {
                                   ),
                                   // '${name}님 취향의 ${model.collectionService.conceptA} 컨셉 아이템',
                                   UIHelper.verticalSpaceLarge,
-                                  Text(
-                                    '회원님을 위한\n추천 아이템',
-                                    style: headerStyle,
-                                  ),
+
+                                  select == 0
+                                      ? Text(
+                                          '스트라이드\n베스트 아이템',
+                                          style: headerStyle,
+                                        )
+                                      : Text(
+                                          '회원님을 위한\n추천 아이템',
+                                          style: headerStyle,
+                                        ),
                                   SizedBox(
                                     height: 16,
                                   ),
-                                  Text(
-                                    '회원님 취향에 맞는 아이템을 분석해 추천해드립니다.',
-                                    style: TextStyle(color: Color(0xff888C93)),
-                                  ),
+                                  select == 0
+                                      ? Text(
+                                          '스트라이드에서 지금 가장 인기있는 아이템을 만나보세요!',
+                                          style: TextStyle(
+                                              color: Color(0xff888C93)),
+                                        )
+                                      : Text(
+                                          '회원님 취향에 맞는 아이템을 분석해 추천해드립니다.',
+                                          style: TextStyle(
+                                              color: Color(0xff888C93)),
+                                        ),
 
                                   SizedBox(
                                     height: 16,
@@ -282,6 +300,9 @@ class _RecommendViewState extends State<RecommendView> {
                                                   ))
                                               : InkWell(
                                                   onTap: () {
+                                                    Stride.logEvent(
+                                                        name:
+                                                            'RECOMMEND_CHANGE_CONCEPT_BUTTON_CLICKED');
                                                     _controller.animateTo(0,
                                                         duration: Duration(
                                                             milliseconds: 500),

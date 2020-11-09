@@ -9,6 +9,8 @@ import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,8 @@ class RecentDetailInfo extends StatefulWidget {
   final RecentItem item;
   final RecentItemModel model;
   final bool show;
+  List<CachedNetworkImageProvider> images = new List();
+  List<CachedNetworkImage> imgs = new List();
   @override
   _RecentDetailInfoState createState() => _RecentDetailInfoState();
 }
@@ -37,10 +41,30 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
   bool haveResult = true;
 
   @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    print("DISOPSE!");
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    for (int i = 0; i < widget.item.image_urls.length; i++) {
+      widget.images.add(CachedNetworkImageProvider(
+        widget.item.image_urls[i],
+        headers: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
+      ));
+      widget.imgs.add(CachedNetworkImage(
+        imageUrl: widget.item.image_urls[i],
+        placeholder: (context, url) => CupertinoActivityIndicator(),
+        httpHeaders: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
+        fit: BoxFit.cover,
+      ));
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    for (int i = 0; i < widget.images.length; i++) {
+      precacheImage(widget.images[i], context);
+    }
   }
 
   @override
@@ -49,22 +73,6 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
     var item = widget.item;
     print(likes);
     if (likes == null) haveResult = false;
-    List<dynamic> images = new List<dynamic>();
-    for (int i = 0; i < widget.item.image_urls.length; i++) {
-      images.add(Image.network(
-        widget.item.image_urls[i],
-        headers: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
-        fit: BoxFit.cover,
-      ));
-    }
-
-    Set precached = Provider.of<SwipeService>(context, listen: false).precached;
-    if (!precached.contains(widget.item.product_id)) {
-      for (int i = 0; i < images.length; i++) {
-        precacheImage(images[i].image, context);
-      }
-      precached.add(widget.item.product_id);
-    }
 
     String concept = "";
     for (var i = 0; i < item.shop_concept.length; i++) {
@@ -112,14 +120,10 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                       }
                                     },
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.only(
-                                          bottomLeft: Radius.circular(32),
-                                          bottomRight: Radius.circular(32)),
-                                      child: Image.network(
-                                        item.image_urls[index],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
+                                        borderRadius: BorderRadius.only(
+                                            bottomLeft: Radius.circular(32),
+                                            bottomRight: Radius.circular(32)),
+                                        child: widget.imgs[index]),
                                   )),
                             ),
                             SizedBox(
@@ -237,18 +241,13 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     ])),
                                     InkWell(
                                       onTap: () {
+                                        Stride.logEvent(
+                                          name:
+                                              'RECOMMEND_PURCHASE_BUTTON_CLICKED',
+                                        );
                                         Navigator.push(context,
                                             MaterialPageRoute(
                                                 builder: (context) {
-                                          Stride.analytics.logEvent(
-                                              name:
-                                                  'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                                              parameters: {
-                                                'itemId':
-                                                    item.product_id.toString(),
-                                                'itemName': item.product_name,
-                                                'itemCategory': item.shop_name
-                                              });
                                           // 이 부분 코드는 나중��� 수정해야할 듯.
                                           Provider.of<SwipeService>(context,
                                                   listen: false)
@@ -357,6 +356,9 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                 !haveResult
                                     ? InkWell(
                                         onTap: () {
+                                          Stride.logEvent(
+                                              name:
+                                                  "RECOMMEND_DISLIKE_BUTTON_CLICKED");
                                           widget.model.dislikeRequest(
                                               widget.item.product_id);
                                           setState(() {
@@ -375,6 +377,10 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     : likes
                                         ? InkWell(
                                             onTap: () {
+                                              Stride.logEvent(
+                                                  name:
+                                                      "RECOMMEND_DISLIKE_BUTTON_CLICKED");
+
                                               widget.model
                                                   .revertAndDislikeRequest(
                                                       widget.item.product_id);
@@ -401,12 +407,21 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                           ),
                                 InkWell(
                                   onTap: () {
+                                    Stride.logEvent(
+                                        name:
+                                            "RECOMMEND_COLLECT_BUTTON_CLICKED");
+
                                     widget.model
                                         .collectRequest(widget.item.product_id);
                                     Provider.of<DressRoomService>(context,
                                             listen: false)
                                         .addItem(widget.item);
-                                    collection_flush.show(context);
+                                    setState(() {
+                                      haveResult = true;
+                                      widget.item.likes = true;
+                                      likes = true;
+                                    });
+                                    // collection_flush.show(context);
                                     // Scaffold.of(context).showSnackBar(SnackBar(
                                     //   elevation: 6.0,
                                     //   behavior: SnackBarBehavior.floating,
@@ -436,6 +451,10 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                 !haveResult
                                     ? InkWell(
                                         onTap: () {
+                                          Stride.logEvent(
+                                              name:
+                                                  "RECOMMEND_LIKE_BUTTON_CLICKED");
+
                                           widget.model.likeRequest(
                                               widget.item.product_id);
                                           setState(() {
@@ -454,6 +473,10 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                                     : !likes
                                         ? InkWell(
                                             onTap: () {
+                                              Stride.logEvent(
+                                                  name:
+                                                      "RECOMMEND_LIKE_BUTTON_CLICKED");
+
                                               widget.model.revertAndLikeRequest(
                                                   widget.item.product_id);
                                               setState(() {
@@ -494,7 +517,7 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                       width: 20,
                       height: 20,
                       child: Image.asset('assets/left-arrow.png',
-                          color: Colors.white),
+                          color: backgroundColor),
                     ),
                   ),
                 ),

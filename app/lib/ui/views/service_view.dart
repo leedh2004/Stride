@@ -106,7 +106,8 @@ class _ServiceViewState extends State<ServiceView>
                                   ),
                                   Text(
                                     '홈',
-                                    style: TextStyle(fontSize: 10),
+                                    style: TextStyle(
+                                        fontSize: 10, color: Color(0xFF8569EF)),
                                   )
                                 ])
                           : Column(
@@ -139,7 +140,8 @@ class _ServiceViewState extends State<ServiceView>
                                   ),
                                   Text(
                                     '아이템',
-                                    style: TextStyle(fontSize: 10),
+                                    style: TextStyle(
+                                        fontSize: 10, color: Color(0xFF8569EF)),
                                   )
                                 ])
                           : Column(
@@ -174,7 +176,8 @@ class _ServiceViewState extends State<ServiceView>
                                   ),
                                   Text(
                                     '드레스룸',
-                                    style: TextStyle(fontSize: 10),
+                                    style: TextStyle(
+                                        fontSize: 10, color: Color(0xFF8569EF)),
                                   )
                                 ])
                           : Column(
@@ -209,7 +212,8 @@ class _ServiceViewState extends State<ServiceView>
                                   ),
                                   Text(
                                     'MY',
-                                    style: TextStyle(fontSize: 10),
+                                    style: TextStyle(
+                                        fontSize: 10, color: Color(0xFF8569EF)),
                                   )
                                 ])
                           : Column(

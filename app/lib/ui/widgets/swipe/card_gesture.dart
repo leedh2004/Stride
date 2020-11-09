@@ -7,15 +7,14 @@ import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
 import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/product_web_view.dart';
-import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/views/swipe/info.dart';
 import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/widgets/swipe/card_align.dart';
 import 'package:app/ui/widgets/swipe/image.dart';
 import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
-import 'package:app/ui/widgets/swipe/tutorial.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:provider/provider.dart';
 
 import 'card_animation.dart';
@@ -29,6 +28,8 @@ List<Alignment> cardsAlign = [
 ];
 
 List<Size> cardsSize = List(3);
+
+const String APP_STORE_ID = "1531507804";
 
 class SwipeCardSection extends StatefulWidget {
   SwipeModel model;
@@ -65,6 +66,8 @@ class SwipeCardSection extends StatefulWidget {
   _SwipeCardSectionState createState() => _SwipeCardSectionState();
 }
 
+final InAppReview inAppReview = InAppReview.instance;
+
 class _SwipeCardSectionState extends State<SwipeCardSection>
     with SingleTickerProviderStateMixin {
   List<SwipeCardAlignment> cards = List();
@@ -74,7 +77,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
   Animation _animation;
 
   int tutorial_like = 0;
-
+  int cnt = 1;
   int index = 0;
   bool move_flag = false;
   bool left_effect = false;
@@ -85,6 +88,20 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
 
   double frontCardRot = 0.0;
   List<double> _opacity = [0, 0];
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    print("DIDCHANGE!!!!!!!!!!!!!!!!!!!!!!@#@!#!@#!@");
+  }
+
+  @override
+  void didUpdateWidget(covariant SwipeCardSection oldWidget) {
+    // TODO: implement didUpdateWidget
+    super.didUpdateWidget(oldWidget);
+    print("DID UPDATE!!!!!@#!@#!@#!@#!@#");
+  }
 
   void tutorial(context) async {
     var authService =
@@ -98,7 +115,12 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     }
     authService.flush_tutorial = WAIT_BUY_BUTTON;
     await flushList2[0].show(context).then((value) async {
-      await nice_flush.show(context);
+      if (value == null) {
+        authService.flush_tutorial = -1;
+        ban_tutorial_end.show(context);
+      } else {
+        await nice_flush.show(context);
+      }
     });
   }
 
@@ -106,9 +128,15 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
     authService.flush_tutorial = WAIT_FILTER_BUTTON;
-    await flushList2[3].show(context);
-    authService.flush_tutorial = TUTORIAL_END;
-    await flushList2[4].show(context);
+    await flushList2[3].show(context).then((value) async {
+      if (value == null) {
+        authService.flush_tutorial = -1;
+        ban_tutorial_end.show(context);
+      } else {
+        await flushList2[4].show(context);
+        // authService.flush_tutorial = TUTORIAL_END;
+      }
+    });
   }
 
   @override
@@ -166,7 +194,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               ? CardsAnimation.backCardSizeAnim(_controller, frontCardAlign)
                   .value
               : cardsSize[2],
-          child: SwipeCardAlignment(item, 0)),
+          child: SwipeCardAlignment(item, 0, true)),
     );
   }
 
@@ -188,7 +216,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               ? CardsAnimation.middleCardSizeAnim(_controller, frontCardAlign)
                   .value
               : cardsSize[1],
-          child: SwipeCardAlignment(item, 0)),
+          child: SwipeCardAlignment(item, 0, false)),
     );
   }
 
@@ -211,7 +239,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
           angle: (pi / 180.0) * frontCardRot,
           child: SizedBox.fromSize(
               size: cardsSize[0],
-              child: SwipeCardAlignment(item, model.image_index)),
+              child: SwipeCardAlignment(item, model.image_index, false)),
         ));
   }
 
@@ -248,7 +276,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     angle: (pi / 180.0) * frontCardRot,
                     child: SizedBox.fromSize(
                         size: cardsSize[0],
-                        child: SwipeCardAlignment(item, model.image_index)),
+                        child:
+                            SwipeCardAlignment(item, model.image_index, false)),
                   )));
         });
   }
@@ -285,7 +314,8 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     angle: (pi / 180.0) * frontCardRot,
                     child: SizedBox.fromSize(
                         size: cardsSize[0],
-                        child: SwipeCardAlignment(item, model.image_index)),
+                        child:
+                            SwipeCardAlignment(item, model.image_index, false)),
                   )));
         });
   }
@@ -319,10 +349,12 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                     InkWell(
                         key: widget.rulerButton,
                         onTap: () async {
+                          Stride.logEvent(name: "SWIPE_INFO_BUTTON_CLICKED");
                           if (authService.flush_tutorial >= 0) {
                             if (authService.flush_tutorial ==
                                 WAIT_INFO_BUTTON) {
                               flushList[9].dismiss(true);
+                              authService.flush_tutorial = WAIT_PHASE2;
                             } else {
                               // disable_flush.show(context);
                               return;
@@ -371,13 +403,9 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                               MaterialPageRoute(builder: (context) {
                             RecentItem item = Provider.of<SwipeService>(context)
                                 .items[model.index];
-                            Stride.analytics.logEvent(
-                                name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
-                                parameters: {
-                                  'itemId': item.product_id.toString(),
-                                  'itemName': item.product_name,
-                                  'itemCategory': item.shop_name
-                                });
+                            Stride.logEvent(
+                              name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
+                            );
                             model.purchaseItem(item.product_id);
                             return ProductWebView(
                                 item.product_url, item.shop_name);
@@ -398,81 +426,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
               ),
             ),
           ),
-          // child: Align(
-          //   alignment: Alignment.bottomRight,
-          //   child: Row(
-          //       mainAxisAlignment: MainAxisAlignment.end,
-          //       mainAxisSize: MainAxisSize.max,
-          //       children: [
-          //         Padding(
-          //           padding: EdgeInsets.fromLTRB(0, 0, 0, 25),
-          //           child: IconButton(
-          //             key: widget.buyButton,
-          //             icon: Container(
-          //               width: 50,
-          //               height: 50,
-          //               decoration: BoxDecoration(
-          //                   color: Colors.transparent,
-          //                   borderRadius: BorderRadius.circular(25)),
-          //               child: Center(
-          //                 child: FaIcon(FontAwesomeIcons.shoppingCart,
-          //                     size: 15, color: Colors.transparent),
-          //               ),
-          //             ),
-          //             onPressed: () {
-          //               Navigator.push(context,
-          //                   MaterialPageRoute(builder: (context) {
-          //                 RecentItem item = Provider.of<SwipeService>(context)
-          //                     .items[model.index];
-          //                 Stride.analytics.logEvent(
-          //                     name: 'SWIPE_PURCHASE_BUTTON_CLICKED',
-          //                     parameters: {
-          //                       'itemId': item.product_id.toString(),
-          //                       'itemName': item.product_name,
-          //                       'itemCategory': item.shop_name
-          //                     });
-
-          //                 model.purchaseItem(item.product_id);
-          //                 return ProductWebView(
-          //                     item.product_url, item.shop_name);
-          //               }));
-          //             },
-          //           ),
-          //         ),
-          //         Padding(
-          //           padding: EdgeInsets.fromLTRB(0, 0, 25, 20),
-          //           child: IconButton(
-          //             key: widget.rulerButton,
-          //             icon: Container(
-          //               width: 50,
-          //               height: 50,
-          //               decoration: BoxDecoration(
-          //                   color: Colors.transparent,
-          //                   borderRadius: BorderRadius.circular(25)),
-          //               child: Center(
-          //                 child: FaIcon(FontAwesomeIcons.info,
-          //                     size: 15, color: Colors.transparent),
-          //               ),
-          //             ),
-          //             onPressed: () async {
-          //               final result = await Navigator.push(context,
-          //                   MaterialPageRoute<String>(
-          //                       builder: (BuildContext context) {
-          //                 return DetailInfo(model);
-          //               }));
-          //               if (await result == 'like') {
-          //                 onTapLikeButton();
-          //                 tutorial_like++;
-          //               } else if (await result == 'dislike') {
-          //                 onTapDislikeButton();
-          //               } else if (await result == 'collect') {
-          //                 onTapCollectionButton();
-          //               }
-          //             },
-          //           ),
-          //         ),
-          //       ]),
-          // ),
         ));
   }
 
@@ -574,11 +527,20 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           });
                         },
                         // When releasing the first card
-                        onPanEnd: (_) {
+                        onPanEnd: (_) async {
                           // If the front card was swiped far enough to count as swiped
                           // String type =
                           //     Provider.of<SwipeService>(context, listen: false)
                           //         .type;x
+                          if (!authService.review && cnt % 15 == 0) {
+                            print("!!");
+                            if (await inAppReview.isAvailable()) {
+                              inAppReview.requestReview();
+                            }
+                            authService.review = true;
+                            authService.storage
+                                .write(key: 'review', value: 'true');
+                          }
                           int index =
                               Provider.of<SwipeService>(context, listen: false)
                                   .index;
@@ -591,27 +553,18 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                           });
                           // Send result reqeust to server
                           if (frontCardAlign.x > STANDARD_RIGHT) {
-                            tutorial_like++;
+                            cnt++;
                             move_flag = true;
-                            Stride.analytics
-                                .logEvent(name: 'LIKE', parameters: {
-                              'itemId': item.product_id.toString(),
-                              'itemName': item.product_name,
-                              'itemCategory': item.shop_name
-                            });
+                            Stride.logEvent(name: 'LIKE');
                             widget.model.likeRequest();
                             animateCards();
                             if (authService.flush_tutorial == WAIT_SWIPE) {
                               flushList[1].dismiss(true);
                             }
                           } else if (frontCardAlign.x < STANDARD_LEFT) {
+                            cnt++;
                             move_flag = true;
-                            Stride.analytics
-                                .logEvent(name: 'DISLIKE', parameters: {
-                              'itemId': item.product_id.toString(),
-                              'itemName': item.product_name,
-                              'itemCategory': item.shop_name
-                            });
+                            Stride.logEvent(name: 'DISLIKE');
                             widget.model.dislikeRequest();
                             animateCards();
                             if (authService.flush_tutorial == WAIT_SWIPE) {

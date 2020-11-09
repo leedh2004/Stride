@@ -193,10 +193,10 @@ class DressRoomService {
       if (folderId == current_folder) {
         current_folder = 0;
       }
-      final response = await _api.client
-          .delete('${Api.endpoint}/v2/dressroom/folder?folder_id=${folderId}');
       folder.remove(folderId);
       items.remove(folderId);
+      final response = await _api.client
+          .delete('${Api.endpoint}/v2/dressroom/folder?folder_id=${folderId}');
       return true;
     } catch (e) {
       _api.errorCreate(Error());

@@ -100,9 +100,9 @@ class FolderLookBookTextButton extends StatelessWidget {
     return InkWell(
         onTap: () {
           model.changeFolder(folderKey);
-          Stride.analytics.logEvent(name: "DRESSROOM_FOLDER_CHANGE");
+          Stride.logEvent(name: "LOOKBOOK_FOLDER_CHANGE");
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return LookBookItemView(folderName);
+            return LookBookItemView();
           }));
         },
         child: Stack(children: [
@@ -112,21 +112,17 @@ class FolderLookBookTextButton extends StatelessWidget {
                     ? threeImg()
                     : items.length > 0
                         ? twoImg()
-                        // ClipRRect(
-                        //     borderRadius: BorderRadius.circular(8),
-                        //     child: Container(
-                        //       width: double.infinity,
-                        //       height: double.infinity,
-                        //       child: CachedNetworkImage(
-                        //         imageUrl: items[0].thumbnail_url,
-                        //         fit: BoxFit.cover,
-                        //       ),
-                        //     ),
-                        //   )
                         : Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
-                                color: Color(0xFFFAF9FC)),
+                                color: Color(0xFFFAF9FC),
+                                border: Border.all(color: Color(0xFFF4F4FC))),
+                            child: Center(
+                              child: Image.asset(
+                                'assets/folder.png',
+                                width: 35,
+                              ),
+                            ),
                           )),
             SizedBox(
               height: 16,

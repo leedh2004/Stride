@@ -6,14 +6,13 @@ import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
-import 'package:app/ui/views/collection/view.dart';
 import 'package:app/ui/views/product_web_view.dart';
-import 'package:app/ui/views/recent_info.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../../../main.dart';
@@ -39,6 +38,13 @@ class _LookBookInfoState extends State<LookBookInfo> {
   int index = 0;
   bool likes;
   bool haveResult = true;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    print("??????????");
+  }
 
   @override
   void dispose() {
@@ -80,6 +86,19 @@ class _LookBookInfoState extends State<LookBookInfo> {
       ),
       child: Scaffold(
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          iconTheme: IconThemeData(
+            color: Colors.black, //change your color here
+          ),
+          backgroundColor: Colors.white,
+          elevation: 0,
+          centerTitle: true,
+          title: Text(
+            '${item.product_name}',
+            style: TextStyle(
+                color: Colors.black, fontSize: 14, fontWeight: FontWeight.w700),
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
               physics: ClampingScrollPhysics(),
@@ -93,6 +112,9 @@ class _LookBookInfoState extends State<LookBookInfo> {
                           alignment: Alignment.centerRight,
                           child: InkWell(
                             onTap: () {
+                              Stride.logEvent(
+                                name: 'LOOKBOOK_CHANGE_TOP_TYPE_BUTTON_CLICKED',
+                              );
                               setState(() {
                                 page = 0;
                                 index = 0;
@@ -100,10 +122,31 @@ class _LookBookInfoState extends State<LookBookInfo> {
                             },
                             child: Padding(
                               padding: EdgeInsets.all(12),
-                              child: Text('상의',
-                                  style: page == 0
-                                      ? currentStyle
-                                      : notCurrentStyle),
+                              child: Container(
+                                width: 82,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: page == 0
+                                        ? Color(0xFF8569EF)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: page == 0
+                                            ? Colors.transparent
+                                            : Color(0xFF888C93))),
+                                child: Center(
+                                  child: Text('상의',
+                                      style: page == 0
+                                          ? TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700)
+                                          : TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF888C93),
+                                              fontWeight: FontWeight.w700)),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -114,6 +157,10 @@ class _LookBookInfoState extends State<LookBookInfo> {
                           alignment: Alignment.centerLeft,
                           child: InkWell(
                             onTap: () {
+                              Stride.logEvent(
+                                name:
+                                    'LOOKBOOK_CHANGE_BOTTOM_TYPE_BUTTON_CLICKED',
+                              );
                               setState(() {
                                 page = 1;
                                 index = 0;
@@ -121,10 +168,31 @@ class _LookBookInfoState extends State<LookBookInfo> {
                             },
                             child: Padding(
                               padding: EdgeInsets.all(12),
-                              child: Text('하의',
-                                  style: page == 1
-                                      ? currentStyle
-                                      : notCurrentStyle),
+                              child: Container(
+                                width: 82,
+                                height: 30,
+                                decoration: BoxDecoration(
+                                    color: page == 1
+                                        ? Color(0xFF8569EF)
+                                        : Colors.transparent,
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(
+                                        color: page == 1
+                                            ? Colors.transparent
+                                            : Color(0xFF888C93))),
+                                child: Center(
+                                  child: Text('하의',
+                                      style: page == 1
+                                          ? TextStyle(
+                                              fontSize: 12,
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w700)
+                                          : TextStyle(
+                                              fontSize: 12,
+                                              color: Color(0xFF888C93),
+                                              fontWeight: FontWeight.w700)),
+                                ),
+                              ),
                             ),
                           ),
                         ),
@@ -137,12 +205,13 @@ class _LookBookInfoState extends State<LookBookInfo> {
                           height: MediaQuery.of(context).size.height * 0.75,
                           child: Hero(
                               tag: item.product_id,
-                              // tag: item.image_urls[index],
+                              // tag: item.image_urls[model.image_index],
                               child: GestureDetector(
                                 onTapUp: (details) {
                                   double standard =
                                       MediaQuery.of(context).size.width / 2;
                                   if (standard < details.globalPosition.dx) {
+                                    // model.nextImage();
                                     if (index < item.image_urls.length - 1) {
                                       setState(() {
                                         index++;
@@ -154,196 +223,327 @@ class _LookBookInfoState extends State<LookBookInfo> {
                                         index--;
                                       });
                                     }
+                                    // model.prevImage();
                                   }
                                 },
-                                child: Image.network(
-                                  item.image_urls[index],
-                                  fit: BoxFit.cover,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(32),
+                                      bottomRight: Radius.circular(32)),
+                                  child: CachedNetworkImage(
+                                    imageUrl: item.image_urls[index],
+                                    placeholder: (context, url) =>
+                                        CupertinoActivityIndicator(),
+                                    // item.image_urls[model.image_index],
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               )),
-                        ),
-                        Align(
-                          alignment: Alignment.topLeft,
-                          child: Row(
-                              children:
-                                  List.generate(item.image_urls.length, (idx) {
-                            if (item.image_urls.length == 1) return Container();
-                            return idx == index
-                                ? Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                      height: 5,
-                                    ),
-                                  )
-                                : Expanded(
-                                    child: Container(
-                                      padding: EdgeInsets.only(top: 10),
-                                      decoration: BoxDecoration(
-                                          color: Colors.black12,
-                                          borderRadius:
-                                              BorderRadius.circular(10)),
-                                      margin: EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                      height: 5,
-                                    ),
-                                  );
-                          })),
                         ),
                         SizedBox(
                           height:
-                              MediaQuery.of(context).size.height * 0.75 + 25,
+                              MediaQuery.of(context).size.height * 0.75 - 30,
                           child: Align(
-                              alignment: Alignment.bottomRight,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 40),
-                                child: Container(
-                                  width: 50,
-                                  height: 50,
-                                  child: RaisedButton(
-                                      onPressed: () {
-                                        Navigator.maybePop(context);
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(25.0)),
-                                      padding: EdgeInsets.all(0),
-                                      child: Ink(
-                                        decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              colors: [
-                                                gradientStart,
-                                                backgroundColor
-                                              ],
-                                              begin: Alignment.topCenter,
-                                              end: Alignment.bottomCenter,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(25.0)),
-                                        child: Container(
-                                            width: 50,
-                                            height: 50,
-                                            alignment: Alignment.center,
-                                            child: FaIcon(
-                                              FontAwesomeIcons.arrowDown,
+                            alignment: Alignment.bottomCenter,
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(item.image_urls.length,
+                                    (idx) {
+                                  if (item.image_urls.length == 1)
+                                    return Container();
+                                  return idx == index
+                                      ? Container(
+                                          width: 24,
+                                          decoration: BoxDecoration(
                                               color: Colors.white,
-                                            )),
-                                      )),
-                                ),
-                              )),
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          margin:
+                                              EdgeInsets.fromLTRB(2, 5, 2, 0),
+                                          height: 4,
+                                        )
+                                      : Container(
+                                          width: 24,
+                                          padding: EdgeInsets.only(top: 10),
+                                          decoration: BoxDecoration(
+                                              color: Color.fromRGBO(
+                                                  255, 255, 255, 0.5),
+                                              borderRadius:
+                                                  BorderRadius.circular(4)),
+                                          margin:
+                                              EdgeInsets.fromLTRB(2, 5, 2, 0),
+                                          height: 4,
+                                        );
+                                })),
+                          ),
                         ),
                       ]),
                     ),
+                    // Padding(
+                    //   padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
+                    //   child: Column(
+                    //     crossAxisAlignment: CrossAxisAlignment.start,
+                    //     children: [
+                    //       Row(
+                    //         children: [
+                    //           Text(item.shop_name, style: shopNameStyle),
+                    //           UIHelper.horizontalSpaceSmall,
+                    //           Text('${concept}', style: conceptStyle),
+                    //         ],
+                    //       ),
+                    //       // Text(item.shop_name, style: shopNameStyle),
+                    //       // UIHelper.verticalSpaceSmall,
+                    //       // Text('#데일리 #스트릿', style: conceptStyle),
+                    //       Text(item.product_name, style: shopNameStyle),
+
+                    //       // UIHelper.verticalSpaceSmall,
+                    //       // Text('종류: ${typeConverter[item.type]}',
+                    //       //     style: titleStyle),
+                    //       UIHelper.verticalSpaceSmall,
+                    //       Row(
+                    //         children: [
+                    //           Text('${typeConverter[item.type]}',
+                    //               style: titleStyle),
+                    //           UIHelper.horizontalSpaceSmall,
+                    //           Text(
+                    //             '${item.price}원',
+                    //             style: titleStyle,
+                    //           ),
+                    //         ],
+                    //       ),
+                    //       UIHelper.verticalSpaceSmall,
+                    //       item.clustered_color != null &&
+                    //               item.origin_color != null
+                    //           ? Wrap(children: [
+                    //               ...List.generate(
+                    //                 item.clustered_color.length,
+                    //                 (index) => Padding(
+                    //                   padding: EdgeInsets.only(right: 4),
+                    //                   child: CircleColorWidget(
+                    //                       item.clustered_color[index]),
+                    //                 ),
+                    //               ),
+                    //               UIHelper.horizontalSpaceSmall,
+                    //               ...List.generate(
+                    //                   item.origin_color.length,
+                    //                   (index) => index ==
+                    //                           item.origin_color.length - 1
+                    //                       ? Padding(
+                    //                           padding:
+                    //                               EdgeInsets.only(right: 4),
+                    //                           child: Text(
+                    //                               '${item.origin_color[index]}'))
+                    //                       : Padding(
+                    //                           padding:
+                    //                               EdgeInsets.only(right: 4),
+                    //                           child: Text(
+                    //                               '${item.origin_color[index]},')))
+                    //             ])
+                    //           : Container(),
+
+                    //       //Text('사이즈 정보'),
+                    //       UIHelper.verticalSpaceSmall,
+                    //       // Text(item.product_name, style: titleStyle),
+                    //       // Text(
+                    //       //   '${item.price}원',
+                    //       //   style: priceStyle,
+                    //       // ),
+                    //       //Text('사이즈 정보'),
+                    //       // UIHelper.verticalSpaceMedium,
+                    //     ],
+                    //   ),
+                    // ),
+                    // Padding(
+                    //     padding: EdgeInsets.all(16), child: SizeDialog(item)),
+                    // Padding(
+                    //   padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
+                    //   child: Center(
+                    //     child: InkWell(
+                    //       onTap: () {
+                    //         Stride.logEvent(
+                    //           name: 'LOOKBOOK_PURCHASE_BUTTON_CLICKED',
+                    //         );
+                    //         Navigator.push(context,
+                    //             MaterialPageRoute(builder: (context) {
+                    //           // 이 부분 코드는 나중에 수정해야할 듯.
+                    //           Provider.of<SwipeService>(context, listen: false)
+                    //               .purchaseItem(item.product_id);
+                    //           return ProductWebView(
+                    //               item.product_url, item.shop_name);
+                    //         }));
+                    //       },
+                    //       child: Container(
+                    //         width: 300,
+                    //         height: 50,
+                    //         decoration: BoxDecoration(
+                    //             color: backgroundColor,
+                    //             borderRadius: BorderRadius.circular(25)),
+                    //         child: Center(child: Text('구매하기', style: buyStyle)),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     Padding(
                       padding: EdgeInsets.fromLTRB(16, 0, 16, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Row(
-                            children: [
-                              Text(item.shop_name, style: shopNameStyle),
-                              UIHelper.horizontalSpaceSmall,
-                              Text('${concept}', style: conceptStyle),
-                            ],
+                          SizedBox(
+                            height: 27,
                           ),
-                          // Text(item.shop_name, style: shopNameStyle),
-                          // UIHelper.verticalSpaceSmall,
-                          // Text('#데일리 #스트릿', style: conceptStyle),
-                          Text(item.product_name, style: shopNameStyle),
-
-                          // UIHelper.verticalSpaceSmall,
-                          // Text('종류: ${typeConverter[item.type]}',
-                          //     style: titleStyle),
-                          UIHelper.verticalSpaceSmall,
+                          Text(item.shop_name,
+                              style: TextStyle(
+                                  color: Color(0xFF888C93),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13)),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Text(item.product_name,
+                              style: TextStyle(
+                                  color: Color(0xFF2B3341),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 18)),
+                          SizedBox(
+                            height: 8,
+                          ),
                           Row(
                             children: [
-                              Text('${typeConverter[item.type]}',
-                                  style: titleStyle),
-                              UIHelper.horizontalSpaceSmall,
-                              Text(
-                                '${item.price}원',
-                                style: titleStyle,
+                              Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: Color(0xFF8569EF)),
+                                  child: Padding(
+                                    padding: EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                    child: Text(
+                                      '${typeConverter[item.type]}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white),
+                                    ),
+                                  )),
+                              SizedBox(
+                                width: 8,
                               ),
+                              Text(
+                                concept,
+                                style: TextStyle(
+                                    color: Color(0xFF616576),
+                                    fontWeight: FontWeight.w700,
+                                    fontSize: 10),
+                              )
                             ],
                           ),
-                          UIHelper.verticalSpaceSmall,
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                RichText(
+                                    text: TextSpan(children: [
+                                  TextSpan(
+                                    text: '${item.price}',
+                                    style: TextStyle(
+                                        fontSize: 26,
+                                        fontWeight: FontWeight.w700,
+                                        color: Color(0xFF2B3341)),
+                                  ),
+                                  TextSpan(
+                                      text: ' 원',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 18,
+                                          color: Color(0xFF2B3341)))
+                                ])),
+                                InkWell(
+                                  onTap: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      Stride.logEvent(
+                                        name:
+                                            'SWIPE_INFO_PURCHASE_BUTTON_CLICKED',
+                                      );
+                                      // 이 부분 코드는 나중��� 수정해야할 듯.
+                                      Provider.of<SwipeService>(context,
+                                              listen: false)
+                                          .purchaseItem(item.product_id);
+                                      return ProductWebView(
+                                          item.product_url, item.shop_name);
+                                    }));
+                                  },
+                                  child: Container(
+                                    width: 54,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(27),
+                                      color: Color(0xFF8569EF),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey,
+                                          offset: Offset(0.0, 1.0), //(x,y)
+                                          blurRadius: 6.0,
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: EdgeInsets.all(12),
+                                      child: Image.asset(
+                                        'assets/shopping-bag@2x.png',
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ]),
+                          SizedBox(
+                            height: 16,
+                          ),
+                          Divider(),
+                          SizedBox(
+                            height: 16,
+                          ),
+
+                          Text('색상정보',
+                              style: TextStyle(
+                                  color: Color(0xFF888C93),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 13)),
+                          SizedBox(
+                            height: 14,
+                          ),
                           item.clustered_color != null &&
                                   item.origin_color != null
                               ? Wrap(children: [
                                   ...List.generate(
                                     item.clustered_color.length,
                                     (index) => Padding(
-                                      padding: EdgeInsets.only(right: 4),
+                                      padding: EdgeInsets.only(right: 10),
                                       child: CircleColorWidget(
                                           item.clustered_color[index]),
                                     ),
                                   ),
                                   UIHelper.horizontalSpaceSmall,
-                                  ...List.generate(
-                                      item.origin_color.length,
-                                      (index) => index ==
-                                              item.origin_color.length - 1
-                                          ? Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 4),
-                                              child: Text(
-                                                  '${item.origin_color[index]}'))
-                                          : Padding(
-                                              padding:
-                                                  EdgeInsets.only(right: 4),
-                                              child: Text(
-                                                  '${item.origin_color[index]},')))
+                                  // ...List.generate(
+                                  //     item.origin_color.length,
+                                  //     (index) => index ==
+                                  //             item.origin_color.length - 1
+                                  //         ? Padding(
+                                  //             padding: EdgeInsets.only(
+                                  //                 right: 4),
+                                  //             child: Text(
+                                  //                 '${item.origin_color[index]}'))
+                                  //         : Padding(
+                                  //             padding: EdgeInsets.only(
+                                  //                 right: 4),
+                                  //             child: Text(
+                                  //                 '${item.origin_color[index]},')))
                                 ])
                               : Container(),
 
                           //Text('사이즈 정보'),
                           UIHelper.verticalSpaceSmall,
-                          // Text(item.product_name, style: titleStyle),
-                          // Text(
-                          //   '${item.price}원',
-                          //   style: priceStyle,
-                          // ),
-                          //Text('사이즈 정보'),
-                          // UIHelper.verticalSpaceMedium,
                         ],
                       ),
                     ),
                     Padding(
                         padding: EdgeInsets.all(16), child: SizeDialog(item)),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
-                      child: Center(
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              Stride.analytics.logEvent(
-                                  name: 'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                                  parameters: {
-                                    'itemId': item.product_id.toString(),
-                                    'itemName': item.product_name,
-                                    'itemCategory': item.shop_name
-                                  });
-                              // 이 부분 코드는 나중에 수정해야할 듯.
-                              Provider.of<SwipeService>(context, listen: false)
-                                  .purchaseItem(item.product_id);
-                              return ProductWebView(
-                                  item.product_url, item.shop_name);
-                            }));
-                          },
-                          child: Container(
-                            width: 300,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                color: backgroundColor,
-                                borderRadius: BorderRadius.circular(25)),
-                            child: Center(child: Text('구매하기', style: buyStyle)),
-                          ),
-                        ),
-                      ),
-                    ),
                     UIHelper.verticalSpaceMedium,
                   ])),
         ),

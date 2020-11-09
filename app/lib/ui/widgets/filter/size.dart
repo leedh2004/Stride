@@ -53,7 +53,7 @@ class _SizeFilterState extends State<SizeFilter> {
         ),
         InkWell(
           onTap: () {
-            Stride.analytics.logEvent(name: 'MYPAGE_SIZE_BUTTON_CLICKED');
+            Stride.logEvent(name: 'FILTER_GO_TO_SIZE_CHANGE_BUTTON_CLICKED');
             Navigator.push(context, MaterialPageRoute(builder: (context) {
               return SizeInputDialog(
                   Provider.of<AuthenticationService>(context, listen: false)

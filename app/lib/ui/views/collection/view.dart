@@ -6,8 +6,10 @@ import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/views/dressroom/view.dart';
 import 'package:app/ui/views/lookbook/view.dart';
+import 'package:app/ui/widgets/dressroom/folder_create_dialog.dart';
 import 'package:app/ui/widgets/dressroom/folder_dialog.dart';
 import 'package:app/ui/widgets/lookbook/LookBookFolderDialog.dart';
+import 'package:app/ui/widgets/lookbook/folder_create_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -42,13 +44,13 @@ class _CollectionViewState extends State<CollectionView>
     return Stack(children: [
       BaseWidget<DressRoomModel>(
           model: DressRoomModel(Provider.of(context, listen: false)),
-          builder: (context, model, child) {
+          builder: (context, dmodel, child) {
             return BaseWidget<LookBookModel>(
                 model: LookBookModel(Provider.of(context, listen: false)),
                 builder: (context, lmodel, child) {
                   return Scaffold(
                     appBar: AppBar(
-                      backgroundColor: Colors.white,
+                      backgroundColor: Colors.transparent,
                       elevation: 0,
                       centerTitle: false,
                       title: Padding(
@@ -68,7 +70,7 @@ class _CollectionViewState extends State<CollectionView>
                         backgroundColor: Color.fromRGBO(128, 108, 231, 1),
                         onPressed: () {
                           if (controller.index == 0) {
-                            Stride.analytics.logEvent(
+                            Stride.logEvent(
                                 name: "DRESSROOM_FODLER_BUTTON_CLICKED");
                             showMaterialModalBottomSheet(
                                 shape: RoundedRectangleBorder(
@@ -77,10 +79,10 @@ class _CollectionViewState extends State<CollectionView>
                                 backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (context, scrollcontext) {
-                                  return FolderDialog(model);
+                                  return FolderCreateDialog(dmodel);
                                 });
                           } else {
-                            Stride.analytics.logEvent(
+                            Stride.logEvent(
                                 name: "LOOKBOOK_FODLER_BUTTON_CLICKED");
                             showMaterialModalBottomSheet(
                                 shape: RoundedRectangleBorder(
@@ -89,7 +91,7 @@ class _CollectionViewState extends State<CollectionView>
                                 backgroundColor: Colors.transparent,
                                 context: context,
                                 builder: (context, scrollcontext) {
-                                  return LookBookFolderDialog(lmodel);
+                                  return LookBookFolderCreateDialog(lmodel);
                                 });
                           }
                         },
@@ -107,7 +109,7 @@ class _CollectionViewState extends State<CollectionView>
                             return [
                               SliverAppBar(
                                 elevation: 0,
-                                backgroundColor: Colors.white,
+                                backgroundColor: Colors.transparent,
                                 bottom: PreferredSize(
                                   preferredSize: Size.fromHeight(0),
                                   child: TabBar(
@@ -115,12 +117,16 @@ class _CollectionViewState extends State<CollectionView>
                                     labelColor:
                                         Color.fromRGBO(128, 108, 231, 1),
                                     unselectedLabelColor: Colors.black38,
-                                    indicatorColor:
-                                        Color.fromRGBO(128, 108, 231, 1),
+                                    indicator: UnderlineTabIndicator(
+                                      borderSide: BorderSide(
+                                        width: 4,
+                                        color: Color.fromRGBO(128, 108, 231, 1),
+                                      ),
+                                    ),
                                     tabs: [
                                       Tab(
                                         child: Text(
-                                          '콜렉션',
+                                          '컬렉션',
                                           style: TextStyle(
                                               fontWeight: FontWeight.w700,
                                               fontSize: 14),
@@ -145,10 +151,10 @@ class _CollectionViewState extends State<CollectionView>
                             children: [
                               Padding(
                                   padding: EdgeInsets.only(top: 24),
-                                  child: DressRoomFolderView()),
+                                  child: DressRoomFolderView(dmodel)),
                               Padding(
                                   padding: EdgeInsets.only(top: 24),
-                                  child: LookBookView())
+                                  child: LookBookView(lmodel))
                             ],
                           ),
                         ),
@@ -174,7 +180,7 @@ class _CollectionViewState extends State<CollectionView>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
-                              '콜렉션에 5개 이상의 아이템이 있을 때 기능을 사용할 수 있습니다.',
+                              '컬렉션에 5개 이상의 아이템이 있을 때 기능을 사용할 수 있습니다.',
                               style: TextStyle(color: Colors.white),
                             ),
                             SizedBox(

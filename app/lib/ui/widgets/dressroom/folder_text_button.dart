@@ -112,9 +112,9 @@ class FolderTextButton extends StatelessWidget {
     return InkWell(
         onTap: () {
           model.changeFolder(folderKey);
-          Stride.analytics.logEvent(name: "DRESSROOM_FOLDER_CHANGE");
+          Stride.logEvent(name: "DRESSROOM_FOLDER_CHANGE");
           Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return DressRoomItemView(folderName);
+            return DressRoomItemView();
           }));
         },
         child: Stack(children: [
@@ -126,18 +126,6 @@ class FolderTextButton extends StatelessWidget {
                         ? twoImg()
                         : items.length > 0
                             ? oneImg()
-
-                            // ClipRRect(
-                            //     borderRadius: BorderRadius.circular(8),
-                            //     child: Container(
-                            //       width: double.infinity,
-                            //       height: double.infinity,
-                            //       child: CachedNetworkImage(
-                            //         imageUrl: items[0].thumbnail_url,
-                            //         fit: BoxFit.cover,
-                            //       ),
-                            //     ),
-                            //   )
                             : Container(
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),

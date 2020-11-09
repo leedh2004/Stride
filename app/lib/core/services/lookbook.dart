@@ -77,38 +77,44 @@ class LookBookService {
     }
   }
 
-  Future rename(int index, String name) async {
+  Future rename(int id, String name) async {
     try {
       final response = await _api.client.put('${Api.endpoint}/v2/coordination/',
-          data: jsonEncode({
-            'coor_id': items[current_folder][index].id,
-            'update_name': name
-          }));
-      items[current_folder][index].name = name;
+          data: jsonEncode({'coor_id': id, 'update_name': name}));
+      for (var item in items[current_folder]) {
+        if (item.id == id) {
+          item.name = name;
+          break;
+          // items[current_folder][index].name = name;
+        }
+      }
     } catch (e) {
       _api.errorCreate(Error());
     }
   }
 
-  Future removeItem(List<int> selectedIdx) async {
-    List<int> removeIds = new List();
-    for (var idx in selectedIdx) removeIds.add(items[current_folder][idx].id);
+  Future removeItem(int id) async {
+    // List<int> removeIds = new List();
+    // for (var idx in selectedIdx) removeIds.add(items[current_folder][idx].id);
     try {
       final response = await _api.client.put('${Api.endpoint}/v2/coordination/',
-          data: jsonEncode({'coor_id': removeIds}));
-      int cnt = 0;
-      var temp = new List<Coordinate>();
-      selectedIdx.sort();
-      for (int i = 0; i < items[current_folder].length; i++) {
-        if (i == selectedIdx[cnt]) {
-          cnt++;
-          if (cnt == selectedIdx.length) cnt--; // 초과 막음
-          continue;
-        } else {
-          temp.add(items[current_folder][i]);
-        }
-      }
-      items[current_folder] = temp;
+          data: jsonEncode({
+            'coor_id': [id]
+          }));
+      // int cnt = 0;
+      items[current_folder].removeWhere((item) => item.id == id);
+      // var temp = new List<Coordinate>();
+      // selectedIdx.sort();
+      // for (int i = 0; i < items[current_folder].length; i++) {
+      //   if (i == selectedIdx[cnt]) {
+      //     cnt++;
+      //     if (cnt == selectedIdx.length) cnt--; // 초과 막음
+      //     continue;
+      //   } else {
+      //     temp.add(items[current_folder][i]);
+      //   }
+      // }
+      // items[current_folder] = temp;
     } catch (e) {
       _api.errorCreate(Error());
     }
@@ -152,10 +158,10 @@ class LookBookService {
       if (folderId == current_folder) {
         current_folder = 0;
       }
-      final response = await _api.client.delete(
-          '${Api.endpoint}/v2/coordination/folder?folder_id=${folderId}');
       folder.remove(folderId);
       items.remove(folderId);
+      final response = await _api.client.delete(
+          '${Api.endpoint}/v2/coordination/folder?folder_id=${folderId}');
       return true;
     } catch (e) {
       _api.errorCreate(Error());
@@ -174,21 +180,30 @@ class LookBookService {
     }
   }
 
-  Future moveFolder(int toId, List<int> selectedIdx) async {
-    List<int> selectedIds = new List();
-    List<Coordinate> selectedProduct = new List();
-    for (var idx in selectedIdx) {
-      selectedIds.add(items[current_folder][idx].id);
-      selectedProduct.add(items[current_folder][idx]);
-    }
-    try {
-      var response = await _api.client.put(
-          '${Api.endpoint}/v2/coordination/folder/move',
-          data: jsonEncode({'folder_id': toId, 'coor_id': selectedIds}));
-      items[toId] = [...items[toId], ...selectedProduct];
-      for (var item in selectedProduct) {
-        items[current_folder].remove(item);
+  Future moveFolder(int toId, int itemId) async {
+    // List<int> selectedIds = new List();
+    // List<Coordinate> selectedProduct = new List();
+    // for (var idx in selectedIdx) {
+    //   selectedIds.add(items[current_folder][idx].id);
+    //   selectedProduct.add(items[current_folder][idx]);
+    // }
+    Coordinate product;
+    for (var item in items[current_folder]) {
+      if (item.id == itemId) {
+        product = item;
+        items[toId] = [product, ...items[toId]];
+        break;
       }
+    }
+    items[current_folder].remove(product);
+    try {
+      var response =
+          await _api.client.put('${Api.endpoint}/v2/coordination/folder/move',
+              data: jsonEncode({
+                'folder_id': toId,
+                'coor_id': [itemId]
+              }));
+      print("!!");
     } catch (e) {
       _api.errorCreate(Error());
     }

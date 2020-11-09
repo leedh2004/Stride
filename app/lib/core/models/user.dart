@@ -11,7 +11,6 @@ class StrideUser {
   List waist;
   List hip;
   List thigh;
-  bool isEmulator;
 
   StrideUser(
       {this.id,

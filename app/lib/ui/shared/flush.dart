@@ -5,9 +5,27 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 Flushbar collection_flush = Flushbar(
   duration: Duration(milliseconds: 2000),
   margin: EdgeInsets.all(8),
-  isDismissible: false,
   borderRadius: 8,
-  message: '  해당 상품이 콜렉션에 추가되었습니다.',
+  message: '  해당 상품이 컬렉션에 추가되었습니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+  icon: Padding(
+      padding: EdgeInsets.only(left: 12),
+      child: Image.asset('assets/purple_star.png', width: 26)),
+);
+
+Flushbar ban_review_flush = Flushbar(
+  duration: Duration(milliseconds: 2000),
+  margin: EdgeInsets.all(8),
+  borderRadius: 8,
+  message: '죄송합니다. 현재 리뷰 사용이 불가능합니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar lookbook_flush = Flushbar(
+  duration: Duration(milliseconds: 2000),
+  margin: EdgeInsets.all(8),
+  borderRadius: 8,
+  message: '  룩북에 아이템이 추가되었습니다.',
   backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
   icon: Padding(
       padding: EdgeInsets.only(left: 12),
@@ -17,9 +35,98 @@ Flushbar collection_flush = Flushbar(
 Flushbar tutorial_start = Flushbar(
   margin: EdgeInsets.all(8),
   duration: Duration(milliseconds: 2500),
-  isDismissible: false,
   borderRadius: 8,
   message: '튜토리얼을 시작할게요.\n튜토리얼 중 특정 기능은 작동하지 않을 수 있습니다!',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_tutorial_end = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 3500),
+  borderRadius: 8,
+  title: '튜토리얼 종료',
+  messageText: RichText(
+    text: TextSpan(children: [
+      TextSpan(
+        text: '화면 상단의 ',
+        style: TextStyle(color: Colors.white, fontSize: 14),
+      ),
+      WidgetSpan(
+          child: FaIcon(
+        FontAwesomeIcons.questionCircle,
+        size: 15,
+        color: Colors.white,
+      )),
+      TextSpan(
+        text: ' 버튼을 클릭하면 ',
+        style: TextStyle(color: Colors.white, fontSize: 14),
+      ),
+      TextSpan(
+        text: '다시 튜토리얼로 돌아와',
+        style: TextStyle(color: Colors.amber, fontSize: 14),
+      ),
+      TextSpan(
+        text: ', 스트라이드의 다양한 기능을 알아보실 수 있습니다!',
+        style: TextStyle(color: Colors.white, fontSize: 14),
+      ),
+    ]),
+  ),
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_tutorial_move = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 2500),
+  borderRadius: 8,
+  message: '튜토리얼 중에 백버튼 사용이 불가능합니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_tutorial_move2 = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 4000),
+  borderRadius: 8,
+  message: '백 버튼 사용이 불가능합니다.\n상품의 이름을 클릭하지 않으면, 더 이상 앱이 작동하지 않습니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_tutorial_move3 = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 4000),
+  borderRadius: 8,
+  message: '백 버튼 사용이 불가능합니다.\n장바구니를 클릭하지 않으면, 더 이상 앱이 작동하지 않습니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_tutorial_move4 = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 4000),
+  borderRadius: 8,
+  message: '백 버튼 사용이 불가능합니다.\n필터설정을 클릭하지 않으면, 더 이상 앱이 작동하지 않습니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_remove = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 2500),
+  borderRadius: 8,
+  message: '삭제할 아이템을 클릭하여 선택해주세요.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_move = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 2500),
+  borderRadius: 8,
+  message: '폴더를 이동할 아이템을 클릭하여 선택해주세요.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
+Flushbar ban_make = Flushbar(
+  margin: EdgeInsets.all(8),
+  duration: Duration(milliseconds: 2500),
+  borderRadius: 8,
+  message: '버튼을 활성화하려면 적어도 하나의 상의와, 하의가 선택되어야 합니다!',
   backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
 );
 
@@ -282,7 +389,7 @@ List<Flushbar> flushList = [
   Flushbar(
     duration: Duration(milliseconds: 3000),
     margin: EdgeInsets.all(8),
-    isDismissible: false,
+    isDismissible: true,
     borderRadius: 8,
     messageText: Wrap(children: [
       Text('좋아요! 이 곳에서 ', style: TextStyle(color: Colors.white, fontSize: 14)),

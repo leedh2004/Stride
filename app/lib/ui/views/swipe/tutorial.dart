@@ -2,8 +2,11 @@ import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/swipe/view.dart';
+import 'package:app/ui/widgets/swipe/card_gesture.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../main.dart';
 
 const int WAIT_SWIPE = 1;
 const int WAIT_SWIPE_BUTTON = 2;
@@ -33,13 +36,17 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
   }
 
   void showTutorial(BuildContext context) async {
+    Stride.logEvent(name: "TUTORIAL_START");
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
     await flushList[0].show(context);
     await tutorial_start.show(context);
     authService.flush_tutorial = WAIT_SWIPE;
     await flushList[1].show(context).then((result) async {
-      if (result) {
+      if (result == null) {
+        authService.flush_tutorial = -1;
+        await ban_tutorial_move.show(context);
+      } else if (result) {
         await flushList[2].show(context);
       } else {
         await flushList[3].show(context);
@@ -48,7 +55,10 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
     await flushList[7].show(context);
     authService.flush_tutorial = WAIT_SWIPE_BUTTON;
     await flushList[4].show(context).then((result) async {
-      if (result) {
+      if (result == null) {
+        authService.flush_tutorial = -1;
+        await ban_tutorial_move.show(context);
+      } else if (result) {
         await flushList[5].show(context);
       } else {
         await flushList[6].show(context);
@@ -56,11 +66,19 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
     });
     authService.flush_tutorial = WAIT_COLLECTION_BUTTON;
     await flushList[8].show(context).then((value) async {
-      await Future.delayed(Duration(seconds: 2));
+      if (value != null) {
+        // await ban_tutorial_move.show(context);
+        await Future.delayed(Duration(seconds: 2));
+      }
       authService.flush_tutorial = WAIT_INFO_BUTTON;
       await flushList[9].show(context).then((result) async {
-        authService.flush_tutorial = WAIT_PHASE2;
-        await flushList[10].show(context);
+        if (result == null) {
+          authService.flush_tutorial = -1;
+
+          await ban_tutorial_end.show(context);
+        } else {
+          await flushList[10].show(context);
+        }
       });
     });
   }

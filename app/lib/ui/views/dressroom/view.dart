@@ -12,44 +12,39 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DressRoomFolderView extends StatelessWidget {
+  DressRoomModel model;
+  DressRoomFolderView(this.model);
+
   @override
   Widget build(BuildContext context) {
-    //Consumer를 없앴음, StreamProvider도 없애버림
-    return BaseWidget<DressRoomModel>(
-        model: DressRoomModel(Provider.of<DressRoomService>(context)),
-        builder: (context, model, child) {
-          Widget showWidget;
-          if (model.busy) {
-            showWidget = LoadingWidget();
-          } else {
-            if (Provider.of<DressRoomService>(context)
-                    .items[model.current_folder] ==
-                null) {
-              model.getDressRoom();
-              showWidget = LoadingWidget();
-            } else {
-              var folder = Provider.of<DressRoomService>(context).folder;
-              var folderKeys = folder.keys.toList();
-              var folderNames = folder.values.toList();
-              showWidget = Stack(children: [
-                Container(
-                    child: GridView.count(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 8,
-                        mainAxisSpacing: 16,
-                        children: List.generate(folderNames.length, (index) {
-                          var items = Provider.of<DressRoomService>(context)
-                              .items[folderKeys[index]];
-                          if (folderKeys[index] == 0)
-                            folderNames[index] = "내가 찜한 옷";
-                          return FolderTextButton(model, folderNames[index],
-                              folderKeys[index], items);
-                        }))),
-              ]);
-            }
-            return showWidget;
-          }
-        });
+    print('DRESSROOM_FOLDER_VIEW');
+    if (model.busy) {
+      return LoadingWidget();
+    } else {
+      if (Provider.of<DressRoomService>(context).items[0] == null) {
+        model.getDressRoom();
+        return LoadingWidget();
+      } else {
+        var folder = Provider.of<DressRoomService>(context).folder;
+        var folderKeys = folder.keys.toList();
+        var folderNames = folder.values.toList();
+        return Stack(children: [
+          Container(
+              child: GridView.count(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 16,
+                  children: List.generate(folderNames.length, (index) {
+                    var items = Provider.of<DressRoomService>(context)
+                        .items[folderKeys[index]];
+                    if (folderKeys[index] == 0) folderNames[index] = "내가 찜한 옷";
+                    return FolderTextButton(
+                        model, folderNames[index], folderKeys[index], items);
+                  }))),
+        ]);
+      }
+      // return showWidget;
+    }
   }
 }
 // if (items.length > 0)

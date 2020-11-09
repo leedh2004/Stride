@@ -6,9 +6,9 @@
 
 
     <!-- You can insert your own image assets here -->
-    <!-- <item>
+    <item>
         <bitmap
-            android:gravity="top|fill_horizontal"
-            android:src="@mipmap/launch_image" />
-    </item> -->
+            android:gravity="center"
+            android:src="@mipmap/splash" />
+    </item>
 </layer-list>

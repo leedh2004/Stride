@@ -10,6 +10,8 @@ import 'package:app/ui/widgets/filter/size.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../main.dart';
+
 List<String> MENU = ['옷 종류', '컨셉', '가격', '색상', '사이즈'];
 
 Widget FilterBar(SwipeModel model, BuildContext context) {
@@ -26,6 +28,17 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
           style: TextStyle(
               color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
         ),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Align(
+              child: Image.asset(
+                'assets/close.png',
+                width: 15,
+                height: 15,
+              ),
+            )),
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -85,6 +98,7 @@ Widget FilterBar(SwipeModel model, BuildContext context) {
                 ),
                 InkWell(
                   onTap: () {
+                    Stride.logEvent(name: 'FILTER_SIZE_CHANGE_BUTTON_CLICKED');
                     Navigator.pop(context);
                     model.setFilter();
                     filter_flush.show(context);

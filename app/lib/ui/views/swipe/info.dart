@@ -9,6 +9,8 @@ import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,33 +18,43 @@ import 'package:provider/provider.dart';
 
 import '../../../mapper.dart';
 
-class DetailInfo extends StatelessWidget {
+class DetailInfo extends StatefulWidget {
   SwipeModel model;
   DetailInfo(this.model);
   ScrollController controller;
-  List<dynamic> images = new List<dynamic>();
-
+  List<CachedNetworkImageProvider> images = new List();
+  List<CachedNetworkImage> imgs = new List();
+  RecentItem item;
   @override
-  Widget build(BuildContext context) {
-    RecentItem item =
-        Provider.of<SwipeService>(context, listen: false).items[(model.index)];
-    print(item.type);
+  _DetailInfoState createState() => _DetailInfoState();
+}
 
-    for (int i = 0; i < item.image_urls.length; i++) {
-      images.add(Image.network(
-        item.image_urls[i],
+class _DetailInfoState extends State<DetailInfo> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.item = Provider.of<SwipeService>(context, listen: false)
+        .items[(widget.model.index)];
+
+    for (int i = 0; i < widget.item.image_urls.length; i++) {
+      widget.images.add(CachedNetworkImageProvider(
+        widget.item.image_urls[i],
         headers: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
+      ));
+      widget.imgs.add(CachedNetworkImage(
+        imageUrl: widget.item.image_urls[i],
+        placeholder: (context, url) => CupertinoActivityIndicator(),
+        httpHeaders: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
         fit: BoxFit.cover,
       ));
     }
+  }
 
-    Set precached = Provider.of<SwipeService>(context, listen: false).precached;
-    if (!precached.contains(item.product_id)) {
-      for (int i = 0; i < images.length; i++) {
-        precacheImage(images[i].image, context);
-      }
-      precached.add(item.product_id);
-    }
+  @override
+  Widget build(BuildContext context) {
+    RecentItem item = widget.item;
+
     String concept = "";
     for (var i = 0; i < item.shop_concept.length; i++) {
       concept += '#';
@@ -57,7 +69,7 @@ class DetailInfo extends StatelessWidget {
           SingleChildScrollView(
               physics: ClampingScrollPhysics(),
               child: BaseWidget<SwipeModel>(
-                  model: model,
+                  model: widget.model,
                   builder: (context, model, child) {
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,14 +96,11 @@ class DetailInfo extends StatelessWidget {
                                         }
                                       },
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(32),
-                                            bottomRight: Radius.circular(32)),
-                                        child: Image.network(
-                                          item.image_urls[model.image_index],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(32),
+                                              bottomRight: Radius.circular(32)),
+                                          child:
+                                              widget.imgs[model.image_index]),
                                     )),
                               ),
                               SizedBox(
@@ -216,15 +225,10 @@ class DetailInfo extends StatelessWidget {
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
-                                            Stride.analytics.logEvent(
-                                                name:
-                                                    'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                                                parameters: {
-                                                  'itemId': item.product_id
-                                                      .toString(),
-                                                  'itemName': item.product_name,
-                                                  'itemCategory': item.shop_name
-                                                });
+                                            Stride.logEvent(
+                                              name:
+                                                  'SWIPE_INFO_PURCHASE_BUTTON_CLICKED',
+                                            );
                                             // 이 부분 코드는 나중��� 수정해야할 듯.
                                             Provider.of<SwipeService>(context,
                                                     listen: false)
@@ -428,8 +432,8 @@ class DetailInfo extends StatelessWidget {
                 child: Container(
                   width: 20,
                   height: 20,
-                  child:
-                      Image.asset('assets/left-arrow.png', color: Colors.white),
+                  child: Image.asset('assets/left-arrow.png',
+                      color: Color(0xFF8569EF)),
                 ),
               ),
             ),
@@ -439,6 +443,14 @@ class DetailInfo extends StatelessWidget {
     );
   }
 }
+
+// class DetailInfo extends StatelessWidget {
+//   SwipeModel model;
+//   DetailInfo(this.model);
+//   ScrollController controller;
+//   List<dynamic> images = new List<dynamic>();
+
+// }
 
 const shopNameStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 20);
 const conceptStyle = TextStyle(
