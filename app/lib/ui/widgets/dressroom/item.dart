@@ -6,6 +6,7 @@ import 'package:app/main.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/views/recent_info.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,6 +32,7 @@ class DressRoomItemWidget extends StatelessWidget {
                   child: CachedNetworkImage(
                     imageUrl: item.thumbnail_url,
                     fit: BoxFit.cover,
+                    placeholder: (context, url) => CupertinoActivityIndicator(),
                   ),
                 ),
               ),

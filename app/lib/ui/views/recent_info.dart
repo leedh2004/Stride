@@ -12,7 +12,8 @@ import 'package:app/ui/widgets/swipe/size_dialog.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+// import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
 
@@ -512,12 +513,22 @@ class _RecentDetailInfoState extends State<RecentDetailInfo> {
                     Navigator.maybePop(context);
                   },
                   child: Padding(
-                    padding: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(8),
                     child: Container(
-                      width: 20,
-                      height: 20,
-                      child: Image.asset('assets/left-arrow.png',
-                          color: backgroundColor),
+                      width: 24,
+                      height: 24,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: Color(0xFF8569EF)),
+                      child: Center(
+                        child: FaIcon(
+                          FontAwesomeIcons.arrowLeft,
+                          color: Colors.white,
+                          size: 15,
+                        ),
+                        // child: Image.asset('assets/left-arrow.png',
+                        // width: 15, color: Colors.white),
+                      ),
                     ),
                   ),
                 ),

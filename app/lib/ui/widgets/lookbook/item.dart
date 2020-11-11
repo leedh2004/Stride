@@ -299,7 +299,7 @@ class _LookBookItemState extends State<LookBookItem> {
                                                   BorderRadius.circular(8.0)),
                                           title: Center(
                                             child: Text(
-                                              "아이템을 삭제하시겠어요?",
+                                              "선택한 아이템을 삭제하시겠어요?",
                                               style: TextStyle(
                                                   fontSize: 18,
                                                   fontWeight: FontWeight.w700),

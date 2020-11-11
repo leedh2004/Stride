@@ -87,64 +87,161 @@ class LoginView extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            UIHelper.verticalSpaceMedium,
+                            SizedBox(
+                              height: 16,
+                            ),
+                            // UIHelper.verticalSpaceMedium,
                             Text.rich(TextSpan(children: [
                               TextSpan(
                                   text: '클릭 한번으로 가입까지 ',
-                                  style: TextStyle(fontSize: 16)),
+                                  style: TextStyle(fontSize: 12)),
                               TextSpan(
                                   text: '단 3초!',
                                   style: TextStyle(
-                                      fontSize: 20,
+                                      fontSize: 14,
                                       color: backgroundColor,
                                       fontWeight: FontWeight.w700)),
                             ])),
-                            Text('간편하게 로그인하세요', style: TextStyle(fontSize: 16)),
-                            UIHelper.verticalSpaceMedium,
+                            Text('간편하게 로그인하세요', style: TextStyle(fontSize: 12)),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            // UIHelper.verticalSpaceMedium,
                             FadeIn(
                               delay: 1,
-                              child: SizedBox(
-                                width: 300,
-                                child: RaisedButton(
-                                  padding: EdgeInsets.all(0),
-                                  onPressed: () =>
-                                      _signInWithKakao(context, model),
-                                  child: Image.asset('images/kakao_login.png'),
+                              child: InkWell(
+                                onTap: () => _signInWithKakao(context, model),
+                                child: Container(
+                                  width: 300,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFFD554),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Stack(children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 23),
+                                        child: Image.asset(
+                                          'assets/kakao.png',
+                                          width: 21,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '카카오로 계속하기',
+                                        style: TextStyle(
+                                          color: Color(0xFF552E19),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
                                 ),
                               ),
                             ),
+                            // FadeIn(
+                            //   delay: 1,
+                            //   child: SizedBox(
+                            //     width: 300,
+                            //     child: RaisedButton(
+                            //       padding: EdgeInsets.all(0),
+                            //       onPressed: () =>
+                            //           _signInWithKakao(context, model),
+                            //       child: Image.asset('images/kakao_login.png'),
+                            //     ),
+                            //   ),
+                            // ),
                             if (configService.isAppleAvailable)
-                              UIHelper.verticalSpaceMedium,
+                              SizedBox(
+                                height: 16,
+                              ),
                             if (configService.isAppleAvailable)
                               FadeIn(
                                 delay: 1,
-                                child: SizedBox(
-                                  width: 300,
-                                  child: AppleSignInButton(
-                                    style: ButtonStyle.black, // style as needed
-                                    type: ButtonType.signIn, // style as needed
-                                    onPressed: () =>
-                                        _signInWithApple(context, model),
+                                child: InkWell(
+                                  onTap: () => _signInWithApple(context, model),
+                                  child: Container(
+                                    width: 300,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF222222),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Stack(children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 23),
+                                          child: Image.asset(
+                                            'assets/apple.png',
+                                            width: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Apple로 계속하기',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
                                   ),
                                 ),
                               ),
-                            UIHelper.verticalSpaceMedium,
+                            SizedBox(
+                              height: 16,
+                            ),
+                            // UIHelper.verticalSpaceMedium,
                             FadeIn(
                               delay: 1,
-                              child: SizedBox(
-                                width: 300,
-                                child: RaisedButton(
-                                  padding: EdgeInsets.all(12),
-                                  onPressed: () =>
-                                      _withoutSignIn(context, model),
-                                  child: Text(
-                                    '로그인 없이 이용하기',
-                                    style:
-                                        TextStyle(fontWeight: FontWeight.w700),
+                              child: InkWell(
+                                onTap: () => _withoutSignIn(context, model),
+                                child: Container(
+                                  width: 300,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    // color: Color(0xFF222222),
+                                    border: Border.all(
+                                      color: Color(0xFFF3F4F8),
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
+                                  child: Stack(children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '로그인 없이 이용하기',
+                                        style: TextStyle(
+                                          color: Color(0xFF8569EF),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
                                 ),
                               ),
                             ),
+                            // FadeIn(
+                            //   delay: 1,
+                            //   child: SizedBox(
+                            //     width: 300,
+                            //     child: RaisedButton(
+                            //       padding: EdgeInsets.all(12),
+                            //       onPressed: () =>
+                            //           _withoutSignIn(context, model),
+                            //       child: Text(
+                            //         '로그인 없이 이용하기',
+                            //         style:
+                            //             TextStyle(fontWeight: FontWeight.w700),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),

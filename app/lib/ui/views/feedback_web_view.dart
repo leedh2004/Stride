@@ -6,14 +6,17 @@ class FeedbackWebView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: backgroundColor,
-        title: Text('앱 설문조사'),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios),
-          onPressed: () {
-            Navigator.maybePop(context);
-          },
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          '앱 설문조사',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
         ),
       ),
       body: SafeArea(

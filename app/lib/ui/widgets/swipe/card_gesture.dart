@@ -380,7 +380,7 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                         child: Opacity(
                           opacity: 0,
                           child: Container(
-                              padding: EdgeInsets.fromLTRB(8, 8, 16, 8),
+                              padding: EdgeInsets.fromLTRB(8, 8, 24, 8),
                               child: Text(item)),
                         )),
                     SizedBox(
@@ -494,9 +494,6 @@ class _SwipeCardSectionState extends State<SwipeCardSection>
                       margin: EdgeInsets.fromLTRB(0, 40, 0, 0),
                       child: GestureDetector(
                         // excludeFromSemantics: true,
-                        onPanStart: (details) {
-                          print('start!');
-                        },
                         onPanUpdate: (DragUpdateDetails details) {
                           List<double> opacity = [0, 0];
 

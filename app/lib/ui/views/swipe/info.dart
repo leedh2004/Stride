@@ -428,12 +428,22 @@ class _DetailInfoState extends State<DetailInfo> {
                 Navigator.maybePop(context);
               },
               child: Padding(
-                padding: EdgeInsets.all(5),
+                padding: EdgeInsets.all(8),
                 child: Container(
-                  width: 20,
-                  height: 20,
-                  child: Image.asset('assets/left-arrow.png',
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
                       color: Color(0xFF8569EF)),
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    // child: Image.asset('assets/left-arrow.png',
+                    // width: 15, color: Colors.white),
+                  ),
                 ),
               ),
             ),

@@ -77,7 +77,6 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
   void didUpdateWidget(SwipeCardAlignment oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
-    // print("WTF!");
     if (widget._isBackCard) {
       print("BACK CARD UPDATE @@@@@@@@@@@@@@@@@@@@");
       for (int i = 0; i < widget.images.length; i++) {
@@ -168,20 +167,24 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                             SizedBox(
                               width: 4,
                             ),
-                            Container(
+                            Image.asset(
+                              'assets/speech_bubble.png',
                               width: 15,
-                              height: 15,
-                              decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(8)),
-                              child: Center(
-                                child: FaIcon(
-                                  FontAwesomeIcons.info,
-                                  size: 10,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ),
+                            )
+                            // Container(
+                            //   width: 15,
+                            //   height: 15,
+                            //   decoration: BoxDecoration(
+                            //       color: Colors.white,
+                            //       borderRadius: BorderRadius.circular(8)),
+                            //   child: Center(
+                            //     child: FaIcon(
+                            //       FontAwesomeIcons.info,
+                            //       size: 10,
+                            //       color: Colors.black,
+                            //     ),
+                            //   ),
+                            // ),
                           ],
                         ),
                         SizedBox(

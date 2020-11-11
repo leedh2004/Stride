@@ -1,6 +1,7 @@
 import 'package:app/core/models/user.dart';
 import 'package:app/ui/views/error_view.dart';
 import 'package:app/ui/views/service_view.dart';
+import 'package:app/ui/widgets/swipe/no_swipe_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'login_view.dart';

@@ -2,6 +2,8 @@ import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../main.dart';
+
 Flushbar collection_flush = Flushbar(
   duration: Duration(milliseconds: 2000),
   margin: EdgeInsets.all(8),
@@ -146,6 +148,46 @@ Flushbar tutorial_restart_flush = Flushbar(
       style: TextStyle(color: Colors.amber),
     ),
   ),
+);
+
+Flushbar tutorial_start_really = Flushbar(
+  margin: EdgeInsets.all(8),
+  isDismissible: false,
+  borderRadius: 8,
+  message: '튜토리얼을 통해 스트라이드의 다양한 기능을 자세히 알아보시겠어요?\n1분 정도의 시간이 소요될 수 있습니다.',
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+  mainButton: Row(children: [
+    InkWell(
+      onTap: () {
+        tutorial_start_really.dismiss(true); // result = true
+      },
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Text(
+          "네",
+          style: TextStyle(color: Colors.amber),
+        ),
+      ),
+    ),
+    SizedBox(
+      width: 8,
+    ),
+    InkWell(
+      onTap: () {
+        Stride.logEvent(name: 'TUTORIAL_SKIP');
+        tutorial_start_really.dismiss(false); // result = true
+      },
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Text(
+          "됐어요",
+          style: TextStyle(
+            color: Colors.white70,
+          ),
+        ),
+      ),
+    )
+  ]),
 );
 
 Flushbar help_flush = Flushbar(
@@ -536,10 +578,14 @@ List<Flushbar> flushList2 = [
             child: FaIcon(
           FontAwesomeIcons.questionCircle,
           size: 15,
-          color: Colors.white,
+          color: Colors.amber,
         )),
         TextSpan(
-          text: '버튼을 클릭하면 ',
+          text: ' 버튼',
+          style: TextStyle(color: Colors.amber, fontSize: 14),
+        ),
+        TextSpan(
+          text: '을 클릭하면 ',
           style: TextStyle(color: Colors.white, fontSize: 14),
         ),
         TextSpan(

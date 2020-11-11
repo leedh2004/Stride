@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/core/viewmodels/views/recommend.dart';
@@ -382,30 +384,56 @@ class _RecommendViewState extends State<RecommendView> {
           ? Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.black54,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FaIcon(FontAwesomeIcons.lock, color: Colors.amber),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Center(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '좋아요를 5개 이상하면 기능을 사용하실 수 있습니다.',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text("'좋아요'를 할수록, '좋아하는 옷'만 보입니다",
-                                style: TextStyle(color: Colors.white))
-                          ]),
-                    ),
-                  ]),
+              color: Colors.white70,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/like_lock.png',
+                        width: 150,
+                      ),
+                      // FaIcon(FontAwesomeIcons.lock, color: Colors.amber),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '아직 좋아요가 부족해요!',
+                                style: TextStyle(
+                                    color: Color(
+                                      0xFF2B3341,
+                                    ),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "좋아요를 ",
+                                    ),
+                                    Text(
+                                      "5개",
+                                      style: TextStyle(
+                                          color: Color(0xFF8569EF),
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                    Text("이상하면")
+                                  ]),
+                              SizedBox(height: 4),
+                              Text('기능을 사용하실 수 있습니다')
+                            ]),
+                      ),
+                    ]),
+              ),
             )
           : Container()
     ]);

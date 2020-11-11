@@ -4,6 +4,7 @@ import 'package:app/ui/shared/flush.dart';
 import 'package:app/ui/views/recommend/view.dart';
 import 'package:app/ui/views/swipe/tutorial.dart';
 import 'package:app/ui/views/swipe/view.dart';
+import 'package:app/ui/views/test/tutorial_image.dart';
 import 'package:app/ui/views/tutorial/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -43,6 +44,7 @@ class _ServiceViewState extends State<ServiceView>
   Widget build(BuildContext context) {
     var authService =
         Provider.of<AuthenticationService>(context, listen: false);
+
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: const SystemUiOverlayStyle(
         statusBarBrightness: Brightness.light,
@@ -61,7 +63,7 @@ class _ServiceViewState extends State<ServiceView>
               MyPageView(),
             ]),
         bottomNavigationBar: SizedBox(
-          height: 60,
+          height: 70,
           child: Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(

@@ -27,14 +27,14 @@ class MyPageView extends StatelessWidget {
 
   onTapFeedBack(BuildContext context) async {
     Stride.logEvent(name: 'MYPAGE_FEEDBACK_BUTTON_CLICKED');
-    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //   return FeedbackWebView();
-    // }));
-    if (await inAppReview.isAvailable()) {
-      inAppReview.requestReview();
-    } else {
-      ban_review_flush.show(context);
-    }
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return FeedbackWebView();
+    }));
+    // if (await inAppReview.isAvailable()) {
+    //   inAppReview.requestReview();
+    // } else {
+    //   ban_review_flush.show(context);
+    // }
   }
 
   onTapHelp(BuildContext context) {
@@ -122,7 +122,7 @@ class MyPageView extends StatelessWidget {
                     myPageListTile('문의 / 건의하기', () => onTapHelp(context),
                         "assets/email.png"),
                     Divider(),
-                    myPageListTile('앱 평가하기', () => onTapFeedBack(context),
+                    myPageListTile('앱 설문조사', () => onTapFeedBack(context),
                         "assets/chat.png"),
                     Divider(),
                     myPageListTile(

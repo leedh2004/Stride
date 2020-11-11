@@ -4,7 +4,6 @@ import 'package:app/ui/shared/text_styles.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/widgets/dressroom/folder_text_button.dart';
 import 'package:app/ui/widgets/loading.dart';
-import 'package:app/ui/widgets/lookbook/bar_button.dart';
 import 'package:app/ui/widgets/lookbook/folder_lookbook_button.dart';
 import 'package:app/ui/widgets/lookbook/item.dart';
 import 'package:flutter/material.dart';

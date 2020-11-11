@@ -32,7 +32,6 @@ class MyHttpOverrides extends HttpOverrides {
 }
 
 Future<void> main() async {
-  print("START");
   WidgetsFlutterBinding.ensureInitialized();
   GestureBinding.instance.resamplingEnabled = true;
   HttpOverrides.global = MyHttpOverrides();

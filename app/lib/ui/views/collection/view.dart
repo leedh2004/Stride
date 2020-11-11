@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/recent_item.dart';
 import 'package:app/core/viewmodels/views/dress_room.dart';
@@ -7,8 +9,6 @@ import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/views/dressroom/view.dart';
 import 'package:app/ui/views/lookbook/view.dart';
 import 'package:app/ui/widgets/dressroom/folder_create_dialog.dart';
-import 'package:app/ui/widgets/dressroom/folder_dialog.dart';
-import 'package:app/ui/widgets/lookbook/LookBookFolderDialog.dart';
 import 'package:app/ui/widgets/lookbook/folder_create_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -167,42 +167,74 @@ class _CollectionViewState extends State<CollectionView>
           ? Container(
               width: double.infinity,
               height: double.infinity,
-              color: Colors.black54,
-              child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    FaIcon(FontAwesomeIcons.lock, color: Colors.amber),
-                    SizedBox(
-                      height: 24,
-                    ),
-                    Center(
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              '컬렉션에 5개 이상의 아이템이 있을 때 기능을 사용할 수 있습니다.',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Image.asset(
-                                  'assets/purple_star.png',
-                                  width: 24,
-                                ),
-                                SizedBox(
-                                  width: 8,
-                                ),
-                                Text("버튼을 눌러 마음에 드는 아이템을 저장해보세요!",
-                                    style: TextStyle(color: Colors.white))
-                              ],
-                            ),
-                          ]),
-                    ),
-                  ]),
+              color: Colors.white70,
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/like_lock.png',
+                        width: 150,
+                      ),
+                      // FaIcon(FontAwesomeIcons.lock, color: Colors.amber),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Center(
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                '컬렉션에 아이템이 부족해요!',
+                                style: TextStyle(
+                                    color: Color(
+                                      0xFF2B3341,
+                                    ),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "아이템을 ",
+                                    ),
+                                    Text(
+                                      "5개",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Color(0xFF8569EF)),
+                                    ),
+                                    Text("이상 저장하면")
+                                  ]),
+                              SizedBox(height: 4),
+                              Text('기능을 사용하실 수 있습니다'),
+                              SizedBox(
+                                height: 15,
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    'assets/purple_star.png',
+                                    width: 24,
+                                  ),
+                                  SizedBox(
+                                    width: 8,
+                                  ),
+                                  Text(
+                                    "버튼을 눌러 마음에 드는 아이템을 저장해보세요!",
+                                  )
+                                ],
+                              ),
+                            ]),
+                      ),
+                    ]),
+              ),
             )
           : Container()
     ]);
