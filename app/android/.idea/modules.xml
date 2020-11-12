@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android.iml" filepath="$PROJECT_DIR$/.idea/modules/android.iml" group="android" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/app.iml" group="android/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/838175016/apple_sign_in.iml" filepath="$PROJECT_DIR$/.idea/modules/838175016/apple_sign_in.iml" group="android/apple_sign_in" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2084004029/firebase_analytics.iml" filepath="$PROJECT_DIR$/.idea/modules/2084004029/firebase_analytics.iml" group="android/firebase_analytics" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/398579804/firebase_auth.iml" filepath="$PROJECT_DIR$/.idea/modules/398579804/firebase_auth.iml" group="android/firebase_auth" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1004638017/firebase_core.iml" filepath="$PROJECT_DIR$/.idea/modules/1004638017/firebase_core.iml" group="android/firebase_core" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1054312437/firebase_crashlytics.iml" filepath="$PROJECT_DIR$/.idea/modules/1054312437/firebase_crashlytics.iml" group="android/firebase_crashlytics" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1709044164/firebase_messaging.iml" filepath="$PROJECT_DIR$/.idea/modules/-1709044164/firebase_messaging.iml" group="android/firebase_messaging" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-1201915696/firebase_remote_config.iml" filepath="$PROJECT_DIR$/.idea/modules/-1201915696/firebase_remote_config.iml" group="android/firebase_remote_config" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-995760024/flutter_secure_storage.iml" filepath="$PROJECT_DIR$/.idea/modules/-995760024/flutter_secure_storage.iml" group="android/flutter_secure_storage" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-183025210/kakao_flutter_sdk.iml" filepath="$PROJECT_DIR$/.idea/modules/-183025210/kakao_flutter_sdk.iml" group="android/kakao_flutter_sdk" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/2031404343/package_info.iml" filepath="$PROJECT_DIR$/.idea/modules/2031404343/package_info.iml" group="android/package_info" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/795381628/path_provider.iml" filepath="$PROJECT_DIR$/.idea/modules/795381628/path_provider.iml" group="android/path_provider" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/-576591037/shared_preferences.iml" filepath="$PROJECT_DIR$/.idea/modules/-576591037/shared_preferences.iml" group="android/shared_preferences" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1413395078/sqflite.iml" filepath="$PROJECT_DIR$/.idea/modules/1413395078/sqflite.iml" group="android/sqflite" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/1801764568/webview_flutter.iml" filepath="$PROJECT_DIR$/.idea/modules/1801764568/webview_flutter.iml" group="android/webview_flutter" />
+    </modules>
+  </component>
+</project>

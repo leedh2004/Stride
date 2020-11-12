@@ -1,0 +1,26 @@
+{
+  "name": "flutter_is_emulator",
+  "version": "0.0.1",
+  "summary": "Plugin to detect whether the current device is an emulator or simulator",
+  "description": "Plugin to detect whether the current device is an emulator or simulator",
+  "homepage": "http://example.com",
+  "license": {
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Your Company": "email@example.com"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "public_header_files": "Classes/**/*.h",
+  "dependencies": {
+    "Flutter": [
+
+    ]
+  },
+  "platforms": {
+    "ios": "8.0"
+  }
+}

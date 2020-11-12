@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="851cb9d0-4c52-4ea9-aa18-b56b58ce3c64" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/android/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/android/app/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/views/dressroom/view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/views/dressroom/view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/views/mypage/view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/views/mypage/view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/views/swipe/view.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/views/swipe/view.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dressroom/bar_button.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dressroom/bar_button.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dressroom/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dressroom/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/dressroom/select_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/dressroom/select_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/lookbook/item.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/lookbook/item.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/mypage/input_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/mypage/input_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/mypage/input_page.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/mypage/input_page.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/ui/widgets/swipe/card.dart" beforeDir="false" afterPath="$PROJECT_DIR$/lib/ui/widgets/swipe/card.dart" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="1hMAORbANW2EyBfenOtCMXNLypg" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="851cb9d0-4c52-4ea9-aa18-b56b58ce3c64" name="Default Changelist" comment="" />
+      <created>1599810555337</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1599810555337</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="950" y="375" key="com.intellij.ide.util.TipDialog" timestamp="1599810561020">
+      <screen x="0" y="23" width="1792" height="1041" />
+    </state>
+    <state x="950" y="375" key="com.intellij.ide.util.TipDialog/0.23.1792.1041@0.23.1792.1041" timestamp="1599810561020" />
+  </component>
+</project>
