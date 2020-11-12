@@ -1,7 +1,5 @@
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/authentication_service.dart';
-import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/recent_item.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
@@ -31,6 +29,12 @@ class RecentItemModel extends BaseModel {
     service.revertAndLikeRequest(id);
     auth_service.addLike();
     auth_service.minusDislike();
+  }
+
+  void collectRequest(int id) {
+    service.likeRequest(id);
+    service.collectRequest(id);
+    auth_service.addLike();
   }
 
   void dislikeRequest(int id) {

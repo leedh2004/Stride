@@ -1,6 +1,7 @@
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/config.dart';
 import 'package:app/core/viewmodels/authentication.dart';
+import 'package:app/ui/shared/app_colors.dart';
 import 'package:app/ui/shared/ui_helper.dart';
 import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/widgets/loading.dart';
@@ -8,12 +9,9 @@ import 'package:apple_sign_in/apple_sign_in_button.dart';
 import 'package:apple_sign_in/scope.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart' hide ButtonStyle;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:kakao_flutter_sdk/all.dart';
 import 'package:provider/provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-
-import '../../main.dart';
+import 'package:uuid/uuid.dart';
 
 class LoginView extends StatelessWidget {
   Future<void> _signInWithApple(
@@ -24,6 +22,18 @@ class LoginView extends StatelessWidget {
       // TODO: Show alert here
       print(e);
     }
+  }
+
+  Future<void> _withoutSignIn(
+      BuildContext context, AuthenticationModel model) async {
+    var storage = model.authService.storage;
+    var uid = await storage.read(key: 'uid');
+    if (uid == null) {
+      var uuid = Uuid();
+      uid = uuid.v4();
+      await storage.write(key: 'uid', value: uid);
+    }
+    model.login(uid, "non_member", "non_member");
   }
 
   Future<void> _signInWithKakao(
@@ -43,6 +53,7 @@ class LoginView extends StatelessWidget {
     ConfigService configService =
         Provider.of<ConfigService>(context, listen: false);
     Widget showWidget;
+
     return Scaffold(
       body: BaseWidget<AuthenticationModel>(
         model: AuthenticationModel(Provider.of(context)),
@@ -52,46 +63,188 @@ class LoginView extends StatelessWidget {
               child: Stack(children: [
                 Container(
                   width: double.infinity,
+                  height: MediaQuery.of(context).size.height - 100,
                   child: Image.asset(
-                    'images/intro.png',
+                    'images/intro.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),
                 if (Provider.of<AuthenticationService>(context).init == true)
-                  Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        FadeIn(
-                          delay: 1,
-                          child: SizedBox(
-                            width: 300,
-                            child: RaisedButton(
-                              padding: EdgeInsets.all(0),
-                              onPressed: () => _signInWithKakao(context, model),
-                              child: Image.asset('images/kakao_login.png'),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(40),
+                            topRight: Radius.circular(40),
+                          )),
+                      height: 300,
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            SizedBox(
+                              height: 16,
                             ),
-                          ),
-                        ),
-                        if (configService.isAppleAvailable)
-                          UIHelper.verticalSpaceMedium,
-                        if (configService.isAppleAvailable)
-                          FadeIn(
-                            delay: 1,
-                            child: SizedBox(
-                              width: 300,
-                              child: AppleSignInButton(
-                                style: ButtonStyle.black, // style as needed
-                                type: ButtonType.signIn, // style as needed
-                                onPressed: () =>
-                                    _signInWithApple(context, model),
+                            // UIHelper.verticalSpaceMedium,
+                            Text.rich(TextSpan(children: [
+                              TextSpan(
+                                  text: '클릭 한번으로 가입까지 ',
+                                  style: TextStyle(fontSize: 12)),
+                              TextSpan(
+                                  text: '단 3초!',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      color: backgroundColor,
+                                      fontWeight: FontWeight.w700)),
+                            ])),
+                            Text('간편하게 로그인하세요', style: TextStyle(fontSize: 12)),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            // UIHelper.verticalSpaceMedium,
+                            FadeIn(
+                              delay: 1,
+                              child: InkWell(
+                                onTap: () => _signInWithKakao(context, model),
+                                child: Container(
+                                  width: 300,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xFFFFD554),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Stack(children: [
+                                    Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Padding(
+                                        padding: EdgeInsets.only(left: 23),
+                                        child: Image.asset(
+                                          'assets/kakao.png',
+                                          width: 21,
+                                        ),
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '카카오로 계속하기',
+                                        style: TextStyle(
+                                          color: Color(0xFF552E19),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                                ),
                               ),
                             ),
-                          ),
-                        UIHelper.verticalSpaceLarge,
-                        UIHelper.verticalSpaceLarge,
-                      ],
+                            // FadeIn(
+                            //   delay: 1,
+                            //   child: SizedBox(
+                            //     width: 300,
+                            //     child: RaisedButton(
+                            //       padding: EdgeInsets.all(0),
+                            //       onPressed: () =>
+                            //           _signInWithKakao(context, model),
+                            //       child: Image.asset('images/kakao_login.png'),
+                            //     ),
+                            //   ),
+                            // ),
+                            if (configService.isAppleAvailable)
+                              SizedBox(
+                                height: 16,
+                              ),
+                            if (configService.isAppleAvailable)
+                              FadeIn(
+                                delay: 1,
+                                child: InkWell(
+                                  onTap: () => _signInWithApple(context, model),
+                                  child: Container(
+                                    width: 300,
+                                    height: 54,
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF222222),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    child: Stack(children: [
+                                      Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: Padding(
+                                          padding: EdgeInsets.only(left: 23),
+                                          child: Image.asset(
+                                            'assets/apple.png',
+                                            width: 20,
+                                          ),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: Text(
+                                          'Apple로 계속하기',
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ]),
+                                  ),
+                                ),
+                              ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            // UIHelper.verticalSpaceMedium,
+                            FadeIn(
+                              delay: 1,
+                              child: InkWell(
+                                onTap: () => _withoutSignIn(context, model),
+                                child: Container(
+                                  width: 300,
+                                  height: 54,
+                                  decoration: BoxDecoration(
+                                    // color: Color(0xFF222222),
+                                    border: Border.all(
+                                      color: Color(0xFFF3F4F8),
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Stack(children: [
+                                    Align(
+                                      alignment: Alignment.center,
+                                      child: Text(
+                                        '로그인 없이 이용하기',
+                                        style: TextStyle(
+                                          color: Color(0xFF8569EF),
+                                        ),
+                                      ),
+                                    ),
+                                  ]),
+                                ),
+                              ),
+                            ),
+                            // FadeIn(
+                            //   delay: 1,
+                            //   child: SizedBox(
+                            //     width: 300,
+                            //     child: RaisedButton(
+                            //       padding: EdgeInsets.all(12),
+                            //       onPressed: () =>
+                            //           _withoutSignIn(context, model),
+                            //       child: Text(
+                            //         '로그인 없이 이용하기',
+                            //         style:
+                            //             TextStyle(fontWeight: FontWeight.w700),
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 if (model.busy) WhiteLoadingWidget()
@@ -105,7 +258,7 @@ class LoginView extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     child: Image.asset(
-                      'images/intro.png',
+                      'images/intro.jpg',
                       fit: BoxFit.cover,
                     ),
                   )
@@ -118,69 +271,3 @@ class LoginView extends StatelessWidget {
     );
   }
 }
-
-// class KakaoLoginPage extends StatelessWidget {
-//   @override
-//   String redirect_uri = "https://api-stride.com/kakao/oauth";
-//   String client_id = "ffc1ec82f333d835621df9caa8511e64";
-//   final storage = new FlutterSecureStorage();
-
-//   Widget build(BuildContext context) {
-//     Stride.analytics.logLogin();
-
-//     return Scaffold(
-//       body: SafeArea(
-//           child: WebView(
-//         javascriptChannels: <JavascriptChannel>[
-//           JavascriptChannel(
-//               name: 'jwt_token',
-//               onMessageReceived: (JavascriptMessage msg) async {
-//                 print(msg.message);
-//                 List<String> info = msg.message.split(',');
-//                 // print(info);
-//                 Provider.of<AuthenticationService>(context, listen: false)
-//                     .login(info[0], info[1] + '@' + info[2]);
-//                 Navigator.maybePop(context);
-//               })
-//         ].toSet(),
-//         initialUrl:
-//             'https://kauth.kakao.com/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&response_type=code',
-//         javascriptMode: JavascriptMode.unrestricted,
-//       )),
-//     );
-//   }
-// }
-
-// class NaverLoginPage extends StatelessWidget {
-//   String redirect_url = "https://api-stride.com/naver/oauth";
-//   String client_id = "5cowST1OYAYIE38vxCq0";
-//   @override
-//   Widget build(BuildContext context) {
-//     Stride.analytics.logLogin();
-
-//     return Scaffold(
-//       body: SafeArea(
-//           child: WebView(
-//         javascriptChannels: <JavascriptChannel>[
-//           JavascriptChannel(
-//               name: 'jwt_token',
-//               onMessageReceived: (JavascriptMessage msg) async {
-//                 print("!!");
-//                 print(msg.message);
-//                 // print(info);
-//                 List<String> info = msg.message.split(',');
-//                 //await storage.write(key: 'jwt_token', value: msg.message);
-//                 Provider.of<AuthenticationService>(context, listen: false)
-//                     .login(info[0], info[1] + '@' + info[2]);
-//                 print(info[1]); // id
-//                 print(info[2]); // channel
-//                 Navigator.maybePop(context);
-//               })
-//         ].toSet(),
-//         initialUrl:
-//             'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${client_id}&redirect_url=${redirect_url}',
-//         javascriptMode: JavascriptMode.unrestricted,
-//       )),
-//     );
-//   }
-// }

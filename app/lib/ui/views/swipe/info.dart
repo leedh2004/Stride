@@ -1,7 +1,5 @@
 import 'dart:io';
-
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:app/core/viewmodels/views/swipe.dart';
 import 'package:app/main.dart';
@@ -11,68 +9,67 @@ import 'package:app/ui/views/base_widget.dart';
 import 'package:app/ui/views/product_web_view.dart';
 import 'package:app/ui/widgets/swipe/circle_color.dart';
 import 'package:app/ui/widgets/swipe/size_dialog.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-final Map<String, String> typeConverter = {
-  'top': '상의',
-  'pants': '팬츠',
-  'dress': '드레스',
-  'skirt': '스커트',
-  'outer': '아우터'
-};
+import '../../../mapper.dart';
 
-class DetailInfo extends StatelessWidget {
+class DetailInfo extends StatefulWidget {
   SwipeModel model;
   DetailInfo(this.model);
   ScrollController controller;
-  List<dynamic> images = new List<dynamic>();
-
+  List<CachedNetworkImageProvider> images = new List();
+  List<CachedNetworkImage> imgs = new List();
+  RecentItem item;
   @override
-  Widget build(BuildContext context) {
-    RecentItem item =
-        Provider.of<SwipeService>(context, listen: false).items[(model.index)];
-    print(item.type);
+  _DetailInfoState createState() => _DetailInfoState();
+}
 
-    for (int i = 0; i < item.image_urls.length; i++) {
-      images.add(Image.network(
-        item.image_urls[i],
+class _DetailInfoState extends State<DetailInfo> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.item = Provider.of<SwipeService>(context, listen: false)
+        .items[(widget.model.index)];
+
+    for (int i = 0; i < widget.item.image_urls.length; i++) {
+      widget.images.add(CachedNetworkImageProvider(
+        widget.item.image_urls[i],
         headers: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
+      ));
+      widget.imgs.add(CachedNetworkImage(
+        imageUrl: widget.item.image_urls[i],
+        placeholder: (context, url) => CupertinoActivityIndicator(),
+        httpHeaders: {HttpHeaders.refererHeader: "http://api-stride.com:5000/"},
         fit: BoxFit.cover,
       ));
     }
+  }
 
-    Set precached = Provider.of<SwipeService>(context, listen: false).precached;
-    if (!precached.contains(item.product_id)) {
-      for (int i = 0; i < images.length; i++) {
-        precacheImage(images[i].image, context);
-      }
-      precached.add(item.product_id);
-    }
+  @override
+  Widget build(BuildContext context) {
+    RecentItem item = widget.item;
+
     String concept = "";
-    for (var c in item.shop_concept) {
-      concept += '#${c} ';
+    for (var i = 0; i < item.shop_concept.length; i++) {
+      concept += '#';
+      concept += item.shop_concept[i];
+      if (i != item.shop_concept.length - 1) concept += ', ';
     }
 
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: const SystemUiOverlayStyle(
-        // For Android.
-        // Use [light] for white status bar and [dark] for black status bar.
-        statusBarIconBrightness: Brightness.light,
-        // For iOS.
-        // Use [dark] for white status bar and [light] for black status bar.
-        statusBarBrightness: Brightness.light,
-      ),
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Stack(children: [
+          SingleChildScrollView(
               physics: ClampingScrollPhysics(),
               child: BaseWidget<SwipeModel>(
-                  model: model,
+                  model: widget.model,
                   builder: (context, model, child) {
                     return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,176 +84,67 @@ class DetailInfo extends StatelessWidget {
                                     tag: item.product_id,
                                     // tag: item.image_urls[model.image_index],
                                     child: GestureDetector(
-                                        onTapUp: (details) {
-                                          double standard =
-                                              MediaQuery.of(context)
-                                                      .size
-                                                      .width /
-                                                  2;
-                                          if (standard <
-                                              details.globalPosition.dx) {
-                                            model.nextImage();
-                                          } else {
-                                            model.prevImage();
-                                          }
-                                        },
-                                        child: Image.asset(
-                                          'images/swipe_image_logo.jpg',
-                                          fit: BoxFit.cover,
-                                        )
-                                        // Image.network(
-                                        //   item.image_urls[model.image_index],
-                                        //   fit: BoxFit.cover,
-                                        // ),
-                                        )),
-                              ),
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Row(
-                                    children: List.generate(
-                                        item.image_urls.length, (idx) {
-                                  if (item.image_urls.length == 1)
-                                    return Container();
-                                  return idx == model.image_index
-                                      ? Expanded(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                color: Colors.white,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            margin:
-                                                EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                            height: 5,
-                                          ),
-                                        )
-                                      : Expanded(
-                                          child: Container(
-                                            padding: EdgeInsets.only(top: 10),
-                                            decoration: BoxDecoration(
-                                                color: Colors.black12,
-                                                borderRadius:
-                                                    BorderRadius.circular(10)),
-                                            margin:
-                                                EdgeInsets.fromLTRB(3, 5, 3, 0),
-                                            height: 5,
-                                          ),
-                                        );
-                                })),
+                                      onTapUp: (details) {
+                                        double standard =
+                                            MediaQuery.of(context).size.width /
+                                                2;
+                                        if (standard <
+                                            details.globalPosition.dx) {
+                                          model.nextImage();
+                                        } else {
+                                          model.prevImage();
+                                        }
+                                      },
+                                      child: ClipRRect(
+                                          borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(32),
+                                              bottomRight: Radius.circular(32)),
+                                          child:
+                                              widget.imgs[model.image_index]),
+                                    )),
                               ),
                               SizedBox(
                                 height:
-                                    MediaQuery.of(context).size.height * 0.75 +
-                                        25,
+                                    MediaQuery.of(context).size.height * 0.75 -
+                                        30,
                                 child: Align(
-                                    alignment: Alignment.bottomRight,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(right: 40),
-                                      child: Container(
-                                        width: 50,
-                                        height: 50,
-                                        child: RaisedButton(
-                                            onPressed: () {
-                                              Navigator.maybePop(context);
-                                            },
-                                            shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                        25.0)),
-                                            padding: EdgeInsets.all(0),
-                                            child: Ink(
-                                              decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      gradientStart,
-                                                      backgroundColor
-                                                    ],
-                                                    begin: Alignment.topCenter,
-                                                    end: Alignment.bottomCenter,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          25.0)),
-                                              child: Container(
-                                                  width: 50,
-                                                  height: 50,
-                                                  alignment: Alignment.center,
-                                                  child: FaIcon(
-                                                    FontAwesomeIcons.arrowDown,
-                                                    color: Colors.white,
-                                                  )),
-                                            )),
-                                      ),
-                                    )),
-                              ),
-                              Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.75,
-                                child: Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: Row(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            Navigator.maybePop(
-                                                context, "dislike");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: Padding(
-                                            padding: EdgeInsets.all(0),
-                                            child: SvgPicture.asset(
-                                              'images/times.svg',
-                                              width: 25.0,
-                                              color: Color.fromRGBO(
-                                                  72, 116, 213, 1),
-                                            ),
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                        RawMaterialButton(
-                                          onPressed: () {
-                                            Navigator.maybePop(
-                                                context, "collect");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: FaIcon(
-                                            FontAwesomeIcons.thLarge,
-                                            color: backgroundColor,
-                                            size: 25,
-                                          ),
-                                          // child: SvgPicture.asset(
-                                          //   'images/buy.svg',
-                                          //   width: 25.0,
-                                          //   color: backgroundColor,
-                                          // ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                        RawMaterialButton(
-                                          constraints:
-                                              BoxConstraints(minWidth: 60),
-                                          onPressed: () {
-                                            Navigator.maybePop(context, "like");
-                                          },
-                                          elevation: 2.0,
-                                          fillColor: Colors.white,
-                                          child: SvgPicture.asset(
-                                            'images/like.svg',
-                                            width: 25.0,
-                                            color: pinkColor,
-                                          ),
-                                          padding: EdgeInsets.all(10.0),
-                                          shape: CircleBorder(),
-                                        ),
-                                      ],
-                                    )),
-                              )
+                                      children: List.generate(
+                                          item.image_urls.length, (idx) {
+                                        if (item.image_urls.length == 1)
+                                          return Container();
+                                        return idx == model.image_index
+                                            ? Container(
+                                                width: 24,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4)),
+                                                margin: EdgeInsets.fromLTRB(
+                                                    2, 5, 2, 0),
+                                                height: 4,
+                                              )
+                                            : Container(
+                                                width: 24,
+                                                padding:
+                                                    EdgeInsets.only(top: 10),
+                                                decoration: BoxDecoration(
+                                                    color: Color.fromRGBO(
+                                                        255, 255, 255, 0.5),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            4)),
+                                                margin: EdgeInsets.fromLTRB(
+                                                    2, 5, 2, 0),
+                                                height: 4,
+                                              );
+                                      })),
+                                ),
+                              ),
                             ]),
                           ),
                           Padding(
@@ -264,55 +152,159 @@ class DetailInfo extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    // Text(item.shop_name, style: shopNameStyle),
-                                    Text("스트라이드", style: shopNameStyle),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text('$concept', style: conceptStyle),
-                                  ],
+                                SizedBox(
+                                  height: 27,
                                 ),
-                                // Text(item.product_name, style: shopNameStyle),
-                                Text("심플 스트라이프 셔츠", style: shopNameStyle),
-                                UIHelper.verticalSpaceSmall,
+                                Text(item.shop_name,
+                                    style: TextStyle(
+                                        color: Color(0xFF888C93),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13)),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                Text(item.product_name,
+                                    style: TextStyle(
+                                        color: Color(0xFF2B3341),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 18)),
+                                SizedBox(
+                                  height: 8,
+                                ),
                                 Row(
                                   children: [
-                                    Text('${typeConverter[item.type]}',
-                                        style: titleStyle),
-                                    UIHelper.horizontalSpaceSmall,
-                                    Text(
-                                      '${item.price}원',
-                                      style: titleStyle,
+                                    Container(
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            color: Color(0xFF8569EF)),
+                                        child: Padding(
+                                          padding:
+                                              EdgeInsets.fromLTRB(10, 4, 10, 4),
+                                          child: Text(
+                                            '${typeConverter[item.type]}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                color: Colors.white),
+                                          ),
+                                        )),
+                                    SizedBox(
+                                      width: 8,
                                     ),
+                                    Text(
+                                      concept,
+                                      style: TextStyle(
+                                          color: Color(0xFF616576),
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 10),
+                                    )
                                   ],
                                 ),
-                                UIHelper.verticalSpaceSmall,
+                                Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      RichText(
+                                          text: TextSpan(children: [
+                                        TextSpan(
+                                          text: '${item.price}',
+                                          style: TextStyle(
+                                              fontSize: 26,
+                                              fontWeight: FontWeight.w700,
+                                              color: Color(0xFF2B3341)),
+                                        ),
+                                        TextSpan(
+                                            text: ' 원',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: 18,
+                                                color: Color(0xFF2B3341)))
+                                      ])),
+                                      InkWell(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            Stride.logEvent(
+                                              name:
+                                                  'SWIPE_INFO_PURCHASE_BUTTON_CLICKED',
+                                            );
+                                            // 이 부분 코드는 나중��� 수정해야할 듯.
+                                            Provider.of<SwipeService>(context,
+                                                    listen: false)
+                                                .purchaseItem(item.product_id);
+                                            return ProductWebView(
+                                                item.product_url,
+                                                item.shop_name);
+                                          }));
+                                        },
+                                        child: Container(
+                                          width: 54,
+                                          height: 54,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(27),
+                                            color: Color(0xFF8569EF),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey,
+                                                offset:
+                                                    Offset(0.0, 1.0), //(x,y)
+                                                blurRadius: 6.0,
+                                              ),
+                                            ],
+                                          ),
+                                          child: Padding(
+                                            padding: EdgeInsets.all(12),
+                                            child: Image.asset(
+                                              'assets/shopping-bag@2x.png',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    ]),
+                                SizedBox(
+                                  height: 16,
+                                ),
+                                Divider(),
+                                SizedBox(
+                                  height: 16,
+                                ),
+
+                                Text('색상정보',
+                                    style: TextStyle(
+                                        color: Color(0xFF888C93),
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 13)),
+                                SizedBox(
+                                  height: 14,
+                                ),
                                 item.clustered_color != null &&
                                         item.origin_color != null
                                     ? Wrap(children: [
                                         ...List.generate(
                                           item.clustered_color.length,
                                           (index) => Padding(
-                                            padding: EdgeInsets.only(right: 4),
+                                            padding: EdgeInsets.only(right: 10),
                                             child: CircleColorWidget(
                                                 item.clustered_color[index]),
                                           ),
                                         ),
                                         UIHelper.horizontalSpaceSmall,
-                                        ...List.generate(
-                                            item.origin_color.length,
-                                            (index) => index ==
-                                                    item.origin_color.length - 1
-                                                ? Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 4),
-                                                    child: Text(
-                                                        '${item.origin_color[index]}'))
-                                                : Padding(
-                                                    padding: EdgeInsets.only(
-                                                        right: 4),
-                                                    child: Text(
-                                                        '${item.origin_color[index]},')))
+                                        // ...List.generate(
+                                        //     item.origin_color.length,
+                                        //     (index) => index ==
+                                        //             item.origin_color.length - 1
+                                        //         ? Padding(
+                                        //             padding: EdgeInsets.only(
+                                        //                 right: 4),
+                                        //             child: Text(
+                                        //                 '${item.origin_color[index]}'))
+                                        //         : Padding(
+                                        //             padding: EdgeInsets.only(
+                                        //                 right: 4),
+                                        //             child: Text(
+                                        //                 '${item.origin_color[index]},')))
                                       ])
                                     : Container(),
 
@@ -324,48 +316,151 @@ class DetailInfo extends StatelessWidget {
                           Padding(
                               padding: EdgeInsets.all(16),
                               child: SizeDialog(item)),
-                          Padding(
-                            padding: EdgeInsets.fromLTRB(16, 16, 16, 32),
-                            child: Center(
-                              child: InkWell(
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    Stride.analytics.logEvent(
-                                        name:
-                                            'DRESSROOM_PURCHASE_BUTTON_CLICKED',
-                                        parameters: {
-                                          'itemId': item.product_id.toString(),
-                                          'itemName': item.product_name,
-                                          'itemCategory': item.shop_name
-                                        });
-                                    // 이 부분 코드는 나중에 수정해야할 듯.
-                                    Provider.of<SwipeService>(context,
-                                            listen: false)
-                                        .purchaseItem(item.product_id);
-                                    return ProductWebView(
-                                        item.product_url, item.shop_name);
-                                  }));
-                                },
-                                child: Container(
-                                  width: 300,
-                                  height: 50,
-                                  decoration: BoxDecoration(
-                                      color: backgroundColor,
-                                      borderRadius: BorderRadius.circular(25)),
-                                  child: Center(
-                                      child: Text('구매하기', style: buyStyle)),
-                                ),
-                              ),
-                            ),
-                          )
+                          UIHelper.verticalSpaceMedium,
+                          UIHelper.verticalSpaceMedium,
+                          UIHelper.verticalSpaceMedium,
                         ]);
                   })),
-        ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.white10, Colors.white])),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "dislike");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/dislike_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  // RawMaterialButton(
+                  //   constraints: BoxConstraints(minWidth: 60),
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "dislike");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: Padding(
+                  //     padding: EdgeInsets.all(0),
+                  //     child: SvgPicture.asset(
+                  //       'images/times.svg',
+                  //       width: 25.0,
+                  //       color: Color.fromRGBO(72, 116, 213, 1),
+                  //     ),
+                  //   ),
+                  //   padding: EdgeInsets.all(10.0),
+                  //   shape: CircleBorder(),
+                  // ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "collect");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/star_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.maybePop(context, "like");
+                    },
+                    // padding: EdgeInsets.all(0),
+                    child: Image.asset(
+                      'assets/heart_button.png',
+                      width: 80,
+                      height: 80,
+                    ),
+                  ),
+                  // RawMaterialButton(
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "collect");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: FaIcon(
+                  //     FontAwesomeIcons.solidStar,
+                  //     color: backgroundColor,
+                  //     size: 25,
+                  //   ),
+                  // child: SvgPicture.asset(
+                  //   'images/buy.svg',
+                  //   width: 25.0,
+                  //   color: backgroundColor,
+                  // ),
+                  // padding: EdgeInsets.all(10.0),
+                  // shape: CircleBorder(),
+                  // ),
+                  // RawMaterialButton(
+                  //   constraints: BoxConstraints(minWidth: 60),
+                  //   onPressed: () {
+                  //     Navigator.maybePop(context, "like");
+                  //   },
+                  //   elevation: 2.0,
+                  //   fillColor: Colors.white,
+                  //   child: SvgPicture.asset(
+                  //     'images/like.svg',
+                  //     width: 25.0,
+                  //     color: pinkColor,
+                  //   ),
+                  //   padding: EdgeInsets.all(10.0),
+                  //   shape: CircleBorder(),
+                  // ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(24, 60, 0, 0),
+            child: InkWell(
+              onTap: () {
+                Navigator.maybePop(context);
+              },
+              child: Padding(
+                padding: EdgeInsets.all(8),
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: Color(0xFF8569EF)),
+                  child: Center(
+                    child: FaIcon(
+                      FontAwesomeIcons.arrowLeft,
+                      color: Colors.white,
+                      size: 15,
+                    ),
+                    // child: Image.asset('assets/left-arrow.png',
+                    // width: 15, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ]),
       ),
     );
   }
 }
+
+// class DetailInfo extends StatelessWidget {
+//   SwipeModel model;
+//   DetailInfo(this.model);
+//   ScrollController controller;
+//   List<dynamic> images = new List<dynamic>();
+
+// }
 
 const shopNameStyle = TextStyle(fontWeight: FontWeight.w700, fontSize: 20);
 const conceptStyle = TextStyle(

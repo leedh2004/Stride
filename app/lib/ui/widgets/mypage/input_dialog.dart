@@ -3,9 +3,12 @@ import 'package:app/core/models/user.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/tutorial.dart';
 import 'package:app/ui/shared/app_colors.dart';
+import 'package:app/ui/views/service_view.dart';
 import 'package:app/ui/widgets/mypage/input_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../../main.dart';
 
 class SizeInputDialog extends StatefulWidget {
   StrideUser user;
@@ -55,71 +58,120 @@ class _SizeInputDialogState extends State<SizeInputDialog> {
       _waistflag = FlagWrapper(true);
     }
 
-    Widget showWidget;
-    showWidget = SingleChildScrollView(
-      child: Column(mainAxisSize: MainAxisSize.min, children: [
-        Padding(
-            padding: EdgeInsets.all(20),
-            child: InputThirdPage(
-              shoulderRange: _shoulderRange,
-              shoulderflag: _shoulderflag,
-              breastRange: _breastRange,
-              breastflag: _breastflag,
-              waistRange: _waistRange,
-              waistflag: _waistflag,
-              hipRange: _hipRange,
-              hipflag: _hipflag,
-              thighRange: _thighRange,
-              thighflag: _thighflag,
-            )),
-        Material(
-          color: backgroundColor,
-          child: InkWell(
-            child: Container(
-              padding: EdgeInsets.all(20),
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text('완료', style: TextStyle(color: Colors.white)),
-            ),
-            onTap: () async {
-              print(_shoulderRange.value);
-              if (await Provider.of<TutorialService>(context, listen: false)
-                  .sendSize([
-                _waistRange,
-                _hipRange,
-                _thighRange,
-                _shoulderRange,
-                _breastRange
-              ], [
-                _waistflag,
-                _hipflag,
-                _thighflag,
-                _shoulderflag,
-                _breastflag
-              ])) {
-                Provider.of<AuthenticationService>(context, listen: false)
-                    .changeUserSize([
-                  _waistRange,
-                  _hipRange,
-                  _thighRange,
-                  _shoulderRange,
-                  _breastRange
-                ], [
-                  _waistflag,
-                  _hipflag,
-                  _thighflag,
-                  _shoulderflag,
-                  _breastflag
-                ]);
-                // Provider.of<StrideUser>(context, listen: false).profile_flag =
-                //     true;
-                Navigator.maybePop(context);
-              }
-            },
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: Colors.black, //change your color here
+        ),
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text(
+          '사이즈 수정',
+          style: TextStyle(
+              color: Colors.black, fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.fromLTRB(24, 24, 24, 24),
+            child: Column(mainAxisSize: MainAxisSize.min, children: [
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Color(0xFFF4F4FC)),
+                child: Center(
+                  child: Text(
+                    '잘 모르시는 부분은 체크를 해제 해주세요!',
+                    style: TextStyle(color: Color(0xFF8569EF)),
+                  ),
+                ),
+              ),
+              InputThirdPage(
+                shoulderRange: _shoulderRange,
+                shoulderflag: _shoulderflag,
+                breastRange: _breastRange,
+                breastflag: _breastflag,
+                waistRange: _waistRange,
+                waistflag: _waistflag,
+                hipRange: _hipRange,
+                hipflag: _hipflag,
+                thighRange: _thighRange,
+                thighflag: _thighflag,
+              ),
+              InkWell(
+                child: Container(
+                  width: double.infinity,
+                  height: 54,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Color(0xFF2B3341)),
+                  child: Center(
+                    child: Text(
+                      '적용하기',
+                      style: TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w700),
+                    ),
+                  ),
+                ),
+                onTap: () async {
+                  print(_shoulderRange.value);
+                  Stride.logEvent(name: 'MYPAGE_SIZE_CHANGED');
+                  if (await Provider.of<TutorialService>(context, listen: false)
+                      .sendSize([
+                    _waistRange,
+                    _hipRange,
+                    _thighRange,
+                    _shoulderRange,
+                    _breastRange
+                  ], [
+                    _waistflag,
+                    _hipflag,
+                    _thighflag,
+                    _shoulderflag,
+                    _breastflag
+                  ])) {
+                    Provider.of<AuthenticationService>(context, listen: false)
+                        .changeUserSize([
+                      _waistRange,
+                      _hipRange,
+                      _thighRange,
+                      _shoulderRange,
+                      _breastRange
+                    ], [
+                      _waistflag,
+                      _hipflag,
+                      _thighflag,
+                      _shoulderflag,
+                      _breastflag
+                    ]);
+                    // Provider.of<StrideUser>(context, listen: false).profile_flag =
+                    //     true;
+                    ServiceView.scaffoldKey.currentState.showSnackBar(SnackBar(
+                      elevation: 6.0,
+                      behavior: SnackBarBehavior.floating,
+                      duration: Duration(milliseconds: 1500),
+                      backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(10))),
+                      content: Row(children: [
+                        Image.asset('assets/purple_star.png', width: 30),
+                        Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text('사이즈가 수정되었습니다!')),
+                      ]),
+                    ));
+                    Navigator.maybePop(context);
+                  }
+                },
+              )
+            ]),
           ),
-        )
-      ]),
+        ),
+      ),
     );
-    return showWidget;
   }
 }

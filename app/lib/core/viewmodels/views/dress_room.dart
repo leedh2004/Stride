@@ -1,4 +1,3 @@
-import 'package:app/core/models/product.dart';
 import 'package:app/core/models/recentItem.dart';
 import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/viewmodels/base_model.dart';

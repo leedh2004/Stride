@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:app/core/models/coordinate.dart';
-import 'package:app/core/services/api.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
@@ -22,14 +19,20 @@ class LookBookModel extends BaseModel {
     notifyListeners();
   }
 
-  Future removeItem() async {
-    await service.removeItem(selectedIdx.toList());
+  Future removeItem(int id) async {
+    await service.removeItem(id);
     selectedIdx.clear();
     notifyListeners();
   }
 
-  Future rename(int index, String name) async {
-    await service.rename(index, name);
+  // Future removeItem() async {
+  //   await service.removeItem(selectedIdx.toList());
+  //   selectedIdx.clear();
+  //   notifyListeners();
+  // }
+
+  Future rename(int id, String name) async {
+    await service.rename(id, name);
     notifyListeners();
   }
 
@@ -59,9 +62,8 @@ class LookBookModel extends BaseModel {
     notifyListeners();
   }
 
-  Future moveFolder(int toId) async {
-    await service.moveFolder(toId, selectedIdx.toList());
-    selectedIdx.clear();
+  Future moveFolder(int toId, int itemId) async {
+    await service.moveFolder(toId, itemId);
     notifyListeners();
   }
 

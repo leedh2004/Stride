@@ -1,9 +1,5 @@
-import 'dart:convert';
-import 'package:app/core/models/coordinate.dart';
-import 'package:app/core/services/api.dart';
 import 'package:app/core/services/authentication_service.dart';
 import 'package:app/core/services/recommend.dart';
-import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/viewmodels/base_model.dart';
 
 class RecommendationModel extends BaseModel {
@@ -16,7 +12,7 @@ class RecommendationModel extends BaseModel {
     print("RecommendationModel 생성!");
     collectionService = _service;
     authService = _authService;
-    init = false;
+    init = collectionService.init;
   }
 
   Future initialize() async {

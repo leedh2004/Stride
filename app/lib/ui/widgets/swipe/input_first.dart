@@ -22,11 +22,11 @@ class _InputFirstPageState extends State<InputFirstPage> {
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            PurpleCircle(),
-            UIHelper.horizontalSpaceSmall,
-            Circle(),
-            UIHelper.horizontalSpaceSmall,
-            Circle()
+            // PurpleCircle(),
+            // UIHelper.horizontalSpaceSmall,
+            // Circle(),
+            // UIHelper.horizontalSpaceSmall,
+            // Circle()
           ],
         ),
         RichText(

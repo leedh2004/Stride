@@ -1,7 +1,7 @@
 import 'package:apple_sign_in/apple_sign_in.dart';
 
 class ConfigService {
-  final String currentVersion = "0.9.0";
+  final String currentVersion = "0.9.13";
   ConfigService(this.isAppleAvailable, this.updateVersion);
   final bool isAppleAvailable;
   final String updateVersion;

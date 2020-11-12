@@ -14,13 +14,23 @@ class NoSwipeView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              'images/search.png',
-              width: 100,
-              height: 100,
+              'assets/error_search.png',
+              width: 150,
             ),
-            Text("상품목록이 없어요", style: headerStyle),
-            UIHelper.verticalSpaceSmall,
-            Text("필터 조건을 조금 더 완화해 주세요", style: dressRoomsubHeaderStyle),
+            SizedBox(
+              height: 13,
+            ),
+            Text("상품목록이 없어요",
+                style: TextStyle(
+                  color: Color(0xFF616576),
+                  fontWeight: FontWeight.w700,
+                  fontSize: 18,
+                )),
+            SizedBox(
+              height: 15,
+            ), // UIHelper.verticalSpaceSmall,
+            Text("필터 조건을 조금 더 완화해 주세요",
+                style: TextStyle(color: Color(0xFF888C93), fontSize: 12)),
           ],
         ),
       ),

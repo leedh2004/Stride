@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:app/core/models/recentItem.dart';
-import 'package:app/core/models/swipeCard.dart';
-import 'package:rxdart/rxdart.dart';
 import 'api.dart';
 
 class RecentItemService {
@@ -48,6 +46,12 @@ class RecentItemService {
 
   Future likeRequest(int id) async {
     final response = await _api.client.post('${Api.endpoint}/v2/home/like',
+        data: jsonEncode({'product_id': id}));
+    print(response.statusCode);
+  }
+
+  Future collectRequest(int id) async {
+    final response = await _api.client.post('${Api.endpoint}/v2/dressroom',
         data: jsonEncode({'product_id': id}));
     print(response.statusCode);
   }

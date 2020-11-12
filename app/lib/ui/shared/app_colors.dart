@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 // cc99cc rgb(204,153,204)
 // 660099 102, 0, 153
 // const Color backgroundColor = Colors.black;
-const Color backgroundColor = Color.fromRGBO(145, 142, 189, 1);
+const Color backgroundColor = Color.fromRGBO(74, 43, 181, 1);
 // const Color backgroundColor = Color.fromRGBO(146, 145, 190, 1);
 // const Color backgroundColor = Color.fromRGBO(102, 0, 153, 1);
 const Color backgroundTransparentColor = Color.fromRGBO(145, 118, 190, 0.6);
