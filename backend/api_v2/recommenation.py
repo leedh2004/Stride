@@ -29,6 +29,7 @@ def get_recommended_list():
     try:
         mock_result = get_recommended_multi_mock_list()
         return mock_result, 200
-    except:
+    except Exception as Ex:
+        print(Ex)
         return jsonify("Fail"), 500
 

@@ -13,6 +13,10 @@ from bson import json_util
 def get_recommended_multi_mock_list():
     with db_connect() as (service_conn, cursor):
         mock_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True ORDER BY random() LIMIT 20"""
+        best_query = """
+        SELECT * FROM products p JOIN shop s on p.shop_id = s.shop_id AND p.active_flag is True WHERE p.product_id IN (
+        SELECT product_id FROM evaluation WHERE likes is TRUE AND created_at > '2020-10-17' group by product_id having count(*) > 1 order by count(*) desc) ORDER BY random() limit 20;
+        """
         eval_query = """SELECT * FROM evaluation WHERE user_id = %s AND product_id IN %s"""
         get_list_query = """SELECT * FROM products p, shop s WHERE p.shop_id = s.shop_id AND p.active_flag = True AND p.product_id IN %s"""
         get_user_concept = """SELECT ARRAY(SELECT unnest(shop_concept) FROM users WHERE user_id = %s EXCEPT SELECT unnest(ARRAY['basic']))"""
@@ -22,8 +26,11 @@ def get_recommended_multi_mock_list():
         ORDER BY random() LIMIT 20;
         """
         select_new_arrived = """SELECT * FROM products WHERE product_id IN(SELECT product_id FROM products ORDER BY created_at desc limit 1000) ORDER BY random() LIMIT 20"""
-        cursor.execute(get_user_concept, (g.user_id, ))
-        concept = cursor.fetchone()[0]
+        if has_user_concept() is True:
+            cursor.execute(get_user_concept, (g.user_id, ))
+            concept = cursor.fetchone()[0]
+        else:
+            concept = ['daily', 'simple']
         concept_1 = concept[0]
         concept_2 = concept[1]
         total_result = {
@@ -43,7 +50,7 @@ def get_recommended_multi_mock_list():
             product_eval = {}
             product_id = []
             if type == 'recommend':
-                cursor.execute(mock_query)
+                cursor.execute(best_query)
             elif type == 'new_arrive':
                 cursor.execute(select_new_arrived)
             elif type == 'concept1':

@@ -236,9 +236,12 @@ def check_like_cnt():
         try:
             cursor.execute(query, (g.user_id, ))
             cnt = cursor.fetchone()[0]
-            if cnt >= 20:
+            if cnt >= 5:
                 cursor.execute(update_query, (g.user_id, ))
                 service_conn.commit()
+                return True
+            else:
+                return False
         except Exception as ex:
             print(ex)
             pass

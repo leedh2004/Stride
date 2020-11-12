@@ -3,7 +3,6 @@ sys.path.append('../')
 sys.path.append('../../')
 sys.path.append('../../../')
 from config.oauthconfig import *
-es = es_connection
 
 user_ratings_mapping = \
     {

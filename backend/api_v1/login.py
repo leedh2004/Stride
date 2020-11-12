@@ -25,8 +25,8 @@ def user_login():
         return jsonify("Signature has expired"), 500
     user_id = decoded_token['user_id']
     result = select_user(user_id)
-    if result is None:
-        insert_user(user_id)
+    # if result is None:
+    #     insert_user(user_id)
     exp = decoded_token['exp']
     time = datetime.utcnow() - timedelta(days=3)
     exp = datetime.fromtimestamp(exp)

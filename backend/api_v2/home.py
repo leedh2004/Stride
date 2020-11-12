@@ -15,6 +15,7 @@ from backend.db.queries.home import *
 from backend.module.qsparser import QuerystringParser
 from backend.db.queries.behavior import *
 from backend.recommendation.main import *
+from backend.db.queries.tutorial import *
 v2_home = Blueprint('/v2/home', __name__)
 
 
@@ -32,6 +33,10 @@ def get_clothes():
         if price[1] >= 60000:
             price[1] = 300000
         exception = QuerystringParser.empty_list(args.get('exception').split(','))
+        if has_user_concept() is False:
+            check_like_cnt()
+            if select_user_recommenation_flag() is True:
+                Tutorial.cal_concept()
         result = filter_product(g.user_id, color, size, price, concept, type, exception)
         if not result:
             result = []
@@ -57,7 +62,6 @@ def like():
             return jsonify("Duplicate"), 202
         else:
             return jsonify("Fail"), 500
-
 
 
 @v2_home.route('/dislike', methods=['POST'])

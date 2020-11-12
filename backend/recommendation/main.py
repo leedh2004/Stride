@@ -4,6 +4,7 @@ sys.path.append('../../')
 sys.path.append('../../../')
 import backend.recommendation.queries as queries
 import backend.recommendation.recommendation as recommendation
+from backend.db.queries.user import *
 from backend.db.init import *
 import random
 
@@ -72,14 +73,14 @@ def get_entire_types_item_recommendation(user_id, size_filter, es):
 
 # this function should be executed periodically to update user preferring shop concepts
 def update_user_preferred_shop_concepts():
-    users = queries.get_update_user_ids_from_db()
+    # users = queries.get_update_user_ids_from_db()
+    users = queries.get_entire_users_from_db()
+    print(users)
     print("updating shop concepts of users:", users)
     for user in users:
         concepts = queries.get_user_liked_shop_concepts_from_db(user)[:3]
         print("user and preferred concepts:", user, concepts)
         queries.update_user_concepts(user, concepts)
-
-
 
 
 def filter_product(user_id: str, colors: list, size_on: bool, price: list, concepts: list, clothes_type: list, exclude_list: list) -> list:
@@ -92,7 +93,7 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
             terms_colors = {"terms": {"color": colors}}
             filter_conditions.append(terms_colors)
         if concepts:
-            terms_shop_concept = {"terms": {"shop_concept": concepts}}
+            terms_shop_concept = {"terms": {"shop_concept": concepts, "boost": 2.0}}
             filter_conditions.append(terms_shop_concept)
         if clothes_type and 'all' not in clothes_type:
             terms_clothes_type = {"terms": {"clothes_type": clothes_type}}
@@ -109,6 +110,10 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                           {"range": {"max_shoulder": {"gte": min(user_size_data['shoulder'])}}},
                           {"range": {"max_bust": {"gte": min(user_size_data['bust'])}}}]
             must_conditions += range_size
+        should_conditions = []
+        if user_prefer_concepts and not concepts:
+            should_concepts = {"terms": {"shop_concept": user_prefer_concepts}}
+            should_conditions.append(should_concepts)
         res = es.search(
             index='products',
             body={
@@ -118,11 +123,7 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
                     "bool": {
                         "filter": filter_conditions,
                         "must": must_conditions,
-                        "should": {
-                            "terms": {
-                                "shop_concept": user_prefer_concepts
-                            }
-                        },
+                        "should": should_conditions,
                         "must_not": [
                             {
                                 "terms": {
@@ -137,12 +138,17 @@ def filter_product(user_id: str, colors: list, size_on: bool, price: list, conce
         print(res['hits']['hits'])
         result_product_ids = [item['_source']['product_id'] for item in res['hits']['hits']]
         result_product_ids = random.sample(result_product_ids, 20) if len(result_product_ids) > 20 else result_product_ids
+        random.shuffle(result_product_ids)
         return result_product_ids
 
 
-def personalized_recommendation(user_id):
-    # get best items
-    # choose with user concepts
-    user_prefer_concepts = queries.get_user_liked_shop_concepts_from_db(user_id)
-    # no need to exclude items that user has already seen!
-    # just add some randomness to the list, shuffle
+def remove_off_season_items(es):
+    remove_items = queries.get_off_season_items()
+    if remove_items:
+        es.delete_by_query(index='products', body={
+            "query": {
+                "terms": {
+                    "product_id": remove_items
+                }
+            }
+        })
