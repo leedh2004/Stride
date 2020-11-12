@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "113051128302",
+    "firebase_url": "https://stride-fa118.firebaseio.com",
+    "project_id": "stride-fa118",
+    "storage_bucket": "stride-fa118.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113051128302:android:370ec72f524c2644ab3eff",
+        "android_client_info": {
+          "package_name": "kr.co.stride.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113051128302-r2fsaqsa27vg89ftvr33a8juk6l93pr1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.co.stride.app",
+            "certificate_hash": "9eb966bb8e0fc4202d7ded872e44c9d0fb10183d"
+          }
+        },
+        {
+          "client_id": "113051128302-n0hhr72mki725udrcebe6r0l4amv0u1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB9l5MjVjKkiDCuDAzZiDyajPShMCGuguY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113051128302-n0hhr72mki725udrcebe6r0l4amv0u1c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "113051128302-im6hpnjipcveotrv15g5nphedno9lum8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "kr.co.stride.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
