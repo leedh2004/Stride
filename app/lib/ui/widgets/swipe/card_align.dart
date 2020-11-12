@@ -171,20 +171,6 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                               'assets/speech_bubble.png',
                               width: 15,
                             )
-                            // Container(
-                            //   width: 15,
-                            //   height: 15,
-                            //   decoration: BoxDecoration(
-                            //       color: Colors.white,
-                            //       borderRadius: BorderRadius.circular(8)),
-                            //   child: Center(
-                            //     child: FaIcon(
-                            //       FontAwesomeIcons.info,
-                            //       size: 10,
-                            //       color: Colors.black,
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                         SizedBox(
@@ -206,7 +192,6 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                         SizedBox(
                           height: 8,
                         ),
-
                         Row(children: [
                           Container(
                               decoration: BoxDecoration(
@@ -232,34 +217,9 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                                 fontSize: 10),
                           )
                         ]),
-                        // style: TextStyle(
-                        //     fontSize: 40, fontFamily: 'NotoSansKR'))
                       ]),
                 ),
               ),
-              // Align(
-              //   alignment: Alignment.bottomRight,
-              //   child: Padding(
-              //     padding: EdgeInsets.fromLTRB(0, 0, 20, 20),
-              //     child: IconButton(
-              //       icon: Container(
-              //         width: 50,
-              //         height: 50,
-              //         decoration: BoxDecoration(
-              //             color: Colors.white,
-              //             borderRadius: BorderRadius.circular(25)),
-              //         child: Center(
-              //           child: FaIcon(
-              //             FontAwesomeIcons.info,
-              //             size: 15,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //       ),
-              //       onPressed: () {},
-              //     ),
-              //   ),
-              // ),
               Align(
                   alignment: Alignment.bottomRight,
                   child: Padding(
@@ -268,31 +228,7 @@ class _SwipeCardAlignmentState extends State<SwipeCardAlignment> {
                       'assets/shopping-bag@2x.png',
                       width: 30,
                     ),
-                  )
-                  // Padding(
-                  //   padding: EdgeInsets.fromLTRB(0, 0, 70, 20),
-                  //   child: IconButton(
-                  //     icon: Container(
-                  //       width: 50,
-                  //       height: 50,
-                  //       decoration: BoxDecoration(
-                  //           color: Colors.white,
-                  //           borderRadius: BorderRadius.circular(25)),
-                  //       child: Center(
-
-                  //         child: FaIcon(
-                  //           FontAwesomeIcons.shoppingCart,
-                  //           size: 15,
-                  //           color: Colors.black,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     onPressed: () {
-                  //       print("wtf");
-                  //     },
-                  //   ),
-                  // ),
-                  ),
+                  )),
             ],
           )),
     );
