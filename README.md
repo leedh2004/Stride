@@ -36,7 +36,7 @@ ServiceDB에서 추출, 파싱한 데이터를 ``AWS ElasticSearch Service``에 
 
 다음은 ElasticSearch에 인덱스된 상품 정보 document 예시입니다.
 
-<img src="/uploads/449446b8ef5175df5b0fe47016c79f8b/스크린샷_2020-11-13_오후_3.28.35.png"/>
+<img src="/uploads/9d38508a5f1c5e1f3eb8568cefd86971/es_document.png"/>
 
 상품의 카테고리(아우터, 팬츠, 스커트 등), 색상, 사이즈, 가격, 쇼핑몰 컨셉 등 다양한 조건을 넣어서 상품을 검색할 수 있도록 인덱스를 구성하였습니다.
 
