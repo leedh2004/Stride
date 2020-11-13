@@ -1,5 +1,8 @@
 # Stride
 
+- Play Store: https://play.google.com/store/apps/details?id=kr.co.stride.app
+- App Store: https://apps.apple.com/kr/app/id1531507804
+
 ## Team
 
 - SW Maestro 11기 도담신담 팀 Mobile Application
@@ -9,14 +12,19 @@
 
 IOS / Android 를 두 가지 시장의 빠른 출시와 피드백 반영을 위해 ``Cross Platform Application``으로 프로젝트를 진행하기로 결정하였습니다. 
 
-React Native보다 ``Flutter``가 애니메이션과 관련된 기능이 우수하다고 판단하여 Flutter로 개발을 진행하게 되었습니다.
+React Native보다 ``Flutter``가 애니메이션과 관련된 기능이 우수하다고 판단하여 Flutter로, ``Provider Architecture``를 기반으로 개발을 진행하게 되었습니다.
 
-Google에서 공식적으로 권장한 Flutter ``Provider Design Pattern``을 학습하여 코드를 설계하였고, ``MVVM Pattern``을 이용해 유지보수가 쉽게 개발을 진행하였습니다.
+``Provider`` 패턴은 2019 Google IO에 공식적으로 추천되면서 큰 주목을 받은 패턴으로, 클라이언트 화면에서 변화가 있는 부분만 렌더링함으로써 효율적인 모바일 어플리케이션 환경을 구축합니다. 
+
+Stride 모바일 어플리케이션은 Google에서 공식적으로 권장한 Flutter ``Provider Design Pattern``을 학습하여 코드를 설계하였고, ``MVVM Pattern``을 이용해 유지보수가 쉽도록 개발을 진행하였습니다.
+
+다음은 앱의 구조를 간단하게 도식화한 그림입니다.
+
+<img src="/uploads/0f9a81baf43768e84c582f888119be0a/Untitled_Diagram.png"/>
 
 ## Flask
 
 Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그인, REST API서버의 기능과 같은 최소한의 기능이 필요했습니다. 그래서 빠르고 자유롭게 개발 할 수 있는 Flask를 선택하여 진행하였습니다.
-
 
 
 ## 개발 현황
@@ -39,7 +47,47 @@ Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그
 - `20.08.11: 마이페이지 UI구현
 - `20.08.13: 사용자 정보 입력 페이지 구현
 - `20.08.15: 모바일 앱 프로토타입 1.0 완성
-
+- `20.08.27 Swipe Model MVVM 패턴으로 변경
+- `20.08.30 파이어베이스 잘못된 설정 다시 연동, Crashyltics & analytics 붙임
+- `20.08.31 파이어베이스 로그 심음, 프로토타입 UI 완성
+- `20.09.2 드레스룸 폴더 기능 완성, 애플로그인 기능 완성
+- `20.09.3 FCM 기능 완성
+- `20.09.5 전체적인 로그인 기능 완성
+- `20.09.6 스와이프 민감도 조정
+- `20.09.7 드레스룸 폴더 버그 수정, 팝업 디자인 수정
+- `20.09.8 디자인 수정
+- `20.09.09 튜토리얼 UI완성
+- `20.09.10 앱 아이콘 적용
+- `20.09.11 프로토타입 1.0 완성, 앱스토어, 구글 스토어 심사요청
+- `20.09.12 0.2.0 앱스토어, 플레이스토어 배포 완료
+- `20.09.14 로딩 위젯 변경
+- `20.09.16 1.0.2 카카오 로그인 이슈 해결
+- `20.09.23 ~ 10/16 클로즈베타 이후, 피드백 반영하여 전반적인 수정 작업 진행
+- `20.10.5 스와이프 클래스 삭제 전
+- `20.10.8 ~ 11 맥북 고장으로 인한 개발 중단
+- `20.10.12 배포한 앱 버그 픽스
+- `20.10.13 폴더쪽 비동기로 가능한 부분은, 비동기로 변경
+- `20.10.14 1.1.1
+- `20.10.15 1.1.2 배포, 안드로이드 멈춤 현상 수정
+- `20.10.16 1.1.3 배포, 광고를 위한 앱 퍼블리싱 페이지 제작완료
+- `20.10.17 1.1.4 앱사이즈 최적화 (70MB -> 25MB)
+- `20.10.19 1.1.5 배포 예전 튜토리얼 멈춤 버그, 튜토리얼 이미지가 안보이는 버그 픽스
+- `20.10.22 1.2.0 디자인 받은 메인페이지 수정하여 재배포
+- `20.10.23 스와이프 코드 리팩토링
+- `20.10.24 1.2.1 배포, 안드로이드에 앱이 실행되지 않았던 버그 픽스
+- `20.10.26 파이어베이스 데이터 분석 후 비회원 로그인 기능 추가
+- `20.10.27 1.3.0 배포, 추천페이지 디자인 수정, 룩북 구매하기 버튼 추가, UI개선 작업 
+- `20.10.28 1.3.2
+- `20.11.01 1.4.0 UI개선 작업, 튜토리얼 방식 개선
+- `20.11.03 1.5.0 대화형 튜토리얼 방식으로 변경
+- `20.11.04 1.5.2 튜토리얼 멈춤현상 해결
+- `20.11.05 1.5.3 에뮬레이터는 파이어베이스 로그에 안남도록 이벤트 추가
+- `20.11.09 스플래시 스크린 적용
+- `20.11.07 1.5.6 튜토리얼 중 안드로이드 백 버튼 시, 튜토리얼 종료
+- `20.11.09 1.5.7 뒤로가기 화살표 색상 칠함, 룩북쪽 수정
+- `20.11.10 1.6.0 모든 기능 구현, 룩북쪽 꾸미기 완성, 이미지 프리캐쉬쪽 코드 개선, 이미지 로딩시 로딩이미지 표시, 앱 평가 기능 추가
+- `20.11.12 1.7.0 로딩 위젯 변경, 에러페이지, 잠금 페이지, 로그인페이지 변경, 로그인쪽 코드 병렬화, 로그인쪽 코드 파이어베이스 삭제, 폴더 삭제 멘트 변경, 튜토리얼 스킵 넣음, 튜토리얼 이미지 넣음
+ 
 ### BE
 
 - `20.06.26: Flask세팅 및 MockAPI 구현
@@ -52,27 +100,58 @@ Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그
 
 ## 앱 스크린샷
 
-어플리케이션을 ```iphone 11 Pro Emulator``` 에서 구동한 화면입니다. (`20.08.20 기준)
+어플리케이션을 ```iphone 12 Pro Emulator``` 에서 구동한 화면입니다. (`20.08.20 기준)
 
 #### Swipe View
 
-<img src="/uploads/d9ecafa8b7a962008a0b8333c83da7e3/사이즈입력1.png" width=300/>
-<img src="/uploads/1af2ed5e86faca00efbcd0a8c4b4c2bf/스와이프뷰.png" width=300/>
+<img src="/uploads/c922278166ecf87caf3e4f56d5789bd6/main1.png" width=300/>
+<img src="/uploads/7b291b21202c17115ccd79b3a1b3ab2d/main_2.png" width=300/>
+<img src="/uploads/0a3d31c4589db89abf2c2254ac7206bf/main_3.png" width=300 />
+<img src="/uploads/7c9a269abdd013b9857102860be98556/main_4.png" width=300 />
+<img src="/uploads/4693d8ab52f114491916599cfa0bcf3d/main_5.png" width=300 />
 
-#### Dress Room View
+#### Recommend View
 
-<img src="/uploads/fab8b82511de4ae693731fd32e190982/드레스룸_선택_.png" width=300/>
-<img src="/uploads/8c52043d16568cc03ff6adcdd6a7afb8/드레스룸_룩북make.png" width=300/>
+<img src="/uploads/3ec9185f5f5b39726a6da144e8f9a4f0/recommend_1.png" width=300 />
+<img src="/uploads/4ba270dc91b307d9f7e03b4eb76cff68/recommend_2.png" width=300 />
+<img src="/uploads/dc658ae56b58b8cb471cb57212542bc1/recommend_3.png" width=300 />
+<img src="/uploads/451325c796b2264056415b9569f5ea6b/recent.png" width=300 />
 
 #### Look Book View
 
-<img src="/uploads/578989824c880d01c8d994b3a8b67da2/룩북.png" width=300/>
-<img src="/uploads/764be74ee519fc0db7ffd5c0e31e7513/스크린샷_2020-08-20_오전_1.31.36.png" width=300/>
+<img src="/uploads/13a96aa1be66d24b21b96297100abe8a/lookbook.png" width=300 />
+<img src="/uploads/a3abc21dc626c52a9990b217d1f8d4c1/lookbook_2.png" width=300 />
+<img src="/uploads/22047e577d2424cc10b5611af5f0a5c7/lookbook_3.png" width=300 />
+<img src="/uploads/7c6e1544e1ac9ea940ec3f9392cef9e4/lookbook_4.png" width=300 />
+<img src="/uploads/43883c9d7fb4dc6e440fc44b114ad235/look_book_make.png" width= 300 />
 
-#### Login View & MyPage View
+#### Dress Room View
 
-<img src="/uploads/bca9f0225f3180b9459889fc11f9ce25/스크린샷_2020-08-20_오전_1.45.09.png" width=300/>
-<img src="/uploads/45ae47aa983e37411f30746505e59af9/마이페이지.png" width=300/>
+<img src="/uploads/929a6796a14a313bd5cbf3631e3b2ec1/dressroom.png" width=300/>
+<img src="/uploads/29df8f3d4b2ec8376f3ce900cd54fe8d/dressroom_2.png" width=300/>
+<img src="/uploads/10fb9fda4951d2d3fd9f7a10cfd88328/item_remove.png" width=300/>
+<img src="/uploads/9edbacd8519246f3bc07434ad7629041/select_menu.png" width=300/>
+<img src="/uploads/6dae92e076152ef71c2890ee1c0002fd/folder_move.png" width=300/>
+
+#### Login & Tutorial View
+
+<img src="/uploads/50fa6c6f051aa6852258d7a49fdaa7e5/tutorial_1.png" width=300 />
+<img src="/uploads/f472432037e9f87dd58ee19e4820b3db/tutorial_2.png" width=300 />
+<img src="/uploads/4ce777a2c9de7a7faf3068e1a64f8a54/tutorial.png" width=300 />
+<img src="/uploads/c898c028e41f43981555365949355299/login.png" width=300 />
+
+#### Mypage View
+
+<img src="/uploads/69459c55a433db6e398169f5d8140417/mypage_1.png" width=300/>
+<img src="/uploads/7d34dac726ac4714a6a446189eb07af7/mypage_2.png" width=300/>
+<img src="/uploads/15e8fc60a314da7b305591b8527b969a/mypage_3.png" width=300/>
+<img src="/uploads/4fd7ccdca214d88740277ac4e64b1f70/mypage_4.png" width=300/>
+
+#### etc View
+
+<img src="/uploads/d7754063641bbeb70add3ef4b5996416/etc1.png" width=300 />
+<img src="/uploads/e4300deeda8acc97875785ae401afc9b/etc2.png" width=300 />
+<img src="/uploads/57bb1f39655dc6733d1c775449d6b520/etc3.png" width=300 />
 
 ## 사용 라이브러리
 
@@ -80,10 +159,12 @@ Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그
 
 - ##### Firebase
 
-  - firebase_core: ^0.4.5
-  - firebase_crashlytics: ^0.1.4+1
-  - firebase_analytics: ^5.0.16
-
+  - firebase_core: ^0.5.2
+  - firebase_remote_config: ^0.4.2
+  - firebase_auth: ^0.18.3
+  - firebase_analytics: ^6.2.0
+  - firebase_crashlytics: ^0.2.3
+  - firebase_messaging: ^7.0.3
 
 - ##### 상태관리
 
@@ -106,17 +187,36 @@ Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그
 
 - ##### 기능
 
-  - webview_flutter: ^0.3.22+1
+  - webview_flutter: 1.0.0
   - modal_bottom_sheet: ^0.2.0+1
   - awesome_dialog: ^1.1.3
+  - in_app_review: ^1.0.2
 
+- ##### OAuth Login
 
-- ##### UI
+  - apple_sign_in: ^0.1.0
+  - uuid: ^2.2.2
+  - kakao_flutter_sdk: ^0.5.0
+
+- ##### UI & UX
 
   - font_awesome_flutter: ^8.8.1
   - carousel_slider: ^2.2.1
   - fancy_shimmer_image: ^1.2.0
-  - tutorial_coach_mark: ^0.5.1
+  - flushbar: ^1.0.4
+  - custom_pop_up_menu: ^1.1.0
+  - flutter_sliding_tutorial: ^0.1.0
+  - font_awesome_flutter: ^8.8.1
+  - flutter_svg: ^0.18.1
+  - animated_widgets: ^1.0.6
+  - custom_switch: ^0.0.1
+  - pull_to_refresh; ^1.6.1
+
+- ##### App Icon & Splash
+
+  - flutter_native_splash: ^0.1.9
+  - flutter_launcher_icons: ^0.7.5
+
 
 ### BE
 
@@ -161,9 +261,9 @@ python3 app.py
 
 
 
-##### 알려진 이슈 (Known Issues)
+##### 알려진 버그 (Known Issues)
 
-- 로그아웃 시 서비스 모델의 초기화가 필요함, Provider MVVM 패턴 개선 예정
+- 없음
 
 ##### 저작권 및 사용권 정보 (CopyRight / End User License)
 
@@ -171,107 +271,30 @@ python3 app.py
 
 ##### 업데이트 정보 (Change Log)
 
-- `20.08.19: 초기 README 작성
+- `20.08.19: 중간발표 README 작성
+- `20.11.13: 최종발표 README 작성
 
 
 ## 향후 계획
 
 #### 프로젝트 관련
 
-- ##### Tutroial View 구현
+- ##### 어플리케이션 홍보 진행 예정
 
-- ##### 외주 디자인의 UI로 Design Migration
+#### 폴더 구조
 
-- ##### `20.09.30: 서비스 플레이스토어/앱스토어 출시 
+<img src="/uploads/1ac8bf96b2003ab6596187f5bd9399c9/folder.png" width=300/>
 
-#### TO-DO
+- lib/core/constant: 코어 부분(뷰와 관련되지 않음)에서 공통적으로 사용할 상수값들을 저장한다.
 
-- ##### LoginPage View
+- lib/core/service: service class들이 존재하고, 이는 MVVM 패턴에서 Model과 대응된다.
 
-- [x] 카카오 로그인 기능
+- lib/core/viewmodels: view model class가 존재하고, 이는 MVVM 패턴에서 View Model과 대응된다.
 
-- [x] 서버에 요청 전송
+- lib/core/models: 서비스를 위해 필요한 데이터를 처리하기 위한 구조를 지정한다.
 
-- [ ] 애플 로그인 기능
+- lib/ui/shared: view에서 공통적으로 공유하는 widget들을 모아 두었다.
 
-- ##### Swipe View
+- lib/ui/views: view class가 존재하고, 전체적인 view를 의미한다. 다시 말해, 이는 MVVM 패턴에서 View와 대응된다.
 
-- [x] 스와이프 UI 및 애니메이션 구현
-
-- [x] 데이터 부족 시 Request 전송 후, 데이터 채워 넣기
-
-- [x] 스와이프 결과 API Request 전송
-
-- [x] 카테고리 별로 받기
-
-- [x] 선물 버튼 클릭 시 구매 페이지로 이동
-
-- [ ] 이미지 클릭 시 다른 이미지 보여주기 (Image.copycrop)
-
-- [ ] 토글버튼 클릭 시, 데이터 갱신
-
-- [ ] O, X 버튼 클릭 시 애니메이션 생성
-
-- [ ] 줄 자 버튼으로 사이즈 보여주기
-
-- ##### Dress Room
-
-- [x] 드레스룸 UI 구현
-
-- [x] Make Button 기능
-
-- [x] 삭제 기능
-
-- [x] Request 전송
-
-- [x] 드레스룸 나갔다 들어오면 선택된 것 풀어주기
-
-- ##### Look Book
-
-- [x] 룩북 UI 구현
-
-- [x] 룩북 이름 수정 기능
-
-- [x] 룩북 삭제 기능
-
-- ##### Mypage View
-
-- [x] 들어갈 메뉴 생각하기 // 사이즈 수정, 로그아웃, 고객센터, 앱 리뷰쓰기
-
-- [x] List View로 UI 생성
-
-- [x] 본인 사이즈 입력받기
-
-- ##### Tutorial View
-
-- [x] 어떤 식으로 튜토리얼 할 지 생각하기
-
-- [x] 본인 나이 입력받기
-
-- [x] 본인 사이즈 입력받기
-
-- [ ] 애니메이션 튜토리얼 만들기
-
-- [ ] Watcha 튜토리얼 참고해서 배치고사 페이지 만들기
-
-- ##### Extra
-
-- [x] 구매할때 API 날리기
-
-- [x] 토글과 버튼의 위치 바꾸기
-
-- [ ] Loading시 gif가 필요함, 우선은 라이브러리 사용 (pub.dev)
-
-- [ ] 구매, 좋아요, 싫어요, 메뉴전환 Analytics 붙이기
-
-- [ ] Crashlytics 붙이기
-
-- [ ] 쇼핑몰 이름 바꾸기
-
-- [ ] FCM 연동
-
-- [ ] 유저 햅틱고려
-
-- [ ] 로그아웃하면 서비스 모델 비워주기
-
-- [ ] 토글 UI 변경
+- lib/ui/widgets: view를 구성하는 위젯들을 재사용하기 위해 따로 만들었다.
