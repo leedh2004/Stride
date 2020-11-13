@@ -2,6 +2,7 @@
 
 - Play Store: https://play.google.com/store/apps/details?id=kr.co.stride.app
 - App Store: https://apps.apple.com/kr/app/id1531507804
+- Landing Page: https://www.stride.co.kr
 
 ## Team
 
