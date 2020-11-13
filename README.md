@@ -28,7 +28,7 @@ Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그
 
 하지만, Flask는 소형서버이고, 대부분의 루틴이 Blocking형태로 작동하기 때문에, 프로덕션에 사용하기에 무리가 있습니다. 그렇기에 WSGI(Web Server Gateway Interface), Gunicorn을 달아 하나의 프로세스에 다중 어플리케이셔니 동작하도록 하였습니다.
 
-<img src="/uploads/81453f8af2143a7857bf8d8ad39c456c/Serverarch.png"/>
+<img src="https://stridedodamshindam.s3.ap-northeast-2.amazonaws.com/Serverarch.png" width=600 />
 
 ## Search & Recommendation Engine
 
