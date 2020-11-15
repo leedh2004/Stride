@@ -50,7 +50,7 @@ class _TutorialWrapperState extends State<TutorialWrapper> {
         Provider.of<AuthenticationService>(context, listen: false);
     await flushList[0].show(context);
     await tutorial_start_really.show(context).then((value) {
-      if (!value) {
+      if (value == null || value == false) {
         authService.flush_tutorial = -1;
         authService.storage.write(key: 'flush_tutorial', value: 'true');
         flushList2[6].show(context);

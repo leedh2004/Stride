@@ -4,6 +4,14 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../main.dart';
 
+Flushbar exit = Flushbar(
+  duration: Duration(milliseconds: 2000),
+  margin: EdgeInsets.all(8),
+  borderRadius: 8,
+  message: "'뒤로'버튼 한번 더 누르시면 종료됩니다.",
+  backgroundColor: Color.fromRGBO(63, 70, 82, 0.9),
+);
+
 Flushbar collection_flush = Flushbar(
   duration: Duration(milliseconds: 2000),
   margin: EdgeInsets.all(8),
