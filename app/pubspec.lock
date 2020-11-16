@@ -286,13 +286,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_auth_buttons:
-    dependency: "direct main"
-    description:
-      name: flutter_auth_buttons
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.0"
   flutter_blurhash:
     dependency: transitive
     description:
@@ -335,13 +328,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
-  flutter_svg:
-    dependency: "direct main"
-    description:
-      name: flutter_svg
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.18.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -478,20 +464,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.0-nullsafety.1"
-  path_drawing:
-    dependency: transitive
-    description:
-      name: path_drawing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.1+1"
-  path_parsing:
-    dependency: transitive
-    description:
-      name: path_parsing
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   path_provider:
     dependency: transitive
     description:
@@ -749,13 +721,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.19-nullsafety.2"
-  tutorial_coach_mark:
-    dependency: "direct main"
-    description:
-      name: tutorial_coach_mark
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.1"
   typed_data:
     dependency: transitive
     description:

@@ -65,7 +65,7 @@ class LoginView extends StatelessWidget {
                   width: double.infinity,
                   height: MediaQuery.of(context).size.height - 100,
                   child: Image.asset(
-                    'images/intro.jpg',
+                    'assets/intro.jpg',
                     fit: BoxFit.cover,
                   ),
                 ),

@@ -4,7 +4,6 @@ import 'package:app/core/services/dress_room.dart';
 import 'package:app/core/services/lookbook.dart';
 import 'package:app/core/services/swipe.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../main.dart';
