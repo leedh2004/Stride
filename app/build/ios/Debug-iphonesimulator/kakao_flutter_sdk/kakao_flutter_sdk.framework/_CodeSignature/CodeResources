@@ -10,7 +10,7 @@
 		</data>
 		<key>Headers/kakao_flutter_sdk-Swift.h</key>
 		<data>
-		ePoZnLhFeGWW6pVZ73Ro4LdIKIY=
+		LlzMdf33Et4XQoT+W6rZEk1hDuY=
 		</data>
 		<key>Headers/kakao_flutter_sdk-umbrella.h</key>
 		<data>
@@ -18,31 +18,31 @@
 		</data>
 		<key>Info.plist</key>
 		<data>
-		SckDk2nSV8rCVYR8QaBIf8kdXNQ=
+		TpoV0LwmYpz9lMhsdEnEJluCCsU=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		B/VKUkPgxXxTbigAbLjPQspbzWE=
+		mb75Yh4F6xvVDVlslY5K6xFzYkQ=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<data>
-		B/VKUkPgxXxTbigAbLjPQspbzWE=
+		mb75Yh4F6xvVDVlslY5K6xFzYkQ=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<data>
-		5AfneR9/p0f6PjJNJyxnFPIJDSY=
+		VvWhFaBNGOJuljfvnhltm02mtuQ=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		N+qnXD+GPb6HPY6i2DwFBwc7gNw=
+		CVIHQtt5ukr+614XY2W1kTOxolo=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64.swiftdoc</key>
 		<data>
-		5AfneR9/p0f6PjJNJyxnFPIJDSY=
+		VvWhFaBNGOJuljfvnhltm02mtuQ=
 		</data>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64.swiftmodule</key>
 		<data>
-		N+qnXD+GPb6HPY6i2DwFBwc7gNw=
+		CVIHQtt5ukr+614XY2W1kTOxolo=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -62,7 +62,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			ntfB41m2bwJ0rpO24wOX2EOd8C6ee7jT+EKE4BmgPJc=
+			fJoRTTeq7CrNmtAXj2q3hF3Isz66QvDe85czrNf8As0=
 			</data>
 		</dict>
 		<key>Headers/kakao_flutter_sdk-umbrella.h</key>
@@ -76,42 +76,42 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			dykRjSBQNIWYeGhyzocSMxv28qTOYuOJB7/UrNCE5AQ=
+			Ty6bki+2sOgPdjfuVm13FtWii1PcRu0h5guS2Vu2BIY=
 			</data>
 		</dict>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/Project/x86_64.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			dykRjSBQNIWYeGhyzocSMxv28qTOYuOJB7/UrNCE5AQ=
+			Ty6bki+2sOgPdjfuVm13FtWii1PcRu0h5guS2Vu2BIY=
 			</data>
 		</dict>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64-apple-ios-simulator.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bd3Iu08NciYtrvxFMTWz6RdCwQ7X6uN06LZXBUCF6qk=
+			yROm2qf3j4VvKw2pzp7uafIMTjn+SWHwVUyCPxR1cYI=
 			</data>
 		</dict>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			twEVEvrfZr544No/ewaKMCCg+DolUD4KwEPRpIO7qLE=
+			7xW/I0CQpYhJK+BmDWaYyVl0vvI2AHij/XEBIXMght8=
 			</data>
 		</dict>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64.swiftdoc</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			bd3Iu08NciYtrvxFMTWz6RdCwQ7X6uN06LZXBUCF6qk=
+			yROm2qf3j4VvKw2pzp7uafIMTjn+SWHwVUyCPxR1cYI=
 			</data>
 		</dict>
 		<key>Modules/kakao_flutter_sdk.swiftmodule/x86_64.swiftmodule</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			twEVEvrfZr544No/ewaKMCCg+DolUD4KwEPRpIO7qLE=
+			7xW/I0CQpYhJK+BmDWaYyVl0vvI2AHij/XEBIXMght8=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>

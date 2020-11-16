@@ -36,12 +36,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/44fe822318f2b9772882314afd3d320b/core-1.2.0/res/layout/notification_template_part_chronometer.xml"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-hdpi-v4_abc_textfield_activated_mtrl_alpha.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-ldrtl-xxhdpi-v17_abc_ic_menu_cut_mtrl_alpha.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-ldrtl-xxhdpi-v17/abc_ic_menu_cut_mtrl_alpha.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-hdpi-v4_abc_textfield_activated_mtrl_alpha.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-hdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_abc_text_select_handle_right_mtrl_dark.png.flat",
@@ -52,24 +52,24 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-hdpi-v4/abc_scrubber_control_to_pressed_mtrl_005.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable_tooltip_frame_dark.xml.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable/tooltip_frame_dark.xml"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_abc_scrubber_primary_mtrl_alpha.9.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxhdpi-v4/abc_scrubber_primary_mtrl_alpha.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xxhdpi-v4/common_google_signin_btn_text_dark_normal_background.9.png"
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable_tooltip_frame_dark.xml.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable/tooltip_frame_dark.xml"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_list_pressed_holo_dark.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xhdpi-v4/abc_list_pressed_holo_dark.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/color-v23_abc_btn_colored_text_material.xml.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/color-v23/abc_btn_colored_text_material.xml"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_list_pressed_holo_dark.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xhdpi-v4/abc_list_pressed_holo_dark.9.png"
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_common_google_signin_btn_text_dark_normal_background.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xxhdpi-v4/common_google_signin_btn_text_dark_normal_background.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_scrubber_primary_mtrl_alpha.9.png.flat",
@@ -124,12 +124,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxxhdpi-v4/abc_ic_star_half_black_36dp.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_000.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_abc_ab_share_pack_mtrl_alpha.9.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxhdpi-v4/abc_ab_share_pack_mtrl_alpha.9.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxxhdpi-v4_abc_btn_radio_to_on_mtrl_000.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxxhdpi-v4/abc_btn_radio_to_on_mtrl_000.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-hdpi-v4_abc_btn_check_to_on_mtrl_015.png.flat",
@@ -180,12 +180,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/44fe822318f2b9772882314afd3d320b/core-1.2.0/res/drawable/notification_icon_background.xml"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_list_menu_item_radio.xml.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_list_menu_item_radio.xml"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-mdpi-v4_abc_list_selector_disabled_holo_dark.9.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-mdpi-v4/abc_list_selector_disabled_holo_dark.9.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_list_menu_item_radio.xml.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_list_menu_item_radio.xml"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/color_common_google_signin_btn_text_light.xml.flat",
@@ -464,12 +464,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-mdpi-v4/common_google_signin_btn_text_dark_normal_background.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_expanded_menu_layout.xml.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_expanded_menu_layout.xml"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_common_google_signin_btn_text_light_normal_background.9.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xhdpi-v4/common_google_signin_btn_text_light_normal_background.9.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_expanded_menu_layout.xml.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_expanded_menu_layout.xml"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xxhdpi-v4_abc_scrubber_track_mtrl_alpha.9.png.flat",
@@ -604,12 +604,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xxhdpi-v4/common_google_signin_btn_text_light_normal_background.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_screen_toolbar.xml.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_screen_toolbar.xml"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-ldrtl-xxxhdpi-v17_abc_ic_menu_copy_mtrl_am_alpha.png.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-ldrtl-xxxhdpi-v17/abc_ic_menu_copy_mtrl_am_alpha.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_screen_toolbar.xml.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_screen_toolbar.xml"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-mdpi-v4_abc_textfield_search_default_mtrl_alpha.9.png.flat",
@@ -620,12 +620,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/color/abc_tint_edittext.xml"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_list_longpressed_holo.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xhdpi-v4/abc_list_longpressed_holo.9.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_browser_actions_context_menu_page.xml.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4945d7d3f0d39b7c84be814c4b6cce06/browser-1.0.0/res/layout/browser_actions_context_menu_page.xml"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_list_longpressed_holo.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xhdpi-v4/abc_list_longpressed_holo.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-mdpi-v4_abc_list_longpressed_holo.9.png.flat",
@@ -636,12 +636,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxhdpi-v4/abc_textfield_default_mtrl_alpha.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-mdpi-v4_notification_bg_low_normal.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/44fe822318f2b9772882314afd3d320b/core-1.2.0/res/drawable-mdpi-v4/notification_bg_low_normal.9.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable_abc_list_selector_background_transition_holo_light.xml.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable/abc_list_selector_background_transition_holo_light.xml"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-mdpi-v4_notification_bg_low_normal.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/44fe822318f2b9772882314afd3d320b/core-1.2.0/res/drawable-mdpi-v4/notification_bg_low_normal.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/layout_abc_search_view.xml.flat",
@@ -904,12 +904,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-hdpi-v4/abc_menu_hardkey_panel_mtrl_mult.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-ldrtl-xhdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-ldrtl-xhdpi-v17/abc_spinner_mtrl_am_alpha.9.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-watch-v20_abc_dialog_material_background.xml.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-watch-v20/abc_dialog_material_background.xml"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-ldrtl-xhdpi-v17_abc_spinner_mtrl_am_alpha.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-ldrtl-xhdpi-v17/abc_spinner_mtrl_am_alpha.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/release/drawable-xhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",

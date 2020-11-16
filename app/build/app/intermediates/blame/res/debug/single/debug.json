@@ -292,12 +292,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xhdpi-v4/common_google_signin_btn_icon_light_normal_background.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxhdpi-v4/abc_list_divider_mtrl_alpha.9.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/mipmap-xhdpi_splash.png.flat",
         "source": "/Users/ldh/Desktop/Project/stride/app/android/app/src/main/res/mipmap-xhdpi/splash.png"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/drawable-xxhdpi-v4_abc_list_divider_mtrl_alpha.9.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xxhdpi-v4/abc_list_divider_mtrl_alpha.9.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_abc_popup_background_mtrl_mult.9.png.flat",
@@ -412,12 +412,12 @@
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/drawable-xhdpi-v4/abc_textfield_activated_mtrl_alpha.9.png"
     },
     {
-        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_common_full_open_on_phone.png.flat",
-        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xhdpi-v4/common_full_open_on_phone.png"
-    },
-    {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/layout_abc_cascading_menu_item_layout.xml.flat",
         "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/4a39155054c02928129aed98e535733e/appcompat-1.0.2/res/layout/abc_cascading_menu_item_layout.xml"
+    },
+    {
+        "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/drawable-xhdpi-v4_common_full_open_on_phone.png.flat",
+        "source": "/Users/ldh/.gradle/caches/transforms-2/files-2.1/2cd8e9bfc9aa0a2769027e42eb4d5a1e/play-services-base-17.1.0/res/drawable-xhdpi-v4/common_full_open_on_phone.png"
     },
     {
         "merged": "/Users/ldh/Desktop/Project/stride/app/build/app/intermediates/res/merged/debug/layout_abc_expanded_menu_layout.xml.flat",

@@ -128,7 +128,7 @@ flutter:
     - assets/like-of-filled-heart.png
     - assets/close_purple.png
     - assets/right-arrow.png
-    - assets/heart.svg 
+    # - assets/heart.svg 
     - assets/search.png
     - assets/collection.png
     - assets/collection_s.png
@@ -139,10 +139,10 @@ flutter:
     - assets/user.png
     - assets/user_s.png
     - assets/config.png
-    - assets/left-arrow.svg
+    # - assets/left-arrow.svg
     - assets/right.png
-    - assets/shopping-bag.svg
-    - assets/shopping-bag.png
+    # - assets/shopping-bag.svg
+    # - assets/shopping-bag.png
     - assets/shopping-bag@2x.png
     - assets/filter.png
     - assets/stride_logo.png

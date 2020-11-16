@@ -470,7 +470,7 @@ List<Flushbar> flushList2 = [
       Padding(
         padding: EdgeInsets.only(right: 4),
         child: Image.asset(
-          'assets/shopping-bag.png',
+          'assets/shopping-bag@2x.png',
           width: 18,
           height: 18,
         ),
