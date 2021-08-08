@@ -1,13 +1,38 @@
 # Stride
+![image](https://user-images.githubusercontent.com/31717177/128624371-ca5b5797-e170-47d0-9d09-1103c400fe5f.png)
 
+- 현재는 서비스하지 않습니다.
 - Play Store: https://play.google.com/store/apps/details?id=kr.co.stride.app
 - App Store: https://apps.apple.com/kr/app/id1531507804
 - Landing Page: https://www.stride.co.kr
 
+[![Video Label](https://user-images.githubusercontent.com/31717177/128625172-68870222-71b5-43f3-be77-628dbaee5556.png)](https://www.youtube.com/watch?v=lpkWew-7elg)
+
+## 회고 (2021.08.08 추가)
+제가 처음으로 개발했던 모바일 앱입니다. 이제 이 앱을 개발한 지 1년이 되었네요.
+
+SW 마에스트로에서 처음 만난 팀원들, 그리고 그 중에 아무도 모바일 앱 개발자가 없었고 당시 제가 모바일 앱 개발을 자처했던 기억이 납니다.
+
+처음 이 앱을 개발할 때 모르는 것 투성이였고, MVVM, MVC 패턴이 무엇인지도 몰랐습니다. 당연히 사수도 없었고, 당시 신생 프레임워크였던 Flutter는 많은 정보도 없었습니다. 
+
+정말 열정 하나만을 가지고, 우리가 만든 서비스를 많은 사람들이 사용할 기대에 부풀어 기획을 하고, 기능을 하나씩 추가하며 매일 카페에서 밤을 새며 개발하느라 밤낮이 바뀌었던 기억이 나네요.
+
+비록 앱의 코드 구성도 깔끔하지 않고, 앱 아키텍쳐도 명확하지 않습니다.
+누군가 제 코드를 본다면, 부끄럽기도 하지만 이 프로젝트는 누가 물어봐도 제가 제일 사랑했었던 프로젝트임이 분명합니다.
+
+하단에 이미지 등 구현된 부분이 있습니다.
+모든 기능을 첨부하지는 않았지만, 앱 개발을 하시는 분이라면 언뜻봐도 정말 많은 기능이 있는 것을 보실 수 있습니다.
+
+구현된 부분이 다가 아닙니다. 정말 많은 기능을 다시 추가하고, 또 다시 없애고, 또 다른 기능을 개선하고, 사용자들에게 편한 앱을 제공하고자 정말 많은 실험을 했습니다. 튜토리얼만 5번을 넘게 변경을 했으니 말입니다.
+
+1년이 지난 지금, 제가 이 앱을 다시 개발 하려해도 이 정도의 앱을 3달만에 만들 수 있을까?라는 생각이 듭니다. 3달 만에, 기획부터 iOS/Android 앱 런칭, 그리고 사용자 데이터 분석 후 업데이트를 하며 매일 밤새고, 기대하고, 한 명의 사용자가 1시간을 사용했던 그 기록에 팀원들 모두 너무나 기뻐했던, 그 과정을 지금 돌이켜보니 실력보다 중요한 것은 열정과 마음가짐이 아닐까라는 반성을 하게 되네요.
+
+비록 코드와 아키텍쳐 등은 낮은 수준일지 몰라도, 이 프로젝트는 저에게 처음 모바일 프로젝트에 대한 열정을 불러일으켜주었고, 무엇보다 "개발이 재밌다" 라는 생각을 들게해 준, 제가 정말 아끼는 프로젝트입니다.
+
 ## Team
 
 - SW Maestro 11기 도담신담 팀 Mobile Application
-- 개발기간: `20.07.18 ~ 
+- 개발기간: `20.07.18 ~ 20.11.15
 
 ## Flutter App (IOS & Android)
 
@@ -21,13 +46,14 @@ Stride 모바일 어플리케이션은 Google에서 공식적으로 권장한 Fl
 
 다음은 앱의 구조를 간단하게 도식화한 그림입니다.
 
-<img src="/uploads/0f9a81baf43768e84c582f888119be0a/Untitled_Diagram.png"/>
+![image](https://user-images.githubusercontent.com/31717177/128624397-7b6c6f8f-bc0a-4eac-937b-7baaebe7ee11.png)
+
 
 ## Flask
 
 Stride는 게시판 형태의 복잡한 구조를 가지는 것이 아닌 로그인, REST API서버의 기능과 같은 최소한의 기능이 필요했습니다. 그래서 빠르고 자유롭게 개발 할 수 있는 Flask를 선택하여 진행하였습니다.
 
-하지만, Flask는 소형서버이고, 대부분의 루틴이 Blocking형태로 작동하기 때문에, 프로덕션에 사용하기에 무리가 있습니다. 그렇기에 WSGI(Web Server Gateway Interface), Gunicorn을 달아 하나의 프로세스에 다중 어플리케이셔니 동작하도록 하였습니다.
+하지만, Flask는 소형서버이고, 대부분의 루틴이 Blocking형태로 작동하기 때문에, 프로덕션에 사용하기에 무리가 있습니다. 그렇기에 WSGI(Web Server Gateway Interface), Gunicorn을 달아 하나의 프로세스에 다중 어플리케이션 동작하도록 하였습니다.
 
 <img src="https://stridedodamshindam.s3.ap-northeast-2.amazonaws.com/Serverarch.png" width=600 />
 
@@ -179,58 +205,37 @@ Cold Start를 방지하기 위한 2-step 추천 알고리즘
 
 #### Swipe View
 
-<img src="/uploads/c922278166ecf87caf3e4f56d5789bd6/main1.png" width=300/>
-<img src="/uploads/7b291b21202c17115ccd79b3a1b3ab2d/main_2.png" width=300/>
-<img src="/uploads/0a3d31c4589db89abf2c2254ac7206bf/main_3.png" width=300 />
-<img src="/uploads/7c9a269abdd013b9857102860be98556/main_4.png" width=300 />
-<img src="/uploads/4693d8ab52f114491916599cfa0bcf3d/main_5.png" width=300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624439-839df76a-f116-4cd6-95fb-380b6418dfb7.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624542-cbfcf778-b569-4739-81d5-5deaff14dcbc.png" width= 300 />
 
 #### Recommend View
 
-<img src="/uploads/3ec9185f5f5b39726a6da144e8f9a4f0/recommend_1.png" width=300 />
-<img src="/uploads/4ba270dc91b307d9f7e03b4eb76cff68/recommend_2.png" width=300 />
-<img src="/uploads/dc658ae56b58b8cb471cb57212542bc1/recommend_3.png" width=300 />
-<img src="/uploads/451325c796b2264056415b9569f5ea6b/recent.png" width=300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624474-3de8c88f-2f8c-4983-91da-13855da829c8.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624477-9d814923-22db-4bdc-9364-bf1078bf2524.png" width= 300 />
+
 
 #### Look Book View
 
-<img src="/uploads/13a96aa1be66d24b21b96297100abe8a/lookbook.png" width=300 />
-<img src="/uploads/a3abc21dc626c52a9990b217d1f8d4c1/lookbook_2.png" width=300 />
-<img src="/uploads/22047e577d2424cc10b5611af5f0a5c7/lookbook_3.png" width=300 />
-<img src="/uploads/7c6e1544e1ac9ea940ec3f9392cef9e4/lookbook_4.png" width=300 />
-<img src="/uploads/43883c9d7fb4dc6e440fc44b114ad235/look_book_make.png" width= 300 />
-
-#### Dress Room View
-
-<img src="/uploads/929a6796a14a313bd5cbf3631e3b2ec1/dressroom.png" width=300/>
-<img src="/uploads/29df8f3d4b2ec8376f3ce900cd54fe8d/dressroom_2.png" width=300/>
-<img src="/uploads/10fb9fda4951d2d3fd9f7a10cfd88328/item_remove.png" width=300/>
-<img src="/uploads/9edbacd8519246f3bc07434ad7629041/select_menu.png" width=300/>
-<img src="/uploads/6dae92e076152ef71c2890ee1c0002fd/folder_move.png" width=300/>
-
-#### Login & Tutorial View
-
-<img src="/uploads/50fa6c6f051aa6852258d7a49fdaa7e5/tutorial_1.png" width=300 />
-<img src="/uploads/f472432037e9f87dd58ee19e4820b3db/tutorial_2.png" width=300 />
-<img src="/uploads/4ce777a2c9de7a7faf3068e1a64f8a54/tutorial.png" width=300 />
-<img src="/uploads/c898c028e41f43981555365949355299/login.png" width=300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624498-b4eeb9a5-e7fd-4a11-9606-c2492b8c0ff1.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624551-05e3a20a-c058-473d-b2ac-b160009d8098.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624558-b93e747f-c943-4792-8ae8-1666ac5179be.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624562-1528597d-5888-4f61-afd2-ea0691c4e85c.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624567-900766ab-9906-484f-b955-92c60b250e20.png" width= 300 />
+<img src="https://user-images.githubusercontent.com/31717177/128624570-2d1a5da6-b3af-4c8e-9e0d-2ccfdae10ff3.png" width= 300 />
 
 #### Mypage View
 
-<img src="/uploads/69459c55a433db6e398169f5d8140417/mypage_1.png" width=300/>
-<img src="/uploads/7d34dac726ac4714a6a446189eb07af7/mypage_2.png" width=300/>
-<img src="/uploads/15e8fc60a314da7b305591b8527b969a/mypage_3.png" width=300/>
-<img src="/uploads/4fd7ccdca214d88740277ac4e64b1f70/mypage_4.png" width=300/>
+<img src="https://user-images.githubusercontent.com/31717177/128624525-5ce2eaab-6013-483f-8310-375341f7d6be.png" width= 300 />
 
-#### etc View
 
-<img src="/uploads/d7754063641bbeb70add3ef4b5996416/etc1.png" width=300 />
-<img src="/uploads/e4300deeda8acc97875785ae401afc9b/etc2.png" width=300 />
-<img src="/uploads/57bb1f39655dc6733d1c775449d6b520/etc3.png" width=300 />
+#### Error Handling View
+
+<img src="https://user-images.githubusercontent.com/31717177/128624539-3d8f04d8-cd06-472b-963e-75a680949dcf.png" width= 300 />
+
 
 ## 사용 라이브러리
 
-### FE
+### FE(Flutter)
 
 - ##### Firebase
 
@@ -360,8 +365,6 @@ pip3 install -r requirements.txt
 - ##### 어플리케이션 홍보 진행 예정
 
 #### 폴더 구조
-
-<img src="/uploads/1ac8bf96b2003ab6596187f5bd9399c9/folder.png" width=300/>
 
 - lib/core/constant: 코어 부분(뷰와 관련되지 않음)에서 공통적으로 사용할 상수값들을 저장한다.
 
